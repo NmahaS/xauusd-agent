@@ -1,0 +1,27 @@
+{
+  "name": "xauusd-agent",
+  "version": "1.0.0",
+  "description": "Autonomous hourly XAUUSD analysis agent with SMC + DeepSeek LLM",
+  "type": "module",
+  "main": "src/run.js",
+  "scripts": {
+    "analyze": "node src/run.js",
+    "dry-run": "DRY_RUN=true node src/run.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "technicalindicators": "^3.1.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "transform": {},
+    "testEnvironment": "node"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

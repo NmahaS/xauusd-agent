@@ -1,0 +1,49 @@
+name: Hourly XAUUSD Analysis
+
+on:
+  schedule:
+    - cron: '5 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: xauusd-analysis
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Check market hours
+        id: market
+        continue-on-error: true
+        run: node src/utils/marketHours.js
+      - name: Run analysis
+        if: steps.market.outcome == 'success'
+        env:
+          TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DEEPSEEK_MODEL: deepseek-chat
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          METALPRICE_API_KEY: ${{ secrets.METALPRICE_API_KEY }}
+          METALSDEV_API_KEY: ${{ secrets.METALSDEV_API_KEY }}
+        run: node src/run.js
+      - name: Commit plan
+        if: steps.market.outcome == 'success'
+        run: |
+          git config user.name "xauusd-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add plans/ README.md
+          git diff --staged --quiet || git commit -m "plan: $(date -u +'%Y-%m-%d %H:00 UTC')"
+          git push

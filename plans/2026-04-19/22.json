@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-04-19T22:51:38.470Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 bias is bullish with CHoCH at 4838.06 and discount zone, but H1 trend is bearish with extreme RSI oversold at 4.2 and price in deep discount, creating conflicting signals; no clear structure alignment for execution.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) for better liquidity and confluence"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "USD strengthening via EUR/USD falling is bearish for gold, with positive real yields at 1.96% adding pressure; silver outperforming suggests risk-on sentiment, but Fear & Greed at 27 indicates some safe-haven demand.",
+  "warnings": [
+    "High-impact CAD CPI news in +818m (13.6 hours) could increase volatility and disrupt setups",
+    "H1 RSI at 4.2 indicates extreme oversold but no reversal confirmation yet",
+    "Session is off with no kill zone, reducing institutional participation",
+    "Spot/chart gap 0.93% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

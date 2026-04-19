@@ -72,20 +72,21 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-19T13:58:36.477Z
+**Generated:** 2026-04-19T22:51:38.470Z
 
-- **Bias:** bullish
+- **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** ny — Wait for clearer POI and discount zone entry
+- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and confluence
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.96%, bearish for gold; Fear & Greed index at 27 indicates fear but trending risk-on, neutral for gold; CAD high-impact CPI data due in ~22.5 hours may increase volatility.
+**Macro Context:** USD strengthening via EUR/USD falling is bearish for gold, with positive real yields at 1.96% adding pressure; silver outperforming suggests risk-on sentiment, but Fear & Greed at 27 indicates some safe-haven demand.
 
 **Warnings:**
-- ⚠ Price is in extreme premium zone (96.8% on H1, 54.7% on H4), reducing entry probability
-- ⚠ No clear POI (order block or FVG) near current price for high-probability setup
-- ⚠ High-impact CAD CPI news in ~22.5 hours could disrupt market conditions
+- ⚠ High-impact CAD CPI news in +818m (13.6 hours) could increase volatility and disrupt setups
+- ⚠ H1 RSI at 4.2 indicates extreme oversold but no reversal confirmation yet
+- ⚠ Session is off with no kill zone, reducing institutional participation
+- ⚠ Spot/chart gap 0.93% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

@@ -72,20 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T14:06:55.558Z
+**Generated:** 2026-04-20T15:51:39.883Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** ny — Wait for clearer POI alignment and reduced news risk
+- **Session:** ny — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) with better confluence
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.96% (bearish for gold), Fear & Greed index at 29 indicates fear but with a rising trend (neutral), and silver outperforming suggests risk-on sentiment.
+**Macro Context:** Real yields are positive at 1.96% (bearish for gold), Fear & Greed index at 29 (fear) with rising trend indicating risk-on sentiment, and silver outperforming gold suggests reduced safe-haven demand.
 
 **Warnings:**
-- ⚠ High-impact news (NZD CPI, USD Retail Sales, Fed testimony) within next 24h increases volatility risk
-- ⚠ Price is in premium zone but lacks clear POI confluence for entry
-- ⚠ H1 OTE short zone (4800.48-4816.72) is near current price but not aligned with strong bearish structure
+- ⚠ High-impact news (NZ CPI, USD Retail Sales) within next 24h creates volatility risk
+- ⚠ Price in premium zone but lacks clear POI near current level for high-probability entry
+- ⚠ Session is NY but kill zone is none, reducing execution quality
+- ⚠ Confluence factors insufficient (<3) for A/B grade setup
+- ⚠ Spot/chart gap 0.67% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

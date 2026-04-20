@@ -72,22 +72,21 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T16:19:31.635Z
+**Generated:** 2026-04-20T18:06:18.583Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** ny — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) with better confluence
+- **Session:** off — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for better liquidity and institutional activity.
 - **Direction:** no-trade
 
-**Macro Context:** Positive real yields (1.96%) are bearish for gold, but EUR/USD rising suggests USD weakening which is bullish; Fear & Greed at 29 (fear) is neutral, and high-impact US data (Core Retail Sales, Retail Sales) is imminent in ~12 hours.
+**Macro Context:** Positive real yields (1.96%) are bearish for gold, while Fear & Greed index at 29 (fear) provides mild safe-haven support but is neutral overall; upcoming high-impact US data (Core Retail Sales, Retail Sales) within 18 hours adds volatility risk.
 
 **Warnings:**
-- ⚠ No clear POI near current price (4794.24) for a high-probability setup
-- ⚠ High-impact US economic data (Core Retail Sales, Retail Sales) scheduled in ~12 hours, increasing volatility risk
-- ⚠ Current NY session kill zone is none, reducing execution quality
-- ⚠ Conflicting macro signals: positive real yields bearish vs. USD weakening bullish
-- ⚠ Spot/chart gap 0.77% — data sources may be desynced
+- ⚠ Current session is off with no kill zone, reducing institutional participation and setup reliability.
+- ⚠ Price is in premium zone (72.8%), favoring short setups but lacks clear entry near bearish POI with sufficient confluence.
+- ⚠ High-impact economic events (NZD CPI, USD Retail Sales) within next 24 hours increase market noise and risk of adverse moves.
+- ⚠ Spot/chart gap 0.42% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

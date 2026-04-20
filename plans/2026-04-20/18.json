@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-04-20T18:06:18.583Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last CHoCH at 4769.05, H1 SMC bias is bearish with last CHoCH at 4829.09, price is in premium zone (72.8% of range 4740.75-4837.40), and H1 shows bearish order blocks near current price.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for better liquidity and institutional activity."
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Positive real yields (1.96%) are bearish for gold, while Fear & Greed index at 29 (fear) provides mild safe-haven support but is neutral overall; upcoming high-impact US data (Core Retail Sales, Retail Sales) within 18 hours adds volatility risk.",
+  "warnings": [
+    "Current session is off with no kill zone, reducing institutional participation and setup reliability.",
+    "Price is in premium zone (72.8%), favoring short setups but lacks clear entry near bearish POI with sufficient confluence.",
+    "High-impact economic events (NZD CPI, USD Retail Sales) within next 24 hours increase market noise and risk of adverse moves.",
+    "Spot/chart gap 0.42% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

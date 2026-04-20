@@ -72,21 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T22:58:29.097Z
+**Generated:** 2026-04-20T23:55:08.136Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and confluence
+- **Session:** off — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for better liquidity and institutional participation.
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.91% (bearish for gold), and silver outperforming (Au/Ag ratio 59.8) suggests risk-on sentiment, though Fear & Greed at 29 indicates some safe-haven demand.
+**Macro Context:** Positive real yields (1.91%) are bearish for gold, while Fear & Greed index at 29 (fear) provides some safe-haven support but trend is risk-on; high-impact USD data (Core Retail Sales, Retail Sales) and Fed testimony imminent within 12-14 hours.
 
 **Warnings:**
-- ⚠ No kill zone active (current session is off), reducing execution quality
-- ⚠ High-impact USD data (Core Retail Sales, Retail Sales) due in ~8h, increasing volatility risk
-- ⚠ Price is in extreme premium zones (H1 97.8%, H4 88.9%) but lacks nearby bearish POI for entry, requiring pullback to OTE short zone or bearish OB
-- ⚠ Insufficient confluence factors (<3) for a trade setup
+- ⚠ Current session is off with no kill zone, reducing institutional participation
+- ⚠ Price is in extreme premium (91.9% on H1, 83.6% on H4), favoring sell-side but no clear entry near POI
+- ⚠ High-impact USD economic events (Core Retail Sales, Retail Sales, Fed testimony) within 12-14 hours create volatility risk
+- ⚠ No clear OTE zone near current price (OTE short zone 4795.07-4809.84 is below, OTE long zone 4759.56-4774.33 is far below)
+- ⚠ Confluence factors insufficient (<3) for A/B grade setup.
 <!-- LATEST_PLAN_END -->
 
 ---

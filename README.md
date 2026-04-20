@@ -72,7 +72,7 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T13:09:55.447Z
+**Generated:** 2026-04-20T14:06:55.558Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
@@ -80,13 +80,12 @@ Each run (~60 seconds):
 - **Session:** ny — Wait for clearer POI alignment and reduced news risk
 - **Direction:** no-trade
 
-**Macro Context:** Positive real yields (1.96%) are bearish for gold, and upcoming high-impact US retail sales data in 1400 minutes adds volatility risk.
+**Macro Context:** Real yields are positive at 1.96% (bearish for gold), Fear & Greed index at 29 indicates fear but with a rising trend (neutral), and silver outperforming suggests risk-on sentiment.
 
 **Warnings:**
-- ⚠ Price is in premium zone but lacks clear POI near current level for entry
-- ⚠ High-impact US retail sales data in 1400 minutes increases volatility and risk
-- ⚠ Conflicting signals: bearish SMC bias vs bullish H4 trend indicators (EMA alignment)
-- ⚠ Spot/chart gap 0.50% — data sources may be desynced
+- ⚠ High-impact news (NZD CPI, USD Retail Sales, Fed testimony) within next 24h increases volatility risk
+- ⚠ Price is in premium zone but lacks clear POI confluence for entry
+- ⚠ H1 OTE short zone (4800.48-4816.72) is near current price but not aligned with strong bearish structure
 <!-- LATEST_PLAN_END -->
 
 ---

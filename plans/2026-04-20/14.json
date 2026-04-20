@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-04-20T14:06:55.558Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last CHoCH at 4769.05, H1 SMC bias is bearish with last CHoCH at 4829.09, price is in premium zone (78.9% of range 4740.75-4837.40), and H1 trend is neutral with bearish order blocks nearby.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for clearer POI alignment and reduced news risk"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.96% (bearish for gold), Fear & Greed index at 29 indicates fear but with a rising trend (neutral), and silver outperforming suggests risk-on sentiment.",
+  "warnings": [
+    "High-impact news (NZD CPI, USD Retail Sales, Fed testimony) within next 24h increases volatility risk",
+    "Price is in premium zone but lacks clear POI confluence for entry",
+    "H1 OTE short zone (4800.48-4816.72) is near current price but not aligned with strong bearish structure"
+  ],
+  "promptVersion": "v2.0"
+}

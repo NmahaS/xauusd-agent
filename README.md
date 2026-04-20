@@ -72,21 +72,25 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T09:15:28.958Z
+**Generated:** 2026-04-20T11:38:35.165Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** london — Wait for clearer POI alignment and reduced news impact
+- **Session:** london — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) after high-impact news passes
 - **Direction:** no-trade
 
-**Macro Context:** Positive real yields at 1.96% are bearish for gold, while Fear & Greed index at 29 (fear) provides neutral safe-haven support; silver outperforming suggests risk-on sentiment.
+**Macro Context:** Positive real yields (1.96%) are bearish for gold, while Fear & Greed index at 29 (fear) provides some safe-haven support but is neutral overall; silver outperforming (Au/Ag ratio 59.8) suggests risk-on sentiment.
 
 **Warnings:**
-- ⚠ High-impact CAD CPI news in 195 minutes may cause volatility
-- ⚠ Price is in premium zone but lacks clear POI for entry
-- ⚠ Conflicting signals: bearish SMC bias vs bullish H4 trend and OTE long zone nearby
-- ⚠ Spot/chart gap 0.71% — data sources may be desynced
+- ⚠ High-impact gold events (CAD CPI data) in 51 minutes, avoid trading near news
+- ⚠ Price in premium zone but no clear POI near current level for entry
+- ⚠ Session is London but not in kill zone, reducing execution quality
+- ⚠ High-impact gold event in 51min: CAD CPI m/m (High)
+- ⚠ High-impact gold event in 51min: CAD Median CPI y/y (High)
+- ⚠ High-impact gold event in 51min: CAD Trimmed CPI y/y (High)
+- ⚠ High-impact gold event in 51min: CAD Common CPI y/y (Medium)
+- ⚠ Spot/chart gap 0.85% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

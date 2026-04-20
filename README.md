@@ -72,7 +72,7 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T19:53:08.486Z
+**Generated:** 2026-04-20T20:05:18.391Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
@@ -80,14 +80,14 @@ Each run (~60 seconds):
 - **Session:** off — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for better liquidity and execution.
 - **Direction:** no-trade
 
-**Macro Context:** Positive real yields (1.96%) are bearish for gold, and silver outperforming (Au/Ag ratio 59.8) suggests risk-on sentiment, though Fear & Greed at 29 indicates some fear; upcoming high-impact USD data (Core Retail Sales, Retail Sales) within 16 hours adds volatility risk.
+**Macro Context:** Positive real yields (1.96%) are bearish for gold, and silver outperforming (Au/Ag ratio 59.8) suggests risk-on sentiment, though Fear & Greed at 29 indicates some fear; upcoming high-impact USD data (Core Retail Sales, Retail Sales) and Fed testimony add volatility.
 
 **Warnings:**
-- ⚠ Current session is off with no kill zone, reducing execution quality.
-- ⚠ Price is in premium zones on both H4 and H1, but no clear entry POI near current price (4812.45) with sufficient confluence.
-- ⚠ High-impact USD economic events (Core Retail Sales, Retail Sales) scheduled within ~16 hours, increasing volatility and risk.
-- ⚠ Insufficient confluence factors (<3) for a trade setup; need more alignment in structure, POI, timing, or macro signals.
-- ⚠ Spot/chart gap 0.39% — data sources may be desynced
+- ⚠ Session is off with no kill zone, reducing execution quality
+- ⚠ Price is in premium zones on H4 and H1, but no clear POI near current price for entry
+- ⚠ High-impact news (USD Core Retail Sales, Retail Sales, Fed testimony) within 2 hours increases risk
+- ⚠ Insufficient confluence factors (<3) for a valid setup
+- ⚠ Spot/chart gap 0.33% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

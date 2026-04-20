@@ -72,25 +72,19 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T11:38:35.165Z
+**Generated:** 2026-04-20T13:07:23.763Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** london — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) after high-impact news passes
+- **Session:** ny — NY kill zone active (12-15 UTC)
 - **Direction:** no-trade
 
-**Macro Context:** Positive real yields (1.96%) are bearish for gold, while Fear & Greed index at 29 (fear) provides some safe-haven support but is neutral overall; silver outperforming (Au/Ag ratio 59.8) suggests risk-on sentiment.
+**Macro Context:** Real yields are positive at 1.96%, bearish for gold; upcoming high-impact USD retail sales data in ~14 hours may increase volatility.
 
 **Warnings:**
-- ⚠ High-impact gold events (CAD CPI data) in 51 minutes, avoid trading near news
-- ⚠ Price in premium zone but no clear POI near current level for entry
-- ⚠ Session is London but not in kill zone, reducing execution quality
-- ⚠ High-impact gold event in 51min: CAD CPI m/m (High)
-- ⚠ High-impact gold event in 51min: CAD Median CPI y/y (High)
-- ⚠ High-impact gold event in 51min: CAD Trimmed CPI y/y (High)
-- ⚠ High-impact gold event in 51min: CAD Common CPI y/y (Medium)
-- ⚠ Spot/chart gap 0.85% — data sources may be desynced
+- ⚠ Schema error: POI, entry, stopLoss, and invalidation must be objects or null; takeProfits array requires objects with level, reasoning, and rr fields. Insufficient confluence for a valid trade setup.
+- ⚠ Spot/chart gap 0.51% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

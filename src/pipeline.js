@@ -167,6 +167,7 @@ export async function runPipeline() {
     session,
     dailySummary,
   });
+  console.log(`[telegram] SENDING NOW (bias=${mergedPlan.bias} setup=${mergedPlan.setupQuality} dryRun=${config.DRY_RUN})`);
   await sendTelegramMessage(telegramText);
   console.log(`[pipeline] notify phase done in ${time() - tNotify}ms`);
 

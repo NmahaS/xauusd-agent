@@ -26,6 +26,9 @@ jobs:
       - name: Check market hours
         id: market
         continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: node src/utils/marketHours.js
       - name: Run analysis
         if: steps.market.outcome == 'success'
@@ -47,3 +50,9 @@ jobs:
           git add plans/ README.md plans/.last-run
           git diff --staged --quiet || git commit -m "plan: $(date -u +'%Y-%m-%d %H:00 UTC')"
           git push
+      - name: Notify failure
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\":\"${{ secrets.TELEGRAM_CHAT_ID }}\",\"text\":\"🔴 XAUUSD workflow failed at $(date -u +'%H:%M UTC'). Check Actions tab.\",\"parse_mode\":\"HTML\"}"

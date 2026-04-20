@@ -1,31 +1,50 @@
-import { runPipeline } from './pipeline.js';
-import { writeFileSync } from 'fs';
+import 'dotenv/config';
+import fs from 'fs';
 
-const force = process.argv.includes('--force');
+const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-if (!force) {
-  const now = new Date();
-  const day = now.getUTCDay();
-  const mins = now.getUTCHours() * 60 + now.getUTCMinutes();
-  const isOpen =
-    day !== 6 &&
-    !(day === 0 && mins < 22 * 60) &&
-    !(day === 5 && mins >= 22 * 60);
-
-  if (!isOpen) {
-    console.log(`Gold market is closed (UTC: ${now.toISOString()}). Skipping run. Use --force to override.`);
-    process.exit(0);
+async function sendEmergencyTelegram(msg) {
+  if (!TOKEN || !CHAT_ID) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'HTML' }),
+    });
+  } catch (e) {
+    console.error('Emergency Telegram failed:', e.message);
   }
 }
 
-if (force) console.log('[run] --force: skipping market hours check');
+const force = process.argv.includes('--force');
 
-runPipeline()
-  .then(() => {
-    writeFileSync('plans/.last-run', new Date().toISOString() + '\n');
-    process.exit(0);
-  })
-  .catch(err => {
-    console.error('[run] pipeline fatal error:', err);
-    process.exit(2);
-  });
+try {
+  if (!force) {
+    const now = new Date();
+    const day = now.getUTCDay();
+    const mins = now.getUTCHours() * 60 + now.getUTCMinutes();
+    const isOpen =
+      day !== 6 &&
+      !(day === 0 && mins < 22 * 60) &&
+      !(day === 5 && mins >= 22 * 60);
+
+    if (!isOpen) {
+      console.log(`Gold market is closed (UTC: ${now.toISOString()}). Skipping run. Use --force to override.`);
+      process.exit(0);
+    }
+  }
+
+  if (force) console.log('[run] --force: skipping market hours check');
+
+  const { runPipeline } = await import('./pipeline.js');
+  await runPipeline();
+
+  fs.mkdirSync('plans', { recursive: true });
+  fs.writeFileSync('plans/.last-run', new Date().toISOString() + '\n');
+  process.exit(0);
+} catch (err) {
+  console.error('FATAL:', err.message, err.stack);
+  await sendEmergencyTelegram(`🔴 <b>XAUUSD Agent crashed</b>\n<code>${err.message}</code>`);
+  process.exit(1);
+}

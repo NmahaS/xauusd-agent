@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-04-20T13:07:23.763Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last CHoCH at 4769.05, H1 SMC bias is bearish with last CHoCH at 4829.09, and price is in a premium zone (68.0% of range 4740.75-4837.40), indicating potential for a pullback.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone active (12-15 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.96%, bearish for gold; upcoming high-impact USD retail sales data in ~14 hours may increase volatility.",
+  "warnings": [
+    "Schema error: POI, entry, stopLoss, and invalidation must be objects or null; takeProfits array requires objects with level, reasoning, and rr fields. Insufficient confluence for a valid trade setup.",
+    "Spot/chart gap 0.51% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

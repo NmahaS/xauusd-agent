@@ -6,7 +6,8 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  actions: write
 
 jobs:
   check:
@@ -46,25 +47,11 @@ jobs:
           "
         continue-on-error: true
 
-      - name: Run analysis if overdue
-        if: steps.check.outcome == 'failure'
-        env:
-          TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-          DEEPSEEK_MODEL: deepseek-chat
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          METALPRICE_API_KEY: ${{ secrets.METALPRICE_API_KEY }}
-          METALSDEV_API_KEY: ${{ secrets.METALSDEV_API_KEY }}
-        run: node src/run.js
-
-      - name: Commit last-run update
+      - name: Trigger main workflow if overdue
         if: steps.check.outcome == 'failure'
         run: |
-          git config user.name "xauusd-bot"
-          git config user.email "bot@users.noreply.github.com"
-          git pull --rebase origin main
-          git add plans/.last-run plans/ README.md
-          git diff --staged --quiet || git commit -m "watchdog: recovered missed run $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git push
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/actions/workflows/analyze.yml/dispatches \
+            -d '{"ref":"main"}'

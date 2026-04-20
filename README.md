@@ -72,22 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T02:02:17.630Z
+**Generated:** 2026-04-20T03:47:39.397Z
 
 - **Bias:** bullish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) for better liquidity and confluence
+- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) for better liquidity and confirmation
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.96% (bearish for gold), Fear & Greed index at 29 (fear) with rising trend indicating risk-on sentiment, and silver outperforming gold (Au/Ag ratio 59.8) suggests reduced safe-haven demand.
+**Macro Context:** Positive real yields (1.96%) are bearish for gold, but EUR/USD rising suggests USD weakening, providing some bullish support; Fear & Greed at 29 (fear) is neutral, and upcoming high-impact CAD CPI news in 522 minutes adds volatility risk.
 
 **Warnings:**
-- ⚠ Current session is Asia with no kill zone, reducing execution quality
-- ⚠ High-impact CAD CPI news in ~628 minutes (gold-relevant) creates uncertainty
-- ⚠ Price is far from H1 OTE long zone [4830.87, 4832.27] and lacks immediate POI confluence
-- ⚠ Macro backdrop with positive real yields and risk-on sentiment limits bullish momentum
-- ⚠ Spot/chart gap 0.48% — data sources may be desynced
+- ⚠ Current session is asia with no kill zone, reducing liquidity and execution quality
+- ⚠ High-impact CAD CPI news in 522 minutes (High, GOLD-RELEVANT) creates significant volatility risk
+- ⚠ Price is in a discount zone but lacks clear POI near current level for high-probability entry
+- ⚠ H1 OTE long zone [4830.87, 4832.27] is above current price, requiring a rally for entry, which may not align with immediate structure
+- ⚠ Spot/chart gap 0.81% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

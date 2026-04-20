@@ -72,7 +72,7 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T15:51:39.883Z
+**Generated:** 2026-04-20T16:19:31.635Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
@@ -80,14 +80,14 @@ Each run (~60 seconds):
 - **Session:** ny — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) with better confluence
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.96% (bearish for gold), Fear & Greed index at 29 (fear) with rising trend indicating risk-on sentiment, and silver outperforming gold suggests reduced safe-haven demand.
+**Macro Context:** Positive real yields (1.96%) are bearish for gold, but EUR/USD rising suggests USD weakening which is bullish; Fear & Greed at 29 (fear) is neutral, and high-impact US data (Core Retail Sales, Retail Sales) is imminent in ~12 hours.
 
 **Warnings:**
-- ⚠ High-impact news (NZ CPI, USD Retail Sales) within next 24h creates volatility risk
-- ⚠ Price in premium zone but lacks clear POI near current level for high-probability entry
-- ⚠ Session is NY but kill zone is none, reducing execution quality
-- ⚠ Confluence factors insufficient (<3) for A/B grade setup
-- ⚠ Spot/chart gap 0.67% — data sources may be desynced
+- ⚠ No clear POI near current price (4794.24) for a high-probability setup
+- ⚠ High-impact US economic data (Core Retail Sales, Retail Sales) scheduled in ~12 hours, increasing volatility risk
+- ⚠ Current NY session kill zone is none, reducing execution quality
+- ⚠ Conflicting macro signals: positive real yields bearish vs. USD weakening bullish
+- ⚠ Spot/chart gap 0.77% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

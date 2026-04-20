@@ -4,7 +4,7 @@ const TG_BASE = 'https://api.telegram.org/bot';
 
 export async function sendTelegramMessage(text, { parseMode = 'HTML', disablePreview = true } = {}) {
   if (config.DRY_RUN) {
-    console.log('[telegram] DRY_RUN — skipping Telegram send. Message preview:\n' + text.slice(0, 800));
+    console.log('[telegram] DRY_RUN — skipping Telegram send. Message preview:\n' + text);
     return { ok: true, skipped: true };
   }
 

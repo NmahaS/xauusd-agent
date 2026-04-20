@@ -6,7 +6,10 @@
   "main": "src/run.js",
   "scripts": {
     "analyze": "node src/run.js",
+    "analyze:force": "node src/run.js --force",
     "dry-run": "DRY_RUN=true node src/run.js",
+    "report": "node src/plan/generateMonthlyReport.js",
+    "report:month": "node src/plan/generateMonthlyReport.js --month",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {

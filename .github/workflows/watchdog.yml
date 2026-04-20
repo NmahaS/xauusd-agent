@@ -1,0 +1,70 @@
+name: Watchdog
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+      - run: npm ci
+
+      - name: Check if main workflow is overdue
+        id: check
+        run: |
+          node -e "
+          const fs = require('fs');
+          try {
+            const lastRun = fs.readFileSync('plans/.last-run', 'utf8').trim();
+            const lastRunTime = new Date(lastRun);
+            const now = new Date();
+            const minutesSince = (now - lastRunTime) / 1000 / 60;
+            console.log('Last run:', lastRun);
+            console.log('Minutes since last run:', minutesSince.toFixed(1));
+            if (minutesSince > 90) {
+              console.log('OVERDUE — last run was', minutesSince.toFixed(0), 'minutes ago');
+              process.exit(1);
+            } else {
+              console.log('OK — within 90 minute window');
+              process.exit(0);
+            }
+          } catch(e) {
+            console.log('No last-run file found — treating as overdue');
+            process.exit(1);
+          }
+          "
+        continue-on-error: true
+
+      - name: Run analysis if overdue
+        if: steps.check.outcome == 'failure'
+        env:
+          TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DEEPSEEK_MODEL: deepseek-chat
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          METALPRICE_API_KEY: ${{ secrets.METALPRICE_API_KEY }}
+          METALSDEV_API_KEY: ${{ secrets.METALSDEV_API_KEY }}
+        run: node src/run.js
+
+      - name: Commit last-run update
+        if: steps.check.outcome == 'failure'
+        run: |
+          git config user.name "xauusd-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git pull --rebase origin main
+          git add plans/.last-run plans/ README.md
+          git diff --staged --quiet || git commit -m "watchdog: recovered missed run $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push

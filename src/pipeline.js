@@ -17,6 +17,8 @@ import { computePremiumDiscount } from './smc/premiumDiscount.js';
 
 import { generatePlan } from './llm/client.js';
 import { savePlan, updateReadmeLatestPlan } from './plan/writer.js';
+import { resolveOpenTrades } from './plan/outcomeTracker.js';
+import { updateDailySummary } from './plan/tracker.js';
 import { formatPlanForTelegram } from './plan/formatter.js';
 import { sendTelegramMessage } from './telegram/notify.js';
 
@@ -74,6 +76,11 @@ export async function runPipeline() {
     console.error('[pipeline] FATAL: no XAU candles fetched; cannot continue');
     throw new Error('No XAU candles — aborting run');
   }
+
+  // Resolve open trades from prior plans before computing new indicators
+  await resolveOpenTrades(h1Candles).catch(err =>
+    console.warn(`[outcome] resolution error: ${err.message}`)
+  );
 
   // Refresh spot vs chart gap now that we have chart prices
   let metals = metalsResult;
@@ -134,15 +141,19 @@ export async function runPipeline() {
 
   // Phase 4: persist + notify
   const tWrite = time();
+  let dailySummary = null;
   if (!config.DRY_RUN) {
     try {
       await savePlan(mergedPlan);
       await updateReadmeLatestPlan(mergedPlan);
+      dailySummary = await updateDailySummary(runTimestamp);
     } catch (err) {
       console.warn(`[pipeline] write phase error: ${err.message}`);
     }
   } else {
     console.log('[pipeline] DRY_RUN — skipping file writes');
+    // Still compute summary from any plans already on disk (for footer preview)
+    dailySummary = await updateDailySummary(runTimestamp, { save: false }).catch(() => null);
   }
   console.log(`[pipeline] write phase done in ${time() - tWrite}ms`);
 
@@ -154,6 +165,7 @@ export async function runPipeline() {
     fred: fredResult,
     calendar: calendarResult,
     session,
+    dailySummary,
   });
   await sendTelegramMessage(telegramText);
   console.log(`[pipeline] notify phase done in ${time() - tNotify}ms`);

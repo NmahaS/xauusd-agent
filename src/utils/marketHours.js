@@ -25,6 +25,9 @@ if (day === 6) {
   isOpen = true;
 }
 
+const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+console.log(`[market] day=${dayNames[day]}(${day}) hour=${hour} min=${minute} → ${isOpen ? 'open' : 'closed'}`);
+
 if (!isOpen) {
   console.log(`Gold market is closed (UTC: ${now.toISOString()}). Skipping run.`);
   process.exit(1);

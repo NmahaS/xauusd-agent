@@ -32,8 +32,18 @@ function pct(v) {
   return `${v >= 0 ? '+' : ''}${v.toFixed(2)}%`;
 }
 
+function minsUntilNextRun(timestampIso) {
+  const min = new Date(timestampIso).getUTCMinutes();
+  return min < 5 ? 5 - min : 65 - min;
+}
+
+function fmtSign(v) {
+  if (v == null) return 'n/a';
+  return `${v >= 0 ? '+' : ''}${v.toFixed(1)}R`;
+}
+
 export function formatPlanForTelegram(plan, extras = {}) {
-  const { dxy, metals, sentiment, fred, calendar, session } = extras;
+  const { dxy, metals, sentiment, fred, calendar, session, dailySummary } = extras;
   const biasEmoji = BIAS_EMOJI[plan.bias] ?? '⚪';
   const qualityEmoji = QUALITY_EMOJI[plan.setupQuality] ?? '';
   const killZoneIcon = session?.inKillZone ? ' 🔥' : '';
@@ -110,6 +120,99 @@ export function formatPlanForTelegram(plan, extras = {}) {
     lines.push(`<b>⚠ Warnings:</b>`);
     for (const w of plan.warnings) {
       lines.push(`  • ${esc(w)}`);
+    }
+  }
+
+  // Daily stats footer
+  lines.push('');
+  if (dailySummary) {
+    const { trades, noTrades, wins: w, dailyRR: rr } = dailySummary;
+    const nextMin = minsUntilNextRun(plan.timestamp);
+
+    if (trades === 0) {
+      lines.push(`<i>📊 Today: 0 trades · ${noTrades} skip | Waiting for setup... · ~${nextMin}m</i>`);
+    } else if (w.open > 0 && (w.total + w.losses) === 0) {
+      lines.push(`<i>📊 Today: ${w.open} open · ${noTrades} skip | Tracking... · ~${nextMin}m</i>`);
+    } else {
+      const longN = dailySummary.directions?.long ?? 0;
+      const shortN = dailySummary.directions?.short ?? 0;
+      const dirStr = [longN && `${longN} long`, shortN && `${shortN} short`].filter(Boolean).join(' · ');
+      const rrStr = [rr.avgRR_TP1, rr.avgRR_TP2, rr.avgRR_TP3]
+        .map(v => v != null ? v.toFixed(1) : '-')
+        .join('/');
+      lines.push(
+        `<i>📊 Today: ${dirStr} | ${w.total}W ${w.losses}L (${w.winRate}) · Net: ${fmtSign(rr.netRR)} · Avg: ${rrStr}R (TP1/2/3) | ${noTrades} skip · ~${nextMin}m</i>`
+      );
+      if (rr.bestSetup) {
+        const b = rr.bestSetup;
+        lines.push(`<i>🏆 Best: ${b.hour}:00 ${esc(b.quality)} ${esc(b.direction)} ${fmtSign(b.rr)}</i>`);
+      }
+    }
+  } else {
+    lines.push(`<i>📊 ~${minsUntilNextRun(plan.timestamp)}m to next run</i>`);
+  }
+
+  return lines.join('\n');
+}
+
+export function formatMonthlyReportForTelegram(report) {
+  const { month, summary: s, winLoss: wl, rrAnalysis: rr, breakdowns: bd, insights } = report;
+  const year = month.slice(0, 4);
+  const monthName = new Date(`${month}-01`).toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+  const lines = [];
+
+  lines.push(`<b>📊 XAUUSD Monthly Report — ${monthName} ${year}</b>`);
+  lines.push('');
+  lines.push(`📈 ${s.totalDays} days · ${s.totalTrades} trades · ${s.totalNoTrades} skip`);
+  lines.push('');
+  lines.push(`<b>🏆 Performance:</b>`);
+  lines.push(`  Win rate: ${wl.winRate} (${wl.wins}W / ${wl.losses}L${wl.partialWins ? ` / ${wl.partialWins}P` : ''})`);
+  lines.push(`  Net RR: ${fmtSign(rr.totalNetRR)}`);
+  lines.push(`  Avg win: +${(wl.avgWinRR ?? 0).toFixed(2)}R | Avg loss: ${(wl.avgLossRR ?? 0).toFixed(2)}R`);
+  lines.push(`  Expectancy: +${(wl.expectancy ?? 0).toFixed(2)}R per trade`);
+  lines.push(`  Profit factor: ${(wl.profitFactor ?? 0).toFixed(1)}x`);
+  lines.push('');
+
+  if (bd?.byQuality) {
+    lines.push(`<b>📊 By Quality:</b>`);
+    for (const [q, v] of Object.entries(bd.byQuality)) {
+      lines.push(`  ${q}: ${v.winRate} WR · ${(v.avgRR ?? 0).toFixed(1)}R avg (${v.count} trades)`);
+    }
+    lines.push('');
+  }
+
+  if (bd?.bySession) {
+    lines.push(`<b>🕐 By Session:</b>`);
+    const sessions = Object.entries(bd.bySession).sort((a, b) => (b[1].netRR ?? 0) - (a[1].netRR ?? 0));
+    for (const [sess, v] of sessions) {
+      const tag = sess === sessions[0][0] ? ' (best)' : sess === sessions[sessions.length - 1][0] ? ' (worst)' : '';
+      lines.push(`  ${sess}: ${v.winRate} WR · ${fmtSign(v.netRR)} net${tag}`);
+    }
+    lines.push('');
+  }
+
+  if (bd?.byDayOfWeek) {
+    const days = Object.entries(bd.byDayOfWeek);
+    const best = days.reduce((a, b) => parseFloat(b[1].winRate) > parseFloat(a[1].winRate) ? b : a);
+    const worst = days.reduce((a, b) => parseFloat(b[1].winRate) < parseFloat(a[1].winRate) ? b : a);
+    lines.push(`<b>📅 By Day:</b>`);
+    lines.push(`  Best: ${best[0]} (${best[1].winRate} WR)`);
+    lines.push(`  Worst: ${worst[0]} (${worst[1].winRate} WR)`);
+    lines.push('');
+  }
+
+  if (rr.bestSingleTrade) {
+    const bt = rr.bestSingleTrade;
+    lines.push(`🔥 Best: ${bt.date} ${bt.hour}:00 ${esc(bt.quality ?? '')} +${(bt.actualRR ?? 0).toFixed(1)}R`);
+  }
+  if (wl.longestLoseStreak?.count > 1) {
+    lines.push(`💀 Worst streak: ${wl.longestLoseStreak.count} consecutive losses`);
+  }
+
+  if (insights?.length) {
+    lines.push('');
+    for (const ins of insights) {
+      lines.push(`💡 ${esc(ins)}`);
     }
   }
 

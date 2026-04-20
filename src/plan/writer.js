@@ -56,6 +56,26 @@ function buildLatestMarkdown(plan) {
   return lines.join('\n');
 }
 
+export async function getTodayStats(timestampIso) {
+  const d = timestampIso ? new Date(timestampIso) : new Date();
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  const dir = path.join(PLANS_DIR, `${y}-${m}-${day}`);
+  const counts = { 'A+': 0, 'A': 0, 'B': 0, 'no-trade': 0 };
+  try {
+    const files = (await fs.readdir(dir)).filter(f => f.endsWith('.json'));
+    await Promise.all(files.map(async (file) => {
+      try {
+        const raw = await fs.readFile(path.join(dir, file), 'utf8');
+        const plan = JSON.parse(raw);
+        if (plan.setupQuality in counts) counts[plan.setupQuality]++;
+      } catch {}
+    }));
+  } catch {}
+  return counts;
+}
+
 export async function updateReadmeLatestPlan(plan) {
   let readme;
   try {

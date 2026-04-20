@@ -72,20 +72,21 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T21:57:51.042Z
+**Generated:** 2026-04-20T22:58:29.097Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and confluence.
+- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and confluence
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.91%, bearish for gold, and silver outperforming gold (Au/Ag ratio 59.8) suggests risk-on sentiment, reducing safe-haven demand.
+**Macro Context:** Real yields are positive at 1.91% (bearish for gold), and silver outperforming (Au/Ag ratio 59.8) suggests risk-on sentiment, though Fear & Greed at 29 indicates some safe-haven demand.
 
 **Warnings:**
-- ⚠ High-impact gold event (NZD CPI q/q) in 47 minutes, likely causing volatility and reducing setup reliability.
-- ⚠ Price is in extreme premium zones on H1 (91.2%) and H4 (83.0%), but no clear POI near current price for entry, and session is off with no kill zone active.
-- ⚠ High-impact gold event in 47min: NZD CPI q/q (High)
+- ⚠ No kill zone active (current session is off), reducing execution quality
+- ⚠ High-impact USD data (Core Retail Sales, Retail Sales) due in ~8h, increasing volatility risk
+- ⚠ Price is in extreme premium zones (H1 97.8%, H4 88.9%) but lacks nearby bearish POI for entry, requiring pullback to OTE short zone or bearish OB
+- ⚠ Insufficient confluence factors (<3) for a trade setup
 <!-- LATEST_PLAN_END -->
 
 ---

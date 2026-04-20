@@ -1,4 +1,3 @@
-import { config } from '../config.js';
 import { generateMonthlyReport, saveMonthlyReport } from './monthlyReport.js';
 import { formatMonthlyReportForTelegram } from './formatter.js';
 import { sendTelegramMessage } from '../telegram/notify.js';

@@ -72,22 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T20:05:18.391Z
+**Generated:** 2026-04-20T21:00:20.757Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for better liquidity and execution.
+- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and confluence.
 - **Direction:** no-trade
 
-**Macro Context:** Positive real yields (1.96%) are bearish for gold, and silver outperforming (Au/Ag ratio 59.8) suggests risk-on sentiment, though Fear & Greed at 29 indicates some fear; upcoming high-impact USD data (Core Retail Sales, Retail Sales) and Fed testimony add volatility.
+**Macro Context:** Cross-asset signals are mixed with EUR/USD stable and silver outperforming (risk-on), but Fear & Greed at 29 (fear) provides some safe-haven support; high-impact NZD CPI event imminent adds uncertainty.
 
 **Warnings:**
-- ⚠ Session is off with no kill zone, reducing execution quality
-- ⚠ Price is in premium zones on H4 and H1, but no clear POI near current price for entry
-- ⚠ High-impact news (USD Core Retail Sales, Retail Sales, Fed testimony) within 2 hours increases risk
-- ⚠ Insufficient confluence factors (<3) for a valid setup
-- ⚠ Spot/chart gap 0.33% — data sources may be desynced
+- ⚠ High-impact gold event (NZD CPI q/q) in 105 minutes, avoid trading near news.
+- ⚠ Session is off with no kill zone, reducing liquidity and execution quality.
+- ⚠ Price is in extreme premium on H1 (90.7%) and H4 (82.5%), but no clear POI near current level for entry.
+- ⚠ High-impact gold event in 105min: NZD CPI q/q (High)
+- ⚠ FRED macro data unavailable — yields/real-rate missing
 <!-- LATEST_PLAN_END -->
 
 ---

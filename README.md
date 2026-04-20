@@ -72,19 +72,21 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T13:07:23.763Z
+**Generated:** 2026-04-20T13:09:55.447Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** ny — NY kill zone active (12-15 UTC)
+- **Session:** ny — Wait for clearer POI alignment and reduced news risk
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.96%, bearish for gold; upcoming high-impact USD retail sales data in ~14 hours may increase volatility.
+**Macro Context:** Positive real yields (1.96%) are bearish for gold, and upcoming high-impact US retail sales data in 1400 minutes adds volatility risk.
 
 **Warnings:**
-- ⚠ Schema error: POI, entry, stopLoss, and invalidation must be objects or null; takeProfits array requires objects with level, reasoning, and rr fields. Insufficient confluence for a valid trade setup.
-- ⚠ Spot/chart gap 0.51% — data sources may be desynced
+- ⚠ Price is in premium zone but lacks clear POI near current level for entry
+- ⚠ High-impact US retail sales data in 1400 minutes increases volatility and risk
+- ⚠ Conflicting signals: bearish SMC bias vs bullish H4 trend indicators (EMA alignment)
+- ⚠ Spot/chart gap 0.50% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

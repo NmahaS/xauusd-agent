@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-04-19T14:56:51.022Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bullish",
+  "biasReasoning": "H4 and H1 SMC biases are bullish with last CHoCH events at 4838.06 and 4806.14 respectively, indicating upward market structure. H4 trend is bullish with price above key EMAs (EMA20=4826.08, EMA50=4798.53, EMA200=4665.02). H1 trend is also bullish with price above EMAs (EMA20=4833.99, EMA50=4830.82).",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for clearer POI and reduced premium; consider after CAD CPI data release"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.96%, bearish for gold, while Fear & Greed index at 27 indicates fear but with a rising trend towards risk-on, providing neutral sentiment. Silver outperforming gold suggests risk-on environment, limiting safe-haven demand.",
+  "warnings": [
+    "Price is in extreme premium zone on H1 (97.8% of range), reducing probability for long entries.",
+    "No clear POI near current price; nearest bullish order block at 4783.00-4794.74 is too far for immediate setup.",
+    "High-impact CAD CPI data due in ~21.5 hours may increase volatility and disrupt setups.",
+    "H1 OTE long zone [4830.19, 4831.05] is below current price but not strongly confluent with other factors."
+  ],
+  "promptVersion": "v2.0"
+}

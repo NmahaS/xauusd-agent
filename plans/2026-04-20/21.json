@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-04-20T21:00:20.757Z",
+  "timestamp": "2026-04-20T21:57:51.042Z",
   "symbol": "XAU/USD",
   "timeframe": "1h",
   "bias": "bearish",
-  "biasReasoning": "H4 SMC bias is bearish with last CHoCH at 4769.05, H1 SMC bias is bearish with last CHoCH at 4829.09, and price is in premium zones on both H4 (82.5%) and H1 (90.7%), indicating overbought conditions and potential reversal.",
+  "biasReasoning": "H4 SMC bias is bearish with last CHoCH at 4769.05, H1 SMC bias is bearish with last CHoCH at 4829.09, and price is in premium zones on both H4 (83.0%) and H1 (91.2%), indicating overbought conditions and potential reversal.",
   "setupQuality": "no-trade",
   "confluenceCount": 0,
   "confluenceFactors": [],
@@ -21,13 +21,11 @@
     "suggestedRiskPct": 0,
     "positionSizeHint": "No trade"
   },
-  "macroContext": "Cross-asset signals are mixed with EUR/USD stable and silver outperforming (risk-on), but Fear & Greed at 29 (fear) provides some safe-haven support; high-impact NZD CPI event imminent adds uncertainty.",
+  "macroContext": "Real yields are positive at 1.91%, bearish for gold, and silver outperforming gold (Au/Ag ratio 59.8) suggests risk-on sentiment, reducing safe-haven demand.",
   "warnings": [
-    "High-impact gold event (NZD CPI q/q) in 105 minutes, avoid trading near news.",
-    "Session is off with no kill zone, reducing liquidity and execution quality.",
-    "Price is in extreme premium on H1 (90.7%) and H4 (82.5%), but no clear POI near current level for entry.",
-    "High-impact gold event in 105min: NZD CPI q/q (High)",
-    "FRED macro data unavailable — yields/real-rate missing"
+    "High-impact gold event (NZD CPI q/q) in 47 minutes, likely causing volatility and reducing setup reliability.",
+    "Price is in extreme premium zones on H1 (91.2%) and H4 (83.0%), but no clear POI near current price for entry, and session is off with no kill zone active.",
+    "High-impact gold event in 47min: NZD CPI q/q (High)"
   ],
   "promptVersion": "v2.0"
 }

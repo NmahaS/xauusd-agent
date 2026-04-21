@@ -72,22 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-21T03:39:33.743Z
+**Generated:** 2026-04-21T06:10:20.379Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) for better liquidity and confluence
+- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) to assess price action and high-impact news effects.
 - **Direction:** no-trade
 
-**Macro Context:** Positive real yields at 1.91% are bearish for gold, and Fear & Greed index at 33 (fear) with rising trend is neutral; high-impact USD data (Core Retail Sales, Retail Sales) and Fed testimony imminent within 2 hours increase volatility risk.
+**Macro Context:** Real yields are positive at 1.91%, bearish for gold, and Fear & Greed index is at 33 (fear) with a rising trend, neutral for gold; high-impact USD data (Core Retail Sales, Retail Sales) and Fed testimony are imminent, increasing volatility.
 
 **Warnings:**
-- ⚠ Conflicting H4 (bearish) and H1 (bullish) SMC biases
-- ⚠ Price in premium zones on both H4 and H1, lacking discount entry
-- ⚠ No clear POI near current price for high-probability setup
-- ⚠ High-impact USD news (Core Retail Sales, Retail Sales, Fed testimony) within 2 hours, avoid trading
-- ⚠ Spot/chart gap -0.93% — data sources may be desynced
+- ⚠ Conflicting SMC biases between H4 (bearish) and H1 (bullish)
+- ⚠ High-impact USD news (Core Retail Sales, Retail Sales, Fed testimony) within 2 hours, likely causing high volatility
+- ⚠ Current session is Asia with no kill zone, reducing execution quality
+- ⚠ Insufficient confluence factors (<3) for a clear setup
+- ⚠ Spot/chart gap -0.68% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

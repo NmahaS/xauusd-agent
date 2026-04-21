@@ -72,22 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-20T23:55:08.136Z
+**Generated:** 2026-04-21T03:39:33.743Z
 
-- **Bias:** bearish
+- **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for better liquidity and institutional participation.
+- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) for better liquidity and confluence
 - **Direction:** no-trade
 
-**Macro Context:** Positive real yields (1.91%) are bearish for gold, while Fear & Greed index at 29 (fear) provides some safe-haven support but trend is risk-on; high-impact USD data (Core Retail Sales, Retail Sales) and Fed testimony imminent within 12-14 hours.
+**Macro Context:** Positive real yields at 1.91% are bearish for gold, and Fear & Greed index at 33 (fear) with rising trend is neutral; high-impact USD data (Core Retail Sales, Retail Sales) and Fed testimony imminent within 2 hours increase volatility risk.
 
 **Warnings:**
-- ⚠ Current session is off with no kill zone, reducing institutional participation
-- ⚠ Price is in extreme premium (91.9% on H1, 83.6% on H4), favoring sell-side but no clear entry near POI
-- ⚠ High-impact USD economic events (Core Retail Sales, Retail Sales, Fed testimony) within 12-14 hours create volatility risk
-- ⚠ No clear OTE zone near current price (OTE short zone 4795.07-4809.84 is below, OTE long zone 4759.56-4774.33 is far below)
-- ⚠ Confluence factors insufficient (<3) for A/B grade setup.
+- ⚠ Conflicting H4 (bearish) and H1 (bullish) SMC biases
+- ⚠ Price in premium zones on both H4 and H1, lacking discount entry
+- ⚠ No clear POI near current price for high-probability setup
+- ⚠ High-impact USD news (Core Retail Sales, Retail Sales, Fed testimony) within 2 hours, avoid trading
+- ⚠ Spot/chart gap -0.93% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

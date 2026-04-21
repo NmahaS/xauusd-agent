@@ -72,22 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-21T18:09:31.417Z
+**Generated:** 2026-04-21T19:58:15.689Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for next London session (07-10 UTC) for better liquidity and kill zone activity.
+- **Session:** off — Wait for London kill zone (07-10 UTC)
 - **Direction:** no-trade
 
-**Macro Context:** Real yields positive at 1.91% bearish for gold, Fear & Greed at 33 (fear) neutral, GBP CPI high-impact news in +710m adds uncertainty.
+**Macro Context:** USD strengthening via EUR/USD falling is bearish for gold, positive real yields at 1.91% are bearish, and Fear & Greed at 33 (fear) with rising trend is neutral, providing mixed macro signals.
 
 **Warnings:**
 - ⚠ Session is off with no kill zone, reducing execution quality
-- ⚠ High-impact GBP CPI news in +710m creates volatility risk
-- ⚠ Conflicting SMC biases: H4 bearish vs H1 bullish, lacking clear alignment
-- ⚠ Price in deep discount but no clear POI near current level for entry
-- ⚠ Spot/chart gap 0.88% — data sources may be desynced
+- ⚠ High-impact GBP CPI news in +602m may cause volatility, avoid trading near news
+- ⚠ H1 OTE long zone [4778.31, 4782.26] is above current price, no immediate POI for entry
+- ⚠ Conflicting H1 SMC bullish bias vs H4 bearish bias creates uncertainty
+- ⚠ Spot/chart gap 1.50% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

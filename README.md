@@ -72,23 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-21T12:07:03.188Z
+**Generated:** 2026-04-21T13:45:32.719Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** ny — Wait for NY kill zone after high-impact news passes
+- **Session:** ny — Wait for clearer structure alignment or after high-impact news
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.91% (bearish for gold), Fear & Greed index is 33 (fear) with rising trend, and DXY proxy EUR/USD is stable, providing neutral cross-asset backdrop.
+**Macro Context:** Cross-asset signals are neutral: EUR/USD stable, spot gold gap -0.78%, Fear & Greed at 33 (fear) with rising trend, and unknown real yields provide no strong directional bias.
 
 **Warnings:**
-- ⚠ High-impact gold events (USD Core Retail Sales and Retail Sales) in 23 minutes
-- ⚠ Conflicting H4 bearish and H1 bullish SMC biases
-- ⚠ No clear POI near current price with sufficient confluence
-- ⚠ High-impact gold event in 23min: USD Core Retail Sales m/m (High)
-- ⚠ High-impact gold event in 23min: USD Retail Sales m/m (High)
-- ⚠ Spot/chart gap -0.86% — data sources may be desynced
+- ⚠ Conflicting H4 bearish and H1 bullish biases with no clear structure alignment
+- ⚠ High-impact USD news (Fed testimony) in 14 minutes creates excessive volatility risk
+- ⚠ No strong confluence factors (e.g., POI, P/D alignment, DXY direction) to support a trade
+- ⚠ FRED macro data unavailable — yields/real-rate missing
+- ⚠ Spot/chart gap -0.78% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

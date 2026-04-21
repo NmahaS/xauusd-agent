@@ -72,7 +72,7 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-21T08:14:47.764Z
+**Generated:** 2026-04-21T08:58:34.854Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
@@ -80,13 +80,11 @@ Each run (~60 seconds):
 - **Session:** london — Wait for NY kill zone or post-news clarity
 - **Direction:** no-trade
 
-**Macro Context:** Real yields positive at 1.91% bearish for gold, Fear & Greed at 33 neutral, high-impact USD data (Core Retail Sales, Retail Sales) imminent within 2 hours increasing volatility.
+**Macro Context:** Real yields positive at 1.91% bearish for gold, Fear & Greed at 33 neutral, high-impact USD data imminent.
 
 **Warnings:**
-- ⚠ High-impact USD news (Core Retail Sales, Retail Sales) within 2 hours, avoid trading
-- ⚠ Conflicting H4 bearish SMC bias vs H1 bullish SMC bias, unclear direction
-- ⚠ Price near H1 OTE long zone but lacks strong confluence for entry
-- ⚠ Spot/chart gap -0.51% — data sources may be desynced
+- ⚠ High-impact USD Core Retail Sales and Retail Sales data in 211 minutes, conflicting H4/H1 SMC biases, price in H1 premium zone but H4 discount, no clear POI near current price.
+- ⚠ Spot/chart gap -0.75% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

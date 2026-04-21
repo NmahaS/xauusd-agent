@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-04-21T08:14:47.764Z",
+  "timestamp": "2026-04-21T08:58:34.854Z",
   "symbol": "XAU/USD",
   "timeframe": "1h",
   "bias": "bearish",
-  "biasReasoning": "H4 SMC bias is bearish with last CHoCH-bearish at 4769.05, H4 trend bullish but price in discount zone, H1 SMC bias bullish but conflicting with H4, overall structure suggests bearish continuation after recent drop.",
+  "biasReasoning": "H4 SMC bias is bearish with last CHoCH-bearish at 4769.05, H4 trend bullish but price in discount zone, H1 SMC bias bullish but conflicting with H4 and price in premium zone, overall structure favors bearish continuation.",
   "setupQuality": "no-trade",
   "confluenceCount": 0,
   "confluenceFactors": [],
@@ -21,12 +21,10 @@
     "suggestedRiskPct": 0,
     "positionSizeHint": "No trade"
   },
-  "macroContext": "Real yields positive at 1.91% bearish for gold, Fear & Greed at 33 neutral, high-impact USD data (Core Retail Sales, Retail Sales) imminent within 2 hours increasing volatility.",
+  "macroContext": "Real yields positive at 1.91% bearish for gold, Fear & Greed at 33 neutral, high-impact USD data imminent.",
   "warnings": [
-    "High-impact USD news (Core Retail Sales, Retail Sales) within 2 hours, avoid trading",
-    "Conflicting H4 bearish SMC bias vs H1 bullish SMC bias, unclear direction",
-    "Price near H1 OTE long zone but lacks strong confluence for entry",
-    "Spot/chart gap -0.51% — data sources may be desynced"
+    "High-impact USD Core Retail Sales and Retail Sales data in 211 minutes, conflicting H4/H1 SMC biases, price in H1 premium zone but H4 discount, no clear POI near current price.",
+    "Spot/chart gap -0.75% — data sources may be desynced"
   ],
   "promptVersion": "v2.0"
 }

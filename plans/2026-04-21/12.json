@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-04-21T12:07:03.188Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 SMC bias is bearish (last CHoCH-bearish at 4769.05) and H4 is in premium zone (56.5%), but H1 SMC bias is bullish (last CHoCH-bullish at 4828.65) and H1 is in discount zone (32.8%). Conflicting signals between timeframes create neutral bias.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for NY kill zone after high-impact news passes"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.91% (bearish for gold), Fear & Greed index is 33 (fear) with rising trend, and DXY proxy EUR/USD is stable, providing neutral cross-asset backdrop.",
+  "warnings": [
+    "High-impact gold events (USD Core Retail Sales and Retail Sales) in 23 minutes",
+    "Conflicting H4 bearish and H1 bullish SMC biases",
+    "No clear POI near current price with sufficient confluence",
+    "High-impact gold event in 23min: USD Core Retail Sales m/m (High)",
+    "High-impact gold event in 23min: USD Retail Sales m/m (High)",
+    "Spot/chart gap -0.86% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

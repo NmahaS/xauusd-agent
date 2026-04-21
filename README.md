@@ -72,18 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-21T08:58:34.854Z
+**Generated:** 2026-04-21T10:40:27.336Z
 
-- **Bias:** bearish
+- **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** london — Wait for NY kill zone or post-news clarity
+- **Session:** london — Wait for NY kill zone (12-15 UTC) after high-impact news passes
 - **Direction:** no-trade
 
-**Macro Context:** Real yields positive at 1.91% bearish for gold, Fear & Greed at 33 neutral, high-impact USD data imminent.
+**Macro Context:** Real yields are positive at 1.91%, bearish for gold, with Fear & Greed at 33 indicating fear but trending risk-on, and high-impact USD retail sales data imminent in 110 minutes.
 
 **Warnings:**
-- ⚠ High-impact USD Core Retail Sales and Retail Sales data in 211 minutes, conflicting H4/H1 SMC biases, price in H1 premium zone but H4 discount, no clear POI near current price.
+- ⚠ High-impact gold events (USD Core Retail Sales and Retail Sales) in 110 minutes, creating volatility risk
+- ⚠ Conflicting H4 bearish and H1 bullish biases reduce setup clarity
+- ⚠ Price in premium zone on H1 and H4, limiting discount entry opportunities
+- ⚠ High-impact gold event in 110min: USD Core Retail Sales m/m (High)
+- ⚠ High-impact gold event in 110min: USD Retail Sales m/m (High)
 - ⚠ Spot/chart gap -0.75% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 

@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-04-21T14:52:15.651Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last CHoCH-bearish at 4769.05, H4 trend is bullish but RSI14=29.2 indicates oversold, H1 SMC bias is bullish but price is in deep discount and below key EMAs, creating a mixed structure favoring bearish continuation due to recent sell-off and liquidity sweep.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for clearer structure or after GBP CPI news"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.91%, bearish for gold; Fear & Greed index at 33 (fear) with rising trend neutral for gold; GBP CPI high-impact news in 908 minutes may cause volatility.",
+  "warnings": [
+    "Conflicting biases: H4 SMC bearish vs H1 SMC bullish and H4 trend bullish",
+    "Price in deep discount (-75.4% on H1) but no clear POI near current level for entry",
+    "High-impact GBP CPI news in 908 minutes within kill zone, increasing risk",
+    "Recent sharp drop to 4726.19848 suggests high volatility and lack of stable structure",
+    "Spot/chart gap 0.49% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

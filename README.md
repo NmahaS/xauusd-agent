@@ -72,22 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-21T13:45:32.719Z
+**Generated:** 2026-04-21T14:52:15.651Z
 
-- **Bias:** neutral
+- **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** ny — Wait for clearer structure alignment or after high-impact news
+- **Session:** ny — Wait for clearer structure or after GBP CPI news
 - **Direction:** no-trade
 
-**Macro Context:** Cross-asset signals are neutral: EUR/USD stable, spot gold gap -0.78%, Fear & Greed at 33 (fear) with rising trend, and unknown real yields provide no strong directional bias.
+**Macro Context:** Real yields are positive at 1.91%, bearish for gold; Fear & Greed index at 33 (fear) with rising trend neutral for gold; GBP CPI high-impact news in 908 minutes may cause volatility.
 
 **Warnings:**
-- ⚠ Conflicting H4 bearish and H1 bullish biases with no clear structure alignment
-- ⚠ High-impact USD news (Fed testimony) in 14 minutes creates excessive volatility risk
-- ⚠ No strong confluence factors (e.g., POI, P/D alignment, DXY direction) to support a trade
-- ⚠ FRED macro data unavailable — yields/real-rate missing
-- ⚠ Spot/chart gap -0.78% — data sources may be desynced
+- ⚠ Conflicting biases: H4 SMC bearish vs H1 SMC bullish and H4 trend bullish
+- ⚠ Price in deep discount (-75.4% on H1) but no clear POI near current level for entry
+- ⚠ High-impact GBP CPI news in 908 minutes within kill zone, increasing risk
+- ⚠ Recent sharp drop to 4726.19848 suggests high volatility and lack of stable structure
+- ⚠ Spot/chart gap 0.49% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

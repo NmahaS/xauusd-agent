@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-04-21T17:50:41.364Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last CHoCH-bearish at 4769.05, H4 trend neutral but in discount zone, H1 trend bearish with price below EMAs and RSI oversold at 22.9, indicating strong selling pressure.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.91%, bearish for gold; Fear & Greed index at 33 indicates fear but trending risk-on, providing neutral sentiment; DXY stable with EUR/USD at 1.17501, no strong directional pressure.",
+  "warnings": [
+    "No clear POI near current price for entry",
+    "Session is off with no kill zone active",
+    "High-impact GBP CPI news in +729m could increase volatility",
+    "H1 OTE zones are above current price, not aligned with bearish bias",
+    "H1 liquidity EQLs have been swept, reducing immediate support levels",
+    "Spot/chart gap 0.83% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

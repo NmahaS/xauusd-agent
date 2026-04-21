@@ -72,7 +72,7 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-21T20:10:50.171Z
+**Generated:** 2026-04-21T21:55:49.533Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
@@ -80,14 +80,14 @@ Each run (~60 seconds):
 - **Session:** off — Wait for London kill zone (07-10 UTC)
 - **Direction:** no-trade
 
-**Macro Context:** Real yields positive at 1.91% bearish for gold, Fear & Greed at 33 (fear) neutral, GBP CPI high-impact news in 589 minutes could increase volatility.
+**Macro Context:** Real yields positive at 1.88% bearish for gold, Fear & Greed at 33 neutral, GBP CPI high-impact news in 484 minutes.
 
 **Warnings:**
-- ⚠ Session is off with no kill zone, reducing execution quality
-- ⚠ High-impact GBP CPI news in 589 minutes, avoid trading near news
+- ⚠ Session is off with no kill zone active
+- ⚠ High-impact GBP CPI news in 484 minutes creates uncertainty
+- ⚠ Conflicting H1 bullish SMC bias vs H4 bearish SMC bias reduces confluence
 - ⚠ No clear POI near current price for high-probability entry
-- ⚠ H1 and H4 biases conflicting (H1 bullish vs H4 bearish), lacks alignment
-- ⚠ Spot/chart gap 1.72% — data sources may be desynced
+- ⚠ Spot/chart gap 0.81% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-04-22T23:00:16.447Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last BOS-bearish at 4740.75, H1 SMC bias is bearish with last CHoCH-bearish at 4773.28, and price is in a discount zone on H1, indicating potential continuation of bearish structure.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) for better liquidity and execution."
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.92%, bearish for gold; Fear & Greed index at 32 (fear) with rising trend, neutral for gold; upcoming high-impact economic data (e.g., German PMIs, USD Unemployment Claims) within 24h adds uncertainty.",
+  "warnings": [
+    "Session is off with no kill zone, reducing execution quality.",
+    "Multiple high-impact economic events scheduled within 24h, increasing volatility risk.",
+    "Insufficient confluence factors (<3) for a trade setup.",
+    "Spot/chart gap 2.17% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

@@ -72,7 +72,7 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T08:14:33.737Z
+**Generated:** 2026-04-22T08:54:27.474Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
@@ -83,8 +83,8 @@ Each run (~60 seconds):
 **Macro Context:** LLM unavailable; no macro synthesis produced.
 
 **Warnings:**
-- ⚠ LLM failure: poi.zone.0: Expected number, received string; poi.zone.1: Expected number, received string; entry.trigger: Required; entry.confirmation: Required; takeProfits.0.level: Invalid input; takeProfits.1.level: Invalid input; takeProfits.2.level: Invalid input
-- ⚠ Spot/chart gap 1.45% — data sources may be desynced
+- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required; takeProfits.2.price: Required
+- ⚠ Spot/chart gap 1.52% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

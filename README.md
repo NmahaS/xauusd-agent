@@ -72,22 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T17:50:18.394Z
+**Generated:** 2026-04-22T18:10:11.360Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and execution
+- **Session:** off — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)
 - **Direction:** no-trade
 
-**Macro Context:** USD strengthening via EUR/USD falling is bearish for gold, and positive real yields (1.88%) add bearish pressure, while Fear & Greed at 32 (fear) provides neutral safe-haven support.
+**Macro Context:** Real yields are positive at 1.88% (bearish for gold), Fear & Greed index is 32 (fear) with rising trend (neutral), and upcoming high-impact news includes USD Unemployment Claims and PMI data.
 
 **Warnings:**
 - ⚠ Current session is off with no kill zone, reducing execution quality
-- ⚠ Multiple high-impact economic events (e.g., German Flash PMIs, USD Unemployment Claims) within next 24h increase volatility risk
-- ⚠ Price is in premium zone but lacks clear POI near current level for high-probability entry
-- ⚠ Confluence factors insufficient (<3) for A/B grade setup
-- ⚠ Spot/chart gap 1.95% — data sources may be desynced
+- ⚠ Price is in premium zone (67.4%) but no clear POI near current level for entry
+- ⚠ Upcoming high-impact news (USD Unemployment Claims) within 2 hours adds uncertainty
+- ⚠ Insufficient confluence factors (<3) for a trade setup
+- ⚠ Spot/chart gap 1.93% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

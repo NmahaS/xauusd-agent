@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-04-22T18:10:11.360Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last BOS-bearish at 4740.75, H1 SMC bias is bearish with last CHoCH-bearish at 4773.28, price is in premium zone (67.4% of range), and both H4 and H1 trends are bearish/neutral-bearish.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.88% (bearish for gold), Fear & Greed index is 32 (fear) with rising trend (neutral), and upcoming high-impact news includes USD Unemployment Claims and PMI data.",
+  "warnings": [
+    "Current session is off with no kill zone, reducing execution quality",
+    "Price is in premium zone (67.4%) but no clear POI near current level for entry",
+    "Upcoming high-impact news (USD Unemployment Claims) within 2 hours adds uncertainty",
+    "Insufficient confluence factors (<3) for a trade setup",
+    "Spot/chart gap 1.93% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

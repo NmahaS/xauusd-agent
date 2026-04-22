@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-04-22T16:17:30.905Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last BOS-bearish at 4740.75, H1 SMC bias is bearish with last CHoCH-bearish at 4773.28, and price is in a premium zone on H1 (59.0% of range), indicating selling pressure.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for better liquidity and confluence."
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.88%, bearish for gold, and Fear & Greed index at 32 (fear) with a rising trend indicates neutral risk sentiment, while upcoming high-impact economic data (e.g., German PMIs, USD Unemployment Claims) within 24h adds uncertainty.",
+  "warnings": [
+    "No clear POI near current price (4729.13) for a high-probability setup; H1 OTE short zone is at 4732.04-4749.37, but price is below this and in premium, lacking strong entry confluence.",
+    "Current NY session kill zone is none, reducing execution quality; wait for London or NY kill zones for better timing.",
+    "Upcoming high-impact economic events (e.g., German PMIs, USD Unemployment Claims) within 24h increase market volatility and risk, making setups less reliable.",
+    "Spot/chart gap 2.12% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

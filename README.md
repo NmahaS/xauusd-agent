@@ -72,21 +72,21 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T21:44:27.406Z
+**Generated:** 2026-04-22T22:00:14.755Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and confluence.
+- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and execution.
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.92%, bearish for gold; Fear & Greed index at 32 (fear) with rising trend, neutral for gold; multiple high-impact economic events (e.g., German PMIs, USD Unemployment Claims) within next 24h increase volatility risk.
+**Macro Context:** Real yields are positive at 1.92%, bearish for gold; Fear & Greed index at 32 (fear) with rising trend, neutral for gold; DXY stable, neutral impact.
 
 **Warnings:**
-- ⚠ Current session is off with no kill zone, reducing execution quality.
-- ⚠ Multiple high-impact economic events within next 24h (e.g., German PMIs, USD Unemployment Claims) create high volatility risk.
-- ⚠ Conflicting P/D zones: H1 in discount (30.2%) but H4 in premium (68.5%), lacking clear alignment.
-- ⚠ No strong POI (order block or FVG) near current price for high-probability entry.
+- ⚠ Current session is off, no kill zone active, reducing execution quality.
+- ⚠ Multiple high-impact economic events (e.g., German PMIs, USD Unemployment Claims) within next 24h, increasing volatility risk.
+- ⚠ H1 P/D is in discount (30.2%), but H4 bias is bearish and price in premium, creating conflicting signals.
+- ⚠ No clear POI near current price for a high-probability entry.
 - ⚠ Spot/chart gap 1.91% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 

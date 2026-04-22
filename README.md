@@ -72,21 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T23:00:16.447Z
+**Generated:** 2026-04-22T23:56:44.047Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and execution.
+- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and confluence.
 - **Direction:** no-trade
 
 **Macro Context:** Real yields are positive at 1.92%, bearish for gold; Fear & Greed index at 32 (fear) with rising trend, neutral for gold; upcoming high-impact economic data (e.g., German PMIs, USD Unemployment Claims) within 24h adds uncertainty.
 
 **Warnings:**
-- ⚠ Session is off with no kill zone, reducing execution quality.
+- ⚠ Current session is off with no kill zone, reducing execution quality.
 - ⚠ Multiple high-impact economic events scheduled within 24h, increasing volatility risk.
-- ⚠ Insufficient confluence factors (<3) for a trade setup.
-- ⚠ Spot/chart gap 2.17% — data sources may be desynced
+- ⚠ Price is in H1 discount zone but lacks clear POI confluence for a high-probability entry.
+- ⚠ H4 is in premium zone (58.3%), conflicting with H1 discount, indicating mixed signals.
+- ⚠ Spot/chart gap 2.14% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

@@ -72,19 +72,21 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T11:00:57.952Z
+**Generated:** 2026-04-22T12:05:39.531Z
 
-- **Bias:** neutral
+- **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** london — current london session
+- **Session:** ny — Wait for price to approach a clear POI like the H1 OTE short zone [4732.04, 4749.37] or bearish FVG [4797.20-4817.73] with better confluence
 - **Direction:** no-trade
 
-**Macro Context:** LLM unavailable; no macro synthesis produced.
+**Macro Context:** Real yields are positive at 1.88%, bearish for gold, and Fear & Greed index at 32 (fear) with rising trend suggests neutral risk sentiment, while upcoming high-impact EU/UK PMI data in ~19 hours adds uncertainty.
 
 **Warnings:**
-- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.level: Invalid input; takeProfits.1.level: Invalid input; takeProfits.2.level: Invalid input
-- ⚠ Spot/chart gap 1.47% — data sources may be desynced
+- ⚠ Price is far from nearest POI (H1 OTE short zone ~4732-4749 vs current ~4756), lacking entry confluence
+- ⚠ No clear invalidation level near current price for a short setup
+- ⚠ Insufficient confluence factors (<3) for a trade; need more alignment with structure, POI, and timing
+- ⚠ Spot/chart gap 1.54% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

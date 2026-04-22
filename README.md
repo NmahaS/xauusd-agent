@@ -72,21 +72,19 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T12:05:39.531Z
+**Generated:** 2026-04-22T14:14:11.352Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** ny — Wait for price to approach a clear POI like the H1 OTE short zone [4732.04, 4749.37] or bearish FVG [4797.20-4817.73] with better confluence
+- **Session:** ny — Wait for clearer POI alignment or discount zone entry
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.88%, bearish for gold, and Fear & Greed index at 32 (fear) with rising trend suggests neutral risk sentiment, while upcoming high-impact EU/UK PMI data in ~19 hours adds uncertainty.
+**Macro Context:** Real yields are positive at 1.88%, bearish for gold; Fear & Greed index at 32 (fear) with rising trend, neutral for gold; upcoming high-impact news includes German PMIs and USD Unemployment Claims within 2 hours.
 
 **Warnings:**
-- ⚠ Price is far from nearest POI (H1 OTE short zone ~4732-4749 vs current ~4756), lacking entry confluence
-- ⚠ No clear invalidation level near current price for a short setup
-- ⚠ Insufficient confluence factors (<3) for a trade; need more alignment with structure, POI, and timing
-- ⚠ Spot/chart gap 1.54% — data sources may be desynced
+- ⚠ Price is in H1 premium zone (72.8%), not ideal for buying; H1 OTE short zone [4732.04, 4749.37] is near current price but lacks strong POI confluence; upcoming high-impact news (German PMIs, USD Unemployment Claims) within 2 hours increases volatility risk; no clear POI near current price for high-probability entry.
+- ⚠ Spot/chart gap 1.81% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-04-22T14:14:11.352Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last BOS-bearish at 4740.75, H1 SMC bias is bearish with last CHoCH-bearish at 4773.28, and price is in a premium zone on H1 (72.8% of range), indicating selling pressure.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for clearer POI alignment or discount zone entry"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.88%, bearish for gold; Fear & Greed index at 32 (fear) with rising trend, neutral for gold; upcoming high-impact news includes German PMIs and USD Unemployment Claims within 2 hours.",
+  "warnings": [
+    "Price is in H1 premium zone (72.8%), not ideal for buying; H1 OTE short zone [4732.04, 4749.37] is near current price but lacks strong POI confluence; upcoming high-impact news (German PMIs, USD Unemployment Claims) within 2 hours increases volatility risk; no clear POI near current price for high-probability entry.",
+    "Spot/chart gap 1.81% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

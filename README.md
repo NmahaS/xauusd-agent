@@ -72,7 +72,7 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T14:14:11.352Z
+**Generated:** 2026-04-22T14:52:35.147Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
@@ -80,11 +80,14 @@ Each run (~60 seconds):
 - **Session:** ny — Wait for clearer POI alignment or discount zone entry
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.88%, bearish for gold; Fear & Greed index at 32 (fear) with rising trend, neutral for gold; upcoming high-impact news includes German PMIs and USD Unemployment Claims within 2 hours.
+**Macro Context:** Dollar strengthening via EUR/USD falling is bearish for gold, positive real yields (1.88%) are bearish, and Fear & Greed index at 32 (fear) with rising trend is neutral.
 
 **Warnings:**
-- ⚠ Price is in H1 premium zone (72.8%), not ideal for buying; H1 OTE short zone [4732.04, 4749.37] is near current price but lacks strong POI confluence; upcoming high-impact news (German PMIs, USD Unemployment Claims) within 2 hours increases volatility risk; no clear POI near current price for high-probability entry.
-- ⚠ Spot/chart gap 1.81% — data sources may be desynced
+- ⚠ No clear POI near current price for a high-probability setup
+- ⚠ H1 is in premium zone (66.5%) but lacks discount zone entry for buys
+- ⚠ H4 discount zone (41.7%) is far from current price, reducing immediate trade opportunity
+- ⚠ Multiple high-impact news events (e.g., German PMI, USD Unemployment Claims) within next 24h add uncertainty
+- ⚠ Spot/chart gap 1.95% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

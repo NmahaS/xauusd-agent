@@ -72,21 +72,19 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T06:07:51.841Z
+**Generated:** 2026-04-22T08:14:33.737Z
 
-- **Bias:** bearish
+- **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) for better liquidity and confluence.
+- **Session:** london — NOW (kill zone active)
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.88%, bearish for gold; Fear & Greed index at 32 (fear) with rising trend suggests neutral risk sentiment, and DXY proxy EUR/USD is stable, providing limited directional cues.
+**Macro Context:** LLM unavailable; no macro synthesis produced.
 
 **Warnings:**
-- ⚠ Current session is Asia with no kill zone, reducing execution quality.
-- ⚠ Price is in premium zones on H4 and H1, but no clear POI near current level for a short entry.
-- ⚠ Insufficient confluence factors (<3) for a trade setup; wait for London session and better alignment.
-- ⚠ Spot/chart gap 1.40% — data sources may be desynced
+- ⚠ LLM failure: poi.zone.0: Expected number, received string; poi.zone.1: Expected number, received string; entry.trigger: Required; entry.confirmation: Required; takeProfits.0.level: Invalid input; takeProfits.1.level: Invalid input; takeProfits.2.level: Invalid input
+- ⚠ Spot/chart gap 1.45% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

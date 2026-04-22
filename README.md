@@ -72,23 +72,21 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T03:36:22.080Z
+**Generated:** 2026-04-22T06:07:51.841Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) for better liquidity and confluence
+- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) for better liquidity and confluence.
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.88%, bearish for gold, and Fear & Greed index at 32 (fear) with rising trend indicates neutral risk sentiment, while GBP CPI high-impact news in 144 minutes adds uncertainty.
+**Macro Context:** Real yields are positive at 1.88%, bearish for gold; Fear & Greed index at 32 (fear) with rising trend suggests neutral risk sentiment, and DXY proxy EUR/USD is stable, providing limited directional cues.
 
 **Warnings:**
-- ⚠ Current session is Asia with no kill zone, reducing execution quality
-- ⚠ High-impact GBP CPI news in 144 minutes creates volatility risk
-- ⚠ Price is in H1 premium zone but lacks clear POI near current level for entry
-- ⚠ H4 bias bearish but H1 OTE short zone (4747.70-4769.28) not aligned with current price at 4761.11
-- ⚠ Insufficient confluence factors (<3) for a trade setup
-- ⚠ Spot/chart gap 1.43% — data sources may be desynced
+- ⚠ Current session is Asia with no kill zone, reducing execution quality.
+- ⚠ Price is in premium zones on H4 and H1, but no clear POI near current level for a short entry.
+- ⚠ Insufficient confluence factors (<3) for a trade setup; wait for London session and better alignment.
+- ⚠ Spot/chart gap 1.40% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

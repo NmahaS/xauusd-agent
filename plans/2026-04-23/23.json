@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-23T23:00:40.929Z",
+  "timestamp": "2026-04-23T23:58:01.047Z",
   "symbol": "XAU/USD",
   "timeframe": "1h",
   "bias": "neutral",
@@ -23,9 +23,8 @@
   },
   "macroContext": "LLM unavailable; no macro synthesis produced.",
   "warnings": [
-    "LLM failure: poi.reasoning: Required; entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required",
-    "FRED macro data unavailable — yields/real-rate missing",
-    "Spot/chart gap 1.11% — data sources may be desynced"
+    "LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.level: Invalid input; takeProfits.1.level: Invalid input",
+    "Spot/chart gap 1.05% — data sources may be desynced"
   ],
   "promptVersion": "v2.0"
 }

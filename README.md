@@ -72,21 +72,19 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-23T08:15:40.610Z
+**Generated:** 2026-04-23T09:00:08.300Z
 
-- **Bias:** bearish
+- **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** london — Wait for clearer POI or structure confirmation
+- **Session:** london — NOW (kill zone active)
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.92%, bearish for gold; Fear & Greed index is neutral at 46 with rising trend, indicating risk-on sentiment; upcoming high-impact GBP PMI data in 14 minutes adds volatility risk.
+**Macro Context:** LLM unavailable; no macro synthesis produced.
 
 **Warnings:**
-- ⚠ No clear POI near current price for entry
-- ⚠ High-impact GBP PMI data imminent in 14 minutes, increasing volatility
-- ⚠ Conflicting signals: bearish bias but price in discount zones may limit downside momentum
-- ⚠ Spot/chart gap 0.55% — data sources may be desynced
+- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required
+- ⚠ Spot/chart gap 0.85% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

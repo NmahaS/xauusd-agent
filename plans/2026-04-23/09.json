@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-04-23T09:00:08.300Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "LLM analysis failed; fallback no-trade plan returned.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "NOW (kill zone active)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "n/a (no-trade)"
+  },
+  "macroContext": "LLM unavailable; no macro synthesis produced.",
+  "warnings": [
+    "LLM failure: entry.trigger: Required; entry.confirmation: Required",
+    "Spot/chart gap 0.85% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

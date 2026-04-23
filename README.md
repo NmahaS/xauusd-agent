@@ -72,18 +72,19 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-23T16:56:46.767Z
+**Generated:** 2026-04-23T17:41:55.336Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** ny — current ny session
+- **Session:** off — wait for next London session
 - **Direction:** no-trade
 
 **Macro Context:** LLM unavailable; no macro synthesis produced.
 
 **Warnings:**
 - ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.level: Invalid input; takeProfits.1.level: Invalid input
+- ⚠ Spot/chart gap 1.04% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

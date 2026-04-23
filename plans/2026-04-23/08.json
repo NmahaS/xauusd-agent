@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-04-23T08:15:40.610Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last event BOS-bearish at 4740.75, H1 SMC bias is bearish with last event CHoCH-bearish at 4773.28, and price is in discount zones on both H4 and H1, indicating bearish structure.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "Wait for clearer POI or structure confirmation"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.92%, bearish for gold; Fear & Greed index is neutral at 46 with rising trend, indicating risk-on sentiment; upcoming high-impact GBP PMI data in 14 minutes adds volatility risk.",
+  "warnings": [
+    "No clear POI near current price for entry",
+    "High-impact GBP PMI data imminent in 14 minutes, increasing volatility",
+    "Conflicting signals: bearish bias but price in discount zones may limit downside momentum",
+    "Spot/chart gap 0.55% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

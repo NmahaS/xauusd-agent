@@ -72,7 +72,7 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-23T21:58:12.357Z
+**Generated:** 2026-04-23T23:00:40.929Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
@@ -83,8 +83,9 @@ Each run (~60 seconds):
 **Macro Context:** LLM unavailable; no macro synthesis produced.
 
 **Warnings:**
-- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required
-- ⚠ Spot/chart gap 1.09% — data sources may be desynced
+- ⚠ LLM failure: poi.reasoning: Required; entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required
+- ⚠ FRED macro data unavailable — yields/real-rate missing
+- ⚠ Spot/chart gap 1.11% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

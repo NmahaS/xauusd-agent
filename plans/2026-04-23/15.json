@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-23T15:09:00.120Z",
+  "timestamp": "2026-04-23T15:21:01.501Z",
   "symbol": "XAU/USD",
   "timeframe": "1h",
   "bias": "neutral",
@@ -23,8 +23,7 @@
   },
   "macroContext": "LLM unavailable; no macro synthesis produced.",
   "warnings": [
-    "LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.level: Invalid input; takeProfits.1.level: Invalid input; takeProfits.2.level: Invalid input",
-    "Spot/chart gap 0.31% — data sources may be desynced"
+    "LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required"
   ],
   "promptVersion": "v2.0"
 }

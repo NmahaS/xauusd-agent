@@ -72,22 +72,19 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-23T19:37:17.324Z
+**Generated:** 2026-04-23T21:02:05.061Z
 
-- **Bias:** bearish
+- **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for next London session (07-10 UTC)
+- **Session:** off — wait for next London session
 - **Direction:** no-trade
 
-**Macro Context:** Dollar strengthening via EUR/USD falling and positive real yields (1.92%) are bearish for gold. Fear & Greed neutral at 46, no strong safe-haven bid.
+**Macro Context:** LLM unavailable; no macro synthesis produced.
 
 **Warnings:**
-- ⚠ No clear POI near current price for a high-probability entry.
-- ⚠ H1 bullish divergence conflicts with bearish structure, reducing confidence.
-- ⚠ Outside kill zone session; low liquidity may cause erratic moves.
-- ⚠ GBP Retail Sales high-impact event in 6h; avoid holding through news.
-- ⚠ Spot/chart gap 1.12% — data sources may be desynced
+- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.level: Invalid input; takeProfits.1.level: Invalid input
+- ⚠ Spot/chart gap 1.10% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

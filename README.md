@@ -72,20 +72,19 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-23T12:05:56.292Z
+**Generated:** 2026-04-23T15:09:00.120Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** ny — NOW (kill zone active)
+- **Session:** ny — current ny session
 - **Direction:** no-trade
 
 **Macro Context:** LLM unavailable; no macro synthesis produced.
 
 **Warnings:**
-- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required; takeProfits.2.price: Required
-- ⚠ High-impact gold event in 24min: USD Unemployment Claims (Medium)
-- ⚠ Spot/chart gap 0.32% — data sources may be desynced
+- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.level: Invalid input; takeProfits.1.level: Invalid input; takeProfits.2.level: Invalid input
+- ⚠ Spot/chart gap 0.31% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

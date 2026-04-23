@@ -72,22 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T23:56:44.047Z
+**Generated:** 2026-04-23T03:40:24.357Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for London kill zone (07-10 UTC) for better liquidity and confluence.
+- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) for better liquidity and confluence
 - **Direction:** no-trade
 
-**Macro Context:** Real yields are positive at 1.92%, bearish for gold; Fear & Greed index at 32 (fear) with rising trend, neutral for gold; upcoming high-impact economic data (e.g., German PMIs, USD Unemployment Claims) within 24h adds uncertainty.
+**Macro Context:** Real yields are positive at 1.92% (bearish for gold), Fear & Greed index is neutral at 46, and upcoming high-impact economic data (e.g., German PMIs, USD Unemployment Claims) within 2 hours adds uncertainty.
 
 **Warnings:**
-- ⚠ Current session is off with no kill zone, reducing execution quality.
-- ⚠ Multiple high-impact economic events scheduled within 24h, increasing volatility risk.
-- ⚠ Price is in H1 discount zone but lacks clear POI confluence for a high-probability entry.
-- ⚠ H4 is in premium zone (58.3%), conflicting with H1 discount, indicating mixed signals.
-- ⚠ Spot/chart gap 2.14% — data sources may be desynced
+- ⚠ Current session is Asia with no kill zone, reducing execution quality
+- ⚠ Price is in a deep discount zone on H1 (-46.9%) but lacks clear POI for entry
+- ⚠ Multiple high-impact economic events within 2 hours (e.g., German PMIs at +230m) increase volatility risk
+- ⚠ H1 OTE short zone [4753.65, 4761.47] is far from current price (~50 points away), no immediate setup
+- ⚠ Spot/chart gap 0.90% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

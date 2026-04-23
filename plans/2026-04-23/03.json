@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-04-23T03:40:24.357Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last event BOS-bearish at 4740.75, H1 SMC bias is bearish with last event CHoCH-bearish at 4773.28, and price is trading below key EMAs (EMA20=4733.06, EMA50=4750.62) on H1, indicating bearish structure.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for better liquidity and confluence"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.92% (bearish for gold), Fear & Greed index is neutral at 46, and upcoming high-impact economic data (e.g., German PMIs, USD Unemployment Claims) within 2 hours adds uncertainty.",
+  "warnings": [
+    "Current session is Asia with no kill zone, reducing execution quality",
+    "Price is in a deep discount zone on H1 (-46.9%) but lacks clear POI for entry",
+    "Multiple high-impact economic events within 2 hours (e.g., German PMIs at +230m) increase volatility risk",
+    "H1 OTE short zone [4753.65, 4761.47] is far from current price (~50 points away), no immediate setup",
+    "Spot/chart gap 0.90% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

@@ -72,19 +72,19 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-24T06:18:43.202Z
+**Generated:** 2026-04-24T08:28:37.018Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** asia — wait for London open (07:00 UTC)
+- **Session:** london — NOW (kill zone active)
 - **Direction:** no-trade
 
 **Macro Context:** LLM unavailable; no macro synthesis produced.
 
 **Warnings:**
-- ⚠ LLM failure: poi.zone.0: Expected number, received string; poi.zone.1: Expected number, received string; entry.trigger: Required; entry.confirmation: Required
-- ⚠ Spot/chart gap 0.57% — data sources may be desynced
+- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.level: Invalid input; takeProfits.1.level: Invalid input
+- ⚠ Spot/chart gap 0.33% — data sources may be desynced
 <!-- LATEST_PLAN_END -->
 
 ---

@@ -72,7 +72,7 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-24T12:55:19.699Z
+**Generated:** 2026-04-24T14:02:24.620Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
@@ -83,7 +83,8 @@ Each run (~60 seconds):
 **Macro Context:** LLM unavailable; no macro synthesis produced.
 
 **Warnings:**
-- ⚠ LLM failure: poi.zone: Expected array, received string; poi.reasoning: Required; entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required
+- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.level: Invalid input; takeProfits.1.level: Invalid input
+- ⚠ FRED macro data unavailable — yields/real-rate missing
 <!-- LATEST_PLAN_END -->
 
 ---

@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-04-24T21:01:42.218Z",
+  "timestamp": "2026-04-24T21:58:09.937Z",
   "symbol": "XAU/USD",
   "timeframe": "1h",
-  "bias": "bearish",
-  "biasReasoning": "H4 bias is bearish with BOS-bearish and price in discount, but H1 shows a bullish CHoCH and price in premium. Conflicting timeframes suggest a retracement within the larger bearish trend. H4 EMA20/50 bearish cross, RSI below 50, and positive real yields support bearish bias.",
+  "bias": "neutral",
+  "biasReasoning": "LLM analysis failed; fallback no-trade plan returned.",
   "setupQuality": "no-trade",
   "confluenceCount": 0,
   "confluenceFactors": [],
@@ -15,19 +15,15 @@
   "invalidation": null,
   "session": {
     "current": "off",
-    "recommendedExecutionWindow": "Wait for next London kill zone (07-10 UTC)"
+    "recommendedExecutionWindow": "wait for next London session"
   },
   "risk": {
     "suggestedRiskPct": 0,
-    "positionSizeHint": "No trade"
+    "positionSizeHint": "n/a (no-trade)"
   },
-  "macroContext": "Positive real yields (1.92%) and rising US 10Y yield are bearish for gold. Fear & Greed at 39 (fear) but trending risk-on, providing neutral support. Dollar stable, no strong cross-asset catalyst.",
+  "macroContext": "LLM unavailable; no macro synthesis produced.",
   "warnings": [
-    "Conflicting H4 bearish vs H1 bullish structure",
-    "Price in H1 premium zone, not ideal for longs; H4 discount zone not yet reached for shorts",
-    "No clear POI near current price with sufficient confluence",
-    "Out of kill zone session; low liquidity",
-    "Upcoming Trump speech (medium impact) may cause volatility"
+    "LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required"
   ],
   "promptVersion": "v2.0"
 }

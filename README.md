@@ -72,19 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-24T19:08:48.138Z
+**Generated:** 2026-04-24T21:01:42.218Z
 
-- **Bias:** neutral
+- **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — wait for next London session
+- **Session:** off — Wait for next London kill zone (07-10 UTC)
 - **Direction:** no-trade
 
-**Macro Context:** LLM unavailable; no macro synthesis produced.
+**Macro Context:** Positive real yields (1.92%) and rising US 10Y yield are bearish for gold. Fear & Greed at 39 (fear) but trending risk-on, providing neutral support. Dollar stable, no strong cross-asset catalyst.
 
 **Warnings:**
-- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required
-- ⚠ Spot/chart gap -0.35% — data sources may be desynced
+- ⚠ Conflicting H4 bearish vs H1 bullish structure
+- ⚠ Price in H1 premium zone, not ideal for longs; H4 discount zone not yet reached for shorts
+- ⚠ No clear POI near current price with sufficient confluence
+- ⚠ Out of kill zone session; low liquidity
+- ⚠ Upcoming Trump speech (medium impact) may cause volatility
 <!-- LATEST_PLAN_END -->
 
 ---

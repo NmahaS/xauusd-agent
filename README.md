@@ -72,18 +72,20 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-24T09:07:17.456Z
+**Generated:** 2026-04-24T11:18:13.179Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** london — NOW (kill zone active)
+- **Session:** london — current london session
 - **Direction:** no-trade
 
 **Macro Context:** LLM unavailable; no macro synthesis produced.
 
 **Warnings:**
 - ⚠ LLM failure: poi.type: Required; poi.zone: Expected array, received string; entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required
+- ⚠ High-impact gold event in 72min: CAD Core Retail Sales m/m (Medium)
+- ⚠ High-impact gold event in 72min: CAD Retail Sales m/m (Medium)
 <!-- LATEST_PLAN_END -->
 
 ---

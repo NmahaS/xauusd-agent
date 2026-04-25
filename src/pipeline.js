@@ -1,9 +1,8 @@
 import { config, configIsFull } from './config.js';
-import { fetchDxy } from './data/dxy.js';
-import { fetchMetals } from './data/metals.js';
-import { fetchFredMacro } from './data/fred.js';
+import { fetchAllIGData } from './data/ig.js';
+import { fetchFredMacro as fetchMacroData } from './data/fred.js';
 import { fetchSentiment } from './data/sentiment.js';
-import { fetchCalendar } from './data/calendar.js';
+import { fetchCalendar as fetchEconomicCalendar } from './data/calendar.js';
 
 import { computeClassicalIndicators } from './indicators/classical.js';
 import { detectSession, computeSessionLevels } from './indicators/session.js';
@@ -34,17 +33,21 @@ function smcForTimeframe(candles, n) {
   return { structure, fvgs, orderBlocks, liquidity, pd };
 }
 
-function buildCrossAssetWarnings({ dxy, metals, fred, sentiment }) {
+function buildCrossAssetWarnings({ dxy, fred, sentiment, marketStatus, spread, h1Count, h4Count }) {
   const warnings = [];
-  if (!dxy?.ok) warnings.push('DXY data unavailable — cross-asset context reduced');
-  if (!metals?.ok) warnings.push('Spot metals unavailable — Au/Ag & Au/Pt ratios missing');
+  if (!dxy?.ok) warnings.push('DXY proxy unavailable — cross-asset context reduced');
   if (!fred?.ok) warnings.push('FRED macro data unavailable — yields/real-rate missing');
   if (!sentiment?.ok) warnings.push('Fear & Greed unavailable');
-  if (metals?.auAg != null && metals.auAg > 90) {
-    warnings.push(`Au/Ag ratio elevated (${metals.auAg.toFixed(1)}) — gold extended vs silver`);
+  if (marketStatus === 'EDITS_ONLY') {
+    warnings.push('IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.');
+  } else if (marketStatus && marketStatus !== 'TRADEABLE') {
+    warnings.push(`IG market status: ${marketStatus} — execution may be restricted`);
   }
-  if (metals?.spotVsChartPct != null && Math.abs(metals.spotVsChartPct) > 2.0) {
-    warnings.push(`Spot/chart gap ${metals.spotVsChartPct.toFixed(2)}% (normal during volatile sessions)`);
+  if (spread != null && spread > 0.5) {
+    warnings.push(`Wide IG spread (${spread.toFixed(2)}) — confirm before market orders`);
+  }
+  if (h1Count != null && h1Count < 50) {
+    warnings.push(`Limited history (${h1Count} H1 / ${h4Count} H4 candles) — SMC and indicators degraded`);
   }
   return warnings;
 }
@@ -62,23 +65,25 @@ export async function runPipeline() {
   console.log(`\n=== XAUUSD Agent run @ ${runTimestamp} ===`);
   console.log(`symbol=${config.SYMBOL} exec=${config.EXECUTION_TF} bias=${config.BIAS_TF} dryRun=${config.DRY_RUN}`);
 
-  // Phase 1: parallel fetch of all data sources (silver now comes exclusively from metals.js)
+  // Phase 1: parallel fetch — IG (price/candles/sentiment/dxy) + macro + alt-sentiment + calendar
   const tFetch = time();
-  const [dxyResult, metalsResult, fredResult, sentimentResult, calendarResult] = await Promise.all([
-    fetchDxy(),
-    fetchMetals().catch(err => ({ ok: false, error: err.message })),
-    fetchFredMacro(),
+  const [igData, macro, altSentiment, calendar] = await Promise.all([
+    fetchAllIGData(),
+    fetchMacroData(config.FRED_API_KEY),
     fetchSentiment(),
-    fetchCalendar(),
+    fetchEconomicCalendar(),
   ]);
-  const xauResult = { h1: { candles: [] }, h4: { candles: [] } };
+
+  const { h1Candles, h4Candles, currentPrice, spread, marketStatus, igSentiment, dxy, dailyHigh, dailyLow } = igData;
   console.log(`[pipeline] fetch phase done in ${time() - tFetch}ms`);
 
-  const h1Candles = xauResult.h1.candles;
-  const h4Candles = xauResult.h4.candles;
-
-  if (!h1Candles.length || !h4Candles.length) {
-    console.error('[pipeline] FATAL: no XAU candles fetched; cannot continue');
+  if (h1Candles.length < 50 || h4Candles.length < 50) {
+    console.warn(
+      `[pipeline] reduced history: H1=${h1Candles.length} H4=${h4Candles.length} — continuing with degraded analysis`
+    );
+  }
+  if (h1Candles.length === 0 || h4Candles.length === 0) {
+    console.error('[pipeline] FATAL: no XAU candles fetched from IG; cannot continue');
     throw new Error('No XAU candles — aborting run');
   }
 
@@ -86,20 +91,6 @@ export async function runPipeline() {
   await resolveOpenTrades(h1Candles).catch(err =>
     console.warn(`[outcome] resolution error: ${err.message}`)
   );
-
-  // Refresh spot vs chart gap now that we have chart prices
-  let metals = metalsResult;
-  if (metals?.ok && h1Candles.length > 0) {
-    const chartGold = h1Candles[h1Candles.length - 1].close;
-    const diff = metals.gold - chartGold;
-    const gapPct = (diff / chartGold) * 100;
-    metals = {
-      ...metals,
-      spotVsChart: diff,
-      spotVsChartPct: gapPct,
-    };
-    console.log(`[metals] Spot/chart gap ${gapPct.toFixed(2)}% (normal during volatile sessions)`);
-  }
 
   // Phase 2: indicators + SMC
   const tCompute = time();
@@ -125,11 +116,16 @@ export async function runPipeline() {
     smcH4,
     session,
     sessionLevels,
-    dxy: dxyResult,
-    metals,
-    fred: fredResult,
-    sentiment: sentimentResult,
-    calendar: calendarResult,
+    dxy,
+    currentPrice,
+    spread,
+    dailyHigh,
+    dailyLow,
+    marketStatus,
+    igSentiment,
+    fred: macro,
+    sentiment: altSentiment,
+    calendar,
   };
 
   const tLlm = time();
@@ -138,8 +134,11 @@ export async function runPipeline() {
 
   // Merge warnings from calendar + cross-asset into the plan
   const extraWarnings = [
-    ...(calendarResult?.warnings || []),
-    ...buildCrossAssetWarnings({ dxy: dxyResult, metals, fred: fredResult, sentiment: sentimentResult }),
+    ...(calendar?.warnings || []),
+    ...buildCrossAssetWarnings({
+      dxy, fred: macro, sentiment: altSentiment, marketStatus, spread,
+      h1Count: h1Candles.length, h4Count: h4Candles.length,
+    }),
   ];
   const mergedPlan = {
     ...plan,
@@ -159,19 +158,21 @@ export async function runPipeline() {
     }
   } else {
     console.log('[pipeline] DRY_RUN — skipping file writes');
-    // Still compute summary from any plans already on disk (for footer preview)
     dailySummary = await updateDailySummary(runTimestamp, { save: false }).catch(() => null);
   }
   console.log(`[pipeline] write phase done in ${time() - tWrite}ms`);
 
   const tNotify = time();
   const telegramText = formatPlanForTelegram(mergedPlan, {
-    dxy: dxyResult,
-    metals,
-    sentiment: sentimentResult,
-    fred: fredResult,
-    calendar: calendarResult,
+    dxy,
+    sentiment: altSentiment,
+    fred: macro,
+    calendar,
     session,
+    igSentiment,
+    currentPrice,
+    spread,
+    marketStatus,
     dailySummary,
   });
   console.log(`[telegram] SENDING NOW (bias=${mergedPlan.bias} setup=${mergedPlan.setupQuality} dryRun=${config.DRY_RUN})`);

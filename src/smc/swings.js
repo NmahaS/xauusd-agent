@@ -3,7 +3,8 @@
 // Pivot low: mirror.
 export function detectSwings(candles, n = 5) {
   const swings = [];
-  if (!Array.isArray(candles) || candles.length < 2 * n + 1) return swings;
+  if (!Array.isArray(candles) || candles.length < 20) return swings;
+  if (candles.length < 2 * n + 1) return swings;
 
   for (let i = n; i < candles.length - n; i++) {
     const c = candles[i];

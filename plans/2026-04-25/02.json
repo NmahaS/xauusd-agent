@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-04-25T02:53:13.546Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 structure is neutral with no recent BOS/CHoCH; price is in extreme premium zone (206% of range) but no clear POI near current price. H1 shows bullish FVGs but no active OBs. Cross-assets are mixed: EUR/USD flat, real yields rising (bearish), fear index at 31 (fear) which is neutral. No high-impact news within 2 hours. Overall conflicting signals warrant no trade.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "US 10Y yield rising (4.34%), real yields positive (1.92%) bearish for gold; EUR/USD flat (neutral); Fear & Greed at 31 (fear) neutral.",
+  "warnings": [
+    "H4 structure neutral, no clear bias",
+    "Price in extreme premium zone (206% of range) but no POI near",
+    "No active order blocks within 20 points",
+    "Current session is Asia kill zone not active",
+    "Cross-asset signals mixed",
+    "IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

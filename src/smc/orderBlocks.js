@@ -6,6 +6,7 @@ import { detectSwings } from './swings.js';
 // The impulse must contain >=1 bullish FVG. Zone = [low, high] of the OB candle.
 // Active = not yet traded through. Returns top 3 by proximity to current price.
 export function detectOrderBlocks(candles, n = 5) {
+  if (!Array.isArray(candles) || candles.length < 20) return [];
   const swings = detectSwings(candles, n);
   if (swings.length < 2) return [];
 

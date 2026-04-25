@@ -72,21 +72,24 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-22T13:06:16.555Z
+**Generated:** 2026-04-25T02:53:13.546Z
 
-- **Bias:** bearish
+- **Bias:** neutral
 - **Setup Quality:** no-trade
-- **Confluence:** 2 — H4 bearish structure (BOS intact); H1 bearish structure (CHoCH intact)
-- **Session:** ny — Wait for price to reach a premium zone or bearish POI within NY kill zone
+- **Confluence:** 0 — none
+- **Session:** asia — Wait for London kill zone (07:00 UTC)
 - **Direction:** no-trade
 
-**Macro Context:** EUR/USD falling signals dollar strength, real yields unknown, F&G neutral — bearish backdrop for gold.
+**Macro Context:** US 10Y yield rising (4.34%), real yields positive (1.92%) bearish for gold; EUR/USD flat (neutral); Fear & Greed at 31 (fear) neutral.
 
 **Warnings:**
-- ⚠ Price is in discount zone on H4 (44.8%) and premium on H1 (71.6%), creating conflicting zone signals
-- ⚠ No active bearish order blocks or FVGs within 20 points of current price (4742.10) for short setup
-- ⚠ Price not in OTE short zone (4732.04-4749.37) as current price is at the upper edge, lacking clear entry confluence
-- ⚠ FRED macro data unavailable — yields/real-rate missing
+- ⚠ H4 structure neutral, no clear bias
+- ⚠ Price in extreme premium zone (206% of range) but no POI near
+- ⚠ No active order blocks within 20 points
+- ⚠ Current session is Asia kill zone not active
+- ⚠ Cross-asset signals mixed
+- ⚠ IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.
+- ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->
 
 ---

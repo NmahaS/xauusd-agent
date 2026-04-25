@@ -4,6 +4,9 @@ import { detectSwings } from './swings.js';
 // BOS (Break of Structure): price breaks the most recent same-direction swing level, trend continues.
 // CHoCH (Change of Character): price breaks against prior trend — first signal of reversal.
 export function analyzeStructure(candles, n = 5) {
+  if (!Array.isArray(candles) || candles.length < 20) {
+    return { bias: 'neutral', lastEvent: null, eventCandle: null, brokenLevel: null, swings: [] };
+  }
   const swings = detectSwings(candles, n);
   if (swings.length === 0) {
     return { bias: 'neutral', lastEvent: null, eventCandle: null, brokenLevel: null, swings };

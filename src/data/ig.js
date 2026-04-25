@@ -1,0 +1,273 @@
+import { config } from '../config.js';
+
+const DEMO_BASE = 'https://demo-api.ig.com/gateway/deal';
+const LIVE_BASE = 'https://api.ig.com/gateway/deal';
+
+const GOLD_EPIC_FALLBACKS = [
+  'CS.D.USCGC.TODAY.IP',
+  'CS.D.CFDGOLD.CFD.IP',
+  'IX.D.XAUUSD.MINI.IP',
+  'MT.D.GC.Month1.IP',
+];
+const EURUSD_EPIC_FALLBACKS = [
+  'CS.D.EURUSD.TODAY.IP',
+  'CS.D.EURUSD.CFD.IP',
+  'CS.D.EURUSD.MINI.IP',
+];
+
+function baseUrl() {
+  return config.IG_DEMO ? DEMO_BASE : LIVE_BASE;
+}
+
+function parseSnapshotTime(s) {
+  // IG returns "2026/04/25 02:00:00:000" — millis separated by colon, not dot
+  const m = s.match(/^(\d{4})\/(\d{2})\/(\d{2})\s+(\d{2}):(\d{2}):(\d{2})(?::(\d{3}))?$/);
+  if (!m) return new Date(s).toISOString();
+  const [, y, mo, d, h, mi, se, ms = '000'] = m;
+  return `${y}-${mo}-${d}T${h}:${mi}:${se}.${ms}Z`;
+}
+
+function mid(bid, ask) {
+  if (bid == null || ask == null) return null;
+  return (Number(bid) + Number(ask)) / 2;
+}
+
+function igPriceToCandle(p) {
+  return {
+    time: parseSnapshotTime(p.snapshotTime),
+    open: mid(p.openPrice?.bid, p.openPrice?.ask),
+    high: mid(p.highPrice?.bid, p.highPrice?.ask),
+    low: mid(p.lowPrice?.bid, p.lowPrice?.ask),
+    close: mid(p.closePrice?.bid, p.closePrice?.ask),
+    volume: p.lastTradedVolume != null ? Number(p.lastTradedVolume) : 0,
+  };
+}
+
+async function igLogin() {
+  const url = `${baseUrl()}/session`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'X-IG-API-KEY': config.IG_API_KEY,
+      'Content-Type': 'application/json',
+      Accept: 'application/json; charset=UTF-8',
+      Version: '2',
+    },
+    body: JSON.stringify({
+      identifier: config.IG_USERNAME,
+      password: config.IG_PASSWORD,
+      encryptedPassword: false,
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`IG login HTTP ${res.status}: ${body.slice(0, 200)}`);
+  }
+  const cst = res.headers.get('cst') || res.headers.get('CST');
+  const xst = res.headers.get('x-security-token') || res.headers.get('X-SECURITY-TOKEN');
+  if (!cst || !xst) {
+    throw new Error('IG login: missing CST / X-SECURITY-TOKEN headers');
+  }
+  return { cst, xst, env: config.IG_DEMO ? 'demo' : 'live' };
+}
+
+async function igGet(path, session, version) {
+  const url = `${baseUrl()}${path}`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'X-IG-API-KEY': config.IG_API_KEY,
+      CST: session.cst,
+      'X-SECURITY-TOKEN': session.xst,
+      Accept: 'application/json; charset=UTF-8',
+      Version: String(version),
+    },
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`IG GET ${path} HTTP ${res.status}: ${body.slice(0, 200)}`);
+  }
+  return res.json();
+}
+
+async function epicExists(session, epic) {
+  try {
+    await igGet(`/markets/${epic}`, session, 3);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function resolveEpicFromList(session, fallbacks, label) {
+  for (const epic of fallbacks) {
+    if (await epicExists(session, epic)) {
+      console.log(`[ig] ${label} epic resolved via fallback list: ${epic}`);
+      return epic;
+    }
+  }
+  return null;
+}
+
+async function discoverGoldEpic(session) {
+  const fromList = await resolveEpicFromList(session, GOLD_EPIC_FALLBACKS, 'gold');
+  if (fromList) return fromList;
+  // Last resort: search the markets catalog for "Spot Gold".
+  try {
+    const json = await igGet(`/markets?searchTerm=${encodeURIComponent('Spot Gold')}`, session, 1);
+    const candidates = (json.markets || []).filter(m =>
+      /gold/i.test(m.instrumentName || '') && !/silver|platinum|mining/i.test(m.instrumentName || '')
+    );
+    const tradeable = candidates.find(m => m.marketStatus === 'TRADEABLE') || candidates[0];
+    if (tradeable?.epic) {
+      console.log(`[ig] gold epic resolved via search: ${tradeable.epic} (${tradeable.instrumentName})`);
+      return tradeable.epic;
+    }
+  } catch (err) {
+    console.warn(`[ig] gold epic search failed: ${err.message}`);
+  }
+  throw new Error('IG: could not resolve a tradeable Spot Gold epic on this account');
+}
+
+async function discoverEurUsdEpic(session) {
+  const fromList = await resolveEpicFromList(session, EURUSD_EPIC_FALLBACKS, 'EUR/USD');
+  if (fromList) return fromList;
+  console.warn('[ig] EUR/USD epic not found on account — DXY proxy will be unavailable');
+  return null;
+}
+
+async function fetchCandles(session, epic, resolution, max) {
+  const path = `/prices/${epic}?resolution=${resolution}&max=${max}`;
+  const json = await igGet(path, session, 3);
+  const prices = Array.isArray(json.prices) ? json.prices : [];
+  return prices.map(igPriceToCandle).filter(c => c.close != null);
+}
+
+async function fetchCandlesSafe(session, epic, resolution, max, label) {
+  try {
+    const candles = await fetchCandles(session, epic, resolution, max);
+    console.log(`[ig] ${label} ok (${candles.length} candles)`);
+    return candles;
+  } catch (err) {
+    console.warn(`[ig] ${label} failed: ${err.message}`);
+    return [];
+  }
+}
+
+async function fetchMarketDetails(session, epic) {
+  const json = await igGet(`/markets/${epic}`, session, 3);
+  const snap = json.snapshot || {};
+  const bid = snap.bid;
+  const offer = snap.offer;
+  return {
+    bid,
+    offer,
+    mid: mid(bid, offer),
+    spread: bid != null && offer != null ? Number(offer) - Number(bid) : null,
+    marketStatus: snap.marketStatus || 'UNKNOWN',
+    high: snap.high != null ? Number(snap.high) : null,
+    low: snap.low != null ? Number(snap.low) : null,
+    netChange: snap.netChange != null ? Number(snap.netChange) : null,
+    percentageChange: snap.percentageChange != null ? Number(snap.percentageChange) : null,
+    updateTime: snap.updateTime,
+  };
+}
+
+async function fetchIGClientSentiment(session, marketId) {
+  const json = await igGet(`/clientsentiment/${marketId}`, session, 1);
+  const longPct = json.longPositionPercentage != null ? Number(json.longPositionPercentage) : null;
+  const shortPct = json.shortPositionPercentage != null ? Number(json.shortPositionPercentage) : null;
+
+  // When the market is closed IG returns 0/0 — that's not a real "balanced" reading.
+  if (longPct === 0 && shortPct === 0) {
+    return { longPct, shortPct, signal: 'unknown', note: 'Market closed — no live sentiment' };
+  }
+
+  let signal = 'neutral';
+  if (longPct != null) {
+    if (longPct >= 70) signal = 'contrarian-bearish';
+    else if (longPct <= 30) signal = 'contrarian-bullish';
+  }
+  return { longPct, shortPct, signal };
+}
+
+function computeDxyProxyFromEurUsd(eurUsdCandles) {
+  // EUR/USD is the dominant DXY component (~57% weight). USD strength ≈ inverse of EUR/USD.
+  if (!eurUsdCandles.length) {
+    return { ok: false, latestClose: null, change24h: null, trend: 'unknown', correlation: 'unknown' };
+  }
+  const last = eurUsdCandles[eurUsdCandles.length - 1].close;
+  const prev = eurUsdCandles.length >= 24 ? eurUsdCandles[eurUsdCandles.length - 24].close : eurUsdCandles[0].close;
+  const eurChange = ((last - prev) / prev) * 100;
+  const usdChange = -eurChange;
+  let trend;
+  if (Math.abs(usdChange) < 0.1) trend = 'flat';
+  else trend = usdChange > 0 ? 'strengthening' : 'weakening';
+  const correlation =
+    trend === 'strengthening' ? 'bearish-for-gold' :
+    trend === 'weakening' ? 'bullish-for-gold' :
+    'neutral';
+  return {
+    ok: true,
+    latestClose: last,
+    change24h: usdChange,
+    trend,
+    correlation,
+    symbol: 'DXY (EUR/USD proxy)',
+    last,
+    change24hPct: usdChange,
+    goldImpact: correlation,
+  };
+}
+
+export async function fetchAllIGData() {
+  const tStart = Date.now();
+  const session = await igLogin();
+  console.log(`[ig] login ok (${session.env}) in ${Date.now() - tStart}ms`);
+
+  const [goldEpic, eurUsdEpic] = await Promise.all([
+    discoverGoldEpic(session),
+    discoverEurUsdEpic(session),
+  ]);
+
+  const [h1Candles, h4Candles, eurUsdCandles, market, igSentiment] = await Promise.all([
+    fetchCandlesSafe(session, goldEpic, 'HOUR', config.CANDLES_LOOKBACK || 200, 'XAU H1'),
+    fetchCandlesSafe(session, goldEpic, 'HOUR_4', 100, 'XAU H4'),
+    eurUsdEpic
+      ? fetchCandlesSafe(session, eurUsdEpic, 'HOUR', 50, 'EUR/USD H1')
+      : Promise.resolve([]),
+    fetchMarketDetails(session, goldEpic),
+    fetchIGClientSentiment(session, 'GOLD').catch(err => {
+      console.warn(`[ig] sentiment failed: ${err.message}`);
+      return { longPct: null, shortPct: null, signal: 'unknown' };
+    }),
+  ]);
+
+  if (h1Candles.length < 50) {
+    console.warn(
+      `[ig] WARN: only ${h1Candles.length} H1 candles available (expected ≥50). ` +
+      `IG demo and weekend windows have tight history quotas — proceeding with reduced data.`
+    );
+  }
+
+  console.log(`[ig] summary H1=${h1Candles.length} H4=${h4Candles.length} EUR/USD=${eurUsdCandles.length}`);
+  console.log(`[ig] market ${goldEpic} mid=${market.mid?.toFixed(2)} spread=${market.spread?.toFixed(2)} status=${market.marketStatus}`);
+  console.log(`[ig] sentiment long=${igSentiment.longPct}% short=${igSentiment.shortPct}% signal=${igSentiment.signal}`);
+
+  const dxy = computeDxyProxyFromEurUsd(eurUsdCandles);
+  console.log(`[ig] dxy proxy latestClose=${dxy.latestClose?.toFixed(5)} change24h=${dxy.change24h?.toFixed(2)}% trend=${dxy.trend}`);
+
+  return {
+    h1Candles,
+    h4Candles,
+    currentPrice: market.mid,
+    spread: market.spread,
+    dailyHigh: market.high,
+    dailyLow: market.low,
+    marketStatus: market.marketStatus,
+    change24h: market.percentageChange,
+    igSentiment,
+    dxy,
+    session,
+  };
+}

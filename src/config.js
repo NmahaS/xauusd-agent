@@ -10,7 +10,9 @@ const fullSchema = baseSchema.extend({
   IG_API_KEY: z.string().min(1, 'IG_API_KEY is required'),
   IG_USERNAME: z.string().min(1, 'IG_USERNAME is required'),
   IG_PASSWORD: z.string().min(1, 'IG_PASSWORD is required'),
-  IG_DEMO: z.string().transform(v => v !== 'false').default('true'),
+  IG_DEMO: z.string()
+    .transform(v => v === 'false' ? false : true)
+    .default('true'),
   DEEPSEEK_API_KEY: z.string().min(1, 'DEEPSEEK_API_KEY is required'),
   DEEPSEEK_MODEL: z.string().default('deepseek-chat'),
   FRED_API_KEY: z.string().default(''),

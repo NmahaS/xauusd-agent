@@ -3,6 +3,7 @@ import fs from 'fs';
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+const IG_ENV_LABEL = process.env.IG_DEMO === 'false' ? 'LIVE' : 'DEMO';
 
 async function sendEmergencyTelegram(msg) {
   if (!TOKEN || !CHAT_ID) return;
@@ -45,6 +46,6 @@ try {
   process.exit(0);
 } catch (err) {
   console.error('FATAL:', err.message, err.stack);
-  await sendEmergencyTelegram(`🔴 <b>XAUUSD Agent crashed</b>\n<code>${err.message}</code>`);
+  await sendEmergencyTelegram(`🔴 <b>XAUUSD Agent Error [${IG_ENV_LABEL}]</b>\n<code>${err.message}</code>`);
   process.exit(1);
 }

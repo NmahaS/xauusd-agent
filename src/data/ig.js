@@ -1,23 +1,21 @@
 import { config } from '../config.js';
 
-const DEMO_BASE = 'https://demo-api.ig.com/gateway/deal';
-const LIVE_BASE = 'https://api.ig.com/gateway/deal';
+const BASE_URL = config.IG_DEMO === false || config.IG_DEMO === 'false'
+  ? 'https://api.ig.com/gateway/deal'
+  : 'https://demo-api.ig.com/gateway/deal';
 
-const GOLD_EPIC_FALLBACKS = [
-  'CS.D.USCGC.TODAY.IP',
-  'CS.D.CFDGOLD.CFD.IP',
-  'IX.D.XAUUSD.MINI.IP',
-  'MT.D.GC.Month1.IP',
-];
-const EURUSD_EPIC_FALLBACKS = [
-  'CS.D.EURUSD.TODAY.IP',
-  'CS.D.EURUSD.CFD.IP',
-  'CS.D.EURUSD.MINI.IP',
+export const IG_ENV = BASE_URL.startsWith('https://api.ig.com') ? 'LIVE' : 'DEMO';
+
+const GOLD_EPICS = [
+  'CS.D.CFDGOLD.CFD.IP',    // Standard CFD gold — works on live
+  'CS.D.USCGC.TODAY.IP',    // Spread bet fallback
+  'IX.D.XAUUSD.MINI.IP',    // Mini gold fallback
 ];
 
-function baseUrl() {
-  return config.IG_DEMO ? DEMO_BASE : LIVE_BASE;
-}
+const EURUSD_EPICS = [
+  'CS.D.EURUSD.CFD.IP',     // Standard CFD EUR/USD — works on live
+  'CS.D.EURUSD.TODAY.IP',   // Spread bet fallback
+];
 
 function parseSnapshotTime(s) {
   // IG returns "2026/04/25 02:00:00:000" — millis separated by colon, not dot
@@ -33,18 +31,23 @@ function mid(bid, ask) {
 }
 
 // IG transmits prices as integers compressed by an instrument-specific divisor.
-// On `.TODAY.IP` epics the canonical `instrument.scalingFactor` field is absent; the divisor
-// must be derived from `instrument.onePipMeans` (e.g. "0.0001 USD/EUR" → divisor 10000).
-function deriveScalingFactor(instrument) {
+// Resolution order:
+//   1. instrument.scalingFactor — set on canonical CFD epics (e.g. CS.D.CFDGOLD.CFD.IP).
+//   2. onePipMeans — for `.TODAY.IP` spread-bet epics (e.g. "0.0001 USD/EUR" → divisor 10000).
+//   3. price-magnitude heuristic — last-resort safety net for XAU when metadata is missing.
+function deriveScalingFactor(instrument, { epic, samplePrice } = {}) {
   if (!instrument) return 1;
   if (instrument.scalingFactor != null && Number(instrument.scalingFactor) !== 0) {
     return Number(instrument.scalingFactor);
   }
-  // Parse a leading decimal from onePipMeans (e.g. "0.0001 USD/EUR", "1 $/Troy Ounce").
   const m = String(instrument.onePipMeans || '').match(/^\s*([0-9]*\.?[0-9]+)/);
   if (m) {
     const pipValue = Number(m[1]);
     if (pipValue > 0) return Math.round(1 / pipValue);
+  }
+  if (samplePrice != null && /XAU|GOLD/i.test(epic || '')) {
+    if (samplePrice > 100000) return 100;
+    if (samplePrice > 10000) return 10;
   }
   return 1;
 }
@@ -78,7 +81,7 @@ function igPriceToCandle(p) {
 }
 
 async function igLogin() {
-  const url = `${baseUrl()}/session`;
+  const url = `${BASE_URL}/session`;
   const res = await fetch(url, {
     method: 'POST',
     headers: {
@@ -102,11 +105,11 @@ async function igLogin() {
   if (!cst || !xst) {
     throw new Error('IG login: missing CST / X-SECURITY-TOKEN headers');
   }
-  return { cst, xst, env: config.IG_DEMO ? 'demo' : 'live' };
+  return { cst, xst, env: IG_ENV };
 }
 
 async function igGet(path, session, version) {
-  const url = `${baseUrl()}${path}`;
+  const url = `${BASE_URL}${path}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: {
@@ -144,7 +147,7 @@ async function resolveEpicFromList(session, fallbacks, label) {
 }
 
 async function discoverGoldEpic(session) {
-  const fromList = await resolveEpicFromList(session, GOLD_EPIC_FALLBACKS, 'gold');
+  const fromList = await resolveEpicFromList(session, GOLD_EPICS, 'gold');
   if (fromList) return fromList;
   // Last resort: search the markets catalog for "Spot Gold".
   try {
@@ -164,7 +167,7 @@ async function discoverGoldEpic(session) {
 }
 
 async function discoverEurUsdEpic(session) {
-  const fromList = await resolveEpicFromList(session, EURUSD_EPIC_FALLBACKS, 'EUR/USD');
+  const fromList = await resolveEpicFromList(session, EURUSD_EPICS, 'EUR/USD');
   if (fromList) return fromList;
   console.warn('[ig] EUR/USD epic not found on account — DXY proxy will be unavailable');
   return null;
@@ -192,7 +195,7 @@ async function fetchMarketDetails(session, epic) {
   const json = await igGet(`/markets/${epic}`, session, 3);
   const snap = json.snapshot || {};
   const inst = json.instrument || {};
-  const sf = deriveScalingFactor(inst);
+  const sf = deriveScalingFactor(inst, { epic, samplePrice: snap.bid });
 
   const bid = applyScalingFactor(snap.bid, sf);
   const offer = applyScalingFactor(snap.offer, sf);
@@ -268,6 +271,7 @@ function computeDxyProxyFromEurUsd(eurUsdCandles, scalingFactor = 1) {
 
 export async function fetchAllIGData() {
   const tStart = Date.now();
+  console.log(`[ig] environment=${IG_ENV}`);
   const session = await igLogin();
   console.log(`[ig] login ok (${session.env}) in ${Date.now() - tStart}ms`);
 
@@ -317,14 +321,24 @@ export async function fetchAllIGData() {
   }
 
   const goldSampleClose = h1Candles[h1Candles.length - 1]?.close;
-  console.log(
-    `[ig] gold scalingFactor=${goldSF} → adjusted price=${goldSampleClose != null ? goldSampleClose.toFixed(2) : 'n/a'}`
-  );
+  if (goldSampleClose != null) {
+    if (goldSampleClose < 1000 || goldSampleClose > 10000) {
+      throw new Error(`Gold price sanity check failed: ${goldSampleClose} (expected 1000-10000 range)`);
+    }
+    console.log(`[ig] gold scalingFactor=${goldSF} price=${goldSampleClose.toFixed(2)} ✓`);
+    console.log(`[ig] gold price sanity: ${goldSampleClose.toFixed(2)} ✓`);
+  } else {
+    console.warn(`[ig] gold price sanity: skipped — no H1 candles`);
+  }
+
   if (eurUsdEpic) {
     const eurSampleClose = eurUsdCandles[eurUsdCandles.length - 1]?.close;
-    console.log(
-      `[ig] EUR/USD scalingFactor=${eurSF} → adjusted price=${eurSampleClose != null ? eurSampleClose.toFixed(5) : 'n/a'}`
-    );
+    if (eurSampleClose != null) {
+      if (eurSampleClose < 0.5 || eurSampleClose > 5) {
+        console.warn(`[ig] EUR/USD scaling may be wrong: ${eurSampleClose} — check scalingFactor`);
+      }
+      console.log(`[ig] EUR/USD scalingFactor=${eurSF} price=${eurSampleClose.toFixed(5)} ✓`);
+    }
   }
 
   console.log(`[ig] summary H1=${h1Candles.length} H4=${h4Candles.length} EUR/USD=${eurUsdCandles.length}`);

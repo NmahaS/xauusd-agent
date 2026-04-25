@@ -1,5 +1,5 @@
 import { config, configIsFull } from './config.js';
-import { fetchAllIGData } from './data/ig.js';
+import { fetchAllIGData, IG_ENV } from './data/ig.js';
 import { fetchFredMacro as fetchMacroData } from './data/fred.js';
 import { fetchSentiment } from './data/sentiment.js';
 import { fetchCalendar as fetchEconomicCalendar } from './data/calendar.js';
@@ -63,7 +63,7 @@ export async function runPipeline() {
   const runTimestamp = new Date().toISOString();
 
   console.log(`\n=== XAUUSD Agent run @ ${runTimestamp} ===`);
-  console.log(`symbol=${config.SYMBOL} exec=${config.EXECUTION_TF} bias=${config.BIAS_TF} dryRun=${config.DRY_RUN}`);
+  console.log(`symbol=${config.SYMBOL} exec=${config.EXECUTION_TF} bias=${config.BIAS_TF} env=${IG_ENV} dryRun=${config.DRY_RUN}`);
 
   // Phase 1: parallel fetch — IG (price/candles/sentiment/dxy) + macro + alt-sentiment + calendar
   const tFetch = time();

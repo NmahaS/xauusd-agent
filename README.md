@@ -72,22 +72,26 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-25T02:53:13.546Z
+**Generated:** 2026-04-25T03:00:56.299Z
 
-- **Bias:** neutral
-- **Setup Quality:** no-trade
-- **Confluence:** 0 — none
-- **Session:** asia — Wait for London kill zone (07:00 UTC)
-- **Direction:** no-trade
+- **Bias:** bullish
+- **Setup Quality:** B
+- **Confluence:** 3 — Unfilled bullish FVG within 20 points (4777.89-4793.21); Unfilled bullish FVG within 20 points (4820.80-4830.74); No high-impact news within 2 hours
+- **Session:** asia — Wait for London kill zone (07:00 UTC) or NY kill zone (12:00 UTC) for better liquidity.
+- **Direction:** long
+- **POI:** bullish_fvg @ [4777.89, 4793.21]
+- **Entry:** limit @ 4785.55 — Limit buy at midpoint of FVG; wait for price to enter zone with bullish confirmation (e.g., bullish engulfing on 15m).
+- **Stop Loss:** 4773
+- **TP1:** 4820 (RR 2.7)
+- **TP2:** 4845 (RR 4.7)
+- **TP3:** 4872 (RR 6.9)
+- **Invalidation:** 4772
 
-**Macro Context:** US 10Y yield rising (4.34%), real yields positive (1.92%) bearish for gold; EUR/USD flat (neutral); Fear & Greed at 31 (fear) neutral.
+**Macro Context:** US 10Y yield rising (4.34%), real yields positive (1.92%) bearish for gold; EUR/USD flat; Fear & Greed at 31 (fear) provides safe-haven support.
 
 **Warnings:**
-- ⚠ H4 structure neutral, no clear bias
-- ⚠ Price in extreme premium zone (206% of range) but no POI near
-- ⚠ No active order blocks within 20 points
-- ⚠ Current session is Asia kill zone not active
-- ⚠ Cross-asset signals mixed
+- ⚠ H4 structure is neutral, no clear trend; trade is counter-trend to H4 premium zone.
+- ⚠ Price is far from entry zone; may not retrace fully.
 - ⚠ IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

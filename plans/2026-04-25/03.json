@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-04-25T03:00:56.299Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bullish",
+  "biasReasoning": "H1 bullish FVGs remain unfilled near current price, suggesting buy-side interest. H4 premium zone is far above, but price is in discount relative to recent H1 range. EUR/USD flat, real yields bearish but fear index supports safe-haven. No clear H4 structure, but H1 shows bullish potential with unfilled FVGs.",
+  "setupQuality": "B",
+  "confluenceCount": 3,
+  "confluenceFactors": [
+    "Unfilled bullish FVG within 20 points (4777.89-4793.21)",
+    "Unfilled bullish FVG within 20 points (4820.80-4830.74)",
+    "No high-impact news within 2 hours"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_fvg",
+    "zone": [
+      4777.89,
+      4793.21
+    ],
+    "reasoning": "Unfilled bullish FVG from H1, price currently near 4835, but retracement could fill this gap. Zone acts as support."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4785.55,
+    "confirmation": "Limit buy at midpoint of FVG; wait for price to enter zone with bullish confirmation (e.g., bullish engulfing on 15m)."
+  },
+  "stopLoss": {
+    "price": 4773,
+    "reasoning": "Below FVG low with buffer; invalidates bullish setup if broken.",
+    "pips": 125.5
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4820,
+      "reasoning": "Next unfilled FVG top / prior resistance.",
+      "rr": 2.7
+    },
+    {
+      "level": "TP2",
+      "price": 4845,
+      "reasoning": "Recent H1 swing high / liquidity.",
+      "rr": 4.7
+    },
+    {
+      "level": "TP3",
+      "price": 4872,
+      "reasoning": "H1 high from last candle / extension.",
+      "rr": 6.9
+    }
+  ],
+  "invalidation": {
+    "price": 4772,
+    "reasoning": "Close below FVG low invalidates bullish bias."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00 UTC) or NY kill zone (12:00 UTC) for better liquidity."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 125.5-pip stop"
+  },
+  "macroContext": "US 10Y yield rising (4.34%), real yields positive (1.92%) bearish for gold; EUR/USD flat; Fear & Greed at 31 (fear) provides safe-haven support.",
+  "warnings": [
+    "H4 structure is neutral, no clear trend; trade is counter-trend to H4 premium zone.",
+    "Price is far from entry zone; may not retrace fully.",
+    "IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

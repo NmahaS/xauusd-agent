@@ -32,6 +32,40 @@ function mid(bid, ask) {
   return (Number(bid) + Number(ask)) / 2;
 }
 
+// IG transmits prices as integers compressed by an instrument-specific divisor.
+// On `.TODAY.IP` epics the canonical `instrument.scalingFactor` field is absent; the divisor
+// must be derived from `instrument.onePipMeans` (e.g. "0.0001 USD/EUR" → divisor 10000).
+function deriveScalingFactor(instrument) {
+  if (!instrument) return 1;
+  if (instrument.scalingFactor != null && Number(instrument.scalingFactor) !== 0) {
+    return Number(instrument.scalingFactor);
+  }
+  // Parse a leading decimal from onePipMeans (e.g. "0.0001 USD/EUR", "1 $/Troy Ounce").
+  const m = String(instrument.onePipMeans || '').match(/^\s*([0-9]*\.?[0-9]+)/);
+  if (m) {
+    const pipValue = Number(m[1]);
+    if (pipValue > 0) return Math.round(1 / pipValue);
+  }
+  return 1;
+}
+
+function applyScalingFactor(price, scalingFactor) {
+  if (price == null) return null;
+  if (!scalingFactor || scalingFactor === 1) return price;
+  return Number(price) / scalingFactor;
+}
+
+function scaleCandle(c, scalingFactor) {
+  if (!scalingFactor || scalingFactor === 1) return c;
+  return {
+    ...c,
+    open: applyScalingFactor(c.open, scalingFactor),
+    high: applyScalingFactor(c.high, scalingFactor),
+    low: applyScalingFactor(c.low, scalingFactor),
+    close: applyScalingFactor(c.close, scalingFactor),
+  };
+}
+
 function igPriceToCandle(p) {
   return {
     time: parseSnapshotTime(p.snapshotTime),
@@ -157,19 +191,27 @@ async function fetchCandlesSafe(session, epic, resolution, max, label) {
 async function fetchMarketDetails(session, epic) {
   const json = await igGet(`/markets/${epic}`, session, 3);
   const snap = json.snapshot || {};
-  const bid = snap.bid;
-  const offer = snap.offer;
+  const inst = json.instrument || {};
+  const sf = deriveScalingFactor(inst);
+
+  const bid = applyScalingFactor(snap.bid, sf);
+  const offer = applyScalingFactor(snap.offer, sf);
+  const high = applyScalingFactor(snap.high, sf);
+  const low = applyScalingFactor(snap.low, sf);
+
   return {
     bid,
     offer,
     mid: mid(bid, offer),
-    spread: bid != null && offer != null ? Number(offer) - Number(bid) : null,
+    spread: bid != null && offer != null ? offer - bid : null,
     marketStatus: snap.marketStatus || 'UNKNOWN',
-    high: snap.high != null ? Number(snap.high) : null,
-    low: snap.low != null ? Number(snap.low) : null,
+    high,
+    low,
     netChange: snap.netChange != null ? Number(snap.netChange) : null,
     percentageChange: snap.percentageChange != null ? Number(snap.percentageChange) : null,
     updateTime: snap.updateTime,
+    scalingFactor: sf,
+    instrumentName: inst.name,
   };
 }
 
@@ -191,10 +233,13 @@ async function fetchIGClientSentiment(session, marketId) {
   return { longPct, shortPct, signal };
 }
 
-function computeDxyProxyFromEurUsd(eurUsdCandles) {
+function computeDxyProxyFromEurUsd(eurUsdCandles, scalingFactor = 1) {
   // EUR/USD is the dominant DXY component (~57% weight). USD strength ≈ inverse of EUR/USD.
   if (!eurUsdCandles.length) {
-    return { ok: false, latestClose: null, change24h: null, trend: 'unknown', correlation: 'unknown' };
+    return {
+      ok: false, latestClose: null, change24h: null, trend: 'unknown', correlation: 'unknown',
+      scalingFactor,
+    };
   }
   const last = eurUsdCandles[eurUsdCandles.length - 1].close;
   const prev = eurUsdCandles.length >= 24 ? eurUsdCandles[eurUsdCandles.length - 24].close : eurUsdCandles[0].close;
@@ -213,6 +258,7 @@ function computeDxyProxyFromEurUsd(eurUsdCandles) {
     change24h: usdChange,
     trend,
     correlation,
+    scalingFactor,
     symbol: 'DXY (EUR/USD proxy)',
     last,
     change24hPct: usdChange,
@@ -230,18 +276,38 @@ export async function fetchAllIGData() {
     discoverEurUsdEpic(session),
   ]);
 
-  const [h1Candles, h4Candles, eurUsdCandles, market, igSentiment] = await Promise.all([
+  const [
+    h1CandlesRaw,
+    h4CandlesRaw,
+    eurUsdCandlesRaw,
+    goldMarket,
+    eurUsdMarket,
+    igSentiment,
+  ] = await Promise.all([
     fetchCandlesSafe(session, goldEpic, 'HOUR', config.CANDLES_LOOKBACK || 200, 'XAU H1'),
     fetchCandlesSafe(session, goldEpic, 'HOUR_4', 100, 'XAU H4'),
     eurUsdEpic
       ? fetchCandlesSafe(session, eurUsdEpic, 'HOUR', 50, 'EUR/USD H1')
       : Promise.resolve([]),
     fetchMarketDetails(session, goldEpic),
+    eurUsdEpic
+      ? fetchMarketDetails(session, eurUsdEpic).catch(err => {
+          console.warn(`[ig] EUR/USD market details failed: ${err.message}`);
+          return null;
+        })
+      : Promise.resolve(null),
     fetchIGClientSentiment(session, 'GOLD').catch(err => {
       console.warn(`[ig] sentiment failed: ${err.message}`);
       return { longPct: null, shortPct: null, signal: 'unknown' };
     }),
   ]);
+
+  // Apply each instrument's scalingFactor to its candles (raw IG prices are integer-compressed).
+  const goldSF = goldMarket.scalingFactor || 1;
+  const eurSF = eurUsdMarket?.scalingFactor || 1;
+  const h1Candles = h1CandlesRaw.map(c => scaleCandle(c, goldSF));
+  const h4Candles = h4CandlesRaw.map(c => scaleCandle(c, goldSF));
+  const eurUsdCandles = eurUsdCandlesRaw.map(c => scaleCandle(c, eurSF));
 
   if (h1Candles.length < 50) {
     console.warn(
@@ -250,22 +316,33 @@ export async function fetchAllIGData() {
     );
   }
 
+  const goldSampleClose = h1Candles[h1Candles.length - 1]?.close;
+  console.log(
+    `[ig] gold scalingFactor=${goldSF} → adjusted price=${goldSampleClose != null ? goldSampleClose.toFixed(2) : 'n/a'}`
+  );
+  if (eurUsdEpic) {
+    const eurSampleClose = eurUsdCandles[eurUsdCandles.length - 1]?.close;
+    console.log(
+      `[ig] EUR/USD scalingFactor=${eurSF} → adjusted price=${eurSampleClose != null ? eurSampleClose.toFixed(5) : 'n/a'}`
+    );
+  }
+
   console.log(`[ig] summary H1=${h1Candles.length} H4=${h4Candles.length} EUR/USD=${eurUsdCandles.length}`);
-  console.log(`[ig] market ${goldEpic} mid=${market.mid?.toFixed(2)} spread=${market.spread?.toFixed(2)} status=${market.marketStatus}`);
+  console.log(`[ig] market ${goldEpic} mid=${goldMarket.mid?.toFixed(2)} spread=${goldMarket.spread?.toFixed(2)} status=${goldMarket.marketStatus}`);
   console.log(`[ig] sentiment long=${igSentiment.longPct}% short=${igSentiment.shortPct}% signal=${igSentiment.signal}`);
 
-  const dxy = computeDxyProxyFromEurUsd(eurUsdCandles);
-  console.log(`[ig] dxy proxy latestClose=${dxy.latestClose?.toFixed(5)} change24h=${dxy.change24h?.toFixed(2)}% trend=${dxy.trend}`);
+  const dxy = computeDxyProxyFromEurUsd(eurUsdCandles, eurSF);
+  console.log(`[ig] dxy proxy latestClose=${dxy.latestClose?.toFixed(5)} change24h=${dxy.change24h?.toFixed(2)}% trend=${dxy.trend} scalingFactor=${dxy.scalingFactor}`);
 
   return {
     h1Candles,
     h4Candles,
-    currentPrice: market.mid,
-    spread: market.spread,
-    dailyHigh: market.high,
-    dailyLow: market.low,
-    marketStatus: market.marketStatus,
-    change24h: market.percentageChange,
+    currentPrice: goldMarket.mid,
+    spread: goldMarket.spread,
+    dailyHigh: goldMarket.high,
+    dailyLow: goldMarket.low,
+    marketStatus: goldMarket.marketStatus,
+    change24h: goldMarket.percentageChange,
     igSentiment,
     dxy,
     session,

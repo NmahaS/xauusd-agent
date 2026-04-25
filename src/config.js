@@ -36,4 +36,15 @@ export const reportConfig = (() => {
   return baseParsed.data;
 })();
 
-export const config = fullParsed.success ? fullParsed.data : reportConfig;
+// Pipeline (src/run.js) needs the full schema. Monthly report (src/plan/generateMonthlyReport.js)
+// only needs reportConfig. When we fall back to reportConfig, log loudly so the caller can detect it.
+export const config = (() => {
+  if (fullParsed.success) return fullParsed.data;
+  console.warn('[config] Full schema validation failed — pipeline will not work. Missing/invalid:');
+  for (const issue of fullParsed.error.issues) {
+    console.warn(`  ${issue.path.join('.')}: ${issue.message}`);
+  }
+  return reportConfig;
+})();
+
+export const configIsFull = fullParsed.success;

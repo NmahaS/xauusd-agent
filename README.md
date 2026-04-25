@@ -72,18 +72,21 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-24T21:58:09.937Z
+**Generated:** 2026-04-22T13:06:16.555Z
 
-- **Bias:** neutral
+- **Bias:** bearish
 - **Setup Quality:** no-trade
-- **Confluence:** 0 — none
-- **Session:** off — wait for next London session
+- **Confluence:** 2 — H4 bearish structure (BOS intact); H1 bearish structure (CHoCH intact)
+- **Session:** ny — Wait for price to reach a premium zone or bearish POI within NY kill zone
 - **Direction:** no-trade
 
-**Macro Context:** LLM unavailable; no macro synthesis produced.
+**Macro Context:** EUR/USD falling signals dollar strength, real yields unknown, F&G neutral — bearish backdrop for gold.
 
 **Warnings:**
-- ⚠ LLM failure: entry.trigger: Required; entry.confirmation: Required; takeProfits.0.price: Required; takeProfits.1.price: Required
+- ⚠ Price is in discount zone on H4 (44.8%) and premium on H1 (71.6%), creating conflicting zone signals
+- ⚠ No active bearish order blocks or FVGs within 20 points of current price (4742.10) for short setup
+- ⚠ Price not in OTE short zone (4732.04-4749.37) as current price is at the upper edge, lacking clear entry confluence
+- ⚠ FRED macro data unavailable — yields/real-rate missing
 <!-- LATEST_PLAN_END -->
 
 ---

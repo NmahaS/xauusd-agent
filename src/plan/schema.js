@@ -1,32 +1,34 @@
 import { z } from 'zod';
 
+const numberLike = z.union([z.number(), z.string().transform(s => parseFloat(s))]);
+
 const poiSchema = z.object({
   type: z.string(),
-  zone: z.tuple([z.number(), z.number()]),
+  zone: z.array(numberLike).length(2),
   reasoning: z.string(),
 });
 
 const entrySchema = z.object({
   trigger: z.enum(['limit', 'marketOnConfirmation']),
-  price: z.number(),
+  price: numberLike,
   confirmation: z.string(),
 });
 
 const stopLossSchema = z.object({
-  price: z.number(),
+  price: numberLike,
   reasoning: z.string(),
-  pips: z.number().optional().nullable(),
+  pips: z.union([z.number(), z.string().transform(s => parseFloat(s))]).optional().nullable(),
 });
 
 const takeProfitSchema = z.object({
-  level: z.union([z.string(), z.number()]),
-  price: z.number(),
+  level: z.enum(['TP1', 'TP2', 'TP3']),
+  price: numberLike,
   reasoning: z.string(),
-  rr: z.number(),
+  rr: numberLike,
 });
 
 const invalidationSchema = z.object({
-  price: z.number(),
+  price: numberLike,
   reasoning: z.string(),
 });
 

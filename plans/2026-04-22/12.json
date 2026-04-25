@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-04-22T12:05:39.531Z",
+  "timestamp": "2026-04-22T12:50:47.069Z",
   "symbol": "XAU/USD",
   "timeframe": "1h",
   "bias": "bearish",
-  "biasReasoning": "H4 SMC bias is bearish with last BOS-bearish at 4740.75, H1 SMC bias is bearish with last CHoCH-bearish at 4773.28, and price is in premium zones on both H4 (53.4%) and H1 (85.3%), indicating selling pressure.",
+  "biasReasoning": "H4 SMC bias is bearish with a BOS-bearish event at 4740.75, and H1 SMC bias is bearish with a CHoCH-bearish event at 4773.28, indicating overall bearish market structure.",
   "setupQuality": "no-trade",
   "confluenceCount": 0,
   "confluenceFactors": [],
@@ -15,18 +15,17 @@
   "invalidation": null,
   "session": {
     "current": "ny",
-    "recommendedExecutionWindow": "Wait for price to approach a clear POI like the H1 OTE short zone [4732.04, 4749.37] or bearish FVG [4797.20-4817.73] with better confluence"
+    "recommendedExecutionWindow": "Wait for clearer POI alignment and discount zone entry"
   },
   "risk": {
     "suggestedRiskPct": 0,
     "positionSizeHint": "No trade"
   },
-  "macroContext": "Real yields are positive at 1.88%, bearish for gold, and Fear & Greed index at 32 (fear) with rising trend suggests neutral risk sentiment, while upcoming high-impact EU/UK PMI data in ~19 hours adds uncertainty.",
+  "macroContext": "Dollar strengthening via EUR/USD falling is bearish for gold, and positive real yields (1.88%) add bearish pressure, though Fear & Greed at 32 (fear) provides some safe-haven support.",
   "warnings": [
-    "Price is far from nearest POI (H1 OTE short zone ~4732-4749 vs current ~4756), lacking entry confluence",
-    "No clear invalidation level near current price for a short setup",
-    "Insufficient confluence factors (<3) for a trade; need more alignment with structure, POI, and timing",
-    "Spot/chart gap 1.54% — data sources may be desynced"
+    "Price in H1 premium zone (73.2%) discourages long entries",
+    "No clear POI near current price for a short setup",
+    "High-impact news (German PMIs, USD Unemployment Claims) within 2 hours adds uncertainty"
   ],
   "promptVersion": "v2.0"
 }

@@ -44,6 +44,53 @@ async function callDeepSeek(messages) {
   return content;
 }
 
+function sanitizePlan(p) {
+  if (!p || typeof p !== 'object') return p;
+
+  // Fix poi.zone strings to numbers
+  if (p.poi?.zone && Array.isArray(p.poi.zone)) {
+    p.poi.zone = p.poi.zone.map(v => typeof v === 'string' ? parseFloat(v) : v);
+  }
+
+  // Fix takeProfits level names + string prices/rr
+  const levelMap = {
+    'TP 1': 'TP1', 'TP 2': 'TP2', 'TP 3': 'TP3',
+    'TP One': 'TP1', 'TP Two': 'TP2', 'TP Three': 'TP3',
+    'First TP': 'TP1', 'Second TP': 'TP2', 'Third TP': 'TP3',
+    'tp1': 'TP1', 'tp2': 'TP2', 'tp3': 'TP3',
+  };
+  if (Array.isArray(p.takeProfits)) {
+    p.takeProfits = p.takeProfits.map(tp => ({
+      ...tp,
+      level: levelMap[tp.level] || tp.level,
+      price: typeof tp.price === 'string' ? parseFloat(tp.price) : tp.price,
+      rr: typeof tp.rr === 'string' ? parseFloat(tp.rr) : tp.rr,
+    }));
+  }
+
+  // Fix all price fields from strings to numbers
+  const priceFields = ['entry', 'stopLoss', 'invalidation'];
+  for (const field of priceFields) {
+    if (p[field]?.price && typeof p[field].price === 'string') {
+      p[field].price = parseFloat(p[field].price);
+    }
+  }
+
+  // If direction is set but entry/SL/TP missing, force no-trade
+  if (p.direction && (!p.entry || !p.stopLoss || !p.takeProfits)) {
+    console.warn('[llm] sanitize: direction set but missing entry/SL/TP — forcing no-trade');
+    p.direction = null;
+    p.setupQuality = 'no-trade';
+    p.poi = null;
+    p.entry = null;
+    p.stopLoss = null;
+    p.takeProfits = null;
+    p.invalidation = null;
+  }
+
+  return p;
+}
+
 function sanitizeResponse(parsed) {
   // Unwrap if plan is nested inside a key
   if (parsed && typeof parsed === 'object' && !('bias' in parsed)) {
@@ -74,6 +121,25 @@ function sanitizeResponse(parsed) {
   return parsed;
 }
 
+function synthesizeMacroContext(ctx) {
+  const parts = [];
+  const dxy = ctx.dxy;
+  const fred = ctx.fred;
+  const sentiment = ctx.sentiment;
+
+  if (dxy?.ok && dxy.trend && dxy.trend !== 'unknown') {
+    parts.push(`${dxy.symbol ?? 'Dollar proxy'} ${dxy.trend} (${dxy.goldImpact})`);
+  }
+  if (fred?.ok && fred.realYield != null) {
+    parts.push(`10Y real yield ${fred.realYield.toFixed(2)}% → ${fred.goldImpact}`);
+  }
+  if (sentiment?.ok && sentiment.value != null) {
+    parts.push(`F&G ${sentiment.value} (${sentiment.classification}, ${sentiment.goldImpact})`);
+  }
+  if (parts.length === 0) return 'Cross-asset and macro data unavailable this run.';
+  return parts.join('; ') + '.';
+}
+
 function buildFallbackPlan(ctx, errorMessage) {
   return {
     timestamp: ctx.timestamp,
@@ -98,7 +164,7 @@ function buildFallbackPlan(ctx, errorMessage) {
       suggestedRiskPct: 0,
       positionSizeHint: 'n/a (no-trade)',
     },
-    macroContext: 'LLM unavailable; no macro synthesis produced.',
+    macroContext: synthesizeMacroContext(ctx),
     warnings: [`LLM failure: ${errorMessage}`],
     promptVersion: PROMPT_VERSION,
   };
@@ -131,7 +197,7 @@ export async function generatePlan(ctx) {
 
       rawContent = await callDeepSeek(messages);
       const cleaned = stripMarkdownFences(rawContent);
-      const parsed = sanitizeResponse(JSON.parse(cleaned));
+      const parsed = sanitizePlan(sanitizeResponse(JSON.parse(cleaned)));
       const result = tradingPlanSchema.safeParse(parsed);
       if (!result.success) {
         lastError = result.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; ');

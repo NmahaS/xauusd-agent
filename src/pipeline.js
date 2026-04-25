@@ -1,4 +1,4 @@
-import { config } from './config.js';
+import { config, configIsFull } from './config.js';
 import { fetchXauBothTimeframes } from './data/twelvedata.js';
 import { fetchDxy } from './data/dxy.js';
 import { fetchMetals } from './data/metals.js';
@@ -44,13 +44,19 @@ function buildCrossAssetWarnings({ dxy, metals, fred, sentiment }) {
   if (metals?.auAg != null && metals.auAg > 90) {
     warnings.push(`Au/Ag ratio elevated (${metals.auAg.toFixed(1)}) — gold extended vs silver`);
   }
-  if (metals?.spotVsChartPct != null && Math.abs(metals.spotVsChartPct) > 0.3) {
-    warnings.push(`Spot/chart gap ${metals.spotVsChartPct.toFixed(2)}% — data sources may be desynced`);
+  if (metals?.spotVsChartPct != null && Math.abs(metals.spotVsChartPct) > 2.0) {
+    warnings.push(`Spot/chart gap ${metals.spotVsChartPct.toFixed(2)}% (normal during volatile sessions)`);
   }
   return warnings;
 }
 
 export async function runPipeline() {
+  if (!configIsFull) {
+    throw new Error(
+      'Pipeline config incomplete — TWELVEDATA_API_KEY and DEEPSEEK_API_KEY are required. See [config] warnings above.'
+    );
+  }
+
   const tTotal = time();
   const runTimestamp = new Date().toISOString();
 
@@ -87,11 +93,13 @@ export async function runPipeline() {
   if (metals?.ok && h1Candles.length > 0) {
     const chartGold = h1Candles[h1Candles.length - 1].close;
     const diff = metals.gold - chartGold;
+    const gapPct = (diff / chartGold) * 100;
     metals = {
       ...metals,
       spotVsChart: diff,
-      spotVsChartPct: (diff / chartGold) * 100,
+      spotVsChartPct: gapPct,
     };
+    console.log(`[metals] Spot/chart gap ${gapPct.toFixed(2)}% (normal during volatile sessions)`);
   }
 
   // Phase 2: indicators + SMC

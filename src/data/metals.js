@@ -2,13 +2,26 @@ import { config } from '../config.js';
 
 async function fetchMetalpriceApi() {
   if (!config.METALPRICE_API_KEY) throw new Error('METALPRICE_API_KEY not set');
-  const url = `https://api.metalpriceapi.com/v1/latest?api_key=${config.METALPRICE_API_KEY}&base=USD&currencies=XAU,XAG,XPT`;
-  const res = await fetch(url);
+  // Cache-bust with nonce + no-store to guarantee live response (no CDN / local caches)
+  const url = `https://api.metalpriceapi.com/v1/latest?api_key=${config.METALPRICE_API_KEY}&base=USD&currencies=XAU,XAG,XPT&_=${Date.now()}`;
+  const res = await fetch(url, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
   if (!res.ok) throw new Error(`MetalpriceAPI HTTP ${res.status}`);
   const json = await res.json();
   console.log(`[metals] MetalpriceAPI raw response: ${JSON.stringify(json)}`);
   if (!json.success || !json.rates) {
     throw new Error(`MetalpriceAPI error: ${JSON.stringify(json).slice(0, 300)}`);
+  }
+
+  // Staleness check — MetalpriceAPI returns `timestamp` as unix seconds.
+  // If the response is older than 2 hours we bail so the caller falls back to metals.dev.
+  if (typeof json.timestamp === 'number') {
+    const ageSec = Math.floor(Date.now() / 1000) - json.timestamp;
+    const ageMin = Math.round(ageSec / 60);
+    if (ageSec > 7200) {
+      console.warn(`[metals] MetalpriceAPI response stale (${ageMin}min old) — falling back`);
+      throw new Error(`MetalpriceAPI stale: ${ageMin}min old`);
+    }
+    console.log(`[metals] MetalpriceAPI timestamp ${json.timestamp} (${ageMin}min old)`);
   }
 
   const rates = json.rates;

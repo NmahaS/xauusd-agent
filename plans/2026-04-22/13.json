@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-04-22T13:06:16.555Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with last event BOS-bearish at 4740.75; H1 SMC bias is bearish with last event CHoCH-bearish at 4773.28, confirming bearish structure on both timeframes.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 2,
+  "confluenceFactors": [
+    "H4 bearish structure (BOS intact)",
+    "H1 bearish structure (CHoCH intact)"
+  ],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for price to reach a premium zone or bearish POI within NY kill zone"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "EUR/USD falling signals dollar strength, real yields unknown, F&G neutral — bearish backdrop for gold.",
+  "warnings": [
+    "Price is in discount zone on H4 (44.8%) and premium on H1 (71.6%), creating conflicting zone signals",
+    "No active bearish order blocks or FVGs within 20 points of current price (4742.10) for short setup",
+    "Price not in OTE short zone (4732.04-4749.37) as current price is at the upper edge, lacking clear entry confluence",
+    "FRED macro data unavailable — yields/real-rate missing"
+  ],
+  "promptVersion": "v2.0"
+}

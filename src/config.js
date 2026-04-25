@@ -7,12 +7,13 @@ const baseSchema = z.object({
 });
 
 const fullSchema = baseSchema.extend({
-  TWELVEDATA_API_KEY: z.string().min(1, 'TWELVEDATA_API_KEY is required'),
+  IG_API_KEY: z.string().min(1, 'IG_API_KEY is required'),
+  IG_USERNAME: z.string().min(1, 'IG_USERNAME is required'),
+  IG_PASSWORD: z.string().min(1, 'IG_PASSWORD is required'),
+  IG_DEMO: z.string().transform(v => v !== 'false').default('true'),
   DEEPSEEK_API_KEY: z.string().min(1, 'DEEPSEEK_API_KEY is required'),
   DEEPSEEK_MODEL: z.string().default('deepseek-chat'),
   FRED_API_KEY: z.string().default(''),
-  METALPRICE_API_KEY: z.string().default(''),
-  METALSDEV_API_KEY: z.string().default(''),
   SYMBOL: z.string().default('XAU/USD'),
   EXECUTION_TF: z.string().default('1h'),
   BIAS_TF: z.string().default('4h'),

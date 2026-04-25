@@ -1,5 +1,4 @@
 import { config, configIsFull } from './config.js';
-import { fetchXauBothTimeframes } from './data/twelvedata.js';
 import { fetchDxy } from './data/dxy.js';
 import { fetchMetals } from './data/metals.js';
 import { fetchFredMacro } from './data/fred.js';
@@ -53,7 +52,7 @@ function buildCrossAssetWarnings({ dxy, metals, fred, sentiment }) {
 export async function runPipeline() {
   if (!configIsFull) {
     throw new Error(
-      'Pipeline config incomplete — TWELVEDATA_API_KEY and DEEPSEEK_API_KEY are required. See [config] warnings above.'
+      'Pipeline config incomplete — IG and DEEPSEEK credentials are required. See [config] warnings above.'
     );
   }
 
@@ -65,14 +64,14 @@ export async function runPipeline() {
 
   // Phase 1: parallel fetch of all data sources (silver now comes exclusively from metals.js)
   const tFetch = time();
-  const [xauResult, dxyResult, metalsResult, fredResult, sentimentResult, calendarResult] = await Promise.all([
-    fetchXauBothTimeframes(),
+  const [dxyResult, metalsResult, fredResult, sentimentResult, calendarResult] = await Promise.all([
     fetchDxy(),
     fetchMetals().catch(err => ({ ok: false, error: err.message })),
     fetchFredMacro(),
     fetchSentiment(),
     fetchCalendar(),
   ]);
+  const xauResult = { h1: { candles: [] }, h4: { candles: [] } };
   console.log(`[pipeline] fetch phase done in ${time() - tFetch}ms`);
 
   const h1Candles = xauResult.h1.candles;

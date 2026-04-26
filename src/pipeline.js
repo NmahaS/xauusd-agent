@@ -77,14 +77,29 @@ export async function runPipeline() {
   const { h1Candles, h4Candles, currentPrice, spread, marketStatus, igSentiment, dxy, dailyHigh, dailyLow } = igData;
   console.log(`[pipeline] fetch phase done in ${time() - tFetch}ms`);
 
+  // No usable gold candles → no possibility of analysis. Alert and exit cleanly (don't crash).
+  if (h1Candles.length === 0) {
+    console.error('[pipeline] no usable gold candles from IG — sending alert and exiting');
+    const alert =
+      `⚠️ <b>XAUUSD Agent [${IG_ENV}]</b>\n` +
+      `Cannot fetch gold prices — no valid IG epic found.\n` +
+      `Enable <code>CS.D.CFDGOLD.CFD.IP</code> on your IG account.`;
+    try {
+      await sendTelegramMessage(alert);
+    } catch (e) {
+      console.error(`[pipeline] alert send failed: ${e.message}`);
+    }
+    return { plan: null, telegramText: alert, skipped: true };
+  }
+
+  if (h4Candles.length === 0) {
+    console.warn('[pipeline] no H4 candles — H4 SMC will be empty, continuing with H1 only');
+  }
+
   if (h1Candles.length < 50 || h4Candles.length < 50) {
     console.warn(
       `[pipeline] reduced history: H1=${h1Candles.length} H4=${h4Candles.length} — continuing with degraded analysis`
     );
-  }
-  if (h1Candles.length === 0 || h4Candles.length === 0) {
-    console.error('[pipeline] FATAL: no XAU candles fetched from IG; cannot continue');
-    throw new Error('No XAU candles — aborting run');
   }
 
   // Resolve open trades from prior plans before computing new indicators

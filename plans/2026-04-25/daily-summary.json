@@ -1,16 +1,16 @@
 {
   "date": "2026-04-25",
-  "totalPlans": 2,
-  "trades": 1,
-  "noTrades": 1,
+  "totalPlans": 5,
+  "trades": 2,
+  "noTrades": 3,
   "setups": {
     "A+": 0,
     "A": 0,
-    "B": 1,
-    "no-trade": 1
+    "B": 2,
+    "no-trade": 3
   },
   "directions": {
-    "long": 1,
+    "long": 2,
     "short": 0
   },
   "wins": {
@@ -18,18 +18,23 @@
     "losses": 0,
     "partialWins": 0,
     "expired": 0,
-    "open": 1,
+    "open": 2,
     "winRate": "0%",
     "winsByQuality": {
       "B": {
         "wins": 0,
         "losses": 0,
-        "total": 1,
+        "total": 2,
         "winRate": "0.0%"
       }
     },
     "winsBySession": {
       "asia": {
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%"
+      },
+      "ny": {
         "wins": 0,
         "losses": 0,
         "winRate": "0.0%"
@@ -67,21 +72,52 @@
         false,
         false
       ]
+    },
+    {
+      "hour": "13",
+      "setupQuality": "B",
+      "direction": "long",
+      "entry": 4785,
+      "sl": 4770,
+      "slPips": 150,
+      "tp1": {
+        "price": 4830,
+        "rr": 3
+      },
+      "tp2": {
+        "price": 4850,
+        "rr": 4.3
+      },
+      "tp3": {
+        "price": 4870,
+        "rr": 5.7
+      },
+      "maxRR": 5.7,
+      "session": "ny",
+      "bias": "bullish",
+      "confluenceCount": 4,
+      "outcome": "open",
+      "actualRR": null,
+      "tpHits": [
+        false,
+        false,
+        false
+      ]
     }
   ],
   "dailyRR": {
-    "totalPotentialRR_TP1": 2.7,
-    "totalPotentialRR_TP2": 4.7,
-    "totalPotentialRR_TP3": 6.9,
+    "totalPotentialRR_TP1": 5.7,
+    "totalPotentialRR_TP2": 9,
+    "totalPotentialRR_TP3": 12.6,
     "totalActualRR": 0,
-    "avgRR_TP1": 2.7,
-    "avgRR_TP2": 4.7,
-    "avgRR_TP3": 6.9,
+    "avgRR_TP1": 2.85,
+    "avgRR_TP2": 4.5,
+    "avgRR_TP3": 6.3,
     "avgActualRR": null,
     "netRR": 0,
     "bestSetup": {
-      "hour": "03",
-      "rr": 2.7,
+      "hour": "13",
+      "rr": 3,
       "direction": "long",
       "quality": "B",
       "outcome": "open"

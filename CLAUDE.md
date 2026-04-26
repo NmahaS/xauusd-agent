@@ -1,6 +1,6 @@
-# XAUUSD Day Trading Agent
+# XAU/AUD Day Trading Agent (IG Australia, JUN-26 futures)
 
-Autonomous hourly XAUUSD analysis agent. Pulls data from 6 sources, computes classical indicators + Smart Money Concepts, sends analysis to **DeepSeek API** for a structured trading plan, saves to git, and delivers via **Telegram**.
+Autonomous hourly analysis agent for AUD-denominated gold futures (JUN-26 contract on IG Australia). Pulls data from IG + macro/sentiment/calendar sources, computes classical indicators + Smart Money Concepts, sends analysis to **DeepSeek API** for a structured trading plan, saves to git, and delivers via **Telegram**.
 
 Hosted on **GitHub Actions** (free serverless cron). No server, no database.
 

@@ -2,33 +2,41 @@ import { z } from 'zod';
 
 const numberLike = z.union([z.number(), z.string().transform(s => parseFloat(s))]);
 
+// Gold price-magnitude sanity. AUD gold futures sit ~4700-4800; USD spot ~3300; either is fine.
+// Anything outside 2000-15000 is almost certainly a magnitude error from the LLM and should
+// fail validation so the retry path can correct it.
+const priceLike = numberLike.refine(
+  v => v >= 2000 && v <= 15000,
+  { message: 'price out of plausible gold range 2000-15000' }
+);
+
 const poiSchema = z.object({
   type: z.string(),
-  zone: z.array(numberLike).length(2),
+  zone: z.array(priceLike).length(2),
   reasoning: z.string(),
 });
 
 const entrySchema = z.object({
   trigger: z.enum(['limit', 'marketOnConfirmation']),
-  price: numberLike,
+  price: priceLike,
   confirmation: z.string(),
 });
 
 const stopLossSchema = z.object({
-  price: numberLike,
+  price: priceLike,
   reasoning: z.string(),
   pips: z.union([z.number(), z.string().transform(s => parseFloat(s))]).optional().nullable(),
 });
 
 const takeProfitSchema = z.object({
   level: z.enum(['TP1', 'TP2', 'TP3']),
-  price: numberLike,
+  price: priceLike,
   reasoning: z.string(),
   rr: numberLike,
 });
 
 const invalidationSchema = z.object({
-  price: numberLike,
+  price: priceLike,
   reasoning: z.string(),
 });
 
@@ -78,7 +86,7 @@ const takeProfitsSchema = z.preprocess(
 
 export const tradingPlanSchema = z.object({
   timestamp: z.string(),
-  symbol: z.string(),
+  symbol: z.string().default('XAU/AUD'),
   timeframe: z.string(),
   bias: z.enum(['bullish', 'bearish', 'neutral']),
   biasReasoning: z.string(),

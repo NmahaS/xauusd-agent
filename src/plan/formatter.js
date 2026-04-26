@@ -1,6 +1,22 @@
 // Telegram HTML message formatting.
 // Emojis: 🟢 bullish, 🔴 bearish, ⚪ neutral, ⏸ no-trade, 🔥 kill zone, ⚠ warning, 📅 calendar.
 
+import { config } from '../config.js';
+
+const CURRENCY_PREFIX = {
+  AUD: 'A$',
+  USD: '$',
+  EUR: '€',
+  GBP: '£',
+};
+
+function currencyPrice(v, currency, d = 2) {
+  if (v == null || Number.isNaN(v)) return 'n/a';
+  const prefix = CURRENCY_PREFIX[currency] ?? `${currency} `;
+  const num = typeof v === 'number' ? v.toFixed(d) : String(v);
+  return `${prefix}${num}`;
+}
+
 const BIAS_EMOJI = {
   bullish: '🟢',
   bearish: '🔴',
@@ -48,8 +64,11 @@ export function formatPlanForTelegram(plan, extras = {}) {
   const qualityEmoji = QUALITY_EMOJI[plan.setupQuality] ?? '';
   const killZoneIcon = session?.inKillZone ? ' 🔥' : '';
 
+  const currency = extras.currency ?? config.CURRENCY ?? 'USD';
+  const cp = (v, d = 2) => currencyPrice(v, currency, d);
+
   const lines = [];
-  lines.push(`<b>${biasEmoji} XAU/USD — ${esc(plan.bias.toUpperCase())} | ${esc(plan.setupQuality)} ${qualityEmoji}</b>`);
+  lines.push(`<b>${biasEmoji} 🥇 ${esc(plan.symbol)} Futures — ${esc(plan.bias.toUpperCase())} | ${esc(plan.setupQuality)} ${qualityEmoji}</b>`);
   lines.push(`<i>${esc(plan.timestamp)} UTC</i>${killZoneIcon}`);
   lines.push('');
 
@@ -81,20 +100,20 @@ export function formatPlanForTelegram(plan, extras = {}) {
 
   if (plan.direction && plan.poi && plan.entry && plan.stopLoss) {
     lines.push(`<b>Direction:</b> ${esc(plan.direction.toUpperCase())}`);
-    lines.push(`<b>POI:</b> ${esc(plan.poi.type)} @ [${fmt(plan.poi.zone[0])} – ${fmt(plan.poi.zone[1])}]`);
+    lines.push(`<b>POI:</b> ${esc(plan.poi.type)} @ [${cp(plan.poi.zone[0])} – ${cp(plan.poi.zone[1])}]`);
     lines.push(`  <i>${esc(plan.poi.reasoning)}</i>`);
-    lines.push(`<b>Entry:</b> ${esc(plan.entry.trigger)} @ ${fmt(plan.entry.price)}`);
+    lines.push(`<b>Entry:</b> ${esc(plan.entry.trigger)} @ ${cp(plan.entry.price)}`);
     lines.push(`  <i>${esc(plan.entry.confirmation)}</i>`);
-    lines.push(`<b>Stop Loss:</b> ${fmt(plan.stopLoss.price)}${plan.stopLoss.pips != null ? ` (${fmt(plan.stopLoss.pips, 1)} pips)` : ''}`);
+    lines.push(`<b>Stop Loss:</b> ${cp(plan.stopLoss.price)}${plan.stopLoss.pips != null ? ` (${fmt(plan.stopLoss.pips, 1)} pips)` : ''}`);
     lines.push(`  <i>${esc(plan.stopLoss.reasoning)}</i>`);
     if (plan.takeProfits?.length) {
       plan.takeProfits.forEach((tp, i) => {
-        lines.push(`<b>TP${i + 1}:</b> ${fmt(tp.price)} (RR ${fmt(tp.rr, 2)})`);
+        lines.push(`<b>TP${i + 1}:</b> ${cp(tp.price)} (RR ${fmt(tp.rr, 2)})`);
         lines.push(`  <i>${esc(tp.reasoning)}</i>`);
       });
     }
     if (plan.invalidation) {
-      lines.push(`<b>Invalidation:</b> ${fmt(plan.invalidation.price)}`);
+      lines.push(`<b>Invalidation:</b> ${cp(plan.invalidation.price)}`);
       lines.push(`  <i>${esc(plan.invalidation.reasoning)}</i>`);
     }
   } else {

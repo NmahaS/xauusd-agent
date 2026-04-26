@@ -1,0 +1,76 @@
+{
+  "timestamp": "2026-04-25T13:10:17.872Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bullish",
+  "biasReasoning": "H4 price is in premium zone but recent H1 candles show bullish momentum with unfilled bullish FVGs below current price; NY kill zone active; macro context mixed but fear index supports safe-haven demand.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "Unfilled bullish FVG within 20 points (4777.89-4793.08)",
+    "Unfilled bullish FVG within 20 points (4820.80-4830.74)",
+    "NY kill zone active",
+    "Fear & Greed at 31 (fear) supports safe-haven buying"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_fvg",
+    "zone": [
+      4777.89,
+      4793.08
+    ],
+    "reasoning": "Unfilled bullish FVG on H1; price currently above it but may retrace to fill; offers discount entry."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4785,
+    "confirmation": "Limit buy inside FVG midpoint; wait for price to enter zone and show rejection (e.g., bullish engulfing or pin bar)."
+  },
+  "stopLoss": {
+    "price": 4770,
+    "reasoning": "Below FVG low with buffer; invalidates bullish setup if broken.",
+    "pips": 150
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4830,
+      "reasoning": "Upper end of second FVG; first liquidity target.",
+      "rr": 3
+    },
+    {
+      "level": "TP2",
+      "price": 4850,
+      "reasoning": "Recent swing high area; premium zone.",
+      "rr": 4.3
+    },
+    {
+      "level": "TP3",
+      "price": 4870,
+      "reasoning": "Above recent highs; extended target.",
+      "rr": 5.7
+    }
+  ],
+  "invalidation": {
+    "price": 4768,
+    "reasoning": "Close below FVG low invalidates bullish structure."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone 12-15 UTC — execute now on limit fill if price retraces to FVG."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 150-pip stop"
+  },
+  "macroContext": "US 10Y yield rising (4.34%) and real yields positive (1.92%) are bearish for gold, but Fear & Greed at 31 (fear) provides safe-haven support; EUR/USD flat so dollar impact neutral.",
+  "warnings": [
+    "H4 bias neutral; no clear structure direction.",
+    "Price is in premium zone on H4; potential resistance.",
+    "No active order blocks near price; relying on FVG only.",
+    "Economic calendar: Trump speech in 170 min (medium impact).",
+    "IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

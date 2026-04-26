@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-04-26T05:22:53.947Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 price is in premium zone (205.1% of range) suggesting overextension; H1 shows unfilled bullish FVGs above current price acting as resistance; EUR/USD flat, real yields positive (1.92%) bearish for gold; Fear & Greed at 33 (fear) but rising risk-on neutral; no clear SMC structure on H4/H1, but premium zone and bearish macro tilt bias bearish.",
+  "setupQuality": "B",
+  "confluenceCount": 3,
+  "confluenceFactors": [
+    "Price in premium zone (205.1% of H4 range)",
+    "Unfilled bullish FVGs above price may act as resistance",
+    "Real yields positive (1.92%) bearish for gold"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4860.15,
+      4868.7
+    ],
+    "reasoning": "Last up-close candle before impulsive move down from 4870.1 to 4851.5 on H1; overlaps with unfilled bullish FVG at 4843.65-4855.50 which may act as resistance; premium zone confluence."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4864.5,
+    "confirmation": "Limit sell inside OB midpoint; validated by premium zone and bearish macro"
+  },
+  "stopLoss": {
+    "price": 4875,
+    "reasoning": "Above OB high (4870.1) plus buffer; invalidates bearish structure if breached",
+    "pips": 105
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4830,
+      "reasoning": "Prior H1 swing low / first liquidity pool",
+      "rr": 3.3
+    },
+    {
+      "level": "TP2",
+      "price": 4800,
+      "reasoning": "H1 bullish FVG fill zone",
+      "rr": 6.1
+    },
+    {
+      "level": "TP3",
+      "price": 4770,
+      "reasoning": "H4 discount zone entry (50% fib of 4626.60-4733.25)",
+      "rr": 9
+    }
+  ],
+  "invalidation": {
+    "price": 4875.5,
+    "reasoning": "Close above OB high invalidates bearish H1 structure"
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00 UTC) or NY kill zone (12:00 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 105-pip stop"
+  },
+  "macroContext": "EUR/USD flat (1.17108), US 10Y yield rising (4.34%), real yield positive (1.92%) bearish for gold; Fear & Greed 33 (fear) but rising risk-on neutral.",
+  "warnings": [
+    "H4/H1 SMC structure neutral; no clear BOS/CHoCH",
+    "Unfilled bullish FVGs below price may act as support",
+    "Asia session low liquidity; prefer London/NY execution",
+    "IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

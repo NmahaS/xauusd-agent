@@ -33,14 +33,15 @@ jobs:
       - name: Run analysis
         if: steps.market.outcome == 'success'
         env:
-          TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
+          IG_API_KEY: ${{ secrets.IG_API_KEY }}
+          IG_USERNAME: ${{ secrets.IG_USERNAME }}
+          IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
+          IG_DEMO: ${{ secrets.IG_DEMO }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           DEEPSEEK_MODEL: deepseek-chat
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          METALPRICE_API_KEY: ${{ secrets.METALPRICE_API_KEY }}
-          METALSDEV_API_KEY: ${{ secrets.METALSDEV_API_KEY }}
         run: node src/run.js
       - name: Commit plan
         if: steps.market.outcome == 'success'

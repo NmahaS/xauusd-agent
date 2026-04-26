@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-04-25T12:44:57.841Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 structure is neutral with no clear BOS/CHoCH; price is in extreme premium zone (205.2% of range) suggesting overextension but no bearish confirmation. H1 shows bullish FVGs but no clear structure bias. Cross-asset and macro are mixed: EUR/USD flat, real yields bearish, fear index neutral. No high-confidence setup.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for clearer structure or retracement to discount zone"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "EUR/USD flat (neutral), 10Y yield rising (bearish), real yields positive (bearish), Fear & Greed at 31 (fear, neutral for gold).",
+  "warnings": [
+    "H4 bias is neutral with no recent BOS/CHoCH",
+    "Price is in extreme premium zone (205.2% of H4 range) - risky for longs",
+    "No active order blocks near price on H1 or H4",
+    "Bullish FVGs exist but are far above current price (4777-4830) - not actionable",
+    "Cross-asset and macro are mixed, no clear directional catalyst",
+    "IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

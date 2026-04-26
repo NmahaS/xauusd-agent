@@ -1,13 +1,13 @@
 {
   "date": "2026-04-26",
-  "totalPlans": 1,
+  "totalPlans": 2,
   "trades": 1,
-  "noTrades": 0,
+  "noTrades": 1,
   "setups": {
     "A+": 0,
     "A": 0,
     "B": 1,
-    "no-trade": 0
+    "no-trade": 1
   },
   "directions": {
     "long": 0,

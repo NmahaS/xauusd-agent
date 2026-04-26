@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-04-26T22:00:56.998Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 premium zone (198.6% of range) suggests overextension; H1 unfilled bullish FVG at 4800-4816 may act as resistance; EUR/USD strengthening (dollar weakening) but gold already priced in; fear index at 33 (fear) but rising trend neutral; no clear SMC structure due to gap in data.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for next London session"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "EUR/USD strengthening (dollar weakening) typically bullish for gold, but real yields unknown; fear index at 33 (fear) with rising trend neutral; no clear macro catalyst.",
+  "warnings": [
+    "Insufficient data for H4/H1 SMC structure (no recent CHoCH/BOS)",
+    "Price far from any active order blocks or OTE zones",
+    "No clear entry trigger or invalidation level",
+    "FRED macro data unavailable — yields/real-rate missing",
+    "Wide IG spread (2.50) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

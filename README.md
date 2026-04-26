@@ -72,28 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-26T05:22:53.947Z
+**Generated:** 2026-04-26T22:00:56.998Z
 
 - **Bias:** bearish
-- **Setup Quality:** B
-- **Confluence:** 3 — Price in premium zone (205.1% of H4 range); Unfilled bullish FVGs above price may act as resistance; Real yields positive (1.92%) bearish for gold
-- **Session:** asia — Wait for London kill zone (07:00 UTC) or NY kill zone (12:00 UTC)
-- **Direction:** short
-- **POI:** bearish_order_block @ [4860.15, 4868.7]
-- **Entry:** limit @ 4864.5 — Limit sell inside OB midpoint; validated by premium zone and bearish macro
-- **Stop Loss:** 4875
-- **TP1:** 4830 (RR 3.3)
-- **TP2:** 4800 (RR 6.1)
-- **TP3:** 4770 (RR 9)
-- **Invalidation:** 4875.5
+- **Setup Quality:** no-trade
+- **Confluence:** 0 — none
+- **Session:** off — Wait for next London session
+- **Direction:** no-trade
 
-**Macro Context:** EUR/USD flat (1.17108), US 10Y yield rising (4.34%), real yield positive (1.92%) bearish for gold; Fear & Greed 33 (fear) but rising risk-on neutral.
+**Macro Context:** EUR/USD strengthening (dollar weakening) typically bullish for gold, but real yields unknown; fear index at 33 (fear) with rising trend neutral; no clear macro catalyst.
 
 **Warnings:**
-- ⚠ H4/H1 SMC structure neutral; no clear BOS/CHoCH
-- ⚠ Unfilled bullish FVGs below price may act as support
-- ⚠ Asia session low liquidity; prefer London/NY execution
-- ⚠ IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.
+- ⚠ Insufficient data for H4/H1 SMC structure (no recent CHoCH/BOS)
+- ⚠ Price far from any active order blocks or OTE zones
+- ⚠ No clear entry trigger or invalidation level
+- ⚠ FRED macro data unavailable — yields/real-rate missing
+- ⚠ Wide IG spread (2.50) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->
 

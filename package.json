@@ -10,6 +10,9 @@
     "dry-run": "DRY_RUN=true node src/run.js",
     "report": "node src/plan/generateMonthlyReport.js",
     "report:month": "node src/plan/generateMonthlyReport.js --month",
+    "backtest": "node src/backtest/run.js",
+    "backtest:fetch": "node src/backtest/run.js --fetch",
+    "backtest:report": "node src/backtest/run.js --report-only",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {

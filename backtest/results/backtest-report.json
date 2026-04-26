@@ -1,0 +1,120 @@
+{
+  "period": {
+    "from": "2026-03-13T01:00:00.000Z",
+    "to": "2026-04-24T05:00:00.000Z",
+    "totalCandlesScanned": 671
+  },
+  "overall": {
+    "totalSignals": 671,
+    "totalTrades": 11,
+    "skipped": 657,
+    "expired": 3,
+    "wins": 9,
+    "losses": 2,
+    "winRate": "81.8%",
+    "totalNetRR": 60.94,
+    "avgWinRR": 6.99,
+    "avgLossRR": -1,
+    "expectancy": 5.54,
+    "profitFactor": 31.47,
+    "maxWinStreak": 9,
+    "maxLossStreak": 2,
+    "tpDistribution": {
+      "TP1": 7,
+      "TP2": 1,
+      "TP3": 1
+    }
+  },
+  "byQuality": [
+    {
+      "quality": "A+",
+      "trades": 2,
+      "wins": 1,
+      "winRate": "50.0%",
+      "avgRR": 0.56,
+      "netRR": 1.12
+    },
+    {
+      "quality": "A",
+      "trades": 3,
+      "wins": 2,
+      "winRate": "66.7%",
+      "avgRR": 4.58,
+      "netRR": 13.73
+    },
+    {
+      "quality": "B",
+      "trades": 6,
+      "wins": 6,
+      "winRate": "100.0%",
+      "avgRR": 7.68,
+      "netRR": 46.09
+    }
+  ],
+  "bySession": [
+    {
+      "session": "london",
+      "trades": 3,
+      "wins": 2,
+      "winRate": "66.7%",
+      "avgRR": 5.53,
+      "netRR": 16.58
+    },
+    {
+      "session": "ny",
+      "trades": 4,
+      "wins": 3,
+      "winRate": "75.0%",
+      "avgRR": 2.28,
+      "netRR": 9.12
+    },
+    {
+      "session": "asia",
+      "trades": 3,
+      "wins": 3,
+      "winRate": "100.0%",
+      "avgRR": 10.35,
+      "netRR": 31.05
+    },
+    {
+      "session": "off",
+      "trades": 1,
+      "wins": 1,
+      "winRate": "100.0%",
+      "avgRR": 4.19,
+      "netRR": 4.19
+    }
+  ],
+  "byDay": [
+    {
+      "day": "Monday",
+      "trades": 0,
+      "winRate": "N/A",
+      "netRR": 0
+    },
+    {
+      "day": "Tuesday",
+      "trades": 3,
+      "winRate": "100.0%",
+      "netRR": 16.49
+    },
+    {
+      "day": "Wednesday",
+      "trades": 2,
+      "winRate": "0.0%",
+      "netRR": -2
+    },
+    {
+      "day": "Thursday",
+      "trades": 3,
+      "winRate": "100.0%",
+      "netRR": 27.16
+    },
+    {
+      "day": "Friday",
+      "trades": 3,
+      "winRate": "100.0%",
+      "netRR": 19.29
+    }
+  ]
+}

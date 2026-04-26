@@ -1,0 +1,30 @@
+XAU/AUD BACKTEST REPORT
+Period: 2026-03-13T01:00:00.000Z → 2026-04-24T05:00:00.000Z
+Candles scanned: 671
+Trades taken: 11 · Skipped: 657 · Expired: 3
+
+Win rate: 81.8% (9W / 2L)
+Net RR: +60.94R
+Avg win: +6.99R · Avg loss: -1R
+Expectancy: +5.54R/trade · PF: 31.47x
+Streaks: max 9W / 2L
+
+TP distribution: TP1=7 TP2=1 TP3=1
+
+By Quality:
+  A+     2 trades   50.0% WR    0.56R avg     1.12R net
+  A      3 trades   66.7% WR    4.58R avg    13.73R net
+  B      6 trades  100.0% WR    7.68R avg    46.09R net
+
+By Session:
+  london     3 trades   66.7% WR    5.53R avg    16.58R net
+  ny         4 trades   75.0% WR    2.28R avg     9.12R net
+  asia       3 trades  100.0% WR   10.35R avg    31.05R net
+  off        1 trades  100.0% WR    4.19R avg     4.19R net
+
+By Day:
+  Monday        0 trades     N/A WR        0R net
+  Tuesday       3 trades  100.0% WR    16.49R net
+  Wednesday     2 trades    0.0% WR       -2R net
+  Thursday      3 trades  100.0% WR    27.16R net
+  Friday        3 trades  100.0% WR    19.29R net

@@ -72,26 +72,27 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-26T22:53:42.392Z
+**Generated:** 2026-04-26T23:52:29.003Z
 
 - **Bias:** bearish
 - **Setup Quality:** B
-- **Confluence:** 3 — Price in premium zone (198.6% of range) for short; Unfilled bearish FVG above price (4800-4816) may act as resistance; Real yields positive (1.92%) bearish for gold
-- **Session:** off — London kill zone 07-10 UTC
+- **Confluence:** 3 — Price in premium zone (211.4% of range); Unfilled bearish FVG within 20 points (4800-4816); EUR/USD strengthening (dollar weakening) - bearish for gold
+- **Session:** off — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)
 - **Direction:** short
-- **POI:** bearish_order_block @ [4847.45, 4852.55]
-- **Entry:** limit @ 4850 — Limit sell inside OB; wait for price to retrace into zone.
-- **Stop Loss:** 4860
-- **TP1:** 4830 (RR 2)
-- **TP2:** 4810 (RR 4)
-- **Invalidation:** 4861
+- **POI:** bearish_order_block @ [4840.95, 4847.95]
+- **Entry:** limit @ 4844.5 — Limit sell inside OB; wait for price to enter zone and show rejection.
+- **Stop Loss:** 4855
+- **TP1:** 4820 (RR 2.3)
+- **TP2:** 4790 (RR 5.2)
+- **TP3:** 4760 (RR 8)
+- **Invalidation:** 4855.5
 
-**Macro Context:** EUR/USD strengthening (dollar weakening) but gold failed to rally; real yields positive (1.92%) bearish; Fear & Greed at 33 (fear) neutral.
+**Macro Context:** EUR/USD strengthening (dollar weakening) is bearish for gold; US 10Y yield rising (4.34%) and positive real yields (1.92%) add headwinds; Fear & Greed at 33 (fear) neutral.
 
 **Warnings:**
-- ⚠ Low confluence (3/10); setup quality B.
-- ⚠ No active kill zone; wait for London session.
-- ⚠ H4 bullish FVG below price may act as support.
+- ⚠ Low confluence count (3/10); exercise caution.
+- ⚠ H4 and H1 structure not clearly aligned; bias is tentative.
+- ⚠ No active kill zone; wait for better execution window.
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

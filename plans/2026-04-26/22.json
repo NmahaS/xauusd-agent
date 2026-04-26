@@ -1,33 +1,67 @@
 {
-  "timestamp": "2026-04-26T22:00:56.998Z",
+  "timestamp": "2026-04-26T22:53:42.392Z",
   "symbol": "XAU/AUD",
   "timeframe": "1h",
   "bias": "bearish",
-  "biasReasoning": "H4 premium zone (198.6% of range) suggests overextension; H1 unfilled bullish FVG at 4800-4816 may act as resistance; EUR/USD strengthening (dollar weakening) but gold already priced in; fear index at 33 (fear) but rising trend neutral; no clear SMC structure due to gap in data.",
-  "setupQuality": "no-trade",
-  "confluenceCount": 0,
-  "confluenceFactors": [],
-  "direction": null,
-  "poi": null,
-  "entry": null,
-  "stopLoss": null,
-  "takeProfits": null,
-  "invalidation": null,
+  "biasReasoning": "H4 premium zone (198.6% of range) suggests overextension; H1 unfilled FVG above price may act as resistance; EUR/USD strengthening (dollar weakening) but gold failed to rally, indicating exhaustion; real yields positive (1.92%) bearish for gold.",
+  "setupQuality": "B",
+  "confluenceCount": 3,
+  "confluenceFactors": [
+    "Price in premium zone (198.6% of range) for short",
+    "Unfilled bearish FVG above price (4800-4816) may act as resistance",
+    "Real yields positive (1.92%) bearish for gold"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4847.45,
+      4852.55
+    ],
+    "reasoning": "Last up-close candle before impulsive move down from 4886.9 high; overlaps with H4 bullish FVG (4712-4817) now acting as resistance."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4850,
+    "confirmation": "Limit sell inside OB; wait for price to retrace into zone."
+  },
+  "stopLoss": {
+    "price": 4860,
+    "reasoning": "Above OB high with buffer; invalidates bearish setup if breached.",
+    "pips": 100
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4830,
+      "reasoning": "Recent swing low / first liquidity pool.",
+      "rr": 2
+    },
+    {
+      "level": "TP2",
+      "price": 4810,
+      "reasoning": "H1 unfilled FVG bottom / discount zone.",
+      "rr": 4
+    }
+  ],
+  "invalidation": {
+    "price": 4861,
+    "reasoning": "Close above OB high invalidates bearish structure."
+  },
   "session": {
     "current": "off",
-    "recommendedExecutionWindow": "Wait for next London session"
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC"
   },
   "risk": {
-    "suggestedRiskPct": 0,
-    "positionSizeHint": "No trade"
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 100-pip stop"
   },
-  "macroContext": "EUR/USD strengthening (dollar weakening) typically bullish for gold, but real yields unknown; fear index at 33 (fear) with rising trend neutral; no clear macro catalyst.",
+  "macroContext": "EUR/USD strengthening (dollar weakening) but gold failed to rally; real yields positive (1.92%) bearish; Fear & Greed at 33 (fear) neutral.",
   "warnings": [
-    "Insufficient data for H4/H1 SMC structure (no recent CHoCH/BOS)",
-    "Price far from any active order blocks or OTE zones",
-    "No clear entry trigger or invalidation level",
-    "FRED macro data unavailable — yields/real-rate missing",
-    "Wide IG spread (2.50) — confirm before market orders",
+    "Low confluence (3/10); setup quality B.",
+    "No active kill zone; wait for London session.",
+    "H4 bullish FVG below price may act as support.",
+    "Wide IG spread (0.80) — confirm before market orders",
     "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
   ],
   "promptVersion": "v2.0"

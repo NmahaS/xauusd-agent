@@ -72,22 +72,27 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-26T22:00:56.998Z
+**Generated:** 2026-04-26T22:53:42.392Z
 
 - **Bias:** bearish
-- **Setup Quality:** no-trade
-- **Confluence:** 0 — none
-- **Session:** off — Wait for next London session
-- **Direction:** no-trade
+- **Setup Quality:** B
+- **Confluence:** 3 — Price in premium zone (198.6% of range) for short; Unfilled bearish FVG above price (4800-4816) may act as resistance; Real yields positive (1.92%) bearish for gold
+- **Session:** off — London kill zone 07-10 UTC
+- **Direction:** short
+- **POI:** bearish_order_block @ [4847.45, 4852.55]
+- **Entry:** limit @ 4850 — Limit sell inside OB; wait for price to retrace into zone.
+- **Stop Loss:** 4860
+- **TP1:** 4830 (RR 2)
+- **TP2:** 4810 (RR 4)
+- **Invalidation:** 4861
 
-**Macro Context:** EUR/USD strengthening (dollar weakening) typically bullish for gold, but real yields unknown; fear index at 33 (fear) with rising trend neutral; no clear macro catalyst.
+**Macro Context:** EUR/USD strengthening (dollar weakening) but gold failed to rally; real yields positive (1.92%) bearish; Fear & Greed at 33 (fear) neutral.
 
 **Warnings:**
-- ⚠ Insufficient data for H4/H1 SMC structure (no recent CHoCH/BOS)
-- ⚠ Price far from any active order blocks or OTE zones
-- ⚠ No clear entry trigger or invalidation level
-- ⚠ FRED macro data unavailable — yields/real-rate missing
-- ⚠ Wide IG spread (2.50) — confirm before market orders
+- ⚠ Low confluence (3/10); setup quality B.
+- ⚠ No active kill zone; wait for London session.
+- ⚠ H4 bullish FVG below price may act as support.
+- ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->
 

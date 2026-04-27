@@ -1,40 +1,88 @@
 {
   "date": "2026-04-27",
   "totalPlans": 3,
-  "trades": 0,
-  "noTrades": 3,
+  "trades": 1,
+  "noTrades": 2,
   "setups": {
     "A+": 0,
     "A": 0,
-    "B": 0,
-    "no-trade": 3
+    "B": 1,
+    "no-trade": 2
   },
   "directions": {
     "long": 0,
-    "short": 0
+    "short": 1
   },
   "wins": {
     "total": 0,
     "losses": 0,
     "partialWins": 0,
     "expired": 0,
-    "open": 0,
+    "open": 1,
     "winRate": "0%",
-    "winsByQuality": {},
-    "winsBySession": {}
+    "winsByQuality": {
+      "B": {
+        "wins": 0,
+        "losses": 0,
+        "total": 1,
+        "winRate": "0.0%"
+      }
+    },
+    "winsBySession": {
+      "london": {
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%"
+      }
+    }
   },
-  "plans": [],
+  "plans": [
+    {
+      "hour": "09",
+      "setupQuality": "B",
+      "direction": "short",
+      "entry": 4829,
+      "sl": 4835,
+      "slPips": 60,
+      "tp1": {
+        "price": 4810,
+        "rr": 3.2
+      },
+      "tp2": {
+        "price": 4795,
+        "rr": 5.7
+      },
+      "tp3": null,
+      "maxRR": 5.7,
+      "session": "london",
+      "bias": "bearish",
+      "confluenceCount": 4,
+      "outcome": "open",
+      "actualRR": null,
+      "tpHits": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
   "dailyRR": {
-    "totalPotentialRR_TP1": 0,
-    "totalPotentialRR_TP2": 0,
+    "totalPotentialRR_TP1": 3.2,
+    "totalPotentialRR_TP2": 5.7,
     "totalPotentialRR_TP3": 0,
     "totalActualRR": 0,
-    "avgRR_TP1": null,
-    "avgRR_TP2": null,
-    "avgRR_TP3": null,
+    "avgRR_TP1": 3.2,
+    "avgRR_TP2": 5.7,
+    "avgRR_TP3": 0,
     "avgActualRR": null,
     "netRR": 0,
-    "bestSetup": null,
+    "bestSetup": {
+      "hour": "09",
+      "rr": 3.2,
+      "direction": "short",
+      "quality": "B",
+      "outcome": "open"
+    },
     "worstSetup": null
   }
 }

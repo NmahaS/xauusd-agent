@@ -72,20 +72,25 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-27T11:55:33.925Z
+**Generated:** 2026-04-27T14:22:59.335Z
 
 - **Bias:** bearish
-- **Setup Quality:** no-trade
-- **Confluence:** 0 — none
-- **Session:** london — Wait for London kill zone or clearer setup
-- **Direction:** no-trade
+- **Setup Quality:** B
+- **Confluence:** 4 — H4 bullish structure (BOS intact); Price in discount zone (38.5% of range); Unfilled bearish FVG on H1 within 20 points; NY kill zone active
+- **Session:** ny — NY kill zone 12-15 UTC — execute now on limit fill
+- **Direction:** short
+- **POI:** bearish_order_block @ [4834.75, 4836.35]
+- **Entry:** limit @ 4835.55 — Limit sell inside FVG; wait for price to enter zone and show rejection.
+- **Stop Loss:** 4842
+- **TP1:** 4810 (RR 3.96)
+- **TP2:** 4780 (RR 8.61)
+- **Invalidation:** 4842
 
-**Macro Context:** EUR/USD rising (dollar weakening) bullish for gold, but US 10Y yield rising and positive real yields (1.92%) bearish; F&G neutral (47). Mixed macro.
+**Macro Context:** EUR/USD strengthening (dollar weakening) is bearish for gold, but US 10Y yield rising and positive real yields (1.92%) are bearish; Fear & Greed neutral (47) with risk-on trend.
 
 **Warnings:**
-- ⚠ No active OBs or FVGs within 20 points of current price
-- ⚠ H1 bias neutral, no clear structure
-- ⚠ High-impact BOJ events in ~14 hours may cause volatility
+- ⚠ H4 bias is bullish, conflicting with short bias; trade only if price enters FVG and shows rejection.
+- ⚠ No active order block near price; reliance on FVG only.
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-04-27T14:22:59.335Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 BOS-bullish but price is in discount zone and H1 structure is neutral; however, bearish FVGs on both H4 and H1, EUR/USD strengthening (dollar weakening) but real yields are positive and rising, and NY kill zone active. The bearish FVGs and premium zone on H1 suggest a short bias.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bullish structure (BOS intact)",
+    "Price in discount zone (38.5% of range)",
+    "Unfilled bearish FVG on H1 within 20 points",
+    "NY kill zone active"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4834.75,
+      4836.35
+    ],
+    "reasoning": "H1 bearish FVG at 4834.75-4836.35; price may retrace to fill this gap before continuing lower."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4835.55,
+    "confirmation": "Limit sell inside FVG; wait for price to enter zone and show rejection."
+  },
+  "stopLoss": {
+    "price": 4842,
+    "reasoning": "Above FVG high with buffer; invalidates short if price closes above 4842.",
+    "pips": 64.5
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4810,
+      "reasoning": "Previous swing low / liquidity pool",
+      "rr": 3.96
+    },
+    {
+      "level": "TP2",
+      "price": 4780,
+      "reasoning": "Next support zone",
+      "rr": 8.61
+    }
+  ],
+  "invalidation": {
+    "price": 4842,
+    "reasoning": "Close above FVG high invalidates bearish bias."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone 12-15 UTC — execute now on limit fill"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 64.5-pip stop"
+  },
+  "macroContext": "EUR/USD strengthening (dollar weakening) is bearish for gold, but US 10Y yield rising and positive real yields (1.92%) are bearish; Fear & Greed neutral (47) with risk-on trend.",
+  "warnings": [
+    "H4 bias is bullish, conflicting with short bias; trade only if price enters FVG and shows rejection.",
+    "No active order block near price; reliance on FVG only.",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

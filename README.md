@@ -72,28 +72,20 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-27T20:16:41.086Z
+**Generated:** 2026-04-27T22:03:19.762Z
 
-- **Bias:** bearish
-- **Setup Quality:** B
-- **Confluence:** 3 — H4 bullish structure (BOS intact); Price in premium zone (68.3% of H1 range); EUR/USD falling (dollar strengthening)
-- **Session:** off — London kill zone 07-10 UTC
-- **Direction:** short
-- **POI:** bearish_order_block @ [4844.8, 4848.6]
-- **Entry:** limit @ 4846.7 — Limit sell inside OB zone; wait for confirmation of rejection.
-- **Stop Loss:** 4854
-- **TP1:** 4829.05 (RR 2.4)
-- **TP2:** 4818.67 (RR 3.8)
-- **TP3:** 4808.9 (RR 5.2)
-- **Invalidation:** 4854.5
+- **Bias:** neutral
+- **Setup Quality:** no-trade
+- **Confluence:** 0 — none
+- **Session:** off — Wait for London kill zone (07-10 UTC)
+- **Direction:** no-trade
 
-**Macro Context:** EUR/USD falling signals dollar strength, real yields unknown, F&G neutral — mildly bearish for gold.
+**Macro Context:** EUR/USD rising (dollar weakening) is bullish for gold, but real yields are positive (1.87%) and F&G neutral, creating mixed signals.
 
 **Warnings:**
-- ⚠ Low confluence count (3/10); setup quality B only.
-- ⚠ No active kill zone; wait for London session.
-- ⚠ H4 bullish bias conflicts with short direction.
-- ⚠ FRED macro data unavailable — yields/real-rate missing
+- ⚠ No clear POI near price
+- ⚠ H1 in premium zone with no active OB
+- ⚠ Current session is off-hours
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

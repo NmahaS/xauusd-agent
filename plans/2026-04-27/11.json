@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-04-27T11:21:05.985Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 bullish BOS but price is in discount zone; H1 neutral with no clear structure. However, bearish H4 FVG at 4791-4798 and EUR/USD strengthening (dollar weakening) contradicts. No clear confluence for a trade. Bias is neutral due to conflicting signals.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "Wait for clearer structure or POI near price"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "EUR/USD strengthening (dollar weakening) is bullish for gold, but rising real yields (1.92%) are bearish; Fear & Greed neutral at 47. Mixed macro signals.",
+  "warnings": [
+    "No active order blocks or FVGs within 20 points of current price",
+    "H1 structure is neutral with no clear bias",
+    "Price is in discount zone on H4 but no bullish POI near price",
+    "Upcoming BOJ policy decision may cause volatility",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

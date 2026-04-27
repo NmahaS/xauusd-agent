@@ -72,27 +72,26 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-27T16:50:04.890Z
+**Generated:** 2026-04-27T18:15:44.268Z
 
 - **Bias:** bearish
 - **Setup Quality:** B
-- **Confluence:** 3 — H1 bearish structure (BOS-bearish); Unmitigated bearish H1 OB at 4830.77-4853.30; Unfilled bearish FVG at 4834.75-4836.35
-- **Session:** ny — NY kill zone 12-15 UTC — wait for retracement to premium zone.
+- **Confluence:** 3 — H1 bearish structure (BOS-bearish); Price in premium zone (79.7% of H1 range); Active bearish OB within 20 points (4830.77-4853.30)
+- **Session:** off — Wait for London kill zone 07-10 UTC or NY kill zone 12-15 UTC
 - **Direction:** short
 - **POI:** bearish_order_block @ [4830.77, 4853.3]
-- **Entry:** limit @ 4842 — Limit sell inside OB; validated by H1 bearish structure and dollar strength.
-- **Stop Loss:** 4858
-- **TP1:** 4808.9 (RR 2.1)
-- **TP2:** 4780 (RR 3.9)
-- **TP3:** 4750 (RR 5.8)
-- **Invalidation:** 4858.5
+- **Entry:** limit @ 4842 — Limit sell inside OB; validated by H1 bearish structure and premium zone.
+- **Stop Loss:** 4854
+- **TP1:** 4818 (RR 2)
+- **TP2:** 4809 (RR 2.75)
+- **TP3:** 4791 (RR 4.25)
+- **Invalidation:** 4854
 
-**Macro Context:** EUR/USD weakening (dollar strengthening), real yields unknown, F&G neutral — bearish backdrop for gold.
+**Macro Context:** EUR/USD rising (dollar weakening) is bullish for gold, but US 10Y yield rising and positive real yields are bearish; Fear & Greed neutral. Mixed macro.
 
 **Warnings:**
-- ⚠ H4 bullish bias conflicts with H1 bearish; wait for H1 confirmation.
-- ⚠ Current price far from POI; limit order may not fill.
-- ⚠ FRED macro data unavailable — yields/real-rate missing
+- ⚠ H4 bullish bias conflicts with H1 bearish bias; trade with caution.
+- ⚠ Current session is off-kill-zone; wait for London or NY session for higher probability.
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

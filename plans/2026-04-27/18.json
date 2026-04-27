@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-04-27T18:15:44.268Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 bullish BOS but price is in discount zone; H1 bearish BOS and price in premium zone with bearish OB nearby. Conflicting timeframes but H1 structure more immediate.",
+  "setupQuality": "B",
+  "confluenceCount": 3,
+  "confluenceFactors": [
+    "H1 bearish structure (BOS-bearish)",
+    "Price in premium zone (79.7% of H1 range)",
+    "Active bearish OB within 20 points (4830.77-4853.30)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4830.77,
+      4853.3
+    ],
+    "reasoning": "Last up-close candle before impulsive leg that broke H1 swing low; overlaps with premium zone."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4842,
+    "confirmation": "Limit sell inside OB; validated by H1 bearish structure and premium zone."
+  },
+  "stopLoss": {
+    "price": 4854,
+    "reasoning": "Above OB high with buffer; invalidates bearish H1 structure if breached.",
+    "pips": 120
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4818,
+      "reasoning": "H1 OTE long zone / first liquidity pool",
+      "rr": 2
+    },
+    {
+      "level": "TP2",
+      "price": 4809,
+      "reasoning": "H1 equal lows liquidity",
+      "rr": 2.75
+    },
+    {
+      "level": "TP3",
+      "price": 4791,
+      "reasoning": "H4 bearish FVG start",
+      "rr": 4.25
+    }
+  ],
+  "invalidation": {
+    "price": 4854,
+    "reasoning": "Close above OB high invalidates bearish H1 structure."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone 07-10 UTC or NY kill zone 12-15 UTC"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 120-pip stop"
+  },
+  "macroContext": "EUR/USD rising (dollar weakening) is bullish for gold, but US 10Y yield rising and positive real yields are bearish; Fear & Greed neutral. Mixed macro.",
+  "warnings": [
+    "H4 bullish bias conflicts with H1 bearish bias; trade with caution.",
+    "Current session is off-kill-zone; wait for London or NY session for higher probability.",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-04-27T16:50:04.890Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 bullish structure but H1 bearish BOS with price in discount zone; bearish OB and FVG above price suggest potential short from premium zone. However, current price is low, so wait for retracement to premium for short.",
+  "setupQuality": "B",
+  "confluenceCount": 3,
+  "confluenceFactors": [
+    "H1 bearish structure (BOS-bearish)",
+    "Unmitigated bearish H1 OB at 4830.77-4853.30",
+    "Unfilled bearish FVG at 4834.75-4836.35"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4830.77,
+      4853.3
+    ],
+    "reasoning": "Last up-close candle before impulsive leg that broke H1 swing low; overlaps with bearish FVG and premium zone."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4842,
+    "confirmation": "Limit sell inside OB; validated by H1 bearish structure and dollar strength."
+  },
+  "stopLoss": {
+    "price": 4858,
+    "reasoning": "Above OB high with ATR buffer; invalidates bearish H1 structure if breached.",
+    "pips": 160
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4808.9,
+      "reasoning": "Prior H1 swing low / first liquidity pool.",
+      "rr": 2.1
+    },
+    {
+      "level": "TP2",
+      "price": 4780,
+      "reasoning": "H4 discount zone entry (50% fib).",
+      "rr": 3.9
+    },
+    {
+      "level": "TP3",
+      "price": 4750,
+      "reasoning": "H4 equal lows / session liquidity target.",
+      "rr": 5.8
+    }
+  ],
+  "invalidation": {
+    "price": 4858.5,
+    "reasoning": "Close above OB high invalidates bearish H1 structure."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone 12-15 UTC — wait for retracement to premium zone."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 160-pip stop."
+  },
+  "macroContext": "EUR/USD weakening (dollar strengthening), real yields unknown, F&G neutral — bearish backdrop for gold.",
+  "warnings": [
+    "H4 bullish bias conflicts with H1 bearish; wait for H1 confirmation.",
+    "Current price far from POI; limit order may not fill.",
+    "FRED macro data unavailable — yields/real-rate missing",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

@@ -72,27 +72,20 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-26T23:52:29.003Z
+**Generated:** 2026-04-27T03:55:14.474Z
 
-- **Bias:** bearish
-- **Setup Quality:** B
-- **Confluence:** 3 — Price in premium zone (211.4% of range); Unfilled bearish FVG within 20 points (4800-4816); EUR/USD strengthening (dollar weakening) - bearish for gold
-- **Session:** off — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)
-- **Direction:** short
-- **POI:** bearish_order_block @ [4840.95, 4847.95]
-- **Entry:** limit @ 4844.5 — Limit sell inside OB; wait for price to enter zone and show rejection.
-- **Stop Loss:** 4855
-- **TP1:** 4820 (RR 2.3)
-- **TP2:** 4790 (RR 5.2)
-- **TP3:** 4760 (RR 8)
-- **Invalidation:** 4855.5
+- **Bias:** neutral
+- **Setup Quality:** no-trade
+- **Confluence:** 0 — none
+- **Session:** asia — Wait for London kill zone (07-10 UTC)
+- **Direction:** no-trade
 
-**Macro Context:** EUR/USD strengthening (dollar weakening) is bearish for gold; US 10Y yield rising (4.34%) and positive real yields (1.92%) add headwinds; Fear & Greed at 33 (fear) neutral.
+**Macro Context:** US 10Y yield rising (4.34%), real yields positive (1.92%), EUR/USD flat, Fear & Greed neutral (47) — mixed backdrop for gold.
 
 **Warnings:**
-- ⚠ Low confluence count (3/10); exercise caution.
-- ⚠ H4 and H1 structure not clearly aligned; bias is tentative.
-- ⚠ No active kill zone; wait for better execution window.
+- ⚠ No clear POI within 20 points of current price
+- ⚠ H4 and H1 structure neutral, no bias
+- ⚠ Price in premium zone but no short setup due to lack of bearish OB or FVG near price
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

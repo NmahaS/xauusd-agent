@@ -169,22 +169,22 @@
       "hour": "20",
       "setupQuality": "B",
       "direction": "short",
-      "entry": 4840.97,
-      "sl": 4850,
-      "slPips": 90.3,
+      "entry": 4846.7,
+      "sl": 4854,
+      "slPips": 73,
       "tp1": {
-        "price": 4820,
-        "rr": 2
+        "price": 4829.05,
+        "rr": 2.4
       },
       "tp2": {
-        "price": 4800,
-        "rr": 4
+        "price": 4818.67,
+        "rr": 3.8
       },
       "tp3": {
-        "price": 4775,
-        "rr": 6.5
+        "price": 4808.9,
+        "rr": 5.2
       },
-      "maxRR": 6.5,
+      "maxRR": 5.2,
       "session": "off",
       "bias": "bearish",
       "confluenceCount": 3,
@@ -198,13 +198,13 @@
     }
   ],
   "dailyRR": {
-    "totalPotentialRR_TP1": 13.26,
-    "totalPotentialRR_TP2": 24.96,
-    "totalPotentialRR_TP3": 16.55,
+    "totalPotentialRR_TP1": 13.66,
+    "totalPotentialRR_TP2": 24.76,
+    "totalPotentialRR_TP3": 15.25,
     "totalActualRR": 0,
-    "avgRR_TP1": 2.65,
-    "avgRR_TP2": 4.99,
-    "avgRR_TP3": 3.31,
+    "avgRR_TP1": 2.73,
+    "avgRR_TP2": 4.95,
+    "avgRR_TP3": 3.05,
     "avgActualRR": null,
     "netRR": 0,
     "bestSetup": {

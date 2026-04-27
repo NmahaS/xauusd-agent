@@ -1,58 +1,58 @@
 {
-  "timestamp": "2026-04-27T20:03:06.525Z",
+  "timestamp": "2026-04-27T20:16:41.086Z",
   "symbol": "XAU/AUD",
   "timeframe": "1h",
   "bias": "bearish",
-  "biasReasoning": "H4 BOS-bullish but price is in discount on H4, while H1 is in premium zone with a bearish FVG above. H1 structure is neutral but recent price action shows rejection from highs. EUR/USD weakening supports bearish gold. No active OBs near price, but H1 premium zone and bearish FVG suggest a short bias.",
+  "biasReasoning": "H4 BOS-bullish but price is in premium on H1 and H4 discount is deep; bearish FVGs above and H1 premium zone suggest rejection. EUR/USD weakening supports bearish gold.",
   "setupQuality": "B",
   "confluenceCount": 3,
   "confluenceFactors": [
+    "H4 bullish structure (BOS intact)",
     "Price in premium zone (68.3% of H1 range)",
-    "Unfilled bearish FVG above (4791.25-4798.20 on H4)",
-    "EUR/USD weakening (dollar strengthening)"
+    "EUR/USD falling (dollar strengthening)"
   ],
   "direction": "short",
   "poi": {
     "type": "bearish_order_block",
     "zone": [
-      4837.13,
-      4844.8
+      4844.8,
+      4848.6
     ],
-    "reasoning": "H1 OTE short zone (0.618-0.786 fib) and premium zone; also near H4 bearish FVG."
+    "reasoning": "Potential bearish OB from H1 structure; price in premium and near OTE short zone."
   },
   "entry": {
     "trigger": "limit",
-    "price": 4840.97,
-    "confirmation": "Limit sell inside OTE short zone; wait for price to reach zone with bearish confirmation."
+    "price": 4846.7,
+    "confirmation": "Limit sell inside OB zone; wait for confirmation of rejection."
   },
   "stopLoss": {
-    "price": 4850,
-    "reasoning": "Above OTE zone and recent swing high; invalidates short if broken.",
-    "pips": 90.3
+    "price": 4854,
+    "reasoning": "Above OB high with buffer; invalidates bearish setup if breached.",
+    "pips": 73
   },
   "takeProfits": [
     {
       "level": "TP1",
-      "price": 4820,
-      "reasoning": "Near H1 discount zone and previous support.",
-      "rr": 2
+      "price": 4829.05,
+      "reasoning": "Unfilled bullish FVG bottom; first liquidity target.",
+      "rr": 2.4
     },
     {
       "level": "TP2",
-      "price": 4800,
-      "reasoning": "Round number and near H4 bearish FVG target.",
-      "rr": 4
+      "price": 4818.67,
+      "reasoning": "OTE long zone start; discount area.",
+      "rr": 3.8
     },
     {
       "level": "TP3",
-      "price": 4775,
-      "reasoning": "Further downside liquidity.",
-      "rr": 6.5
+      "price": 4808.9,
+      "reasoning": "H1 range low; liquidity sweep target.",
+      "rr": 5.2
     }
   ],
   "invalidation": {
-    "price": 4850,
-    "reasoning": "Break above OTE zone and recent high invalidates bearish bias."
+    "price": 4854.5,
+    "reasoning": "Close above OB high invalidates bearish structure."
   },
   "session": {
     "current": "off",
@@ -60,13 +60,13 @@
   },
   "risk": {
     "suggestedRiskPct": 1,
-    "positionSizeHint": "1% risk on 90.3-pip stop"
+    "positionSizeHint": "1% risk on 73-pip stop"
   },
-  "macroContext": "EUR/USD weakening (dollar strengthening) bearish for gold; US 10Y yield unknown; Fear & Greed neutral (47) with risk-on trend.",
+  "macroContext": "EUR/USD falling signals dollar strength, real yields unknown, F&G neutral — mildly bearish for gold.",
   "warnings": [
-    "No active OBs near current price; POI is based on OTE zone.",
-    "H4 bias is bullish but H1 is in premium; conflicting timeframes reduce confidence.",
-    "Session is off; wait for London kill zone for better execution.",
+    "Low confluence count (3/10); setup quality B only.",
+    "No active kill zone; wait for London session.",
+    "H4 bullish bias conflicts with short direction.",
     "FRED macro data unavailable — yields/real-rate missing",
     "Wide IG spread (0.80) — confirm before market orders",
     "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"

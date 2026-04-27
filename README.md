@@ -72,26 +72,28 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-27T18:15:44.268Z
+**Generated:** 2026-04-27T20:03:06.525Z
 
 - **Bias:** bearish
 - **Setup Quality:** B
-- **Confluence:** 3 — H1 bearish structure (BOS-bearish); Price in premium zone (79.7% of H1 range); Active bearish OB within 20 points (4830.77-4853.30)
-- **Session:** off — Wait for London kill zone 07-10 UTC or NY kill zone 12-15 UTC
+- **Confluence:** 3 — Price in premium zone (68.3% of H1 range); Unfilled bearish FVG above (4791.25-4798.20 on H4); EUR/USD weakening (dollar strengthening)
+- **Session:** off — London kill zone 07-10 UTC
 - **Direction:** short
-- **POI:** bearish_order_block @ [4830.77, 4853.3]
-- **Entry:** limit @ 4842 — Limit sell inside OB; validated by H1 bearish structure and premium zone.
-- **Stop Loss:** 4854
-- **TP1:** 4818 (RR 2)
-- **TP2:** 4809 (RR 2.75)
-- **TP3:** 4791 (RR 4.25)
-- **Invalidation:** 4854
+- **POI:** bearish_order_block @ [4837.13, 4844.8]
+- **Entry:** limit @ 4840.97 — Limit sell inside OTE short zone; wait for price to reach zone with bearish confirmation.
+- **Stop Loss:** 4850
+- **TP1:** 4820 (RR 2)
+- **TP2:** 4800 (RR 4)
+- **TP3:** 4775 (RR 6.5)
+- **Invalidation:** 4850
 
-**Macro Context:** EUR/USD rising (dollar weakening) is bullish for gold, but US 10Y yield rising and positive real yields are bearish; Fear & Greed neutral. Mixed macro.
+**Macro Context:** EUR/USD weakening (dollar strengthening) bearish for gold; US 10Y yield unknown; Fear & Greed neutral (47) with risk-on trend.
 
 **Warnings:**
-- ⚠ H4 bullish bias conflicts with H1 bearish bias; trade with caution.
-- ⚠ Current session is off-kill-zone; wait for London or NY session for higher probability.
+- ⚠ No active OBs near current price; POI is based on OTE zone.
+- ⚠ H4 bias is bullish but H1 is in premium; conflicting timeframes reduce confidence.
+- ⚠ Session is off; wait for London kill zone for better execution.
+- ⚠ FRED macro data unavailable — yields/real-rate missing
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-04-27T20:03:06.525Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 BOS-bullish but price is in discount on H4, while H1 is in premium zone with a bearish FVG above. H1 structure is neutral but recent price action shows rejection from highs. EUR/USD weakening supports bearish gold. No active OBs near price, but H1 premium zone and bearish FVG suggest a short bias.",
+  "setupQuality": "B",
+  "confluenceCount": 3,
+  "confluenceFactors": [
+    "Price in premium zone (68.3% of H1 range)",
+    "Unfilled bearish FVG above (4791.25-4798.20 on H4)",
+    "EUR/USD weakening (dollar strengthening)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4837.13,
+      4844.8
+    ],
+    "reasoning": "H1 OTE short zone (0.618-0.786 fib) and premium zone; also near H4 bearish FVG."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4840.97,
+    "confirmation": "Limit sell inside OTE short zone; wait for price to reach zone with bearish confirmation."
+  },
+  "stopLoss": {
+    "price": 4850,
+    "reasoning": "Above OTE zone and recent swing high; invalidates short if broken.",
+    "pips": 90.3
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4820,
+      "reasoning": "Near H1 discount zone and previous support.",
+      "rr": 2
+    },
+    {
+      "level": "TP2",
+      "price": 4800,
+      "reasoning": "Round number and near H4 bearish FVG target.",
+      "rr": 4
+    },
+    {
+      "level": "TP3",
+      "price": 4775,
+      "reasoning": "Further downside liquidity.",
+      "rr": 6.5
+    }
+  ],
+  "invalidation": {
+    "price": 4850,
+    "reasoning": "Break above OTE zone and recent high invalidates bearish bias."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 90.3-pip stop"
+  },
+  "macroContext": "EUR/USD weakening (dollar strengthening) bearish for gold; US 10Y yield unknown; Fear & Greed neutral (47) with risk-on trend.",
+  "warnings": [
+    "No active OBs near current price; POI is based on OTE zone.",
+    "H4 bias is bullish but H1 is in premium; conflicting timeframes reduce confidence.",
+    "Session is off; wait for London kill zone for better execution.",
+    "FRED macro data unavailable — yields/real-rate missing",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

@@ -72,21 +72,20 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-27T11:21:05.985Z
+**Generated:** 2026-04-27T11:55:33.925Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** london — Wait for clearer structure or POI near price
+- **Session:** london — Wait for London kill zone or clearer setup
 - **Direction:** no-trade
 
-**Macro Context:** EUR/USD strengthening (dollar weakening) is bullish for gold, but rising real yields (1.92%) are bearish; Fear & Greed neutral at 47. Mixed macro signals.
+**Macro Context:** EUR/USD rising (dollar weakening) bullish for gold, but US 10Y yield rising and positive real yields (1.92%) bearish; F&G neutral (47). Mixed macro.
 
 **Warnings:**
-- ⚠ No active order blocks or FVGs within 20 points of current price
-- ⚠ H1 structure is neutral with no clear bias
-- ⚠ Price is in discount zone on H4 but no bullish POI near price
-- ⚠ Upcoming BOJ policy decision may cause volatility
+- ⚠ No active OBs or FVGs within 20 points of current price
+- ⚠ H1 bias neutral, no clear structure
+- ⚠ High-impact BOJ events in ~14 hours may cause volatility
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

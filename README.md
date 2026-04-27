@@ -72,21 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-27T06:38:51.037Z
+**Generated:** 2026-04-27T09:12:26.795Z
 
-- **Bias:** neutral
+- **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** asia — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)
+- **Session:** london — Wait for clearer structure or OB/FVG near price
 - **Direction:** no-trade
 
 **Macro Context:** EUR/USD strengthening (dollar weakening) is bearish for gold; US 10Y yield rising (4.34%) and positive real yields (1.92%) are bearish; Fear & Greed neutral (47) with risk-on trend.
 
 **Warnings:**
-- ⚠ No clear market structure on H4 or H1
-- ⚠ Price in extreme premium zone with no active POIs nearby
-- ⚠ No unfilled FVGs or OBs within 20 points of current price
-- ⚠ Current session (Asia) is not a kill zone
+- ⚠ H4 bias bullish but price in premium zone (51%) - conflicting
+- ⚠ H1 bias neutral with no clear OB near price
+- ⚠ No active OBs within 20 points of current price
+- ⚠ Bearish FVG above (4828.77-4829.25) but price is far below (~4835)
+- ⚠ High-impact BOJ events in next 24h may cause volatility
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

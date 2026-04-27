@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-04-27T09:12:26.795Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 BOS-bullish but price in premium zone (51%) and H1 shows bearish structure with a bearish FVG above. EUR/USD strengthening (dollar weakening) is bearish for gold. However, H1 bias is neutral and no clear OB near price, so no high-confidence setup.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "Wait for clearer structure or OB/FVG near price"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "EUR/USD strengthening (dollar weakening) is bearish for gold; US 10Y yield rising (4.34%) and positive real yields (1.92%) are bearish; Fear & Greed neutral (47) with risk-on trend.",
+  "warnings": [
+    "H4 bias bullish but price in premium zone (51%) - conflicting",
+    "H1 bias neutral with no clear OB near price",
+    "No active OBs within 20 points of current price",
+    "Bearish FVG above (4828.77-4829.25) but price is far below (~4835)",
+    "High-impact BOJ events in next 24h may cause volatility",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

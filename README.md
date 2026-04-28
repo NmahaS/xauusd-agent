@@ -72,22 +72,21 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-28T01:45:35.725Z
+**Generated:** 2026-04-28T03:59:46.259Z
 
-- **Bias:** neutral
+- **Bias:** bearish
 - **Setup Quality:** no-trade
-- **Confluence:** 0 — none
+- **Confluence:** 2 — H4 bearish FVG within 20 points; EUR/USD weakening (dollar strengthening)
 - **Session:** asia — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)
 - **Direction:** no-trade
 
-**Macro Context:** EUR/USD rising (dollar weakening) bullish for gold; Fear & Greed at 33 (fear) neutral; no yield data available.
+**Macro Context:** EUR/USD weakening (dollar strengthening), US 10Y yield stable at 4.31%, real yield positive at 1.87% (bearish for gold), Fear & Greed at 33 (fear) neutral.
 
 **Warnings:**
-- ⚠ No clear H4 or H1 structure bias
+- ⚠ No clear H1 or H4 structure bias (neutral SMC)
 - ⚠ No active order blocks near price
-- ⚠ Price in H1 premium zone but no bearish confirmation
-- ⚠ Upcoming high-impact BOJ and AUD CPI events may cause volatility
-- ⚠ FRED macro data unavailable — yields/real-rate missing
+- ⚠ Price in premium zone but no short entry trigger
+- ⚠ Upcoming high-impact AUD CPI data in ~21.5 hours may cause volatility
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

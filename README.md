@@ -72,18 +72,28 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-28T11:57:57.716Z
+**Generated:** 2026-04-28T17:01:13.370Z
 
-- **Bias:** neutral
-- **Setup Quality:** no-trade
-- **Confluence:** 0 — none
-- **Session:** london — current london session
-- **Direction:** no-trade
+- **Bias:** bullish
+- **Setup Quality:** B
+- **Confluence:** 4 — Price in discount zone (H4 40.3%, H1 42%); Unfilled bullish FVGs on H4 (4749.65-4759.57, 4771.20-4786.25); EUR/USD rising (dollar weakening) - bullish for gold; Fear & Greed at 33 (fear) - neutral to bullish for gold
+- **Session:** off — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for better fills.
+- **Direction:** long
+- **POI:** bullish_fair_value_gap @ [4749.65, 4759.57]
+- **Entry:** limit @ 4754.61 — Limit buy at midpoint of H4 bullish FVG; wait for price to retrace into the zone.
+- **Stop Loss:** 4744.65
+- **TP1:** 4793.93 (RR 3.95)
+- **TP2:** 4826.14 (RR 7.18)
+- **TP3:** 4846.05 (RR 9.18)
+- **Invalidation:** 4744.65
 
-**Macro Context:** DXY (EUR/USD proxy) flat (neutral); 10Y real yield 1.87% → bearish (positive real yields); F&G 33 (fear, neutral for gold).
+**Macro Context:** EUR/USD rising (dollar weakening) supports gold; US 10Y yield stable at 4.31% with positive real yields (1.87%) bearish; Fear & Greed at 33 (fear) neutral to bullish.
 
 **Warnings:**
-- ⚠ LLM failure: takeProfits.0.rr: Invalid input; takeProfits.1.rr: Invalid input
+- ⚠ No active H1 or H4 order blocks near price; reliance on FVG only.
+- ⚠ High-impact AUD CPI data in ~509 minutes could cause volatility.
+- ⚠ Current session is off; execution outside kill zone may have wider spreads.
+- ⚠ ⚠️ Split: Claude=no-trade DeepSeek=long — manual only
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

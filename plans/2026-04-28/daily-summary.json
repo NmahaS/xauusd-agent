@@ -1,16 +1,16 @@
 {
   "date": "2026-04-28",
-  "totalPlans": 5,
-  "trades": 1,
-  "noTrades": 4,
+  "totalPlans": 7,
+  "trades": 2,
+  "noTrades": 5,
   "setups": {
     "A+": 0,
     "A": 0,
-    "B": 1,
-    "no-trade": 4
+    "B": 2,
+    "no-trade": 5
   },
   "directions": {
-    "long": 0,
+    "long": 1,
     "short": 1
   },
   "wins": {
@@ -18,18 +18,23 @@
     "losses": 0,
     "partialWins": 0,
     "expired": 0,
-    "open": 1,
+    "open": 2,
     "winRate": "0%",
     "winsByQuality": {
       "B": {
         "wins": 0,
         "losses": 0,
-        "total": 1,
+        "total": 2,
         "winRate": "0.0%"
       }
     },
     "winsBySession": {
       "asia": {
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%"
+      },
+      "off": {
         "wins": 0,
         "losses": 0,
         "winRate": "0.0%"
@@ -64,22 +69,53 @@
         false,
         false
       ]
+    },
+    {
+      "hour": "17",
+      "setupQuality": "B",
+      "direction": "long",
+      "entry": 4754.61,
+      "sl": 4744.65,
+      "slPips": 99.6,
+      "tp1": {
+        "price": 4793.93,
+        "rr": 3.95
+      },
+      "tp2": {
+        "price": 4826.14,
+        "rr": 7.18
+      },
+      "tp3": {
+        "price": 4846.05,
+        "rr": 9.18
+      },
+      "maxRR": 9.18,
+      "session": "off",
+      "bias": "bullish",
+      "confluenceCount": 4,
+      "outcome": "open",
+      "actualRR": null,
+      "tpHits": [
+        false,
+        false,
+        false
+      ]
     }
   ],
   "dailyRR": {
-    "totalPotentialRR_TP1": 3.9,
-    "totalPotentialRR_TP2": 8.6,
-    "totalPotentialRR_TP3": 0,
+    "totalPotentialRR_TP1": 7.85,
+    "totalPotentialRR_TP2": 15.78,
+    "totalPotentialRR_TP3": 9.18,
     "totalActualRR": 0,
-    "avgRR_TP1": 3.9,
-    "avgRR_TP2": 8.6,
-    "avgRR_TP3": 0,
+    "avgRR_TP1": 3.93,
+    "avgRR_TP2": 7.89,
+    "avgRR_TP3": 4.59,
     "avgActualRR": null,
     "netRR": 0,
     "bestSetup": {
-      "hour": "06",
-      "rr": 3.9,
-      "direction": "short",
+      "hour": "17",
+      "rr": 3.95,
+      "direction": "long",
       "quality": "B",
       "outcome": "open"
     },

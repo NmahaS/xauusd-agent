@@ -1,0 +1,102 @@
+{
+  "timestamp": "2026-04-28T17:01:13.370Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bullish",
+  "biasReasoning": "H4 discount zone (40.3%) and bullish FVGs suggest buying interest; H1 also in discount (42%) with OTE long zone nearby. EUR/USD weakening (dollar weakening) supports gold. However, no clear H4/H1 structure bias and no active OBs near price reduce confidence.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "Price in discount zone (H4 40.3%, H1 42%)",
+    "Unfilled bullish FVGs on H4 (4749.65-4759.57, 4771.20-4786.25)",
+    "EUR/USD rising (dollar weakening) - bullish for gold",
+    "Fear & Greed at 33 (fear) - neutral to bullish for gold"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_fair_value_gap",
+    "zone": [
+      4749.65,
+      4759.57
+    ],
+    "reasoning": "H4 bullish FVG that remains unfilled; price is currently above it but could retrace into it. This zone also aligns with the lower end of the H4 discount range."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4754.61,
+    "confirmation": "Limit buy at midpoint of H4 bullish FVG; wait for price to retrace into the zone."
+  },
+  "stopLoss": {
+    "price": 4744.65,
+    "reasoning": "Below the FVG low (4749.65) with a 5-point buffer; invalidation if price breaks below the FVG.",
+    "pips": 99.6
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4793.93,
+      "reasoning": "H1 discount zone upper boundary (50% of H1 range 4793.93-4846.05).",
+      "rr": 3.95
+    },
+    {
+      "level": "TP2",
+      "price": 4826.14,
+      "reasoning": "H1 OTE short zone lower boundary (0.618 fib).",
+      "rr": 7.18
+    },
+    {
+      "level": "TP3",
+      "price": 4846.05,
+      "reasoning": "H1 range high (equal highs liquidity).",
+      "rr": 9.18
+    }
+  ],
+  "invalidation": {
+    "price": 4744.65,
+    "reasoning": "Close below FVG low invalidates bullish bias; structure flips bearish."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for better fills."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 99.6-pip stop"
+  },
+  "macroContext": "EUR/USD rising (dollar weakening) supports gold; US 10Y yield stable at 4.31% with positive real yields (1.87%) bearish; Fear & Greed at 33 (fear) neutral to bullish.",
+  "warnings": [
+    "No active H1 or H4 order blocks near price; reliance on FVG only.",
+    "High-impact AUD CPI data in ~509 minutes could cause volatility.",
+    "Current session is off; execution outside kill zone may have wider spreads.",
+    "⚠️ Split: Claude=no-trade DeepSeek=long — manual only",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v3.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "long",
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "B",
+    "newsRisk": "low",
+    "newsSentiment": "neutral",
+    "newsHeadline": "Parse error"
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4815.80 not at POI [4749.65-4759.57] yet"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "WAITING",
+    "executed": false,
+    "reason": "Auto-trade disabled — manual signal",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

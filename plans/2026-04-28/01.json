@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-04-28T01:45:35.725Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 bias neutral, H1 bias neutral, no clear structure or POI near current price. Price in H1 premium zone but no bearish OB or FVG to act on. Macro context mildly bullish (dollar weakening, fear) but not enough for a trade.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "EUR/USD rising (dollar weakening) bullish for gold; Fear & Greed at 33 (fear) neutral; no yield data available.",
+  "warnings": [
+    "No clear H4 or H1 structure bias",
+    "No active order blocks near price",
+    "Price in H1 premium zone but no bearish confirmation",
+    "Upcoming high-impact BOJ and AUD CPI events may cause volatility",
+    "FRED macro data unavailable — yields/real-rate missing",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

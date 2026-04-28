@@ -72,26 +72,22 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-27T23:07:27.391Z
+**Generated:** 2026-04-28T01:45:35.725Z
 
-- **Bias:** bearish
-- **Setup Quality:** B
-- **Confluence:** 4 — H4 bearish CHoCH (impulsive drop from 4886.9 to 4728.45); Price in premium zone on H1 (82.2% of range); Unfilled bearish FVG on H4 at 4791.25-4798.20; EUR/USD weakening (dollar strengthening)
-- **Session:** off — Wait for London kill zone 07-10 UTC or NY kill zone 12-15 UTC
-- **Direction:** short
-- **POI:** bearish_order_block @ [4791.25, 4798.2]
-- **Entry:** limit @ 4794.73 — Limit sell at midpoint of bearish FVG; wait for price to reach zone with bearish confirmation (e.g., rejection candle).
-- **Stop Loss:** 4803.2
-- **TP1:** 4758.4 (RR 4.3)
-- **TP2:** 4728.45 (RR 7.8)
-- **TP3:** 4700 (RR 11.2)
-- **Invalidation:** 4803.2
+- **Bias:** neutral
+- **Setup Quality:** no-trade
+- **Confluence:** 0 — none
+- **Session:** asia — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)
+- **Direction:** no-trade
 
-**Macro Context:** EUR/USD weakening (dollar strengthening), US 10Y yield stable at 4.31%, real yield positive at 1.87% (bearish for gold), Fear & Greed neutral at 47.
+**Macro Context:** EUR/USD rising (dollar weakening) bullish for gold; Fear & Greed at 33 (fear) neutral; no yield data available.
 
 **Warnings:**
-- ⚠ Current session is off; wait for kill zone for better execution.
-- ⚠ H4 discount zone suggests potential support; monitor price action near POI.
+- ⚠ No clear H4 or H1 structure bias
+- ⚠ No active order blocks near price
+- ⚠ Price in H1 premium zone but no bearish confirmation
+- ⚠ Upcoming high-impact BOJ and AUD CPI events may cause volatility
+- ⚠ FRED macro data unavailable — yields/real-rate missing
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

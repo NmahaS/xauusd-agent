@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-04-27T06:38:51.037Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "No clear H4 or H1 structure; price in extreme premium zone (175.6% of H4 range) with no active OBs or FVGs near current price. Cross-asset mixed: EUR/USD strengthening (bearish for gold) but real yields positive (bearish). No confluence for a trade.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "EUR/USD strengthening (dollar weakening) is bearish for gold; US 10Y yield rising (4.34%) and positive real yields (1.92%) are bearish; Fear & Greed neutral (47) with risk-on trend.",
+  "warnings": [
+    "No clear market structure on H4 or H1",
+    "Price in extreme premium zone with no active POIs nearby",
+    "No unfilled FVGs or OBs within 20 points of current price",
+    "Current session (Asia) is not a kill zone",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

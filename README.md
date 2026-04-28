@@ -72,25 +72,18 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-28T04:20:35.209Z
+**Generated:** 2026-04-28T11:57:57.716Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** asia — Wait for London open (07:00 UTC) and fresh price action; avoid trading into AUD CPI event (1269m away)
+- **Session:** london — current london session
 - **Direction:** no-trade
 
-**Macro Context:** EUR/USD weakening (dollar strengthening) is bearish for gold; positive real yields (1.87%) add headwind; F&G neutral at 33 (fear). High-impact AUD CPI data in ~21 hours creates event risk and invalidates stale technical setup.
+**Macro Context:** DXY (EUR/USD proxy) flat (neutral); 10Y real yield 1.87% → bearish (positive real yields); F&G 33 (fear, neutral for gold).
 
 **Warnings:**
-- ⚠ Data is severely stale: last H1 candle is 2026-04-16T18:00Z (12 days old); no current price action to confirm H1 or H4 structure.
-- ⚠ H4 and H1 SMC bias both neutral — no confirmed BOS, CHoCH, or active order blocks to trade.
-- ⚠ Price in premium zone (52.5%) but no unmitigated OB nearby to anchor a short; bullish FVG above (4819.30–4829.05) is unfilled but too far and lacks confluence.
-- ⚠ Bearish FVG (4791.25–4798.20) is below current price; would require a sharp drop to become a valid short entry, but no structure supports it.
-- ⚠ High-impact AUD CPI data due in ~21 hours (1269m) — m/m fcst 1.3% vs prev 0.0%, y/y fcst 4.8% vs prev 3.7%. Event risk invalidates any pre-event trade.
-- ⚠ EUR/USD weakening (dollar strengthening) is bearish for gold; real yields positive (1.87%) add downside pressure.
-- ⚠ No RSI divergence, no kill zone active (Asia session, no London/NY yet), no macro confluence.
-- ⚠ Recommend: wait for London open (07:00 UTC), refresh price data, and reassess structure post-CPI event.
+- ⚠ LLM failure: takeProfits.0.rr: Invalid input; takeProfits.1.rr: Invalid input
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

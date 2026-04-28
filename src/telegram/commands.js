@@ -7,7 +7,9 @@ const TG_BASE = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}`;
 const PLANS_DIR = path.resolve('plans');
 
 async function tgSend(text, parseMode = 'HTML') {
-  const res = await fetch(`${TG_BASE}/sendMessage`, {
+  const url = `${TG_BASE}/sendMessage`;
+  console.log(`[bot] tgSend → chat_id=${process.env.TELEGRAM_CHAT_ID} len=${text.length}`);
+  const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -18,7 +20,11 @@ async function tgSend(text, parseMode = 'HTML') {
     }),
   });
   const json = await res.json().catch(() => ({}));
-  if (!res.ok || !json.ok) throw new Error(`Telegram ${res.status}: ${JSON.stringify(json).slice(0, 200)}`);
+  if (!res.ok || !json.ok) {
+    console.error(`[bot] tgSend FAILED HTTP ${res.status}: ${JSON.stringify(json).slice(0, 300)}`);
+    throw new Error(`Telegram ${res.status}: ${JSON.stringify(json).slice(0, 200)}`);
+  }
+  console.log(`[bot] tgSend OK message_id=${json.result?.message_id}`);
   return json;
 }
 

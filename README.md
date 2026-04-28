@@ -72,21 +72,25 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-28T03:59:46.259Z
+**Generated:** 2026-04-28T06:39:48.253Z
 
 - **Bias:** bearish
-- **Setup Quality:** no-trade
-- **Confluence:** 2 — H4 bearish FVG within 20 points; EUR/USD weakening (dollar strengthening)
-- **Session:** asia — Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)
-- **Direction:** no-trade
+- **Setup Quality:** B
+- **Confluence:** 4 — H4 bearish FVG at 4791-4798; Price in premium zone (52.5% of H4 range); EUR/USD falling (dollar strengthening); Real yields positive (1.87%) bearish for gold
+- **Session:** asia — London kill zone 07-10 UTC
+- **Direction:** short
+- **POI:** bearish_order_block @ [4791.25, 4798.2]
+- **Entry:** limit @ 4794.5 — Limit sell inside FVG zone; wait for price to enter zone and show rejection.
+- **Stop Loss:** 4802
+- **TP1:** 4765 (RR 3.9)
+- **TP2:** 4730 (RR 8.6)
+- **Invalidation:** 4802
 
-**Macro Context:** EUR/USD weakening (dollar strengthening), US 10Y yield stable at 4.31%, real yield positive at 1.87% (bearish for gold), Fear & Greed at 33 (fear) neutral.
+**Macro Context:** EUR/USD falling (dollar strengthening), US 10Y yield stable at 4.31%, real yield positive at 1.87% (bearish for gold), Fear & Greed at 33 (fear) neutral.
 
 **Warnings:**
-- ⚠ No clear H1 or H4 structure bias (neutral SMC)
-- ⚠ No active order blocks near price
-- ⚠ Price in premium zone but no short entry trigger
-- ⚠ Upcoming high-impact AUD CPI data in ~21.5 hours may cause volatility
+- ⚠ Upcoming high-impact AUD CPI data in ~11 hours may cause volatility.
+- ⚠ Current session is Asia, low liquidity; prefer London kill zone for entry.
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

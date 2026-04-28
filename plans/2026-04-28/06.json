@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-04-28T06:39:48.253Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 structure shows a bearish FVG at 4791-4798, price is in premium zone (52.5%), and recent H1 candles show lower highs. EUR/USD weakening (dollar strengthening) and positive real yields support bearish bias.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish FVG at 4791-4798",
+    "Price in premium zone (52.5% of H4 range)",
+    "EUR/USD falling (dollar strengthening)",
+    "Real yields positive (1.87%) bearish for gold"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4791.25,
+      4798.2
+    ],
+    "reasoning": "H4 bearish FVG zone; price may retrace into this area before continuing lower."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4794.5,
+    "confirmation": "Limit sell inside FVG zone; wait for price to enter zone and show rejection."
+  },
+  "stopLoss": {
+    "price": 4802,
+    "reasoning": "Above FVG high with buffer; invalidates bearish setup if breached.",
+    "pips": 75
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4765,
+      "reasoning": "Recent swing low on H4 (April 9 low).",
+      "rr": 3.9
+    },
+    {
+      "level": "TP2",
+      "price": 4730,
+      "reasoning": "Next support zone near April 9 lows.",
+      "rr": 8.6
+    }
+  ],
+  "invalidation": {
+    "price": 4802,
+    "reasoning": "Close above FVG high invalidates bearish structure."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 75-pip stop"
+  },
+  "macroContext": "EUR/USD falling (dollar strengthening), US 10Y yield stable at 4.31%, real yield positive at 1.87% (bearish for gold), Fear & Greed at 33 (fear) neutral.",
+  "warnings": [
+    "Upcoming high-impact AUD CPI data in ~11 hours may cause volatility.",
+    "Current session is Asia, low liquidity; prefer London kill zone for entry.",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

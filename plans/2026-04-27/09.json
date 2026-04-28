@@ -62,5 +62,20 @@
     "Wide IG spread (0.80) — confirm before market orders",
     "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
   ],
-  "promptVersion": "v2.0"
+  "promptVersion": "v2.0",
+  "outcome": {
+    "status": "expired",
+    "resolvedAt": "2026-04-28T09:31:41.922Z",
+    "resolvedCandle": null,
+    "exitPrice": null,
+    "tp1Hit": false,
+    "tp2Hit": false,
+    "tp3Hit": false,
+    "slHit": false,
+    "actualRR": 0,
+    "pnlPips": 0,
+    "holdingHours": 24,
+    "maxFavorableExcursion": 0,
+    "maxAdverseExcursion": 0
+  }
 }

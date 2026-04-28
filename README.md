@@ -72,25 +72,18 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-28T06:39:48.253Z
+**Generated:** 2026-04-28T09:31:40.618Z
 
-- **Bias:** bearish
-- **Setup Quality:** B
-- **Confluence:** 4 — H4 bearish FVG at 4791-4798; Price in premium zone (52.5% of H4 range); EUR/USD falling (dollar strengthening); Real yields positive (1.87%) bearish for gold
-- **Session:** asia — London kill zone 07-10 UTC
-- **Direction:** short
-- **POI:** bearish_order_block @ [4791.25, 4798.2]
-- **Entry:** limit @ 4794.5 — Limit sell inside FVG zone; wait for price to enter zone and show rejection.
-- **Stop Loss:** 4802
-- **TP1:** 4765 (RR 3.9)
-- **TP2:** 4730 (RR 8.6)
-- **Invalidation:** 4802
+- **Bias:** neutral
+- **Setup Quality:** no-trade
+- **Confluence:** 0 — none
+- **Session:** london — NOW (kill zone active)
+- **Direction:** no-trade
 
-**Macro Context:** EUR/USD falling (dollar strengthening), US 10Y yield stable at 4.31%, real yield positive at 1.87% (bearish for gold), Fear & Greed at 33 (fear) neutral.
+**Macro Context:** DXY (EUR/USD proxy) weakening (bullish-for-gold); 10Y real yield 1.87% → bearish (positive real yields); F&G 33 (fear, neutral for gold).
 
 **Warnings:**
-- ⚠ Upcoming high-impact AUD CPI data in ~11 hours may cause volatility.
-- ⚠ Current session is Asia, low liquidity; prefer London kill zone for entry.
+- ⚠ LLM failure: takeProfits.0.rr: Invalid input; takeProfits.1.rr: Invalid input
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

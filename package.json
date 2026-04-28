@@ -15,6 +15,7 @@
     "backtest:report": "node src/backtest/run.js --report-only",
     "bot": "node src/telegram/bot.js",
     "bot:dev": "DRY_RUN=true node src/telegram/bot.js",
+    "setup-webhook": "node scripts/setup-webhook.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {

@@ -1,0 +1,14 @@
+name = "xauusd-bot"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+# All secrets are set via: wrangler secret put VARIABLE_NAME
+# Never put actual values in this file — it is committed to git.
+#
+# Required secrets:
+#   TELEGRAM_BOT_TOKEN   TELEGRAM_CHAT_ID
+#   IG_API_KEY           IG_USERNAME       IG_PASSWORD   IG_DEMO   IG_ACCOUNT_ID
+#   ANTHROPIC_API_KEY    DEEPSEEK_API_KEY  PERPLEXITY_API_KEY
+#   FRED_API_KEY
+#   GITHUB_TOKEN         GITHUB_REPO
+#   AUTO_TRADE           DRY_EXECUTE

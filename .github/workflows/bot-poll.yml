@@ -1,8 +1,8 @@
-name: Telegram Bot Poll
+name: Telegram Bot Poll (fallback)
 
 on:
   schedule:
-    - cron: '*/3 * * * *'
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 concurrency:
@@ -18,12 +18,38 @@ jobs:
     timeout-minutes: 2
     steps:
       - uses: actions/checkout@v4
+
+      - name: Check webhook status
+        id: webhook
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: |
+          INFO=$(curl -s "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getWebhookInfo")
+          URL=$(echo "$INFO" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('result',{}).get('url',''))" 2>/dev/null || echo "")
+          PENDING=$(echo "$INFO" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('result',{}).get('pending_update_count',0))" 2>/dev/null || echo "0")
+          LAST_ERR=$(echo "$INFO" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('result',{}).get('last_error_message',''))" 2>/dev/null || echo "")
+          echo "url=${URL}" >> "$GITHUB_OUTPUT"
+          echo "pending=${PENDING}" >> "$GITHUB_OUTPUT"
+          echo "last_error=${LAST_ERR}" >> "$GITHUB_OUTPUT"
+          if [ -n "$URL" ] && [ "$PENDING" -lt "10" ] && [ -z "$LAST_ERR" ]; then
+            echo "active=true" >> "$GITHUB_OUTPUT"
+            echo "[bot-poll] Webhook active at ${URL} (pending=${PENDING}) — skipping poll"
+          else
+            echo "active=false" >> "$GITHUB_OUTPUT"
+            echo "[bot-poll] Webhook inactive or degraded — running fallback poll (pending=${PENDING} error=${LAST_ERR})"
+          fi
+
       - uses: actions/setup-node@v4
+        if: steps.webhook.outputs.active != 'true'
         with:
           node-version: '24'
           cache: 'npm'
+
       - run: npm ci
-      - name: Poll Telegram
+        if: steps.webhook.outputs.active != 'true'
+
+      - name: Poll Telegram (fallback)
+        if: steps.webhook.outputs.active != 'true'
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -41,7 +67,9 @@ jobs:
           AUTO_TRADE: 'false'
           DRY_EXECUTE: 'true'
         run: node src/telegram/bot.js
+
       - name: Commit offset
+        if: steps.webhook.outputs.active != 'true'
         run: |
           git config user.name "xauusd-bot"
           git config user.email "bot@users.noreply.github.com"

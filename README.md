@@ -72,15 +72,15 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-28T09:31:40.618Z
+**Generated:** 2026-04-28T11:57:57.716Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** london — NOW (kill zone active)
+- **Session:** london — current london session
 - **Direction:** no-trade
 
-**Macro Context:** DXY (EUR/USD proxy) weakening (bullish-for-gold); 10Y real yield 1.87% → bearish (positive real yields); F&G 33 (fear, neutral for gold).
+**Macro Context:** DXY (EUR/USD proxy) flat (neutral); 10Y real yield 1.87% → bearish (positive real yields); F&G 33 (fear, neutral for gold).
 
 **Warnings:**
 - ⚠ LLM failure: takeProfits.0.rr: Invalid input; takeProfits.1.rr: Invalid input

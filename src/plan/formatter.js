@@ -98,6 +98,20 @@ export function formatPlanForTelegram(plan, extras = {}) {
   lines.push(`<b>Bias rationale:</b> ${esc(plan.biasReasoning)}`);
   lines.push('');
 
+  if (plan.consensus) {
+    const c = plan.consensus;
+    const agreeIcon = c.agreement === 'full' ? '🤝' : c.agreement === 'split' ? '⚔️' : '🔔';
+    lines.push(
+      `<b>${agreeIcon} Consensus:</b> ${c.agreement} (${c.confidence}) ` +
+      `— Claude: ${c.claudeDirection ?? c.claudeQuality ?? 'n/a'} ` +
+      `/ DeepSeek: ${c.deepseekDirection ?? 'n/a'}`
+    );
+    if (c.newsRisk && c.newsRisk !== 'low') {
+      lines.push(`  <i>News risk: ${esc(c.newsRisk)}${c.newsHeadline ? ` — ${esc(c.newsHeadline)}` : ''}</i>`);
+    }
+    lines.push('');
+  }
+
   if (plan.direction && plan.poi && plan.entry && plan.stopLoss) {
     lines.push(`<b>Direction:</b> ${esc(plan.direction.toUpperCase())}`);
     lines.push(`<b>POI:</b> ${esc(plan.poi.type)} @ [${cp(plan.poi.zone[0])} – ${cp(plan.poi.zone[1])}]`);
@@ -121,6 +135,25 @@ export function formatPlanForTelegram(plan, extras = {}) {
   }
   lines.push('');
 
+  // M15 + execution status
+  const m15 = plan.m15;
+  const exec = plan.execution;
+  if (m15?.status && m15.status !== 'N/A') {
+    const m15icon = m15.status === 'CONFIRMED' ? '✅' : m15.status === 'PENDING' ? '⏳' : '⏸';
+    lines.push(`<b>${m15icon} M15:</b> ${m15.status}${m15.reason ? ` — ${esc(m15.reason)}` : ''}`);
+  }
+  if (exec) {
+    if (exec.executed) {
+      lines.push(
+        `<b>🚀 Executed:</b> Deal ${esc(exec.dealId ?? 'n/a')} | ` +
+        `${exec.size} lots | A$${exec.riskAmount} (${exec.riskPct}%)`
+      );
+    } else if (exec.autoTradeEnabled) {
+      lines.push(`<b>⏸ Auto-trade blocked:</b> ${esc(exec.reason)}`);
+    }
+  }
+  if ((m15?.status && m15.status !== 'N/A') || exec) lines.push('');
+
   lines.push(`<b>Session:</b> ${esc(plan.session.current)} — ${esc(plan.session.recommendedExecutionWindow)}`);
   lines.push(`<b>Risk:</b> ${fmt(plan.risk.suggestedRiskPct, 2)}% — ${esc(plan.risk.positionSizeHint)}`);
 
@@ -140,6 +173,15 @@ export function formatPlanForTelegram(plan, extras = {}) {
     for (const w of plan.warnings) {
       lines.push(`  • ${esc(w)}`);
     }
+  }
+
+  const newsResult = extras.newsResult;
+  if (newsResult?.hasBreakingNews) {
+    lines.push('');
+    lines.push(
+      `<b>📰 Breaking news:</b> ${esc(newsResult.headline ?? newsResult.sentiment)} ` +
+      `(risk: ${esc(newsResult.riskLevel)})`
+    );
   }
 
   // Daily stats footer
@@ -171,6 +213,41 @@ export function formatPlanForTelegram(plan, extras = {}) {
     lines.push(`<i>📊 ~${minsUntilNextRun(plan.timestamp)}m to next run</i>`);
   }
 
+  return lines.join('\n');
+}
+
+export function formatOutcomeMessage(outcome, dailySummary = null) {
+  const dirIcon = outcome.direction === 'long' ? '🟢' : '🔴';
+  const resultIcon = outcome.outcome === 'WIN' ? '🏆' : outcome.outcome === 'LOSS' ? '💀' : '⏸';
+  const lines = [
+    `<b>${resultIcon} Trade Closed — ${esc(outcome.symbol ?? 'XAU/AUD')}</b>`,
+    '',
+    `${dirIcon} ${(outcome.direction ?? '').toUpperCase()} @ A$${outcome.entry?.toFixed(2) ?? 'n/a'}`,
+    `Exit: A$${outcome.exit?.toFixed(2) ?? 'n/a'} | Result: <b>${outcome.outcome ?? 'UNKNOWN'}</b>`,
+    `Actual RR: ${outcome.actualRR != null ? (outcome.actualRR >= 0 ? '+' : '') + outcome.actualRR.toFixed(2) + 'R' : 'n/a'}`,
+  ];
+  if (dailySummary) {
+    const { wins: w = {} } = dailySummary;
+    lines.push('');
+    lines.push(`<i>Today: ${w.total ?? 0}W / ${w.losses ?? 0}L</i>`);
+  }
+  return lines.join('\n');
+}
+
+export function formatM15ConfirmedMessage(plan) {
+  const dirIcon = plan.direction === 'long' ? '🟢' : '🔴';
+  const lines = [
+    `<b>🎯 M15 Confirmed — ${esc(plan.symbol ?? 'XAU/AUD')}</b>`,
+    '',
+    `${dirIcon} ${(plan.direction ?? '').toUpperCase()} entry refined`,
+    `Entry: A$${plan.entry?.price?.toFixed(2) ?? 'n/a'} (${esc(plan.entry?.trigger ?? '')})`,
+    `SL: A$${plan.stopLoss?.price?.toFixed(2) ?? 'n/a'}`,
+  ];
+  if (plan.takeProfits?.length) {
+    const tp1 = plan.takeProfits[0];
+    lines.push(`TP1: A$${tp1.price?.toFixed(2) ?? 'n/a'} (${tp1.rr?.toFixed(1) ?? '?'}R)`);
+  }
+  if (plan.m15?.reason) lines.push(`<i>${esc(plan.m15.reason)}</i>`);
   return lines.join('\n');
 }
 

@@ -10,11 +10,16 @@ const fullSchema = baseSchema.extend({
   IG_API_KEY: z.string().min(1, 'IG_API_KEY is required'),
   IG_USERNAME: z.string().min(1, 'IG_USERNAME is required'),
   IG_PASSWORD: z.string().min(1, 'IG_PASSWORD is required'),
+  IG_ACCOUNT_ID: z.string().default(''),
   IG_DEMO: z.string()
     .transform(v => v === 'false' ? false : true)
     .default('true'),
+  AUTO_TRADE: z.string().transform(v => v === 'true').default('false'),
+  DRY_EXECUTE: z.string().transform(v => v === 'true').default('true'),
   DEEPSEEK_API_KEY: z.string().min(1, 'DEEPSEEK_API_KEY is required'),
   DEEPSEEK_MODEL: z.string().default('deepseek-chat'),
+  ANTHROPIC_API_KEY: z.string().min(1, 'ANTHROPIC_API_KEY is required'),
+  PERPLEXITY_API_KEY: z.string().default(''),
   FRED_API_KEY: z.string().default(''),
   SYMBOL: z.string().default('XAU/AUD'),
   CURRENCY: z.string().default('AUD'),

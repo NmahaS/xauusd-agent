@@ -72,28 +72,26 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-26T05:22:53.947Z
+**Generated:** 2026-04-28T04:20:35.209Z
 
-- **Bias:** bearish
-- **Setup Quality:** B
-- **Confluence:** 3 — Price in premium zone (205.1% of H4 range); Unfilled bullish FVGs above price may act as resistance; Real yields positive (1.92%) bearish for gold
-- **Session:** asia — Wait for London kill zone (07:00 UTC) or NY kill zone (12:00 UTC)
-- **Direction:** short
-- **POI:** bearish_order_block @ [4860.15, 4868.7]
-- **Entry:** limit @ 4864.5 — Limit sell inside OB midpoint; validated by premium zone and bearish macro
-- **Stop Loss:** 4875
-- **TP1:** 4830 (RR 3.3)
-- **TP2:** 4800 (RR 6.1)
-- **TP3:** 4770 (RR 9)
-- **Invalidation:** 4875.5
+- **Bias:** neutral
+- **Setup Quality:** no-trade
+- **Confluence:** 0 — none
+- **Session:** asia — Wait for London open (07:00 UTC) and fresh price action; avoid trading into AUD CPI event (1269m away)
+- **Direction:** no-trade
 
-**Macro Context:** EUR/USD flat (1.17108), US 10Y yield rising (4.34%), real yield positive (1.92%) bearish for gold; Fear & Greed 33 (fear) but rising risk-on neutral.
+**Macro Context:** EUR/USD weakening (dollar strengthening) is bearish for gold; positive real yields (1.87%) add headwind; F&G neutral at 33 (fear). High-impact AUD CPI data in ~21 hours creates event risk and invalidates stale technical setup.
 
 **Warnings:**
-- ⚠ H4/H1 SMC structure neutral; no clear BOS/CHoCH
-- ⚠ Unfilled bullish FVGs below price may act as support
-- ⚠ Asia session low liquidity; prefer London/NY execution
-- ⚠ IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.
+- ⚠ Data is severely stale: last H1 candle is 2026-04-16T18:00Z (12 days old); no current price action to confirm H1 or H4 structure.
+- ⚠ H4 and H1 SMC bias both neutral — no confirmed BOS, CHoCH, or active order blocks to trade.
+- ⚠ Price in premium zone (52.5%) but no unmitigated OB nearby to anchor a short; bullish FVG above (4819.30–4829.05) is unfilled but too far and lacks confluence.
+- ⚠ Bearish FVG (4791.25–4798.20) is below current price; would require a sharp drop to become a valid short entry, but no structure supports it.
+- ⚠ High-impact AUD CPI data due in ~21 hours (1269m) — m/m fcst 1.3% vs prev 0.0%, y/y fcst 4.8% vs prev 3.7%. Event risk invalidates any pre-event trade.
+- ⚠ EUR/USD weakening (dollar strengthening) is bearish for gold; real yields positive (1.87%) add downside pressure.
+- ⚠ No RSI divergence, no kill zone active (Asia session, no London/NY yet), no macro confluence.
+- ⚠ Recommend: wait for London open (07:00 UTC), refresh price data, and reassess structure post-CPI event.
+- ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->
 

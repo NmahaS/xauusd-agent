@@ -1,152 +1,86 @@
 import { config } from '../config.js';
 import { buildSystemPrompt, buildUserPrompt, PROMPT_VERSION } from './prompt.js';
 import { tradingPlanSchema } from '../plan/schema.js';
+import { askClaude } from './providers/claude.js';
+import { askDeepSeek } from './providers/deepseek.js';
+import { askPerplexity } from './providers/perplexity.js';
+import { buildConsensus } from './consensus.js';
 
-const ENDPOINT = 'https://api.deepseek.com/chat/completions';
-
-function stripMarkdownFences(s) {
-  if (typeof s !== 'string') return s;
-  let out = s.trim();
-  if (out.startsWith('```')) {
-    out = out.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
-  }
-  return out;
-}
-
-async function callDeepSeek(messages) {
-  const body = {
-    model: config.DEEPSEEK_MODEL,
-    messages,
-    max_tokens: 4000,
-    temperature: 0.3,
-    response_format: { type: 'json_object' },
-  };
-
-  const res = await fetch(ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${config.DEEPSEEK_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`DeepSeek HTTP ${res.status}: ${text.slice(0, 300)}`);
-  }
-
-  const data = await res.json();
-  const content = data?.choices?.[0]?.message?.content;
-  if (!content) {
-    throw new Error(`DeepSeek empty content: ${JSON.stringify(data).slice(0, 300)}`);
-  }
-  return content;
-}
-
-function sanitizePlan(p) {
+// Defensive normalization that runs before Zod validation. Each LLM has its own quirks
+// (string prices, alternate TP labels, missing fields). This shapes the raw output into
+// something the schema will accept; if that's impossible (no entry on a directional plan),
+// it downgrades the plan to no-trade rather than failing validation outright.
+export function sanitizePlan(p) {
+  p = p?.tradingPlan || p?.plan || p?.result || p;
   if (!p || typeof p !== 'object') return p;
 
-  // Fix poi.zone strings to numbers
   if (p.poi?.zone && Array.isArray(p.poi.zone)) {
-    p.poi.zone = p.poi.zone.map(v => typeof v === 'string' ? parseFloat(v) : v);
+    p.poi.zone = p.poi.zone.map(v => parseFloat(String(v)));
+    if (p.poi.zone.some(isNaN)) p.poi = null;
   }
-
-  // Fix takeProfits level names + string prices/rr
-  const levelMap = {
-    'TP 1': 'TP1', 'TP 2': 'TP2', 'TP 3': 'TP3',
-    'TP One': 'TP1', 'TP Two': 'TP2', 'TP Three': 'TP3',
-    'First TP': 'TP1', 'Second TP': 'TP2', 'Third TP': 'TP3',
-    'tp1': 'TP1', 'tp2': 'TP2', 'tp3': 'TP3',
-  };
+  if (p.entry) {
+    p.entry.price = parseFloat(String(p.entry.price || 0));
+    if (!['limit', 'marketOnConfirmation'].includes(p.entry.trigger)) p.entry.trigger = 'marketOnConfirmation';
+    if (!p.entry.confirmation) p.entry.confirmation = 'Price action confirmation at POI';
+  }
+  if (p.stopLoss) {
+    p.stopLoss.price = parseFloat(String(p.stopLoss.price || 0));
+    p.stopLoss.pips = parseFloat(String(p.stopLoss.pips || 0));
+    if (!p.stopLoss.reasoning) p.stopLoss.reasoning = 'Below/above structure';
+  }
   if (Array.isArray(p.takeProfits)) {
-    p.takeProfits = p.takeProfits.map(tp => ({
-      ...tp,
-      level: levelMap[tp.level] || tp.level,
-      price: typeof tp.price === 'string' ? parseFloat(tp.price) : tp.price,
-      rr: typeof tp.rr === 'string' ? parseFloat(tp.rr) : tp.rr,
-    }));
+    const labels = ['TP1', 'TP2', 'TP3'];
+    p.takeProfits = p.takeProfits.map((tp, i) => ({
+      level: String(tp?.level || '').replace(/\s+/g, '').toUpperCase() || labels[i],
+      price: parseFloat(String(tp?.price || 0)),
+      rr: parseFloat(String(tp?.rr || 0)),
+      reasoning: tp?.reasoning || '',
+    })).filter(tp => tp.price > 0);
+    if (p.takeProfits.length === 0) p.takeProfits = null;
   }
+  if (p.invalidation?.price) p.invalidation.price = parseFloat(String(p.invalidation.price));
 
-  // Fix all price fields from strings to numbers
-  const priceFields = ['entry', 'stopLoss', 'invalidation'];
-  for (const field of priceFields) {
-    if (p[field]?.price && typeof p[field].price === 'string') {
-      p[field].price = parseFloat(p[field].price);
-    }
+  if (!p.session || typeof p.session === 'string') {
+    p.session = {
+      current: 'unknown',
+      recommendedExecutionWindow: typeof p.session === 'string' ? p.session : 'N/A',
+    };
   }
+  if (!['asia', 'london', 'ny', 'off', 'unknown'].includes(p.session.current)) p.session.current = 'unknown';
 
-  // If direction is set but entry/SL/TP missing, force no-trade
-  if (p.direction && (!p.entry || !p.stopLoss || !p.takeProfits)) {
-    console.warn('[llm] sanitize: direction set but missing entry/SL/TP — forcing no-trade');
+  if (!p.risk || typeof p.risk !== 'object') p.risk = { suggestedRiskPct: 1, positionSizeHint: '1% risk' };
+  p.risk.suggestedRiskPct = parseFloat(String(p.risk.suggestedRiskPct || 1)) || 1;
+
+  if (typeof p.warnings === 'string') p.warnings = [p.warnings];
+  if (!Array.isArray(p.warnings)) p.warnings = [];
+  if (!Array.isArray(p.confluenceFactors)) p.confluenceFactors = [];
+  if (typeof p.confluenceCount !== 'number') p.confluenceCount = p.confluenceFactors.length;
+  if (!p.macroContext) p.macroContext = '';
+  if (!p.biasReasoning) p.biasReasoning = '';
+  if (!p.promptVersion) p.promptVersion = 'v3.0';
+
+  // If LLM claims a direction but didn't deliver entry/SL/TP, downgrade to no-trade
+  if (p.direction && (!p.entry?.price || !p.stopLoss?.price || !Array.isArray(p.takeProfits) || p.takeProfits.length === 0)) {
     p.direction = null;
     p.setupQuality = 'no-trade';
-    p.poi = null;
-    p.entry = null;
-    p.stopLoss = null;
-    p.takeProfits = null;
-    p.invalidation = null;
+    p.poi = null; p.entry = null; p.stopLoss = null; p.takeProfits = null; p.invalidation = null;
   }
 
   return p;
 }
 
-function sanitizeResponse(parsed) {
-  // Unwrap if plan is nested inside a key
-  if (parsed && typeof parsed === 'object' && !('bias' in parsed)) {
-    const nested = parsed.tradingPlan ?? parsed.plan ?? parsed.analysis ?? parsed.result;
-    if (nested && typeof nested === 'object' && 'bias' in nested) {
-      parsed = nested;
-    }
-  }
-
-  if (typeof parsed.session === 'string') {
-    parsed.session = { current: 'unknown', recommendedExecutionWindow: parsed.session };
-  }
-  if (parsed.risk == null) {
-    parsed.risk = { suggestedRiskPct: 0, positionSizeHint: 'No trade' };
-  }
-  if (typeof parsed.warnings === 'string') {
-    parsed.warnings = [parsed.warnings];
-  }
-  if (
-    parsed.takeProfits != null &&
-    !Array.isArray(parsed.takeProfits) &&
-    typeof parsed.takeProfits === 'object' &&
-    'level' in parsed.takeProfits
-  ) {
-    parsed.takeProfits = [parsed.takeProfits];
-  }
-
-  return parsed;
+function validatePlan(raw, label) {
+  const sanitized = sanitizePlan(raw);
+  return tradingPlanSchema.parse(sanitized);
 }
 
-function synthesizeMacroContext(ctx) {
-  const parts = [];
-  const dxy = ctx.dxy;
-  const fred = ctx.fred;
-  const sentiment = ctx.sentiment;
-
-  if (dxy?.ok && dxy.trend && dxy.trend !== 'unknown') {
-    parts.push(`${dxy.symbol ?? 'Dollar proxy'} ${dxy.trend} (${dxy.goldImpact})`);
-  }
-  if (fred?.ok && fred.realYield != null) {
-    parts.push(`10Y real yield ${fred.realYield.toFixed(2)}% → ${fred.goldImpact}`);
-  }
-  if (sentiment?.ok && sentiment.value != null) {
-    parts.push(`F&G ${sentiment.value} (${sentiment.classification}, ${sentiment.goldImpact})`);
-  }
-  if (parts.length === 0) return 'Cross-asset and macro data unavailable this run.';
-  return parts.join('; ') + '.';
-}
-
-function buildFallbackPlan(ctx, errorMessage) {
+function fallbackNoTradePlan(ctx, error) {
   return {
     timestamp: ctx.timestamp,
     symbol: ctx.symbol,
     timeframe: ctx.executionTf,
     bias: 'neutral',
-    biasReasoning: 'LLM analysis failed; fallback no-trade plan returned.',
+    biasReasoning: 'All LLMs failed — fallback no-trade plan returned.',
     setupQuality: 'no-trade',
     confluenceCount: 0,
     confluenceFactors: [],
@@ -160,58 +94,97 @@ function buildFallbackPlan(ctx, errorMessage) {
       current: ctx.session?.current ?? 'unknown',
       recommendedExecutionWindow: ctx.session?.recommendedWindow ?? 'unknown',
     },
-    risk: {
-      suggestedRiskPct: 0,
-      positionSizeHint: 'n/a (no-trade)',
-    },
-    macroContext: synthesizeMacroContext(ctx),
-    warnings: [`LLM failure: ${errorMessage}`],
+    risk: { suggestedRiskPct: 0, positionSizeHint: 'n/a (no-trade)' },
+    macroContext: 'LLM consensus failed.',
+    warnings: [`All LLMs failed: ${error}`],
     promptVersion: PROMPT_VERSION,
+    consensus: {
+      agreement: 'all_failed',
+      confidence: 'none',
+      claudeDirection: null,
+      deepseekDirection: null,
+      claudeQuality: 'failed',
+      deepseekQuality: 'failed',
+      newsRisk: null,
+      newsSentiment: null,
+      newsHeadline: null,
+    },
   };
 }
 
-export async function generatePlan(ctx) {
+// Calls Claude + DeepSeek in parallel, optionally Perplexity (only when calendar has events
+// AND key set), and combines into a consensus plan via src/llm/consensus.js.
+export async function askLLM(ctx) {
   const systemPrompt = buildSystemPrompt();
   const userPrompt = buildUserPrompt(ctx);
 
-  const baseMessages = [
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: userPrompt },
-  ];
+  const [claudeResult, deepseekResult] = await Promise.allSettled([
+    askClaude(systemPrompt, userPrompt),
+    askDeepSeek(systemPrompt, userPrompt),
+  ]);
 
-  let rawContent = null;
-  let lastError = null;
+  let claudePlan = null;
+  let deepseekPlan = null;
+  let claudeUsage = null;
+  let deepseekUsage = null;
 
-  for (let attempt = 1; attempt <= 2; attempt++) {
+  if (claudeResult.status === 'fulfilled') {
+    claudeUsage = claudeResult.value.__usage ?? null;
     try {
-      const messages = attempt === 1
-        ? baseMessages
-        : [
-            ...baseMessages,
-            { role: 'assistant', content: rawContent ?? '' },
-            {
-              role: 'user',
-              content: `The previous response was not valid JSON for the required schema. Error: ${lastError}. Return ONLY a single valid JSON object matching the v2.0 schema. No markdown, no fences, no prose.`,
-            },
-          ];
-
-      rawContent = await callDeepSeek(messages);
-      const cleaned = stripMarkdownFences(rawContent);
-      const parsed = sanitizePlan(sanitizeResponse(JSON.parse(cleaned)));
-      const result = tradingPlanSchema.safeParse(parsed);
-      if (!result.success) {
-        lastError = result.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; ');
-        console.warn(`[llm] attempt ${attempt} schema invalid: ${lastError}`);
-        continue;
-      }
-      console.log(`[llm] plan generated on attempt ${attempt} (${result.data.setupQuality})`);
-      return { ok: true, plan: result.data, rawContent };
+      claudePlan = validatePlan(claudeResult.value, 'claude');
     } catch (err) {
-      lastError = err.message;
-      console.warn(`[llm] attempt ${attempt} failed: ${err.message}`);
+      console.warn(`[claude] schema invalid: ${err.message}`);
     }
+  } else {
+    console.warn(`[claude] failed: ${claudeResult.reason?.message ?? claudeResult.reason}`);
   }
 
-  console.warn(`[llm] both attempts failed; returning fallback plan. Last error: ${lastError}`);
-  return { ok: false, plan: buildFallbackPlan(ctx, lastError ?? 'unknown error'), rawContent };
+  if (deepseekResult.status === 'fulfilled') {
+    deepseekUsage = deepseekResult.value.__usage ?? null;
+    try {
+      deepseekPlan = validatePlan(deepseekResult.value, 'deepseek');
+    } catch (err) {
+      console.warn(`[deepseek] schema invalid: ${err.message}`);
+    }
+  } else {
+    console.warn(`[deepseek] failed: ${deepseekResult.reason?.message ?? deepseekResult.reason}`);
+  }
+
+  // Perplexity only fires when calendar has upcoming events AND we have a key — saves cost.
+  let news = null;
+  let perplexityUsage = null;
+  if (config.PERPLEXITY_API_KEY && Array.isArray(ctx.calendar?.events) && ctx.calendar.events.length > 0) {
+    const refBias = (claudePlan?.bias ?? deepseekPlan?.bias) || 'neutral';
+    news = await askPerplexity(ctx.currentPrice ?? 'unknown', ctx.calendar.events, refBias);
+    perplexityUsage = news.__usage ?? null;
+  } else if (!config.PERPLEXITY_API_KEY) {
+    console.log('[perplexity] skipped — no API key');
+  } else {
+    console.log('[perplexity] skipped — no upcoming calendar events');
+  }
+
+  let plan;
+  if (claudePlan || deepseekPlan) {
+    plan = buildConsensus(claudePlan, deepseekPlan, news);
+  } else {
+    plan = fallbackNoTradePlan(ctx, 'all LLMs failed validation');
+    console.log('[consensus] result: all_failed none → no-trade');
+    return { ok: false, plan, rawContent: null };
+  }
+
+  console.log(`[consensus] result: ${plan.consensus.agreement} ${plan.consensus.confidence} → ${plan.direction || 'no-trade'}`);
+
+  const claudeCost = claudeUsage?.cost ?? 0;
+  const deepseekCost = deepseekUsage?.cost ?? 0;
+  const perplexityCost = perplexityUsage?.cost ?? 0;
+  const total = claudeCost + deepseekCost + perplexityCost;
+  console.log(
+    `[cost] Claude ~$${claudeCost.toFixed(4)} | DeepSeek ~$${deepseekCost.toFixed(4)} | ` +
+    `Perplexity ~$${perplexityCost.toFixed(4)} | Total ~$${total.toFixed(4)}`
+  );
+
+  return { ok: true, plan, rawContent: null };
 }
+
+// Backwards-compat alias used by pipeline.js (existing code imports generatePlan).
+export const generatePlan = askLLM;

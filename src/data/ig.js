@@ -393,6 +393,14 @@ function computeDxyProxyFromEurUsd(eurUsdCandles, divisor = 1) {
   };
 }
 
+// Public M15 fetcher used by src/refinement/m15.js. Same scaling/IG conventions as the
+// internal H1/H4 fetch in fetchAllIGData, but exposed so the M15 refinement step can run
+// without redoing epic discovery.
+export async function fetchIGCandles(session, epic, resolution, max, divisor = 1) {
+  const raw = await fetchRawCandles(session, epic, resolution, max);
+  return rescaleCandles(raw, divisor || 1);
+}
+
 function emptyIGData(errMsg) {
   return {
     h1Candles: [],
@@ -464,6 +472,10 @@ export async function fetchAllIGData() {
       igSentiment,
       dxy,
       session,
+      // Additive: surface the resolved gold epic + scaling so M15 refinement and the
+      // executor can reuse them without re-running discovery.
+      goldEpic: gold.epic,
+      goldDivisor: gold.candleDivisor,
     };
   } catch (err) {
     console.error(`[ig] data fetch failed after login: ${err.message} — returning empty IG data`);

@@ -1,13 +1,14 @@
 // Bridges the Express POST /webhook body to the existing command handlers.
 // Security check here; routeCommand in commands.js handles dispatch.
-import { config } from '../config.js';
 import { routeCommand } from './commands.js';
 
 export async function processWebhookUpdate(update) {
+  console.log('[webhook] update received:', JSON.stringify(update).slice(0, 200));
   const msg = update.message ?? update.edited_message;
   if (!msg?.text) return;
 
-  if (config.TELEGRAM_CHAT_ID && String(msg.chat.id) !== String(config.TELEGRAM_CHAT_ID)) {
+  const allowedChatId = process.env.TELEGRAM_CHAT_ID;
+  if (allowedChatId && String(msg.chat.id) !== String(allowedChatId)) {
     console.log(`[webhook] ignored message from chat ${msg.chat.id}`);
     return;
   }

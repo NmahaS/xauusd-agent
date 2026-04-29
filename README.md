@@ -72,23 +72,26 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-28T22:08:42.481Z
+**Generated:** 2026-04-29T00:02:54.989Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for London session (07-10 UTC) after AUD CPI data release; reassess structure bias post-event
+- **Session:** asia — Wait for London open (07:00 UTC) and post-AUD CPI clarity (after 01:30 UTC); avoid trading within 2 hours of high-impact AUD CPI release at 01:30 UTC
 - **Direction:** no-trade
 
-**Macro Context:** Real yields positive at 1.91% (bearish for gold), EUR/USD weakening slightly (neutral), Fear & Greed at 33 (fear, neutral). AUD CPI data (High impact) due in 201 minutes — material volatility risk; defer trading until post-event clarity.
+**Macro Context:** Positive real yields (1.91%) bearish for gold; EUR/USD weakening (bullish for gold); F&G at 26 (fear, neutral); high-impact AUD CPI in 87 minutes creates volatility risk and invalidates current technical setup until post-event consolidation.
 
 **Warnings:**
-- ⚠ High-impact AUD CPI (m/m, y/y, Trimmed Mean) due in +201m — avoid entry within 2 hours of event
-- ⚠ H4 and H1 SMC bias both neutral; no active OBs or confirmed structure events to anchor trade
-- ⚠ No unfilled FVGs on H1; H4 bullish FVG [4749.65-4759.57] is 50+ pips away from current price — insufficient proximity for immediate entry
-- ⚠ Current session is 'off' (Asia/early London); no kill-zone execution window active
-- ⚠ Positive real yields (1.91%) create structural headwind for gold bulls; macro backdrop is neutral-to-bearish
-- ⚠ Insufficient confluence factors (0/10) — do not force a trade
+- ⚠ High-impact AUD CPI m/m, y/y, and Trimmed Mean CPI releases in 87 minutes — avoid entry until post-event price action and volatility settle
+- ⚠ H4 and H1 SMC bias both neutral; no active OBs or clear structure events to anchor trade
+- ⚠ H4 unfilled bullish FVG [4749.65-4759.57] exists but is 50+ pips away; price currently in premium zone without confluence
+- ⚠ Positive real yields (1.91%) create bearish headwind for gold despite EUR/USD weakness
+- ⚠ No RSI divergence, no kill zone active, no clear POI within 20 pips of current price
+- ⚠ Recommend waiting for London open and post-CPI consolidation before initiating any directional trade
+- ⚠ High-impact gold event in 87min: AUD CPI m/m (High)
+- ⚠ High-impact gold event in 87min: AUD CPI y/y (High)
+- ⚠ High-impact gold event in 87min: AUD Trimmed Mean CPI m/m (High)
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

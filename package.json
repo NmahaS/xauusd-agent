@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "Autonomous hourly XAUUSD analysis agent with SMC + DeepSeek LLM",
   "type": "module",
-  "main": "src/run.js",
+  "main": "src/index.js",
   "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "server": "node src/server.js",
+    "cron": "node src/cron.js",
     "analyze": "node src/run.js",
     "analyze:force": "node src/run.js --force",
     "dry-run": "DRY_RUN=true node src/run.js",
@@ -15,11 +19,13 @@
     "backtest:report": "node src/backtest/run.js --report-only",
     "bot": "node src/telegram/bot.js",
     "bot:dev": "DRY_RUN=true node src/telegram/bot.js",
-    "setup-webhook": "node scripts/setup-webhook.js",
+    "setup-webhook": "node scripts/setup-railway-webhook.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
+    "express": "^4.22.1",
+    "node-cron": "^3.0.3",
     "technicalindicators": "^3.1.0",
     "zod": "^3.23.8"
   },

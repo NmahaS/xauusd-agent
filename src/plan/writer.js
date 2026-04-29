@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { syncFileToGithub } from '../utils/gitSync.js';
 
 const README_PATH = path.resolve('README.md');
 const PLANS_DIR = path.resolve('plans');
@@ -19,8 +20,10 @@ export async function savePlan(plan) {
   const { dir, filename } = planDatePath(plan.timestamp);
   await fs.mkdir(dir, { recursive: true });
   const fullPath = path.join(dir, filename);
-  await fs.writeFile(fullPath, JSON.stringify(plan, null, 2), 'utf8');
+  const content = JSON.stringify(plan, null, 2);
+  await fs.writeFile(fullPath, content, 'utf8');
   console.log(`[writer] saved plan to ${path.relative(process.cwd(), fullPath)}`);
+  syncFileToGithub(path.relative(process.cwd(), fullPath), content).catch(() => {});
   return fullPath;
 }
 
@@ -106,4 +109,5 @@ export async function updateReadmeLatestPlan(plan) {
 
   await fs.writeFile(README_PATH, updated, 'utf8');
   console.log(`[writer] README.md Latest Plan section updated`);
+  syncFileToGithub('README.md', updated).catch(() => {});
 }

@@ -47,7 +47,15 @@ async function main() {
   console.log(`=== monthly report complete ===\n`);
 }
 
-main().catch(err => {
-  console.error('[monthly] fatal error:', err);
-  process.exit(2);
-});
+// Export for programmatic use (e.g. from cron.js)
+export { main as runMonthlyReport };
+
+// Only auto-run when executed directly (not when imported)
+import { fileURLToPath } from 'node:url';
+const isMain = process.argv[1] === fileURLToPath(import.meta.url);
+if (isMain) {
+  main().catch(err => {
+    console.error('[monthly] fatal error:', err);
+    process.exit(2);
+  });
+}

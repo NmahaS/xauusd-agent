@@ -494,6 +494,34 @@ async function handleAsk(question) {
 
 // ─── Router ───────────────────────────────────────────────────────────────────
 
+// routeCommand: pure routing, no security check. Called by webhook.js (which
+// already verified chatId) and internally by processCommand.
+export async function routeCommand(command, args, _chatId) {
+  const lower = command.toLowerCase();
+  const fullText = args ? `${command} ${args}` : command;
+  try {
+    if (lower === '/help' || lower === '/start') return await handleHelp();
+    if (lower === '/price') return await handlePrice();
+    if (lower === '/status') return await handleStatus();
+    if (lower === '/lastplan') return await handleLastPlan();
+    if (lower === '/confluence') return await handleConfluence();
+    if (lower === '/balance') return await handleBalance();
+    if (lower === '/positions') return await handlePositions();
+    if (lower === '/risk') return await handleRisk();
+    if (lower === '/today') return await handleToday();
+    if (lower === '/performance') return await handlePerformance();
+    if (lower === '/news') return await handleNews();
+    if (lower === '/settings') return await handleSettings();
+    if (lower === '/ask' && args) return await handleAsk(args);
+    if (lower === '/ask') return await handleAsk('');
+    if (!lower.startsWith('/')) return await handleAsk(fullText);
+    await tgSend(`❓ Unknown command: <code>${command.slice(0, 50)}</code>\n\nType /help for available commands.`);
+  } catch (err) {
+    console.error(`[webhook] handler error for "${command}": ${err.message}`);
+    await tgSend(`⚠️ Error: ${err.message.slice(0, 200)}`).catch(() => {});
+  }
+}
+
 export async function processCommand(text, fromChatId) {
   const allowedChat = process.env.TELEGRAM_CHAT_ID;
   if (allowedChat && String(fromChatId) !== String(allowedChat)) {

@@ -1,8 +1,6 @@
 name: Hourly XAUUSD Analysis
 
 on:
-  schedule:
-    - cron: '5 * * * *'
   workflow_dispatch:
 
 concurrency:

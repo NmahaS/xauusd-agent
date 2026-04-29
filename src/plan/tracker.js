@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { syncFileToGithub } from '../utils/gitSync.js';
 
 const PLANS_DIR = path.resolve('plans');
 
@@ -201,7 +202,9 @@ export async function updateDailySummary(timestampIso, { save = true } = {}) {
 
   if (save) {
     const summaryPath = path.join(dir, 'daily-summary.json');
-    await fs.writeFile(summaryPath, JSON.stringify(summary, null, 2), 'utf8');
+    const content = JSON.stringify(summary, null, 2);
+    await fs.writeFile(summaryPath, content, 'utf8');
+    syncFileToGithub(`plans/${dateStr}/daily-summary.json`, content).catch(() => {});
     console.log(
       `[tracker] ${dateStr}: ${plans.length} plans, ${tradePlans.length} trades, ` +
       `${wins.length + partialWins.length}W ${losses.length}L ${openTrades.length} open`

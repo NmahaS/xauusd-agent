@@ -1,0 +1,95 @@
+{
+  "timestamp": "2026-04-29T09:04:54.212Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 premium zone (74.6%) and H1 premium zone (291.8%) suggest overextended price. H1 shows bullish FVGs above but no recent structure break. EUR/USD strengthening (dollar weakening) is bearish for gold. However, price is in extreme premium, and with FOMC risk in 9 hours, a short from premium with tight stop is favored.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "Price in premium zone (H4 74.6%, H1 291.8%)",
+    "Unfilled bearish FVG? none, but bullish FVGs above may act as resistance",
+    "London kill zone active",
+    "EUR/USD strengthening (dollar weakening) bearish for gold"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4822,
+      4825.85
+    ],
+    "reasoning": "H4 high at 4825.85 (2026-04-10T01:00) is a potential resistance; price is currently near 4815-4820. A retest of this zone with bearish confirmation could provide a short entry."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4823,
+    "confirmation": "Limit sell at 4823, near H4 high. Wait for bearish candle close below 4820 for confirmation."
+  },
+  "stopLoss": {
+    "price": 4830,
+    "reasoning": "Above recent high (4827.30) and H4 high (4825.85) with buffer",
+    "pips": 70
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4800,
+      "reasoning": "Round number and prior support",
+      "rr": 3.3
+    },
+    {
+      "level": "TP2",
+      "price": 4787.52,
+      "reasoning": "H1 low of range (4787.52) - discount zone start",
+      "rr": 5.1
+    }
+  ],
+  "invalidation": {
+    "price": 4831,
+    "reasoning": "Close above 4830 invalidates bearish bias"
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "London kill zone active now; wait for retest of 4822-4825 zone"
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 70-pip stop due to FOMC risk"
+  },
+  "macroContext": "EUR/USD strengthening (dollar weakening) is bearish for gold; real yields positive (1.91%) are bearish; Fear & Greed at 26 (fear) is neutral. FOMC decision in 9 hours adds uncertainty.",
+  "warnings": [
+    "FOMC rate decision and press conference in ~9 hours may cause volatility",
+    "No clear H1 structure break; trade based on premium zone rejection",
+    "⚠️ Split: Claude=no-trade DeepSeek=short — manual only",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v3.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "short",
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold stumbles against CAD after BoC holds rates steady, ahead of high-impact FOMC events"
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4903.60 not at POI [4822.00-4825.85] yet"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "WAITING",
+    "executed": false,
+    "reason": "Auto-trade disabled — manual signal",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

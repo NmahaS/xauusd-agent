@@ -72,26 +72,26 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-29T00:02:54.989Z
+**Generated:** 2026-04-29T09:04:54.212Z
 
-- **Bias:** neutral
-- **Setup Quality:** no-trade
-- **Confluence:** 0 — none
-- **Session:** asia — Wait for London open (07:00 UTC) and post-AUD CPI clarity (after 01:30 UTC); avoid trading within 2 hours of high-impact AUD CPI release at 01:30 UTC
-- **Direction:** no-trade
+- **Bias:** bearish
+- **Setup Quality:** B
+- **Confluence:** 4 — Price in premium zone (H4 74.6%, H1 291.8%); Unfilled bearish FVG? none, but bullish FVGs above may act as resistance; London kill zone active; EUR/USD strengthening (dollar weakening) bearish for gold
+- **Session:** london — London kill zone active now; wait for retest of 4822-4825 zone
+- **Direction:** short
+- **POI:** bearish_order_block @ [4822, 4825.85]
+- **Entry:** limit @ 4823 — Limit sell at 4823, near H4 high. Wait for bearish candle close below 4820 for confirmation.
+- **Stop Loss:** 4830
+- **TP1:** 4800 (RR 3.3)
+- **TP2:** 4787.52 (RR 5.1)
+- **Invalidation:** 4831
 
-**Macro Context:** Positive real yields (1.91%) bearish for gold; EUR/USD weakening (bullish for gold); F&G at 26 (fear, neutral); high-impact AUD CPI in 87 minutes creates volatility risk and invalidates current technical setup until post-event consolidation.
+**Macro Context:** EUR/USD strengthening (dollar weakening) is bearish for gold; real yields positive (1.91%) are bearish; Fear & Greed at 26 (fear) is neutral. FOMC decision in 9 hours adds uncertainty.
 
 **Warnings:**
-- ⚠ High-impact AUD CPI m/m, y/y, and Trimmed Mean CPI releases in 87 minutes — avoid entry until post-event price action and volatility settle
-- ⚠ H4 and H1 SMC bias both neutral; no active OBs or clear structure events to anchor trade
-- ⚠ H4 unfilled bullish FVG [4749.65-4759.57] exists but is 50+ pips away; price currently in premium zone without confluence
-- ⚠ Positive real yields (1.91%) create bearish headwind for gold despite EUR/USD weakness
-- ⚠ No RSI divergence, no kill zone active, no clear POI within 20 pips of current price
-- ⚠ Recommend waiting for London open and post-CPI consolidation before initiating any directional trade
-- ⚠ High-impact gold event in 87min: AUD CPI m/m (High)
-- ⚠ High-impact gold event in 87min: AUD CPI y/y (High)
-- ⚠ High-impact gold event in 87min: AUD Trimmed Mean CPI m/m (High)
+- ⚠ FOMC rate decision and press conference in ~9 hours may cause volatility
+- ⚠ No clear H1 structure break; trade based on premium zone rejection
+- ⚠ ⚠️ Split: Claude=no-trade DeepSeek=short — manual only
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

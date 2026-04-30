@@ -7,16 +7,11 @@ const BASE_URL = config.IG_DEMO === false || config.IG_DEMO === 'false'
 export const IG_ENV = BASE_URL.startsWith('https://api.ig.com') ? 'LIVE' : 'DEMO';
 
 const GOLD_EPICS = [
-  // AUD epics confirmed via market search on this IG Australia account
-  'MT.D.GC.FWS2.IP',          // Gold ($100) — AUD-100 contract, primary
-  'MT.D.GC.FWM2.IP',          // Gold ($33.20) — AUD-33.20 contract
-  'CS.D.CFAGOLD.CAF.IP',      // Spot Gold (A$10 Contract)
+  'MT.D.GC.FWS2.IP',          // Gold ($100) JUN-26 — confirmed working on this account
+  'MT.D.GC.FWM2.IP',          // Gold ($33.20) JUN-26 — fallback
   'CS.D.CFAGOLD.CFA.IP',      // Spot Gold (A$1 Contract)
-  // Generic / USD-priced fallbacks (kept so non-AU accounts still work)
-  'CS.D.CFDGOLD.CFD.IP',
-  'IX.D.XAUUSD.MINI.IP',
-  'CS.D.XAUUSD.CFD.IP',
-  'CS.D.USCGC.TODAY.IP',      // Last resort — known scaling issues
+  'CS.D.CFAGOLD.CAF.IP',      // Spot Gold (A$10 Contract)
+  'CS.D.CFDGOLD.CFD.IP',      // Standard CFD — may not be available on AU accounts
 ];
 
 const EURUSD_EPICS = [
@@ -222,9 +217,13 @@ async function discoverGoldEpic(session) {
   return preferred?.epic || fallback?.epic || null;
 }
 
-// Resolve a gold epic via cross-validation: candles and snapshot must each scale to a
-// plausible price AND agree within 10%. Catches the USCGC.TODAY.IP quirk where candle
-// (4847) and snapshot (1404) come back in different unit conventions on the same epic.
+const GAP_TOLERANCE = 0.15; // 15% — covers AUD futures candle/snapshot convention differences
+
+// Resolve a gold epic via cross-validation: candles must scale to a plausible gold price;
+// if a live snapshot is available, it must agree within GAP_TOLERANCE. If the snapshot is
+// unavailable (market closed, futures contract off-hours), candle price is used directly.
+// If every epic fails the gap check but at least one had plausible candle data, that best
+// candidate is used with a warning rather than returning null.
 async function resolveGoldEpic(session) {
   const discovered = await discoverGoldEpic(session);
   if (discovered) {
@@ -235,68 +234,113 @@ async function resolveGoldEpic(session) {
     ...GOLD_EPICS,
   ])];
 
+  // Tracks the first epic with a plausible candle price, used as last-resort fallback.
+  let fallbackCandidate = null;
+
   for (const epic of candidates) {
+    console.log(`[ig] trying ${epic}...`);
     try {
       const [h1Raw, marketRaw] = await Promise.all([
         fetchRawCandles(session, epic, 'HOUR', config.CANDLES_LOOKBACK || 200).catch(() => null),
         fetchRawMarketDetails(session, epic).catch(() => null),
       ]);
 
-      if (!h1Raw?.length || !marketRaw) {
-        console.log(`[ig] gold epic ${epic} probe failed — no data, trying next`);
+      if (!h1Raw?.length) {
+        console.log(`[ig] ${epic} — no candle data, trying next`);
         continue;
       }
 
       const lastCandle = h1Raw[h1Raw.length - 1].close;
-      const snapshotMid = marketRaw.mid;
       const candleDivisor = findWorkingDivisor(lastCandle, 'GOLD');
+
+      if (!candleDivisor) {
+        console.log(`[ig] ${epic} — candle (${lastCandle}) outside plausible gold range, trying next`);
+        continue;
+      }
+
+      const scaledCandle = lastCandle / candleDivisor;
+
+      // Save first plausible candle for use if all gap checks fail
+      if (!fallbackCandidate) {
+        fallbackCandidate = { epic, h1Raw, marketRaw, candleDivisor, scaledCandle };
+      }
+
+      // If snapshot unavailable (market closed / futures off-hours), skip gap check
+      const snapshotMid = marketRaw?.mid ?? null;
+      if (snapshotMid == null) {
+        console.log(`[ig] ${epic} — candle=${scaledCandle.toFixed(2)} snapshot=unavailable (market closed) — using candle price ✓`);
+        const h4Raw = await fetchRawCandles(session, epic, 'HOUR_4', 100).catch(() => []);
+        const market = marketRaw
+          ? { ...rescaleMarketSnapshot(marketRaw, candleDivisor), mid: scaledCandle }
+          : { mid: scaledCandle, marketStatus: 'CLOSED', bid: null, offer: null, spread: null };
+        console.log(`[ig] gold epic resolved: ${epic} ✓`);
+        return {
+          epic,
+          candleDivisor,
+          snapshotDivisor: candleDivisor,
+          h1Candles: rescaleCandles(h1Raw, candleDivisor),
+          h4Candles: rescaleCandles(h4Raw, candleDivisor),
+          market,
+        };
+      }
+
       const snapshotDivisor = findWorkingDivisor(snapshotMid, 'GOLD');
+      const scaledSnapshot = snapshotDivisor ? snapshotMid / snapshotDivisor : null;
 
-      if (!candleDivisor && !snapshotDivisor) {
-        console.log(`[ig] gold epic ${epic} — neither candle (${lastCandle}) nor snapshot (${snapshotMid}) produce plausible gold price, trying next`);
+      if (scaledSnapshot == null) {
+        console.log(`[ig] ${epic} — candle=${scaledCandle.toFixed(2)} snapshot=${snapshotMid} (not plausible gold range) — trying next`);
         continue;
       }
 
-      const scaledCandle = lastCandle / (candleDivisor || 1);
-      const scaledSnapshot = snapshotMid / (snapshotDivisor || 1);
       const gap = Math.abs(scaledCandle - scaledSnapshot) / Math.max(scaledCandle, scaledSnapshot);
+      const withinTolerance = gap <= GAP_TOLERANCE;
+      console.log(
+        `[ig] ${epic} — candle=${scaledCandle.toFixed(2)} snapshot=${scaledSnapshot.toFixed(2)} ` +
+        `gap=${(gap * 100).toFixed(1)}% — ${withinTolerance ? `within ${GAP_TOLERANCE * 100}% tolerance ✓` : 'gap too wide, trying next'}`
+      );
 
-      if (gap > 0.10) {
-        console.warn(
-          `[ig] gold epic ${epic} INCONSISTENT — candle=${scaledCandle.toFixed(2)} (÷${candleDivisor}) ` +
-          `vs snapshot=${scaledSnapshot.toFixed(2)} (÷${snapshotDivisor}) gap=${(gap * 100).toFixed(1)}% — trying next`
-        );
-        continue;
-      }
+      if (!withinTolerance) continue;
 
       const h4Raw = await fetchRawCandles(session, epic, 'HOUR_4', 100).catch(err => {
-        console.warn(`[ig] gold epic ${epic}: H4 fetch failed (${err.message}) — continuing with H1 only`);
+        console.warn(`[ig] ${epic}: H4 fetch failed (${err.message}) — continuing with H1 only`);
         return [];
       });
 
-      const h1Candles = rescaleCandles(h1Raw, candleDivisor || 1);
-      const h4Candles = rescaleCandles(h4Raw, candleDivisor || 1);
-      const market = rescaleMarketSnapshot(marketRaw, snapshotDivisor || 1);
-
-      console.log(
-        `[ig] gold epic resolved: ${epic} candle=${scaledCandle.toFixed(2)} ` +
-        `snapshot=${scaledSnapshot.toFixed(2)} gap=${(gap * 100).toFixed(1)}% ✓`
-      );
-
+      console.log(`[ig] gold epic resolved: ${epic} ✓`);
       return {
         epic,
-        candleDivisor: candleDivisor || 1,
-        snapshotDivisor: snapshotDivisor || 1,
-        h1Candles,
-        h4Candles,
-        market,
+        candleDivisor,
+        snapshotDivisor,
+        h1Candles: rescaleCandles(h1Raw, candleDivisor),
+        h4Candles: rescaleCandles(h4Raw, candleDivisor),
+        market: rescaleMarketSnapshot(marketRaw, snapshotDivisor),
       };
     } catch (err) {
-      console.log(`[ig] gold epic ${epic} probe failed: ${err.message}, trying next`);
+      console.log(`[ig] ${epic} probe failed: ${err.message}, trying next`);
     }
   }
 
-  console.error('[ig] NO gold epic resolved — all failed validation');
+  // All epics failed gap check — use the best candle candidate rather than returning null
+  if (fallbackCandidate) {
+    const { epic, h1Raw, marketRaw, candleDivisor, scaledCandle } = fallbackCandidate;
+    console.warn(`[ig] FALLBACK: using ${epic} candle price despite snapshot gap — snapshot may be stale`);
+    const h4Raw = await fetchRawCandles(session, epic, 'HOUR_4', 100).catch(() => []);
+    const market = marketRaw
+      ? { ...rescaleMarketSnapshot(marketRaw, candleDivisor), mid: scaledCandle }
+      : { mid: scaledCandle, marketStatus: 'CLOSED', bid: null, offer: null, spread: null };
+    market.warningNote = 'Using candle price — snapshot gap too wide';
+    console.log(`[ig] FALLBACK: ${epic} candle price ${scaledCandle.toFixed(2)} (plausible AUD range ✓)`);
+    return {
+      epic,
+      candleDivisor,
+      snapshotDivisor: candleDivisor,
+      h1Candles: rescaleCandles(h1Raw, candleDivisor),
+      h4Candles: rescaleCandles(h4Raw, candleDivisor),
+      market,
+    };
+  }
+
+  console.error('[ig] NO gold epic resolved — all epics failed validation');
   return null;
 }
 

@@ -59,9 +59,15 @@ cron.schedule('*/15 * * * *', async () => {
 // Daily heartbeat at 08:00 UTC
 cron.schedule('0 8 * * *', async () => {
   const uptime = Math.floor(process.uptime() / 3600);
+  const dayOfWeek = new Date().getUTCDay();
+  const blockedToday = dayOfWeek === 3; // Wednesday
+  const dayLine = blockedToday
+    ? '⚠️ Wednesday — no auto-execution today'
+    : '✅ Trading day — A/A+ full consensus will auto-execute';
   await sendTelegram(
     `💚 <b>Agent online</b> — uptime ${uptime}h\n` +
     `Auto-trade: ${process.env.AUTO_TRADE === 'true' ? '✅ ON' : '❌ OFF'}\n` +
+    `${dayLine}\n` +
     `Next run: within 15 min`
   );
 }, { timezone: 'UTC' });

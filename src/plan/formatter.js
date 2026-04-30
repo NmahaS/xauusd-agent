@@ -154,6 +154,29 @@ export function formatPlanForTelegram(plan, extras = {}) {
   }
   if ((m15?.status && m15.status !== 'N/A') || exec) lines.push('');
 
+  // Manual-only signal banners — B quality or split consensus A/A+
+  if (plan.direction && plan.entry && plan.stopLoss) {
+    const tp1 = plan.takeProfits?.[0];
+    const tp1Str = tp1 ? ` | TP1: ${cp(tp1.price)}` : '';
+
+    if (plan.setupQuality === 'B') {
+      lines.push(
+        `📋 <b>B SIGNAL — manual only</b>\n` +
+        `Direction: ${esc(plan.direction.toUpperCase())}\n` +
+        `Entry: ${cp(plan.entry.price)} | SL: ${cp(plan.stopLoss.price)}${tp1Str}`
+      );
+      lines.push('');
+    } else if (['A+', 'A'].includes(plan.setupQuality) && plan.consensus?.agreement !== 'full' && plan.consensus) {
+      const c = plan.consensus;
+      lines.push(
+        `⚠️ <b>SPLIT SIGNAL — manual only</b>\n` +
+        `Claude: ${esc(c.claudeDirection ?? 'n/a')} | DeepSeek: ${esc(c.deepseekDirection ?? 'n/a')}\n` +
+        `Entry: ${cp(plan.entry.price)} if you agree`
+      );
+      lines.push('');
+    }
+  }
+
   lines.push(`<b>Session:</b> ${esc(plan.session.current)} — ${esc(plan.session.recommendedExecutionWindow)}`);
   lines.push(`<b>Risk:</b> ${fmt(plan.risk.suggestedRiskPct, 2)}% — ${esc(plan.risk.positionSizeHint)}`);
 

@@ -19,6 +19,16 @@ export const RISK_RULES = {
   blockedSessions: ['off', 'asia'],
   fridayBlock: 15,              // no new trades after 15:00 UTC Friday
   newsBlackout: 30,             // minutes
+
+  // Quality gates — only auto-execute A and A+ with full consensus
+  autoExecuteQualities: ['A+', 'A'],
+  autoExecuteConsensus: ['full'],   // both LLMs must agree
+
+  // B quality → Telegram signal only, never auto-execute
+  signalOnlyQualities: ['B'],
+
+  // Wednesday block — backtest showed 0% WR
+  blockedDays: [3],  // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
 };
 
 const PLANS_DIR = path.resolve('plans');
@@ -180,24 +190,33 @@ export async function writeRiskState(state) {
 export async function checkRiskRules(plan, accountState, context = {}) {
   const log = (msg) => console.log(`[risk] ${msg}`);
 
-  // 1. Setup quality
-  if (!RISK_RULES.requiredQuality.includes(plan.setupQuality)) {
-    const reason = `${plan.setupQuality}-quality — signal only, no execution`;
+  // 1. Day-of-week block (Wednesday: 0% WR in backtest)
+  const dayOfWeek = new Date().getUTCDay();
+  if (RISK_RULES.blockedDays.includes(dayOfWeek)) {
+    const reason = 'Wednesday blocked — historically weakest day';
+    log(`REJECT dayOfWeek: ${reason}`);
+    return { allowed: false, reason };
+  }
+  log(`PASS dayOfWeek=${dayOfWeek}`);
+
+  // 2. Setup quality — only A+ and A auto-execute; B is signal-only
+  if (!RISK_RULES.autoExecuteQualities.includes(plan.setupQuality)) {
+    const reason = `${plan.setupQuality} quality — signal only, no auto-execution`;
     log(`REJECT setupQuality: ${reason}`);
     return { allowed: false, reason };
   }
   log(`PASS setupQuality=${plan.setupQuality}`);
 
-  // 2. Consensus
+  // 3. Consensus — both LLMs must agree (full) for auto-execution
   const agreement = plan.consensus?.agreement || 'unknown';
-  if (!RISK_RULES.requiredConsensus.includes(agreement)) {
-    const reason = `${agreement} consensus — manual only`;
+  if (!RISK_RULES.autoExecuteConsensus.includes(agreement)) {
+    const reason = `Split consensus — both LLMs must agree for auto-execution`;
     log(`REJECT consensus: ${reason}`);
     return { allowed: false, reason };
   }
   log(`PASS consensus=${agreement}`);
 
-  // 3. Confluence
+  // 4. Confluence
   if ((plan.confluenceCount ?? 0) < RISK_RULES.requiredConfluence) {
     const reason = `Confluence ${plan.confluenceCount}/${RISK_RULES.requiredConfluence} too low`;
     log(`REJECT confluence: ${reason}`);
@@ -205,7 +224,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS confluence=${plan.confluenceCount}`);
 
-  // 4. Session
+  // 5. Session
   const sess = plan.session?.current || 'unknown';
   if (RISK_RULES.blockedSessions.includes(sess)) {
     const reason = `Blocked session: ${sess}`;
@@ -214,7 +233,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS session=${sess}`);
 
-  // 5. Friday cutoff
+  // 6. Friday cutoff
   if (isAfterFridayCutoff()) {
     const reason = 'Friday afternoon cutoff (>=15:00 UTC)';
     log(`REJECT fridayCutoff: ${reason}`);
@@ -222,7 +241,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS fridayCutoff`);
 
-  // 6. News blackout
+  // 7. News blackout
   const imminent = imminentHighImpactNews(context.calendar);
   if (imminent) {
     const reason = `News blackout: ${imminent.title} in ${imminent.minutesAway}m`;
@@ -231,7 +250,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS news blackout`);
 
-  // 7. Open positions
+  // 8. Open positions
   const openCount = accountState.openPositions?.length ?? 0;
   if (openCount >= RISK_RULES.maxOpenPositions) {
     const reason = `${openCount} position(s) already open (max ${RISK_RULES.maxOpenPositions})`;
@@ -240,7 +259,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS openPositions=${openCount}`);
 
-  // 8. Daily trade count
+  // 9. Daily trade count
   const dailyTrades = (await getDailyTradeHistory()).length;
   if (dailyTrades >= RISK_RULES.maxDailyTrades) {
     const reason = `${dailyTrades} trades today — daily limit ${RISK_RULES.maxDailyTrades}`;
@@ -249,7 +268,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS dailyTrades=${dailyTrades}`);
 
-  // 9. Daily P&L floor (best-effort using accountState.dailyPL)
+  // 10. Daily P&L floor (best-effort using accountState.dailyPL)
   const dailyPctLoss = accountState.balance > 0 ? (accountState.dailyPL / accountState.balance) * 100 : 0;
   if (dailyPctLoss <= -RISK_RULES.maxDailyLoss) {
     const reason = `Daily loss limit hit (${dailyPctLoss.toFixed(2)}% <= -${RISK_RULES.maxDailyLoss}%)`;
@@ -258,7 +277,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS dailyPL=${dailyPctLoss.toFixed(2)}%`);
 
-  // 10. Weekly drawdown
+  // 11. Weekly drawdown
   const state = await readRiskState();
   const weekBase = state.weekStartBalance || RISK_RULES.weekStartBalance || 100;
   const weeklyPct = ((accountState.balance - weekBase) / weekBase) * 100;
@@ -269,7 +288,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS weeklyDrawdown=${weeklyPct.toFixed(2)}%`);
 
-  // 11. Min RR on TP1
+  // 12. Min RR on TP1
   const tp1rr = plan.takeProfits?.[0]?.rr ?? 0;
   if (tp1rr < RISK_RULES.minRR) {
     const reason = `TP1 RR ${tp1rr} < ${RISK_RULES.minRR} minimum`;

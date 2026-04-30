@@ -240,13 +240,23 @@ async function resolveGoldEpic(session) {
   for (const epic of candidates) {
     console.log(`[ig] trying ${epic}...`);
     try {
+      let h1FetchErr = null;
       const [h1Raw, marketRaw] = await Promise.all([
-        fetchRawCandles(session, epic, 'HOUR', config.CANDLES_LOOKBACK || 200).catch(() => null),
+        fetchRawCandles(session, epic, 'HOUR', config.CANDLES_LOOKBACK || 200).catch(err => {
+          h1FetchErr = err;
+          return null;
+        }),
         fetchRawMarketDetails(session, epic).catch(() => null),
       ]);
 
       if (!h1Raw?.length) {
-        console.log(`[ig] ${epic} — no candle data, trying next`);
+        const errMsg = h1FetchErr ? h1FetchErr.message.slice(0, 120) : 'empty prices array';
+        console.log(`[ig] ${epic} — candle fetch failed: ${errMsg}`);
+        // Quota exceeded applies to all epics — no point continuing the loop
+        if (h1FetchErr?.message?.includes('exceeded-account-historical-data-allowance')) {
+          console.error('[ig] IG historical data quota exhausted — all epic probes will fail until quota resets (weekly)');
+          break;
+        }
         continue;
       }
 

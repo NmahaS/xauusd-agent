@@ -179,16 +179,33 @@ async function runFullPipeline() {
 
   const {
     h1Candles, h4Candles, currentPrice, spread, marketStatus, igSentiment, dxy,
-    dailyHigh, dailyLow, goldEpic, goldDivisor, session: igSession,
+    dailyHigh, dailyLow, goldEpic, goldDivisor, session: igSession, snapshotOnly,
   } = igData;
   console.log(`[pipeline] fetch phase done in ${time() - tFetch}ms`);
 
-  if (h1Candles.length === 0) {
-    console.error('[pipeline] no usable gold candles from IG — sending alert and exiting');
+  if (snapshotOnly) {
+    console.warn('[pipeline] IG candle quota exhausted — snapshot-only, no analysis possible this run');
+    const priceStr = currentPrice != null ? `A$${currentPrice.toFixed(2)}` : 'unknown';
     const alert =
-      `⚠️ <b>XAUUSD Agent [${IG_ENV}]</b>\n` +
-      `Cannot fetch gold prices — no valid IG epic found.\n` +
-      `Enable <code>CS.D.CFDGOLD.CFD.IP</code> on your IG account.`;
+      `⚠️ <b>IG candle quota exhausted</b>\n` +
+      `No historical data until quota resets (weekly — Mon UTC).\n\n` +
+      `Current gold price: <b>${priceStr}</b> (${goldEpic})\n` +
+      `Market: ${marketStatus ?? 'UNKNOWN'}\n\n` +
+      `Analysis paused — will resume automatically when quota resets.`;
+    try { await sendTelegramMessage(alert); }
+    catch (e) { console.error(`[pipeline] alert send failed: ${e.message}`); }
+    return { plan: null, telegramText: alert, skipped: true };
+  }
+
+  if (h1Candles.length === 0) {
+    console.error('[pipeline] no gold data available — sending alert and skipping this run');
+    const alert =
+      `⚠️ <b>Gold data unavailable</b>\n` +
+      `All IG epics failed. Possible causes:\n` +
+      `• IG API rate limit hit\n` +
+      `• Contract rolled to new expiry\n` +
+      `• IG server issue\n` +
+      `Will retry next run automatically.`;
     try { await sendTelegramMessage(alert); }
     catch (e) { console.error(`[pipeline] alert send failed: ${e.message}`); }
     return { plan: null, telegramText: alert, skipped: true };

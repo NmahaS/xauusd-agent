@@ -183,6 +183,20 @@ async function handleStatus() {
     lines.push(`<b>Auto-trade:</b> disabled (signal only)`);
   }
 
+  // Cache health
+  try {
+    const { getCacheStats } = await import('../data/candleCache.js');
+    const stats = getCacheStats();
+    const goldH1 = stats.find(s => s.resolution === 'HOUR' && s.key.includes('GC'));
+    const goldH4 = stats.find(s => s.resolution === 'HOUR_4');
+    const m15Stat = stats.find(s => s.resolution === 'MINUTE_15');
+    lines.push('');
+    lines.push(`<b>📦 Cache</b>`);
+    lines.push(`H1: ${goldH1 ? `${goldH1.count} candles (${goldH1.ageMinutes}m ago)` : '❌ empty — cold start on next run'}`);
+    lines.push(`H4: ${goldH4 ? `${goldH4.count} candles (${goldH4.ageMinutes}m ago)` : '❌ empty'}`);
+    lines.push(`M15: ${m15Stat ? `${m15Stat.count} candles (${m15Stat.ageMinutes}m ago)` : '❌ empty'}`);
+  } catch {}
+
   await tgSend(lines.join('\n'));
 }
 

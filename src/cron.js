@@ -83,6 +83,41 @@ cron.schedule('10 0 1 * *', async () => {
   }
 }, { timezone: 'UTC' });
 
+// Monday 22:05 UTC — clear stale cache and warm up with fresh weekly data
+cron.schedule('5 22 * * 1', async () => {
+  console.log('[cron] Monday market open — clearing cache for fresh weekly data');
+  try {
+    const fsModule = await import('node:fs');
+    const fsSyn = fsModule.default;
+    if (fsSyn.existsSync('cache')) {
+      const files = fsSyn.readdirSync('cache').filter(f => f.endsWith('.json'));
+      files.forEach(f => fsSyn.unlinkSync(`cache/${f}`));
+      console.log(`[cron] cleared ${files.length} cache files — cold start on next run`);
+    }
+
+    const { fetchAllIGData } = await import('./data/ig.js');
+    await fetchAllIGData();
+    console.log('[cron] Monday cache warmup complete');
+
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    if (token && chatId) {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: '📊 <b>Weekly cache refreshed</b>\nFresh 200-candle history loaded.\nReady to trade this week. ✅',
+          parse_mode: 'HTML',
+        }),
+      });
+    }
+  } catch (err) {
+    console.error('[cron] Monday warmup failed:', err.message);
+  }
+}, { timezone: 'UTC' });
+
 console.log('[cron] scheduler ready — pipeline every 15 min during market hours');
 console.log('[cron] daily heartbeat at 08:00 UTC');
 console.log('[cron] monthly report on 1st at 00:10 UTC');
+console.log('[cron] Monday 22:05 UTC — weekly cache warmup');

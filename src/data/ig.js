@@ -1,4 +1,5 @@
 import { config } from '../config.js';
+import { loadCache, saveCache, appendToCache, isCacheReady } from './candleCache.js';
 
 const BASE_URL = config.IG_DEMO === false || config.IG_DEMO === 'false'
   ? 'https://api.ig.com/gateway/deal'
@@ -333,7 +334,7 @@ async function resolveGoldEpic(session) {
     try {
       let h1FetchErr = null;
       const [h1Raw, marketRaw] = await Promise.all([
-        fetchRawCandles(session, epic, 'HOUR', config.CANDLES_LOOKBACK || 200).catch(err => {
+        fetchIGCandlesCached(epic, 'HOUR', config.CANDLES_LOOKBACK || 200, session).catch(err => {
           h1FetchErr = err;
           return null;
         }),
@@ -372,7 +373,7 @@ async function resolveGoldEpic(session) {
       if (snapshotMid == null) {
         console.log(`[ig] candle=${scaledCandle.toFixed(2)} snapshot=unavailable`);
         console.log(`[ig] epic ${epic} result: PASSED ✓ reason: snapshot unavailable, using candle price`);
-        const h4Raw = await fetchRawCandles(session, epic, 'HOUR_4', 100).catch(() => []);
+        const h4Raw = await fetchIGCandlesCached(epic, 'HOUR_4', 200, session).catch(() => []);
         const market = marketRaw
           ? { ...rescaleMarketSnapshot(marketRaw, candleDivisor), mid: scaledCandle }
           : { mid: scaledCandle, marketStatus: 'CLOSED', bid: null, offer: null, spread: null };
@@ -406,7 +407,7 @@ async function resolveGoldEpic(session) {
 
       if (!withinTolerance) continue;
 
-      const h4Raw = await fetchRawCandles(session, epic, 'HOUR_4', 100).catch(err => {
+      const h4Raw = await fetchIGCandlesCached(epic, 'HOUR_4', 200, session).catch(err => {
         console.warn(`[ig] ${epic}: H4 fetch failed (${err.message}) — continuing with H1 only`);
         return [];
       });
@@ -429,7 +430,7 @@ async function resolveGoldEpic(session) {
   if (fallbackCandidate) {
     const { epic, h1Raw, marketRaw, candleDivisor, scaledCandle } = fallbackCandidate;
     console.warn(`[ig] FALLBACK: using ${epic} candle price despite snapshot gap — snapshot may be stale`);
-    const h4Raw = await fetchRawCandles(session, epic, 'HOUR_4', 100).catch(() => []);
+    const h4Raw = await fetchIGCandlesCached(epic, 'HOUR_4', 200, session).catch(() => []);
     const market = marketRaw
       ? { ...rescaleMarketSnapshot(marketRaw, candleDivisor), mid: scaledCandle }
       : { mid: scaledCandle, marketStatus: 'CLOSED', bid: null, offer: null, spread: null };
@@ -459,7 +460,7 @@ async function resolveEurUsdEpic(session) {
   for (const epic of EURUSD_EPICS) {
     try {
       const [h1Raw, marketRaw] = await Promise.all([
-        fetchRawCandles(session, epic, 'HOUR', 50).catch(() => null),
+        fetchIGCandlesCached(epic, 'HOUR', 50, session).catch(() => null),
         fetchRawMarketDetails(session, epic).catch(() => null),
       ]);
 
@@ -553,6 +554,57 @@ function computeDxyProxyFromEurUsd(eurUsdCandles, divisor = 1) {
 export async function fetchIGCandles(session, epic, resolution, max, divisor = 1) {
   const raw = await fetchRawCandles(session, epic, resolution, max);
   return rescaleCandles(raw, divisor || 1);
+}
+
+// Cache-aware candle fetcher. On cold start (cache < 50 candles) fetches full history once.
+// On hot runs fetches only 2 candles and merges into cache — 99% fewer API calls per week.
+// On quota hit during hot run, returns existing cache rather than failing the pipeline.
+export async function fetchIGCandlesCached(epic, resolution, maxCount = 200, session) {
+  const cacheReady = isCacheReady(epic, resolution, 50);
+
+  if (!cacheReady) {
+    console.log(`[ig] COLD START ${epic} ${resolution} — fetching ${maxCount} candles`);
+    try {
+      const candles = await fetchIGCandles(session, epic, resolution, maxCount);
+      saveCache(epic, resolution, candles);
+      console.log(`[ig] cold start complete: ${candles.length} candles cached`);
+      return candles;
+    } catch (err) {
+      console.error(`[ig] cold start failed: ${err.message}`);
+      const stale = loadCache(epic, resolution);
+      if (stale?.length > 0) {
+        console.warn(`[ig] using stale cache (${stale.length} candles)`);
+        return stale;
+      }
+      throw err;
+    }
+  }
+
+  console.log(`[ig] HOT RUN ${epic} ${resolution} — fetching 2 candles to update cache`);
+  try {
+    const latest = await fetchIGCandles(session, epic, resolution, 2);
+    const updated = appendToCache(epic, resolution, latest);
+    console.log(`[ig] cache updated: ${updated.length} total candles`);
+    return updated;
+  } catch (err) {
+    const isQuota = err.message.toLowerCase().includes('quota') ||
+                    err.message.toLowerCase().includes('allowance') ||
+                    err.message.includes('429');
+
+    if (isQuota) {
+      console.warn(`[ig] QUOTA HIT during hot run — returning cached data`);
+      const cached = loadCache(epic, resolution);
+      if (cached?.length > 0) {
+        console.log(`[ig] using ${cached.length} cached candles (quota safe)`);
+        return cached;
+      }
+    }
+
+    console.warn(`[ig] hot run failed: ${err.message} — returning cache`);
+    const cached = loadCache(epic, resolution);
+    if (cached?.length > 0) return cached;
+    throw err;
+  }
 }
 
 function emptyIGData(errMsg) {

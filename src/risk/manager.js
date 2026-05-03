@@ -5,7 +5,7 @@ import path from 'node:path';
 import { config } from '../config.js';
 
 export const RISK_RULES = {
-  maxRiskPerTrade: 1.0,         // % of equity — A$1.00 on a A$100 account
+  maxRiskPerTrade: 1.5,         // % of equity — up to A$1.50 on A$100 at Tier 1
   maxDailyLoss: 3.0,            // stop trading after -3% daily P&L
   maxWeeklyDrawdown: 8.0,       // pause until next week at -8%
   maxOpenPositions: 1,          // single concurrent position on $100 account
@@ -29,6 +29,21 @@ export const RISK_RULES = {
 
   // Wednesday block — backtest showed 0% WR
   blockedDays: [3],  // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+
+  // Quality × tier execution matrix — risk % per trade (0 = signal only)
+  executionMatrix: {
+    'A+': { tier1: 1.5, tier2: 1.0, tier3: 0, tier4: 0 },
+    'A':  { tier1: 1.5, tier2: 1.0, tier3: 0, tier4: 0 },
+    'B':  { tier1: 1.0, tier2: 0.5, tier3: 0, tier4: 0 },
+  },
+
+  // B-grade specific gates — extra filters beyond the matrix
+  bGradeRequirements: {
+    minTier: 2,
+    requireFullConsensus: true,
+    minConfluence: 5,
+    maxRisk: 1.0,
+  },
 };
 
 const PLANS_DIR = path.resolve('plans');
@@ -199,15 +214,47 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS dayOfWeek=${dayOfWeek}`);
 
-  // 2. Setup quality — only A+ and A auto-execute; B is signal-only
-  if (!RISK_RULES.autoExecuteQualities.includes(plan.setupQuality)) {
-    const reason = `${plan.setupQuality} quality — signal only, no auto-execution`;
-    log(`REJECT setupQuality: ${reason}`);
+  // 2. Execution matrix — quality × tier determines allowed risk
+  const tier = plan.threeLayer?.tier ?? 4;
+  const quality = plan.setupQuality;
+  const matrix = RISK_RULES.executionMatrix[quality];
+  if (!matrix) {
+    const reason = `Unknown quality: ${quality}`;
+    log(`REJECT executionMatrix: ${reason}`);
     return { allowed: false, reason };
   }
-  log(`PASS setupQuality=${plan.setupQuality}`);
+  const allowedRisk = matrix[`tier${tier}`] ?? 0;
+  if (allowedRisk === 0) {
+    const reason = `${quality} at Tier ${tier} — signal only, no auto-execution`;
+    log(`REJECT executionMatrix: ${reason}`);
+    return { allowed: false, reason };
+  }
+  log(`PASS executionMatrix: ${quality} Tier ${tier} → ${allowedRisk}%`);
 
-  // 3. Consensus — both LLMs must agree (full) for auto-execution
+  // B-grade extra checks
+  if (quality === 'B') {
+    if (tier > 2) {
+      const reason = 'B-grade requires Tier 1 or 2 (all layers must align)';
+      log(`REJECT bGrade: ${reason}`);
+      return { allowed: false, reason };
+    }
+    if (plan.consensus?.agreement !== 'full') {
+      const reason = 'B-grade requires full LLM consensus (both agree)';
+      log(`REJECT bGrade: ${reason}`);
+      return { allowed: false, reason };
+    }
+    if ((plan.confluenceCount ?? 0) < RISK_RULES.bGradeRequirements.minConfluence) {
+      const reason = `B-grade needs ${RISK_RULES.bGradeRequirements.minConfluence}+ confluence (got ${plan.confluenceCount})`;
+      log(`REJECT bGrade: ${reason}`);
+      return { allowed: false, reason };
+    }
+    log(`PASS bGrade: Tier ${tier} | consensus=full | confluence=${plan.confluenceCount}`);
+  }
+
+  // Set risk % from matrix (bounded by overall cap)
+  plan.risk.suggestedRiskPct = Math.min(allowedRisk, RISK_RULES.maxRiskPerTrade);
+
+  // 3. Consensus — both LLMs must agree (full) for A+/A auto-execution
   const agreement = plan.consensus?.agreement || 'unknown';
   if (!RISK_RULES.autoExecuteConsensus.includes(agreement)) {
     const reason = `Split consensus — both LLMs must agree for auto-execution`;
@@ -297,5 +344,5 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS minRR=${tp1rr}`);
 
-  return { allowed: true, reason: 'all rules passed' };
+  return { allowed: true, reason: `${quality} Tier ${tier} approved at ${plan.risk.suggestedRiskPct}% risk` };
 }

@@ -179,11 +179,23 @@ export function formatPlanForTelegram(plan, extras = {}) {
     const tp1Str = tp1 ? ` | TP1: ${cp(tp1.price)}` : '';
 
     if (plan.setupQuality === 'B') {
-      lines.push(
-        `📋 <b>B SIGNAL — manual only</b>\n` +
-        `Direction: ${esc(plan.direction.toUpperCase())}\n` +
-        `Entry: ${cp(plan.entry.price)} | SL: ${cp(plan.stopLoss.price)}${tp1Str}`
-      );
+      const bTier = plan.threeLayer?.tier ?? 4;
+      if (bTier <= 2) {
+        const bRisk = bTier === 1 ? '1.0%' : '0.5%';
+        lines.push(
+          `🟡 <b>B SIGNAL — Tier ${bTier} auto-execute</b>\n` +
+          `⚡ 3-layer alignment qualifies B for execution\n` +
+          `Risk: ${bRisk} (half size — B quality caution)`
+        );
+      } else {
+        const bReason = bTier === 3
+          ? 'Macro not aligned — technical signal only'
+          : 'Insufficient alignment for execution';
+        lines.push(
+          `📋 <b>B SIGNAL — Tier ${bTier} manual only</b>\n` +
+          `${bReason}`
+        );
+      }
       lines.push('');
     } else if (['A+', 'A'].includes(plan.setupQuality) && plan.consensus?.agreement !== 'full' && plan.consensus) {
       const c = plan.consensus;

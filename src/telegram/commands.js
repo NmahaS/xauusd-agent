@@ -457,7 +457,14 @@ async function handleSettings() {
     `LLM keys: ` +
     `Claude ${process.env.ANTHROPIC_API_KEY ? '✅' : '❌'} | ` +
     `DeepSeek ${process.env.DEEPSEEK_API_KEY ? '✅' : '❌'} | ` +
-    `Perplexity ${process.env.PERPLEXITY_API_KEY ? '✅' : '❌'}`
+    `Perplexity ${process.env.PERPLEXITY_API_KEY ? '✅' : '❌'}\n\n` +
+    `<b>Execution Matrix:</b>\n` +
+    `A+/A Tier 1: 1.5% risk ✅\n` +
+    `A+/A Tier 2: 1.0% risk ✅\n` +
+    `B   Tier 1: 1.0% risk ✅\n` +
+    `B   Tier 2: 0.5% risk ✅\n` +
+    `Any Tier 3: signal only 📋\n` +
+    `Any Tier 4: blocked ⛔`
   );
 }
 

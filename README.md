@@ -72,28 +72,32 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-04-29T09:04:54.212Z
+**Generated:** 2026-05-01T01:26:03.300Z
 
 - **Bias:** bearish
 - **Setup Quality:** B
-- **Confluence:** 4 — Price in premium zone (H4 74.6%, H1 291.8%); Unfilled bearish FVG? none, but bullish FVGs above may act as resistance; London kill zone active; EUR/USD strengthening (dollar weakening) bearish for gold
-- **Session:** london — London kill zone active now; wait for retest of 4822-4825 zone
+- **Confluence:** 3 — H1 bearish structure (CHoCH-bearish @ 4621.28); Price in premium zone (79% of range); Positive real yields (1.96%) bearish for gold
+- **Session:** asia — Wait for London kill zone (07:00 UTC) for optimal execution; current Asia session has low liquidity.
 - **Direction:** short
-- **POI:** bearish_order_block @ [4822, 4825.85]
-- **Entry:** limit @ 4823 — Limit sell at 4823, near H4 high. Wait for bearish candle close below 4820 for confirmation.
-- **Stop Loss:** 4830
-- **TP1:** 4800 (RR 3.3)
-- **TP2:** 4787.52 (RR 5.1)
-- **Invalidation:** 4831
+- **POI:** bearish_structure_premium_zone @ [4638.32, 4643.19]
+- **Entry:** limit @ 4641 — Limit sell at midpoint of OTE short zone; validated by H1 bearish CHoCH and premium zone positioning. Await London kill zone (07:00 UTC) for execution confirmation.
+- **Stop Loss:** 4650.5
+- **TP1:** 4625 (RR 1.7)
+- **TP2:** 4610 (RR 3.3)
+- **TP3:** 4595 (RR 4.8)
+- **Invalidation:** 4650.5
 
-**Macro Context:** EUR/USD strengthening (dollar weakening) is bearish for gold; real yields positive (1.91%) are bearish; Fear & Greed at 26 (fear) is neutral. FOMC decision in 9 hours adds uncertainty.
+**Macro Context:** Positive real yields (1.96%) and rising 10Y yield (4.420%) are bearish for gold; Fear & Greed at 26 (fear) is neutral; DXY and EUR/USD data unavailable, but macro backdrop supports gold weakness.
 
 **Warnings:**
-- ⚠ FOMC rate decision and press conference in ~9 hours may cause volatility
-- ⚠ No clear H1 structure break; trade based on premium zone rejection
-- ⚠ ⚠️ Split: Claude=no-trade DeepSeek=short — manual only
+- ⚠ H4 bias is neutral with no active structure — confluence is weak (only 3 factors). Trade is B-grade setup; consider waiting for stronger H4 confirmation or additional H1 confluence.
+- ⚠ H4 data unavailable (no candles provided); cannot confirm multi-timeframe alignment. Execution risk elevated.
+- ⚠ ISM Manufacturing PMI and Prices due in ~754 minutes (high-impact USD data); avoid holding through this event.
+- ⚠ No active H1 order blocks or unfilled FVGs near entry — entry is based on OTE zone and premium positioning only.
+- ⚠ Asia session liquidity is low; execution may be slippage-prone. Strongly recommend waiting for London open (07:00 UTC).
+- ⚠ ✅ Consensus: Claude + DeepSeek both short
+- ⚠ DXY proxy unavailable — cross-asset context reduced
 - ⚠ Wide IG spread (0.80) — confirm before market orders
-- ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->
 
 ---

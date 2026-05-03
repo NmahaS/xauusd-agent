@@ -32,9 +32,9 @@ export const RISK_RULES = {
 
   // Quality × tier execution matrix — risk % per trade (0 = signal only)
   executionMatrix: {
-    'A+': { tier1: 1.5, tier2: 1.0, tier3: 0, tier4: 0 },
-    'A':  { tier1: 1.5, tier2: 1.0, tier3: 0, tier4: 0 },
-    'B':  { tier1: 1.0, tier2: 0.5, tier3: 0, tier4: 0 },
+    'A+': { tier1: 1.5, tier2: 1.0, tier3: 0.5, tier4: 0 },
+    'A':  { tier1: 1.5, tier2: 1.0, tier3: 0.5, tier4: 0 },
+    'B':  { tier1: 1.0, tier2: 0.5, tier3: 0,   tier4: 0 },
   },
 
   // B-grade specific gates — extra filters beyond the matrix
@@ -225,7 +225,9 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   const allowedRisk = matrix[`tier${tier}`] ?? 0;
   if (allowedRisk === 0) {
-    const reason = `${quality} at Tier ${tier} — signal only, no auto-execution`;
+    const reason = (quality === 'B' && tier === 3)
+      ? 'B Tier 3 — manual only, macro not aligned'
+      : `${quality} at Tier ${tier} — signal only, no auto-execution`;
     log(`REJECT executionMatrix: ${reason}`);
     return { allowed: false, reason };
   }

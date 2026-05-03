@@ -197,6 +197,13 @@ export function formatPlanForTelegram(plan, extras = {}) {
         );
       }
       lines.push('');
+    } else if (['A+', 'A'].includes(plan.setupQuality) && plan.threeLayer?.tier === 3) {
+      lines.push(
+        `⚡ <b>${esc(plan.setupQuality)} Tier 3 — technical only</b>\n` +
+        `Auto-executing at reduced risk (0.5%)\n` +
+        `⚠️ Macro not aligned — proceed with caution`
+      );
+      lines.push('');
     } else if (['A+', 'A'].includes(plan.setupQuality) && plan.consensus?.agreement !== 'full' && plan.consensus) {
       const c = plan.consensus;
       lines.push(

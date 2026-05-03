@@ -459,12 +459,13 @@ async function handleSettings() {
     `DeepSeek ${process.env.DEEPSEEK_API_KEY ? '✅' : '❌'} | ` +
     `Perplexity ${process.env.PERPLEXITY_API_KEY ? '✅' : '❌'}\n\n` +
     `<b>Execution Matrix:</b>\n` +
-    `A+/A Tier 1: 1.5% risk ✅\n` +
-    `A+/A Tier 2: 1.0% risk ✅\n` +
-    `B   Tier 1: 1.0% risk ✅\n` +
-    `B   Tier 2: 0.5% risk ✅\n` +
-    `Any Tier 3: signal only 📋\n` +
-    `Any Tier 4: blocked ⛔`
+    `A+/A Tier 1: 1.5% ✅\n` +
+    `A+/A Tier 2: 1.0% ✅\n` +
+    `A+/A Tier 3: 0.5% ✅ (reduced)\n` +
+    `B   Tier 1:  1.0% ✅\n` +
+    `B   Tier 2:  0.5% ✅\n` +
+    `B   Tier 3:  📋 manual\n` +
+    `Any Tier 4:  ⛔ blocked`
   );
 }
 

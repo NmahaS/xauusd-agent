@@ -332,8 +332,8 @@ async function runFullPipeline() {
     } else if (threeLayer?.tier === 4) {
       execution = { executed: false, reason: `Tier 4 blocked: ${(threeLayer.blockingFactors || []).join(', ') || threeLayer.tierLabel}` };
       console.log(`[executor] ${execution.reason}`);
-    } else if (threeLayer?.tier === 3) {
-      execution = { executed: false, reason: `Tier 3 — technical-only signal, no auto-execute` };
+    } else if (threeLayer?.tier === 3 && !['A+', 'A'].includes(mergedPlan.setupQuality)) {
+      execution = { executed: false, reason: 'B Tier 3 — manual only, macro not aligned' };
       console.log(`[executor] ${execution.reason}`);
     } else if (mergedPlan.m15?.status === 'CONFIRMED' || mergedPlan.entry?.trigger === 'limit') {
       execution = await executeIfApproved(mergedPlan, { ...ctx, goldEpic, goldDivisor }, igSession);

@@ -115,8 +115,9 @@ export function formatPlanForTelegram(plan, extras = {}) {
   // Three-layer analysis block
   if (plan.threeLayer) {
     const tl = plan.threeLayer;
-    const tierIcon = tl.tier === 1 ? '⚡' : tl.tier === 2 ? '✅' : tl.tier === 3 ? '📋' : '⛔';
-    const tierRisk = tl.tier === 1 ? 'Risk: 1.5%' : tl.tier === 2 ? 'Risk: 1%' : tl.tier === 3 ? 'Manual only' : 'No trade';
+    const aaT3 = tl.tier === 3 && ['A+', 'A'].includes(plan.setupQuality);
+    const tierIcon = tl.tier === 1 ? '⚡' : tl.tier === 2 ? '✅' : aaT3 ? '✅' : tl.tier === 3 ? '📋' : '⛔';
+    const tierRisk = tl.tier === 1 ? 'Risk: 1.5%' : tl.tier === 2 ? 'Risk: 1%' : aaT3 ? 'Risk: 0.5% (reduced)' : tl.tier === 3 ? 'Manual only' : 'No trade';
     lines.push(`<b>🔬 3-Layer Analysis</b>`);
     const wm = tl.layers?.macro;
     const flow = tl.layers?.flow;

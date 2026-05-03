@@ -83,6 +83,69 @@ cron.schedule('10 0 1 * *', async () => {
   }
 }, { timezone: 'UTC' });
 
+// Monday 21:00 UTC — refresh weekly macro state (1 hour before market open + cache warmup)
+cron.schedule('0 21 * * 1', async () => {
+  console.log('[cron] Monday macro refresh...');
+  try {
+    // Clear macro caches to force fresh weekly data
+    const fsSync = (await import('node:fs')).default;
+    ['cache/macro_state.json', 'cache/cot.json', 'cache/weekly_macro.json'].forEach(f => {
+      try { fsSync.unlinkSync(f); } catch {}
+    });
+    const { getWeeklyMacroState } = await import('./macro/macroState.js');
+    const state = await getWeeklyMacroState();
+
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    if (token && chatId) {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text:
+            `📊 <b>Weekly Macro Update</b>\n\n` +
+            `Bias: <b>${(state.weeklyBias || 'unknown').toUpperCase()}</b>\n` +
+            `Score: ${state.bullishPoints}B / ${state.bearishPoints}Br\n\n` +
+            `<b>Factors:</b>\n${(state.factors || []).map(f => `• ${f}`).join('\n') || 'none'}\n\n` +
+            `<i>COT: ${state.cot?.cotSignal || 'unavailable'}</i>`,
+          parse_mode: 'HTML',
+        }),
+      });
+    }
+    console.log(`[cron] weekly macro: ${state.weeklyBias}`);
+  } catch (err) {
+    console.error('[cron] macro refresh failed:', err.message);
+  }
+}, { timezone: 'UTC' });
+
+// Friday 16:00 UTC — COT data releases at 15:30 ET (20:30 UTC), fetch 30 min after
+cron.schedule('0 16 * * 5', async () => {
+  console.log('[cron] Friday COT refresh...');
+  try {
+    const fsSync = (await import('node:fs')).default;
+    try { fsSync.unlinkSync('cache/cot.json'); } catch {}
+    const { fetchCOTReport } = await import('./macro/cot.js');
+    const cot = await fetchCOTReport();
+
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    if (token && chatId) {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: `📋 <b>COT Report Updated</b>\n\n${cot.cotSignal}\n\nBias: <b>${(cot.cotBias || 'neutral').toUpperCase()}</b>`,
+          parse_mode: 'HTML',
+        }),
+      });
+    }
+  } catch (err) {
+    console.error('[cron] COT refresh failed:', err.message);
+  }
+}, { timezone: 'UTC' });
+
 // Monday 22:05 UTC — clear stale cache and warm up with fresh weekly data
 cron.schedule('5 22 * * 1', async () => {
   console.log('[cron] Monday market open — clearing cache for fresh weekly data');
@@ -120,4 +183,6 @@ cron.schedule('5 22 * * 1', async () => {
 console.log('[cron] scheduler ready — pipeline every 15 min during market hours');
 console.log('[cron] daily heartbeat at 08:00 UTC');
 console.log('[cron] monthly report on 1st at 00:10 UTC');
-console.log('[cron] Monday 22:05 UTC — weekly cache warmup');
+console.log('[cron] Monday 21:00 UTC — weekly macro refresh');
+console.log('[cron] Friday 16:00 UTC — COT report refresh');
+console.log('[cron] Monday 22:05 UTC — weekly candle cache warmup');

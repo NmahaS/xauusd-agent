@@ -112,6 +112,25 @@ export function formatPlanForTelegram(plan, extras = {}) {
     lines.push('');
   }
 
+  // Three-layer analysis block
+  if (plan.threeLayer) {
+    const tl = plan.threeLayer;
+    const tierIcon = tl.tier === 1 ? '⚡' : tl.tier === 2 ? '✅' : tl.tier === 3 ? '📋' : '⛔';
+    const tierRisk = tl.tier === 1 ? 'Risk: 1.5%' : tl.tier === 2 ? 'Risk: 1%' : tl.tier === 3 ? 'Manual only' : 'No trade';
+    lines.push(`<b>🔬 3-Layer Analysis</b>`);
+    const wm = tl.layers?.macro;
+    const flow = tl.layers?.flow;
+    const tech = tl.layers?.technical;
+    if (wm) lines.push(`Layer 1 Macro: <b>${esc(wm.bias?.toUpperCase() || 'n/a')}</b> (${wm.score ?? 0} pts)`);
+    if (flow) lines.push(`Layer 2 Flow: ${esc(flow.regime || 'unknown')} regime | VP: ${esc(flow.vpSignal)} | VWAP: ${esc(flow.vwapBias)}`);
+    if (tech) lines.push(`Layer 3 Technical: ${tech.confluenceCount ?? 0} confluence factors (${esc(tech.confluenceGrade)})`);
+    lines.push(`${tierIcon} <b>${esc(tl.tierLabel)}</b> — ${tierRisk}`);
+    if (tl.blockingFactors?.length) {
+      for (const bf of tl.blockingFactors) lines.push(`  ⛔ ${esc(bf)}`);
+    }
+    lines.push('');
+  }
+
   if (plan.direction && plan.poi && plan.entry && plan.stopLoss) {
     lines.push(`<b>Direction:</b> ${esc(plan.direction.toUpperCase())}`);
     lines.push(`<b>POI:</b> ${esc(plan.poi.type)} @ [${cp(plan.poi.zone[0])} – ${cp(plan.poi.zone[1])}]`);

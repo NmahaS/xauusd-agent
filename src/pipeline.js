@@ -26,6 +26,15 @@ import { sendTelegramMessage } from './telegram/notify.js';
 import { refineEntry } from './refinement/m15.js';
 import { executeIfApproved } from './broker/executor.js';
 
+// Layer 1: Macro
+import { getWeeklyMacroState } from './macro/macroState.js';
+// Layer 2: Flow
+import { computeVolumeProfile, getVolumeProfileSignal } from './flow/volumeProfile.js';
+import { computeVWAP, getVWAPSignal } from './flow/vwap.js';
+import { detectRegime } from './flow/regimeDetector.js';
+// Three-layer consensus
+import { computeThreeLayerConsensus } from './analysis/threeLayerConsensus.js';
+
 function time() {
   return Date.now();
 }
@@ -168,13 +177,17 @@ async function runFullPipeline() {
     `env=${IG_ENV} dryRun=${config.DRY_RUN} autoTrade=${config.AUTO_TRADE} dryExecute=${config.DRY_EXECUTE}`
   );
 
-  // Phase 1: parallel fetch
+  // Phase 1: parallel fetch (weeklyMacro is cached — adds <100ms when warm)
   const tFetch = time();
-  const [igData, macro, altSentiment, calendar] = await Promise.all([
+  const [igData, macro, altSentiment, calendar, weeklyMacro] = await Promise.all([
     fetchAllIGData(),
     fetchMacroData(config.FRED_API_KEY),
     fetchSentiment(),
     fetchEconomicCalendar(),
+    getWeeklyMacroState().catch(err => {
+      console.warn(`[pipeline] weekly macro failed: ${err.message}`);
+      return null;
+    }),
   ]);
 
   const {
@@ -231,6 +244,17 @@ async function runFullPipeline() {
   const smcH4 = smcForTimeframe(h4Candles, 3);
   const session = detectSession();
   const sessionLevels = computeSessionLevels(h1Candles);
+
+  // Layer 2: flow analysis (pure computation — no API calls)
+  const volumeProfileRaw = computeVolumeProfile(h1Candles, 'week');
+  const vpSignal = getVolumeProfileSignal(currentPrice, volumeProfileRaw);
+  const dailyVWAP = computeVWAP(h1Candles, 'day');
+  const weeklyVWAP = computeVWAP(h1Candles, 'week');
+  const vwapSignal = getVWAPSignal(currentPrice, dailyVWAP, weeklyVWAP);
+  const regime = detectRegime(h1Candles, h4Candles, h1Indicators);
+  if (volumeProfileRaw) {
+    console.log(`[volume-profile] POC=${vpSignal.poc} HVN=[${vpSignal.nearestHVN}] VA=${vpSignal.valueAreaLow}-${vpSignal.valueAreaHigh} signal=${vpSignal.signal}`);
+  }
   console.log(`[pipeline] compute phase done in ${time() - tCompute}ms`);
 
   // Phase 3: build context + call LLM consensus
@@ -243,11 +267,29 @@ async function runFullPipeline() {
     session, sessionLevels, dxy, currentPrice, spread, dailyHigh, dailyLow,
     marketStatus, igSentiment, fred: macro, sentiment: altSentiment, calendar,
     goldEpic, goldDivisor,
+    // Layer 1 + 2 context for prompt
+    weeklyMacro, volumeProfile: vpSignal, vwap: vwapSignal, regime,
   };
 
   const tLlm = time();
   let { plan, ok: llmOk } = await generatePlan(ctx);
   console.log(`[pipeline] LLM phase done in ${time() - tLlm}ms (ok=${llmOk})`);
+
+  // ── Three-layer consensus (post-LLM — uses plan.confluenceCount for Layer 3) ──
+  const threeLayer = await computeThreeLayerConsensus({
+    weeklyMacro, smcH4, smcH1,
+    volumeProfile: vpSignal, vwap: vwapSignal, regime,
+    plan, currentPrice,
+  }).catch(err => {
+    console.warn(`[3layer] consensus failed: ${err.message}`);
+    return null;
+  });
+
+  // Apply Tier 1 risk boost before merging (1.5× risk when all layers strongly align)
+  if (threeLayer?.tier === 1 && plan.risk) {
+    plan.risk.suggestedRiskPct = Math.min(1.5, (plan.risk.suggestedRiskPct || 1) * 1.5);
+    plan.risk.positionSizeHint = 'Tier 1 — 1.5% risk (all layers strongly aligned)';
+  }
 
   // ── Step A: M15 entry refinement ───────────────────────────────────────────
   let m15 = { status: 'N/A', reason: 'no directional plan' };
@@ -278,12 +320,21 @@ async function runFullPipeline() {
     warnings: [...new Set([...(plan.warnings || []), ...extraWarnings])],
   };
 
+  // Attach three-layer result before merging warnings
+  mergedPlan.threeLayer = threeLayer ?? null;
+
   // ── Step B: Auto-execution ─────────────────────────────────────────────────
   let execution = { executed: false, reason: 'N/A' };
   if (mergedPlan.direction) {
     if (!config.AUTO_TRADE) {
       execution = { executed: false, reason: 'Auto-trade disabled — manual signal' };
       console.log('[executor] AUTO_TRADE=false — signal only, no order placed');
+    } else if (threeLayer?.tier === 4) {
+      execution = { executed: false, reason: `Tier 4 blocked: ${(threeLayer.blockingFactors || []).join(', ') || threeLayer.tierLabel}` };
+      console.log(`[executor] ${execution.reason}`);
+    } else if (threeLayer?.tier === 3) {
+      execution = { executed: false, reason: `Tier 3 — technical-only signal, no auto-execute` };
+      console.log(`[executor] ${execution.reason}`);
     } else if (mergedPlan.m15?.status === 'CONFIRMED' || mergedPlan.entry?.trigger === 'limit') {
       execution = await executeIfApproved(mergedPlan, { ...ctx, goldEpic, goldDivisor }, igSession);
     } else {
@@ -295,6 +346,8 @@ async function runFullPipeline() {
     autoTradeEnabled: !!config.AUTO_TRADE,
     dryExecute: !!config.DRY_EXECUTE,
     m15Status: mergedPlan.m15?.status || 'N/A',
+    tier: threeLayer?.tier ?? null,
+    tierLabel: threeLayer?.tierLabel ?? null,
     executed: execution.executed,
     reason: execution.reason,
     dealId: execution.trade?.dealId || null,

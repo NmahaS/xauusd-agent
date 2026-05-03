@@ -9,7 +9,14 @@ export function buildSystemPrompt() {
 
 CONTEXT: Prices are in ${currency}. The instrument is gold futures (JUN-26 contract on IG Australia), not USD spot. Current price band ~4700-4800 ${currency}. Reason about levels, OBs, FVGs, and stops in ${currency} terms — do not anchor on USD spot prices like 3000-3500.
 
-Your analytical framework:
+THREE-LAYER ANALYTICAL FRAMEWORK — assess all three before concluding:
+Layer 1 MACRO (weekly): COT positioning, DXY weekly trend, real yields. This is the highest-timeframe filter. A macro-bearish week means only look for shorts or stay flat.
+Layer 2 FLOW (daily): Volume Profile, VWAP, market regime. Confirms where institutions are positioned and whether the market structure is tradeable (trending vs ranging).
+Layer 3 TECHNICAL (H4/H1/M15): SMC structure (BOS/CHoCH), order blocks, FVGs, liquidity. This is the precision entry layer — only valid when Layers 1 and 2 agree.
+
+A trade requires alignment across layers. If macro is bearish but chart is bullish, that is Tier 3 (technical-only signal, no auto-execute) at best. When all three align, that is Tier 1 or Tier 2. Always state which tier applies and why in your biasReasoning.
+
+Your technical framework:
 1. Market structure (BOS/CHoCH) dictates bias. Trade with structure, not against it.
 2. Order blocks, Fair Value Gaps, and liquidity pools are points of interest (POIs). Institutional traders return to these zones.
 3. Premium/Discount analysis: buy in discount (below 50% of last range), sell in premium (above 50%). OTE (0.618-0.786 fib) = highest-probability entries.
@@ -100,6 +107,7 @@ export function buildUserPrompt(ctx) {
     smcH1, smcH4,
     session,
     dxy, metals, fred, sentiment, calendar,
+    weeklyMacro, volumeProfile, vwap, regime,
   } = ctx;
 
   const section1 = [
@@ -171,6 +179,34 @@ export function buildUserPrompt(ctx) {
       : '',
   ].filter(Boolean).join('\n');
 
+  const section5 = [
+    `### LAYER 1: WEEKLY MACRO`,
+    ``,
+    `Weekly bias: ${weeklyMacro?.weeklyBias ?? 'unknown'}`,
+    weeklyMacro?.cot?.cotSignal ? `COT: ${weeklyMacro.cot.cotSignal}` : `COT: unavailable`,
+    `Weekly DXY (EUR/USD) trend: ${weeklyMacro?.weeklyMacro?.weeklyDXYTrend ?? 'unknown'} → ${weeklyMacro?.weeklyMacro?.weeklyDXYBias ?? 'unknown'}`,
+    `Weekly yield trend: ${weeklyMacro?.weeklyMacro?.weeklyYieldTrend ?? 'unknown'} → ${weeklyMacro?.weeklyMacro?.weeklyYieldBias ?? 'neutral'}`,
+    `Macro factors: ${weeklyMacro?.factors?.join(' | ') || 'none'}`,
+    `Summary: ${weeklyMacro?.summary ?? 'unavailable'}`,
+  ].join('\n');
+
+  const section6 = [
+    `### LAYER 2: FLOW`,
+    ``,
+    `Market regime: ${regime?.regime ?? 'unknown'} (SMC effective: ${regime?.smc_effective ?? 'unknown'})`,
+    `Regime reasoning: ${regime?.reasoning ?? 'n/a'}`,
+    ``,
+    `Volume Profile (weekly):`,
+    `  Signal: ${volumeProfile?.signal ?? 'unknown'} — ${volumeProfile?.description ?? 'n/a'}`,
+    `  POC: ${volumeProfile?.poc ?? 'n/a'} | VA: ${volumeProfile?.valueAreaLow ?? 'n/a'}–${volumeProfile?.valueAreaHigh ?? 'n/a'}`,
+    `  Nearest HVN: ${volumeProfile?.nearestHVN ?? 'n/a'} | Nearest LVN: ${volumeProfile?.nearestLVN ?? 'n/a'}`,
+    ``,
+    `VWAP:`,
+    `  Daily VWAP: ${vwap?.dailyVWAP ?? 'n/a'} | Weekly VWAP: ${vwap?.weeklyVWAP ?? 'n/a'}`,
+    `  Signals: ${vwap?.signals?.join(' | ') || 'n/a'}`,
+    `  Institutional bias: ${vwap?.institutionalBias ?? 'unknown'}`,
+  ].join('\n');
+
   const footer = [
     ``,
     `### YOUR TASK`,
@@ -179,5 +215,5 @@ export function buildUserPrompt(ctx) {
     `Return ONLY valid JSON. No markdown. No code fences. No explanation outside the JSON.`,
   ].join('\n');
 
-  return [section1, '', section2, '', section3, '', section4, footer].join('\n');
+  return [section5, '', section6, '', section1, '', section2, '', section3, '', section4, footer].join('\n');
 }

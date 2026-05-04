@@ -72,27 +72,24 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-05-04T20:00:00Z
+**Generated:** 2026-05-04T22:00:00Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** off — Wait for London kill zone (07-10 UTC) after RBA decision clarity; avoid trading 30min before/after RBA announcement at +510m
+- **Session:** off — Wait for next London kill zone (07–10 UTC on 2026-05-05) after RBA decision impact clears
 - **Direction:** no-trade
 
-**Macro Context:** RBA Cash Rate decision imminent (+510m, high impact); EUR/USD weakening (dollar strengthening) is bearish for gold; real yields unknown; Fear & Greed at 40 (fear, rising 7d) is neutral. Macro backdrop supports bearish H4 bias but event risk and lack of M15 POI confluence prevent execution.
+**Macro Context:** Positive real yields (1.89%) and stable DXY provide bearish macro backdrop for gold; however, RBA Cash Rate decision (+390m) and RBA Press Conference (+450m) create extreme event risk within next 7 hours — gold AUD will be volatile on AUD rate expectations.
 
 **Warnings:**
-- ⚠ RBA Cash Rate, Monetary Policy Statement, Rate Statement, and Press Conference all scheduled within +510-630m — HIGH IMPACT EVENT RISK. Do not trade within 30min before/after announcement.
-- ⚠ H1 structure undefined — no H1 OBs, FVGs, or P/D zone available for confirmation. Cannot validate H4 bearish bias at H1 level.
-- ⚠ M15 shows no active OBs and no unfilled FVGs within 8pts of current price (4623.55). No M15 POI to anchor entry.
-- ⚠ M15 SMC bias is neutral (no recent structure event). Last M15 candle (2026-05-04T10:00:00Z) closed at 4623.55 with wide wick down to 4615.5 — suggests indecision, not confirmation.
-- ⚠ Macro data sparse (yields, COT, VWAP all unavailable). Cannot assess real yield trend or institutional positioning.
-- ⚠ Market regime transitioning — SMC effective but higher confluence required. Current setup has 0 confluence factors.
-- ⚠ Current session is 'off' (20:00 UTC on 2026-05-04). Next kill zone is London 07-10 UTC on 2026-05-05, but RBA event will dominate overnight volatility.
-- ⚠ Price in premium zone (53.8%) aligns with H4 bearish bias, but without M15 structure confirmation or H1 context, this is macro-only reasoning — insufficient for execution.
-- ⚠ FRED macro data unavailable — yields/real-rate missing
-- ⚠ Wide IG spread (0.80) — confirm before market orders
+- ⚠ CRITICAL: RBA Cash Rate decision and Press Conference scheduled in ~6.5 hours (2026-05-05T04:30 UTC). High-impact AUD event will drive XAU/AUD volatility; no trade should be entered until post-event consolidation.
+- ⚠ M15 and H1 structure data unavailable (all indicators n/a). Cannot identify M15 OBs, FVGs, or CHoCH signals required for entry confirmation.
+- ⚠ Market transitioning regime — confluence threshold raised; require ≥6 factors minimum for any trade setup.
+- ⚠ H4 bearish bias is clear, but without M15 POI within 8 pips of current price (4624.4), no executable short setup exists.
+- ⚠ Current session is 'off' (22:00 UTC on 2026-05-04). Next London kill zone begins 2026-05-05T07:00 UTC, but RBA event at 04:30 UTC will precede it.
+- ⚠ Recommend: Monitor RBA outcome, wait for post-decision price consolidation on M15, then re-assess for short entry into H4 bearish OB (4675–4772) or long entry into H4 discount zone if RBA dovish surprise occurs.
+- ⚠ IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->
 

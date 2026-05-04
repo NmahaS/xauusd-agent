@@ -72,31 +72,28 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-05-04T13:00:00Z
+**Generated:** 2026-05-04T14:00:00.927Z
 
-- **Bias:** bullish
-- **Setup Quality:** B
-- **Confluence:** 5 — M15 bullish BOS confirmed at 4619.27; M15 active bullish OB at 4597.32-4604.05 within 8pts of current price; Multiple M15 bullish FVGs unfilled (4590.60-4593.95, 4604.05-4609.65, 4620.10-4636.80); EUR/USD weakening (-0.45% 24h) = dollar weakness = bullish gold; NY kill zone active (execution window optimal)
-- **Session:** ny — NY kill zone 12-15 UTC — execute now on limit fill or dip-buy confirmation within OB zone
-- **Direction:** long
-- **POI:** bullish_order_block @ [4597.32, 4604.05]
-- **Entry:** limit @ 4600.5 — Limit buy at OB midpoint (4600.50); validated by M15 bullish structure, dollar weakness via EUR/USD, and NY kill zone activity. Await M15 bullish candle close above 4604 or dip-buy confirmation within OB zone.
-- **Stop Loss:** 4591.2
-- **TP1:** 4620.1 (RR 2.1)
-- **TP2:** 4636.8 (RR 3.9)
-- **TP3:** 4672.57 (RR 9.7)
-- **Invalidation:** 4591
+- **Bias:** neutral
+- **Setup Quality:** no-trade
+- **Confluence:** 0 — none
+- **Session:** ny — Await H4 BOS/CHoCH confirmation or H1 structure definition before entry; NY kill zone active but no valid POI within 8pts of current price
+- **Direction:** no-trade
 
-**Macro Context:** EUR/USD weakening (dollar weakness bullish for gold), real yields rising at 1.92% (bearish headwind), Fear & Greed at 40 (fear, neutral). AUD RBA decision imminent (+930m) — high volatility risk. Yields rising is macro headwind but dollar weakness and M15 bullish structure provide tactical long opportunity in NY kill zone.
+**Macro Context:** Macro neutral: COT unavailable, real yields unknown, EUR/USD flat (1.17311, -0.03% 24h), Fear & Greed at 40 (fear rising 7d) — insufficient directional bias; AUD RBA decision in ~14.5h is high-impact event risk.
 
 **Warnings:**
-- ⚠ HIGH IMPACT: AUD RBA Cash Rate decision in ~930 minutes (2026-05-05T02:30 UTC) — extreme volatility expected; consider closing or reducing position 30min before announcement
-- ⚠ Weekly macro neutral but yields rising (1.92% real yield) — bearish backdrop limits upside; TP3 may face resistance
-- ⚠ H4 data sparse (last candle 2026-03-23T21:00); H1/M15 structure more reliable for this trade
-- ⚠ Confluence count 5/12 = B-grade setup; not A-grade; requires strict risk discipline
-- ⚠ M15 premium zone (55.3%) means price is elevated; dip-buy into OB preferred over chase entries
-- ⚠ No volume profile data available; rely on SMC structure and kill zone timing
-- ⚠ ✅ Consensus: Claude + DeepSeek both long
+- ⚠ H4 and H1 OHLC data incomplete or stale (H4 last candle 2026-03-23T21:00:00Z, >40 days old); cannot reliably assess current H4/H1 structure
+- ⚠ M15 price (4651.55 AUD) is in premium zone (68.5% of range 4630.50-4661.25) but no active M15 OB within 8pts; nearest M15 FVGs are 4604.05-4609.65 and 4620.10-4636.80 (both >40pts away)
+- ⚠ No H4 BOS or CHoCH event detected; H4 bias remains neutral
+- ⚠ No H1 active OB or FVG; H1 structure undefined
+- ⚠ COT positioning unavailable (CFTC API 404); cannot assess institutional positioning
+- ⚠ Weekly VWAP and Volume Profile unavailable; institutional flow context missing
+- ⚠ AUD RBA Cash Rate decision in ~14.5h (high-impact, gold-relevant for AUD pairs); recommend avoiding new entries until post-decision clarity
+- ⚠ Spot gold (USD) and Au/Ag ratio unavailable; cannot cross-check spot vs futures basis
+- ⚠ Real yields trend unknown; cannot assess macro headwind/tailwind for gold
+- ⚠ M15 RSI divergence undefined; no momentum confirmation available
+- ⚠ FRED macro data unavailable — yields/real-rate missing
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

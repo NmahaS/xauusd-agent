@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-05-04T18:00:00Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish BOS confirmed at 4539.35; price currently in M15 premium zone (76.3%) with M15 bearish structure intact. H1 neutral but contains unfilled bearish FVG at 4746.90-4753.30. EUR/USD weakening (dollar strengthening) supports bearish bias. Real yields rising (1.92%) is bearish for gold. However, no active M15 OB within 8pts of current price (4634.6) and no M15 CHoCH confirmation yet — structure is transitional.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish structure (BOS-bearish intact)",
+    "M15 bearish bias confirmed (BOS-bearish @ 4625.38)",
+    "Price in premium zone (76.3% of M15 range)",
+    "Real yields rising (1.92% — bearish for gold)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4639.4,
+      4641.4
+    ],
+    "reasoning": "M15 recent swing high candle (2026-05-02T05:15:00Z close 4636.0, high 4639.4) and subsequent structure; overlaps with M15 premium zone. H1 bearish FVG at 4746.90-4753.30 provides macro target but M15 OB is primary entry POI."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4639.8,
+    "confirmation": "Limit sell at M15 swing high resistance; await M15 bearish candle close below 4635 to confirm entry on next M15 CHoCH or BOS-bearish signal. Current structure transitional — do not chase."
+  },
+  "stopLoss": {
+    "price": 4645.5,
+    "reasoning": "Above M15 POI high (4641.4) + 4.1pt buffer (approx 0.2×M15 ATR estimate ~20pts); invalidates bearish M15 structure if breached.",
+    "pips": 5.7
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4625.35,
+      "reasoning": "M15 recent swing low (2026-05-02T06:15:00Z close 4625.35); first liquidity pool.",
+      "rr": 2.4
+    },
+    {
+      "level": "TP2",
+      "price": 4610,
+      "reasoning": "H1 bearish FVG lower bound (4746.90-4753.30 scaled down) and H4 discount zone entry (47.1%).",
+      "rr": 5.2
+    },
+    {
+      "level": "TP3",
+      "price": 4590,
+      "reasoning": "H4 equal lows / prior swing low liquidity target.",
+      "rr": 8.4
+    }
+  ],
+  "invalidation": {
+    "price": 4645.5,
+    "reasoning": "Close above M15 POI high invalidates bearish M15 structure; bias flips neutral/bullish."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) on 2026-05-05 for confirmation and entry. Current session off-hours; structure transitional — do not pre-enter."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 5.7-pip stop due to tight stop and transitional regime. Reduce size until M15 structure confirms with CHoCH or BOS-bearish candle."
+  },
+  "macroContext": "Real yields rising (1.92%), EUR/USD weakening (dollar strengthening), Fear & Greed at 40 (fear) — macro backdrop is bearish for gold. However, AUD RBA decision in +630m is high-impact and may create volatility; monitor for AUD strength which could support AUD gold prices.",
+  "warnings": [
+    "Market regime transitional — SMC effective but confluence is B-grade (4/12 factors). Require M15 CHoCH or BOS-bearish confirmation before entry.",
+    "No active M15 OB within 8pts of current price; POI zone is based on recent swing high, not unmitigated OB. Risk of false entry.",
+    "H1 structure undefined (no trend, no active OBs) — lacks structural confirmation. Treat as M15 signal only (Tier 3).",
+    "AUD RBA decision at +630m (high-impact) — avoid entry 30min before/after announcement. Volatility spike risk.",
+    "Stop is very tight (5.7 pips) due to M15 premium zone proximity. Whipsaws likely in transitional regime.",
+    "EUR/USD weakening supports bearish bias but DXY data unavailable — dollar strength assumption unconfirmed.",
+    "No volume profile or VWAP data — institutional bias unknown. Proceed with caution.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "No breaking news in last 2 hours; gold faces pressure ahead of high-impact RBA and US data with bearish technical bias"
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4532.60 not at M15 POI [4639.40-4641.40] yet"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "unknown",
+        "vwapBias": "unknown",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "neutral",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (BOS-bearish intact)",
+          "M15 bearish bias confirmed (BOS-bearish @ 4625.38)",
+          "Price in premium zone (76.3% of M15 range)",
+          "Real yields rising (1.92% — bearish for gold)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4 bearish structure (BOS-bearish intact)",
+      "M15 bearish bias confirmed (BOS-bearish @ 4625.38)",
+      "Price in premium zone (76.3% of M15 range)",
+      "Real yields rising (1.92% — bearish for gold)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "WAITING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Tier 4 blocked: TIER 4 — Insufficient confluence",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

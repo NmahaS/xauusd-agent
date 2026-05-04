@@ -72,30 +72,31 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-05-04T10:00:00Z
+**Generated:** 2026-05-04T11:00:00Z
 
 - **Bias:** bullish
 - **Setup Quality:** B
-- **Confluence:** 4 — M15 bullish BOS confirmed at 4583.90; M15 active bullish OB [4573.00-4579.70] unmitigated; M15 bullish FVGs unfilled [4579.70-4581.15] and [4590.60-4593.95]; London kill zone active (current session)
-- **Session:** london — London kill zone 07-10 UTC — execute on limit fill; monitor RBA decision risk at +1110m (high impact on AUD/gold correlation).
+- **Confluence:** 4 — M15 impulsive bullish structure (broke swing high 4619.27 to 4668.2); Price in premium zone but from deep discount base (mean reversion potential); EUR/USD weakening (dollar weakness = bullish gold); Multiple unfilled M15 bullish FVGs in 4579-4636 zone (support/retest targets)
+- **Session:** london — London kill zone 07-10 UTC has passed; current time 11:00 UTC is post-London. Recommend execution on limit fill at 4628.45 during next London session (tomorrow 07-10 UTC) or if price retraces into FVG zone during Asian/early London hours today. RBA decision at +1050m (approx 22:10 UTC) may cause volatility; consider scaling in before announcement or waiting for post-announcement consolidation.
 - **Direction:** long
-- **POI:** bullish_order_block @ [4573, 4579.7]
-- **Entry:** limit @ 4576.35 — Limit buy at OB midpoint; wait for M15 pullback into zone with bullish candle close above 4579.70 to confirm continuation.
-- **Stop Loss:** 4568.5
-- **TP1:** 4593.95 (RR 2.2)
-- **TP2:** 4610 (RR 4.2)
-- **TP3:** 4630 (RR 7.7)
-- **Invalidation:** 4572
+- **POI:** bullish_fvg_retest @ [4620.1, 4636.8]
+- **Entry:** limit @ 4628.45 — Limit buy at FVG midpoint (4628.45) on retest. Confirm with bullish M15 candle close above 4620 (FVG low) or bullish engulfing pattern inside FVG zone. Alternative: market entry on break above 4640 if FVG retest fails and price continues higher.
+- **Stop Loss:** 4609.65
+- **TP1:** 4668.2 (RR 2.1)
+- **TP2:** 4690 (RR 3.2)
+- **TP3:** 4730 (RR 5.4)
+- **Invalidation:** 4609.65
 
-**Macro Context:** Real yields rising (1.92%, bearish gold), EUR/USD flat (neutral dollar), Fear & Greed at 40 (fear, neutral). RBA decision in ~18.5 hours is high-impact catalyst for AUD/gold; rising yields are headwind but M15 structure remains bullish.
+**Macro Context:** Real yields rising (1.92%) and positive = bearish headwind for gold; however, EUR/USD weakening (dollar weakness) and F&G at 40 (fear) with rising 7d trend = emerging risk-on sentiment. RBA decision imminent (+1050m) introduces AUD volatility; potential rate hold or cut would weaken AUD = bullish for AUD gold. Macro is mixed; technical setup is bullish but requires higher confluence due to positive real yields.
 
 **Warnings:**
-- ⚠ Market transitioning regime — confluence score 4/12 is below A-grade threshold; treat as tactical setup only.
-- ⚠ RBA Cash Rate decision imminent (+1110m) — high volatility risk; consider reducing position size or waiting for post-decision clarity.
-- ⚠ H4 bias is neutral; this is M15 structure-only signal (Tier 3). Macro backdrop (rising yields) conflicts with bullish technicals.
-- ⚠ No H1 OBs or FVGs available; H1 context missing — reduces structural confirmation.
-- ⚠ Price in premium zone (63% of range) — typically higher-risk entry; prefer discount zone entries for long bias.
-- ⚠ Volume Profile and VWAP data unavailable — institutional flow confirmation missing.
+- ⚠ Confluence score is B (4 factors) — below A threshold. Macro headwind (positive real yields 1.92%) is significant bearish factor not fully offset by technical setup.
+- ⚠ RBA decision imminent (+1050m / 22:10 UTC approx). High-impact event may cause slippage or gap fills. Consider waiting for post-announcement consolidation or scaling position size to 0.5% risk.
+- ⚠ H4 and H1 indicators unavailable (n/a) — unable to confirm higher-timeframe bias. Relying on M15 structure and price action alone. Recommend manual H4/H1 chart review before entry.
+- ⚠ M15 ATR unavailable — stop sized at FVG extreme (4609.65) rather than ATR-adjusted. Actual volatility may differ; monitor for wider stops if ATR is elevated.
+- ⚠ Price is in premium zone (205.7% of M15 range 4573-4619.27) — extended from mean. Reversion risk exists; FVG retest may fail and price could drop sharply. Tight stop (19 pips) is appropriate but limits RR.
+- ⚠ No volume profile or VWAP data — unable to confirm institutional positioning or fair value. Proceed with caution.
+- ⚠ Entry at 4628.45 is a retest of already-broken FVG; confirmation candle required. Do not chase if price gaps above FVG without retesting.
 - ⚠ ✅ Consensus: Claude + DeepSeek both long
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded

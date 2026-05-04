@@ -72,26 +72,26 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-05-04T03:00:00Z
+**Generated:** 2026-05-04T04:00:00Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** asia — Wait for London open (07:00 UTC) and kill zone (07:00-10:00 UTC) to reassess structure and confluence
+- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) to reassess structure and confirm bias
 - **Direction:** no-trade
 
-**Macro Context:** Weekly yields rising (bearish gold), but EUR/USD weakening (bullish gold); real yields positive at 1.92% (bearish); Fear & Greed at 40 (fear, neutral). Macro backdrop mixed; market transitioning with no clear directional bias.
+**Macro Context:** Rising real yields (1.92%) bearish for gold; EUR/USD weakening (dollar weakness) bullish for gold; Fear & Greed at 40 (fear) neutral. Macro backdrop mixed; insufficient technical structure to override caution.
 
 **Warnings:**
-- ⚠ H4 and H1 SMC bias both neutral — no active BOS or CHoCH to trade with structure
-- ⚠ H4 price in extreme discount zone (-130% of range) — unusual; may indicate data anomaly or extreme volatility
-- ⚠ No active order blocks on H1 within 20 pips of current price (4786.1)
-- ⚠ H1 unfilled bullish FVGs exist (4747.80-4755.95, 4765.50-4767.65) but are 30-40 pips below price — entry would require pullback confirmation
-- ⚠ Weekly macro mixed: rising yields (bearish) vs weakening EUR/USD (bullish) — no clear directional filter
-- ⚠ Market transitioning — SMC effective but confluence insufficient (<3 factors) for entry
-- ⚠ Insufficient technical indicators (EMA, RSI, MACD, ATR all n/a) — cannot validate divergence or momentum
-- ⚠ No volume profile or VWAP data — cannot confirm institutional positioning
-- ⚠ Recommend waiting for London kill zone (07:00-10:00 UTC) to reassess H1 structure and identify fresh POI with higher confluence
+- ⚠ No H4, H1, or M15 SMC structure events detected — bias is neutral, not directional
+- ⚠ Missing critical indicator data (EMA, RSI, MACD, ATR) — cannot calculate stops or confirm divergences
+- ⚠ No active M15 Order Blocks within 8 points of current price — no primary POI available
+- ⚠ Market in transition regime — confluence threshold raised; current setup has 0 factors
+- ⚠ Current session is Asia (off-hours) — no kill-zone active; London open in ~3 hours
+- ⚠ H4 P/D zone shows extreme discount (-130% of range) — price may be dislocated; wait for structural confirmation
+- ⚠ Multiple small M15 bearish FVGs present but unconfirmed by structure — insufficient for entry
+- ⚠ COT data unavailable (HTTP 404) — cannot assess institutional positioning
+- ⚠ Volume Profile and VWAP unavailable — cannot confirm institutional bias or liquidity zones
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

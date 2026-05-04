@@ -72,23 +72,25 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-05-04T06:00:00Z
+**Generated:** 2026-05-04T09:00:00Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** asia — Wait for London open (07:00 UTC) and RBA decision clarity (+1350m). Do not trade into high-impact AUD event.
+- **Session:** london — Wait for H4/H1 structure clarity; avoid premium zone entries until price retraces into discount or H4 BOS/CHoCH confirmed
 - **Direction:** no-trade
 
-**Macro Context:** Yields rising (bearish gold) offset by EUR/USD weakening (bullish gold); real yields +1.92% (negative for gold). RBA rate decision imminent in ~22.5 hours — AUD volatility expected. Fear & Greed at 40 (fear) with rising 7d trend suggests risk-on sentiment emerging, but insufficient confluence on chart to justify entry.
+**Macro Context:** Real yields rising at 1.92% (bearish gold), EUR/USD weakening (bullish gold offset), F&G at 40 (fear, neutral). Macro headwind from positive real yields conflicts with dollar weakness; no clear directional bias.
 
 **Warnings:**
-- ⚠ No H4 or H1 structure event detected — bias is neutral, not directional.
-- ⚠ M15 shows only unfilled bearish FVGs; no active OBs within 8 pips of current price.
-- ⚠ High-impact AUD economic calendar: RBA Cash Rate, Monetary Policy Statement, Rate Statement, and Press Conference all due in ~22.5 hours. Avoid trading into this event.
-- ⚠ Market transitioning regime — SMC effective but confluence too low (<4 factors) for entry.
-- ⚠ Insufficient data: H4/H1/M15 EMAs, RSI, MACD, VWAP, COT all unavailable. Reduce position sizing if trade is taken.
-- ⚠ Current price (4576.75 AUD) is in deep discount zone relative to H4 range (4539–4773), but no bullish structure to confirm reversal.
+- ⚠ H4 and H1 structure undefined — no active OBs or recent BOS/CHoCH events to anchor bias
+- ⚠ Price in premium zone (210.6% of range) — historically unfavorable entry area for longs; no discount zone setup
+- ⚠ M15 unfilled FVG at 4579.70-4581.15 is 15+ pips below current price — outside 8-pip POI window
+- ⚠ Weekly macro bearish (rising real yields +1.92%) conflicts with EUR/USD bullish signal — no macro alignment
+- ⚠ Market transitioning regime — SMC effective but structure unclear; require higher confluence before entry
+- ⚠ No H4 active OBs, no H1 active OBs, no M15 active OBs within 8 pips — no primary entry POI
+- ⚠ Insufficient data (EMA, RSI, MACD, VWAP all n/a) limits technical confirmation
+- ⚠ Wait for H4 CHoCH or BOS to establish clear directional bias before considering entry
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

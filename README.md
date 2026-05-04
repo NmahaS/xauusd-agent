@@ -72,24 +72,25 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-05-04T15:00:00Z
+**Generated:** 2026-05-04T16:00:01Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** ny — Wait for RBA decision clarity (05-05 ~09:30 UTC) before entering; current NY session has insufficient M15 confluence and macro event risk
+- **Session:** ny — Await M15 POI formation or H1 structure clarity; RBA decision in ~12.5h may create volatility — consider waiting for post-decision consolidation
 - **Direction:** no-trade
 
-**Macro Context:** Weekly yields rising (bearish gold), EUR/USD weakening (dollar strengthening, bearish gold), Fear & Greed at 40 (fear, neutral). Critical AUD RBA decision in 13.5 hours with 25bp rate cut expected (4.10% → 4.35% cash rate) — high volatility risk for AUD gold futures.
+**Macro Context:** EUR/USD weakening (dollar strengthening) is bearish for gold; real yields unknown; Fear & Greed at 40 (fear) with rising 7d trend suggests risk-on sentiment. RBA rate decision imminent (+12.5h) with AUD cash rate forecast at 4.35% vs 4.10% prev — high volatility risk. Macro backdrop neutral but event risk elevated.
 
 **Warnings:**
-- ⚠ M15 structure is neutral with no active OBs; unfilled bullish FVG at 4604-4609.65 is 23 pips below current price (outside 8-pip POI zone)
-- ⚠ H1 structure undefined — no active OBs, no FVGs, no P/D context available
-- ⚠ High-impact AUD RBA decision in 13.5 hours (Cash Rate, Monetary Policy Statement, Rate Statement, Press Conference) — extreme volatility expected; avoid entry until post-decision consolidation
-- ⚠ Weekly macro bearish (rising yields) conflicts with EUR/USD weakening (which is bullish for gold) — mixed signals reduce setup quality
-- ⚠ Market transitioning regime — SMC effective but requires higher confluence; current setup has zero confluence factors
-- ⚠ Volume Profile and VWAP data unavailable — cannot confirm institutional positioning or daily bias
-- ⚠ No M15 CHoCH or BOS in current candles; last M15 candle (4627.8 close) shows consolidation, not directional confirmation
+- ⚠ CRITICAL: No M15 active Order Blocks within 8pts of current price (4638.05). No M15 unfilled FVGs within 8pts. Cannot establish primary entry POI per schema.
+- ⚠ H1 structure undefined — no H1 OBs, FVGs, or P/D zone available. Structural context missing.
+- ⚠ Market transitioning regime — SMC effective but requires higher confluence threshold (recommend 6+ factors minimum).
+- ⚠ RBA rate decision in ~12.5h (AUD Cash Rate, RBA Monetary Policy Statement, RBA Press Conference). High-impact event for AUD/gold cross. Recommend waiting for post-decision consolidation or explicit M15 POI formation.
+- ⚠ EUR/USD weakening (-0.22% 24h) signals dollar strength, which is bearish for gold — but macro yields/COT unknown, limiting conviction.
+- ⚠ M15 last close (4638.05) is in discount zone (35.3% of 4625.38-4661.25 range), but no active M15 OB or FVG to anchor entry. Price action alone insufficient.
+- ⚠ H4 bearish OB [4675.48-4772.85] is 37-135 pips above current price — too far for immediate M15 entry confluence.
+- ⚠ No kill zone active (NY session but not 12-15 UTC window). Execution window suboptimal.
 - ⚠ FRED macro data unavailable — yields/real-rate missing
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded

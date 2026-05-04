@@ -1,17 +1,12 @@
-// Deterministic mirror of the 10 LLM confluence checks defined in src/llm/prompt.js.
-// Used by the backtest (no LLM in the loop) and available for sanity-checking live plans.
+// Deterministic mirror of the 12 LLM confluence checks defined in src/llm/prompt.js.
+// M15 is the primary signal TF; H1 is context; H4 is the bias filter.
+// Used by the backtest (no LLM in the loop) and for sanity-checking live plans.
 //
-// Three checks (#7 DXY, #8 macro yields, #9 news) are no-ops when the corresponding
-// context fields are absent — they evaluate to false. In a backtest run that means the
-// max evaluable score is 7. Grade thresholds are kept absolute (A+:5+, A:4, B:3) so
-// a B-graded backtest signal is comparable to a B-graded live plan in spirit.
+// Checks 9 (news) and 10 (macro) are no-ops when context fields are absent.
+// Grade thresholds: A+:8+, A:6-7, B:4-5, no-trade:<4.
 
-function bothBiasAgree(h4, h1) {
-  if (!h4 || !h1) return null;
-  if (h4 === 'bullish' && h1 === 'bullish') return 'long';
-  if (h4 === 'bearish' && h1 === 'bearish') return 'short';
-  return null;
-}
+const M15_PROXIMITY_PTS = 8;   // M15 OB/FVG within 8 price units
+const H1_PROXIMITY_PTS = 20;   // H1 OB context check within 20 price units
 
 function nearestZone(zones, currentPrice) {
   if (!Array.isArray(zones) || zones.length === 0) return null;
@@ -33,71 +28,89 @@ export function computeConfluence(ctx) {
   const out = { count: 0, factors, grade: 'no-trade', direction: null };
 
   const h4Bias = ctx.smcH4?.structure?.bias;
+  const m15Bias = ctx.smcM15?.structure?.bias;
   const h1Bias = ctx.smcH1?.structure?.bias;
-  const direction = bothBiasAgree(h4Bias, h1Bias);
+
+  // Check 1: H4 and M15 bias agree (H4 = trend filter, M15 = signal)
+  let direction = null;
+  if (h4Bias === 'bullish' && m15Bias === 'bullish') direction = 'long';
+  else if (h4Bias === 'bearish' && m15Bias === 'bearish') direction = 'short';
+
   if (!direction) {
-    factors.push(`bias conflict (h4=${h4Bias} h1=${h1Bias})`);
+    factors.push(`bias conflict (h4=${h4Bias} m15=${m15Bias})`);
     return out;
   }
   out.direction = direction;
-  factors.push(`H4+H1 bias agree (${direction})`);
+  factors.push(`H4+M15 bias agree (${direction})`);
   out.count++;
 
-  const currentPrice = ctx.h1Indicators?.lastClose;
-  const atr = ctx.h1Indicators?.atr;
-  if (currentPrice == null || atr == null) {
-    out.factors = factors;
-    return out;
-  }
-  const proximity = Math.max(0.5 * atr, 1); // floor at 1 unit so tiny-ATR doesn't block all OBs
+  const currentPrice = ctx.m15Indicators?.lastClose ?? ctx.h1Indicators?.lastClose;
+  if (currentPrice == null) return out;
 
-  // Check 2: H1 PD zone matches direction (discount for long, premium for short)
+  // Check 2: H1 supports direction (H1 context agrees)
+  if (h1Bias === (direction === 'long' ? 'bullish' : 'bearish')) {
+    factors.push(`H1 bias confirms direction (${h1Bias})`);
+    out.count++;
+  }
+
+  // Check 3: M15 active OB within 8pts (primary entry POI)
+  const m15OBs = (ctx.smcM15?.orderBlocks || []).filter(o =>
+    direction === 'long' ? o.type === 'bullish' : o.type === 'bearish'
+  );
+  const nearM15OB = nearestZone(m15OBs, currentPrice);
+  if (nearM15OB && nearM15OB.distance <= M15_PROXIMITY_PTS) {
+    factors.push(`M15 ${nearM15OB.type} OB within 8pts [${nearM15OB.low.toFixed(2)}-${nearM15OB.high.toFixed(2)}]`);
+    out.count++;
+  }
+
+  // Check 4: M15 unfilled FVG within 8pts
+  const m15FVGs = (ctx.smcM15?.fvgs || []).filter(f => !f.filled && (
+    direction === 'long' ? f.type === 'bullish' : f.type === 'bearish'
+  ));
+  const nearM15FVG = nearestZone(m15FVGs, currentPrice);
+  if (nearM15FVG && nearM15FVG.distance <= M15_PROXIMITY_PTS) {
+    factors.push(`M15 unfilled ${nearM15FVG.type} FVG within 8pts [${nearM15FVG.low.toFixed(2)}-${nearM15FVG.high.toFixed(2)}]`);
+    out.count++;
+  }
+
+  // Check 5: M15 CHoCH or BOS confirms direction
+  const m15Struct = ctx.smcM15?.structure;
+  if (m15Struct?.lastEvent) {
+    const eventMatchesLong = m15Struct.lastEvent.includes('bullish');
+    const eventMatchesShort = m15Struct.lastEvent.includes('bearish');
+    if ((direction === 'long' && eventMatchesLong) || (direction === 'short' && eventMatchesShort)) {
+      factors.push(`M15 ${m15Struct.lastEvent} confirms direction`);
+      out.count++;
+    }
+  }
+
+  // Check 6: H1 PD zone correct for direction (context)
   const pd = ctx.smcH1?.pd;
   if (pd?.ok) {
     if ((direction === 'long' && pd.zone === 'discount') ||
         (direction === 'short' && pd.zone === 'premium')) {
-      factors.push(`Price in ${pd.zone} zone (${pd.positionPct?.toFixed(1)}%)`);
+      factors.push(`H1 price in ${pd.zone} zone (${pd.positionPct?.toFixed(1)}%)`);
       out.count++;
     }
   }
 
-  // Check 3: active OB of correct type within proximity of current price
-  const obs = (ctx.smcH1?.orderBlocks || []).filter(o =>
+  // Check 7: H1 OB supports direction (context)
+  const h1OBs = (ctx.smcH1?.orderBlocks || []).filter(o =>
     direction === 'long' ? o.type === 'bullish' : o.type === 'bearish'
   );
-  const nearOB = nearestZone(obs, currentPrice);
-  if (nearOB && nearOB.distance <= proximity) {
-    factors.push(`${nearOB.type} OB within ${(0.5).toFixed(1)}×ATR (zone ${nearOB.low.toFixed(2)}-${nearOB.high.toFixed(2)})`);
+  const nearH1OB = nearestZone(h1OBs, currentPrice);
+  if (nearH1OB && nearH1OB.distance <= H1_PROXIMITY_PTS) {
+    factors.push(`H1 ${nearH1OB.type} OB within 20pts [${nearH1OB.low.toFixed(2)}-${nearH1OB.high.toFixed(2)}]`);
     out.count++;
   }
 
-  // Check 4: unfilled FVG within proximity
-  const fvgs = (ctx.smcH1?.fvgs || []).filter(f => !f.filled && (
-    direction === 'long' ? f.type === 'bullish' : f.type === 'bearish'
-  ));
-  const nearFVG = nearestZone(fvgs, currentPrice);
-  if (nearFVG && nearFVG.distance <= proximity) {
-    factors.push(`Unfilled ${nearFVG.type} FVG within 0.5×ATR (zone ${nearFVG.low.toFixed(2)}-${nearFVG.high.toFixed(2)})`);
-    out.count++;
-  }
-
-  // Check 5: price in OTE zone for direction
-  const ote = pd?.ote?.[direction];
-  if (Array.isArray(ote) && ote.length === 2) {
-    const [lo, hi] = ote;
-    if (currentPrice >= Math.min(lo, hi) && currentPrice <= Math.max(lo, hi)) {
-      factors.push(`Price in OTE ${direction} zone`);
-      out.count++;
-    }
-  }
-
-  // Check 6: kill zone active
+  // Check 8: kill zone active
   if (ctx.session?.inKillZone) {
     factors.push(`${ctx.session.killZone} active`);
     out.count++;
   }
 
-  // Check 7: DXY proxy confirms (live only — backtest leaves blank)
+  // Check 9: DXY confirms (live only)
   if (ctx.dxy?.ok && ctx.dxy.trend) {
     if ((direction === 'long' && ctx.dxy.trend === 'weakening') ||
         (direction === 'short' && ctx.dxy.trend === 'strengthening')) {
@@ -106,7 +119,7 @@ export function computeConfluence(ctx) {
     }
   }
 
-  // Check 8: macro yields confirm (live only)
+  // Check 10: macro yields confirm (live only)
   if (ctx.fred?.ok && ctx.fred.yieldTrend) {
     if ((direction === 'long' && ctx.fred.yieldTrend === 'falling') ||
         (direction === 'short' && ctx.fred.yieldTrend === 'rising')) {
@@ -115,7 +128,7 @@ export function computeConfluence(ctx) {
     }
   }
 
-  // Check 9: no high-impact gold news within 2h (live only)
+  // Check 11: no high-impact gold news within 2h (live only)
   if (Array.isArray(ctx.calendar?.events)) {
     const imminent = ctx.calendar.events.find(e => e.goldRelevant && e.minutesAway != null && e.minutesAway <= 120);
     if (!imminent) {
@@ -124,25 +137,27 @@ export function computeConfluence(ctx) {
     }
   }
 
-  // Check 10: RSI divergence matches direction
-  const div = ctx.h1Indicators?.divergence;
-  if (div) {
-    if ((direction === 'long' && div.bullish) || (direction === 'short' && div.bearish)) {
-      factors.push(`RSI ${direction === 'long' ? 'bullish' : 'bearish'} divergence`);
-      out.count++;
-    }
+  // Check 12: RSI divergence on M15 or H1
+  const m15Div = ctx.m15Indicators?.divergence;
+  const h1Div = ctx.h1Indicators?.divergence;
+  const hasBullishDiv = m15Div?.bullish || h1Div?.bullish;
+  const hasBearishDiv = m15Div?.bearish || h1Div?.bearish;
+  if ((direction === 'long' && hasBullishDiv) || (direction === 'short' && hasBearishDiv)) {
+    factors.push(`RSI ${direction === 'long' ? 'bullish' : 'bearish'} divergence (M15/H1)`);
+    out.count++;
   }
 
-  // Need at minimum a POI (OB or FVG) near price for grade > no-trade
-  const hasPOI = (nearOB && nearOB.distance <= proximity) || (nearFVG && nearFVG.distance <= proximity);
-  if (!hasPOI) {
+  // Require at least one M15 POI (OB or FVG) within range for grade > no-trade
+  const hasM15POI = (nearM15OB && nearM15OB.distance <= M15_PROXIMITY_PTS) ||
+                    (nearM15FVG && nearM15FVG.distance <= M15_PROXIMITY_PTS);
+  if (!hasM15POI) {
     out.grade = 'no-trade';
     return out;
   }
 
-  if (out.count >= 5) out.grade = 'A+';
-  else if (out.count >= 4) out.grade = 'A';
-  else if (out.count >= 3) out.grade = 'B';
+  if (out.count >= 8) out.grade = 'A+';
+  else if (out.count >= 6) out.grade = 'A';
+  else if (out.count >= 4) out.grade = 'B';
   else out.grade = 'no-trade';
 
   return out;

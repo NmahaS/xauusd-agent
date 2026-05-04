@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-05-04T03:00:00.716Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 SMC bias is neutral with no active structure events; H1 also neutral with no confirmed BOS or CHoCH. Price at 4779.35 AUD sits in mid-range between H4 bullish FVGs (4714-4730, 4773-4775) and bearish FVG (4854-4857). Multiple unfilled H1 bullish FVGs (4747-4755, 4765-4767, 4777-4777) suggest upside potential, but lack of confirmed H4 structure invalidates directional bias. No active OBs on either timeframe. Macro backdrop mixed: EUR/USD weakening (bullish for gold) but real yields positive at 1.92% (bearish for gold). Fear & Greed at 40 (fear) is neutral. Asia session, no kill zone active.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London open (07:00 UTC) to confirm H4 structure bias and assess kill zone setup"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — hold for structure confirmation"
+  },
+  "macroContext": "EUR/USD weakening (bullish for gold) offset by positive real yields at 1.92% (bearish); Fear & Greed at 40 (fear) neutral; no high-impact news within 2 hours.",
+  "warnings": [
+    "H4 bias is neutral — no confirmed BOS or CHoCH; structure is undefined",
+    "H1 bias is neutral — no active OBs or confirmed directional structure",
+    "Price at 4779.35 is between multiple unfilled FVGs; no clear POI confluence",
+    "Macro mixed: dollar weakness bullish but positive real yields bearish — no directional conviction",
+    "Asia session with no kill zone active — liquidity and volatility low; wait for London open",
+    "Insufficient confluence factors (<3) to justify entry; risk/reward undefined",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v3.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bullish",
+    "newsHeadline": "Gold rises above $4,600 on USD weakness, oil pullback, and Middle East tensions amid US-Iran war"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "N/A",
+    "executed": false,
+    "reason": "N/A",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

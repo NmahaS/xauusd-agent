@@ -1,16 +1,12 @@
-// M15 entry refinement. The H1 LLM signal gives a POI zone — but for a $100 account,
-// every pip of the H1 stop matters. This module fetches M15 candles, waits for price
-// to enter the H1 POI, then looks for an M15 confirmation (CHoCH or engulfing) before
-// tightening the entry/SL. With a typical 5-pt M15 stop instead of 15-25pt H1 stop,
-// 0.2 lots fits the A$1.00 risk budget on a A$100 account.
-import { fetchIGCandles } from '../data/ig.js';
+// M15 entry refinement. The H4/H1 LLM signal gives a POI zone (M15 OB or FVG) — this
+// module checks whether price has entered that zone and an M15 CHoCH or engulfing has fired.
+// Callers must supply already-fetched m15Candles; no API calls inside this module.
 import { detectSwings } from '../smc/swings.js';
 import { analyzeStructure } from '../smc/structure.js';
 
-const PROXIMITY_PTS = 5;          // "in zone" tolerance in price units
+const PROXIMITY_PTS = 3;          // "in zone" tolerance in price units (tighter for M15)
 const ATR_PERIOD = 14;
-const SL_ATR_MULT = 0.3;          // SL = POI extreme + 0.3 × M15 ATR
-const M15_FETCH_COUNT = 50;
+const SL_ATR_MULT = 0.2;          // SL = M15 OB extreme ± 0.2 × M15 ATR
 
 function computeATR(candles, period = ATR_PERIOD) {
   if (!Array.isArray(candles) || candles.length < 2) return 0;
@@ -62,8 +58,7 @@ function findM15Confirmation(direction, m15Candles, zoneLow, zoneHigh) {
     return { confirmed: true, kind: 'bearish-engulfing', candle: last };
   }
 
-  // CHoCH inside the POI: re-run structure on M15 with smaller pivot n=3, look at the most
-  // recent event and check whether it occurred while price was within the POI zone.
+  // CHoCH inside the POI: re-run structure on M15 with n=3
   const struct = analyzeStructure(m15Candles, 3);
   if (struct?.lastEvent && struct?.eventCandle) {
     const evtPrice = struct.eventCandle.price;
@@ -100,55 +95,43 @@ function recomputePlanWithRefinedEntry(plan, refinedEntry, refinedSL, kind) {
       ...plan.stopLoss,
       price: parseFloat(refinedSL.toFixed(2)),
       pips: parseFloat(slDist.toFixed(2)),
-      reasoning: `${plan.stopLoss?.reasoning || 'POI extreme'} + 0.3 × M15 ATR buffer`,
+      reasoning: `${plan.stopLoss?.reasoning || 'M15 POI extreme'} + 0.2 × M15 ATR buffer`,
     },
     takeProfits: tps,
   };
 }
 
-export async function refineEntry(plan, h1Candles, igSession, goldEpic, goldDivisor = 1) {
-  if (!plan?.direction || !plan?.poi?.zone || !igSession || !goldEpic) {
-    return { refined: false, status: 'N/A', reason: 'missing direction/POI/session/epic', plan };
+// m15Candles must be pre-fetched by the caller. currentPrice is the latest bid/close.
+export function refineEntry(plan, m15Candles, currentPrice) {
+  if (!plan?.direction || !plan?.poi?.zone) {
+    return { refined: false, status: 'N/A', reason: 'missing direction/POI', plan };
   }
 
-  const h1Last = h1Candles?.[h1Candles.length - 1];
-  if (!h1Last) {
-    return { refined: false, status: 'N/A', reason: 'no H1 candles', plan };
+  if (!Array.isArray(m15Candles) || m15Candles.length === 0) {
+    return { refined: false, status: 'N/A', reason: 'no M15 candles supplied', plan };
   }
-  const currentPrice = h1Last.close;
+
+  const price = currentPrice ?? m15Candles[m15Candles.length - 1]?.close;
+  if (price == null) {
+    return { refined: false, status: 'N/A', reason: 'no current price', plan };
+  }
+
   const [zLo, zHi] = [
     Math.min(plan.poi.zone[0], plan.poi.zone[1]),
     Math.max(plan.poi.zone[0], plan.poi.zone[1]),
   ];
 
-  // Phase 1: is price even close to the POI?
-  if (!inZone(currentPrice, [zLo, zHi])) {
+  // Phase 1: is price at the M15 POI?
+  if (!inZone(price, [zLo, zHi])) {
     return {
       refined: false,
       status: 'WAITING',
-      reason: `Price ${currentPrice.toFixed(2)} not at POI [${zLo.toFixed(2)}-${zHi.toFixed(2)}] yet`,
+      reason: `Price ${price.toFixed(2)} not at M15 POI [${zLo.toFixed(2)}-${zHi.toFixed(2)}] yet`,
       plan,
     };
   }
 
-  // Phase 2: fetch M15
-  let m15Candles;
-  try {
-    m15Candles = await fetchIGCandles(igSession, goldEpic, 'MINUTE_15', M15_FETCH_COUNT, goldDivisor);
-  } catch (err) {
-    return {
-      refined: false,
-      status: 'PENDING',
-      reason: `M15 fetch failed: ${err.message}`,
-      plan,
-    };
-  }
-
-  if (!m15Candles.length) {
-    return { refined: false, status: 'PENDING', reason: 'M15 returned 0 candles', plan };
-  }
-
-  // Phase 3: confirmation
+  // Phase 2: M15 confirmation signal
   const conf = findM15Confirmation(plan.direction, m15Candles, zLo, zHi);
   if (!conf.confirmed) {
     return {
@@ -159,9 +142,9 @@ export async function refineEntry(plan, h1Candles, igSession, goldEpic, goldDivi
     };
   }
 
-  // Phase 4: tighten entry/SL using M15 ATR
+  // Phase 3: tighten entry/SL using M15 ATR
   const m15Atr = computeATR(m15Candles, ATR_PERIOD);
-  const refinedEntry = conf.candle.close ?? currentPrice;
+  const refinedEntry = conf.candle.close ?? price;
   const refinedSL = plan.direction === 'long'
     ? zLo - SL_ATR_MULT * m15Atr
     : zHi + SL_ATR_MULT * m15Atr;

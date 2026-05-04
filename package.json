@@ -20,6 +20,7 @@
     "bot": "node src/telegram/bot.js",
     "bot:dev": "DRY_RUN=true node src/telegram/bot.js",
     "setup-webhook": "node scripts/setup-railway-webhook.js",
+    "push": "bash scripts/safe-push.sh",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {

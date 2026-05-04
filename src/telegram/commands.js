@@ -97,17 +97,24 @@ async function igGet(sess, p, version = 1) {
 async function handleHelp() {
   await tgSend(
     `<b>📖 XAUUSD Agent Commands</b>\n\n` +
+    `<b>Market</b>\n` +
     `/price — Live gold price &amp; spread\n` +
+    `/news — Upcoming calendar events\n\n` +
+    `<b>Plans</b>\n` +
     `/status — Current plan, M15 &amp; execution\n` +
     `/lastplan — Most recent trading plan\n` +
     `/confluence — Confluence factors\n` +
+    `/analyze — Trigger a full pipeline run\n\n` +
+    `<b>Account</b>\n` +
     `/balance — IG account balance\n` +
     `/positions — Open positions\n` +
-    `/risk — Risk rules &amp; state\n` +
     `/today — Today's executed trades\n` +
-    `/performance — Daily performance stats\n` +
-    `/news — Upcoming calendar events\n` +
+    `/performance — Daily performance stats\n\n` +
+    `<b>System</b>\n` +
+    `/risk — Risk rules &amp; state\n` +
     `/settings — Agent configuration\n` +
+    `/cache — Candle cache health + quota usage\n\n` +
+    `<b>AI</b>\n` +
     `/ask &lt;question&gt; — Chat with Claude\n\n` +
     `<i>Or just type a question — I'll answer it.</i>`
   );
@@ -446,7 +453,7 @@ async function handleSettings() {
     `<b>⚙️ Agent Configuration</b>\n\n` +
     `Symbol: ${process.env.SYMBOL || 'XAU/AUD'}\n` +
     `Currency: ${process.env.CURRENCY || 'AUD'}\n` +
-    `Execution TF: ${process.env.EXECUTION_TF || '1h'}\n` +
+    `Execution TF: ${process.env.EXECUTION_TF || '15min'}\n` +
     `Bias TF: ${process.env.BIAS_TF || '4h'}\n` +
     `Candles lookback: ${process.env.CANDLES_LOOKBACK || '200'}\n` +
     `Default risk %: ${process.env.DEFAULT_RISK_PCT || '1'}\n` +
@@ -514,6 +521,74 @@ async function handleAsk(question) {
   }
 }
 
+async function handleCache() {
+  try {
+    const { getCacheStats } = await import('../data/candleCache.js');
+    const stats = getCacheStats();
+
+    if (!stats || stats.length === 0) {
+      await tgSend(
+        '📦 <b>Cache Status</b>\n\n' +
+        '❌ No cache files found\n' +
+        'Next pipeline run will do a cold start\n' +
+        '(costs ~280 candle API calls)'
+      );
+      return;
+    }
+
+    let msg = '📦 <b>Candle Cache Status</b>\n\n';
+    let totalCandles = 0;
+    let coldCount = 0;
+
+    for (const s of stats) {
+      const freshness =
+        s.ageMinutes < 20 ? '✅' :
+        s.ageMinutes < 120 ? '⚠️' : '❌';
+
+      const label =
+        s.resolution === 'HOUR' && s.key.includes('EURUSD') ? 'EUR/USD H1' :
+        s.resolution === 'HOUR' ? 'Gold H1' :
+        s.resolution === 'HOUR_4' ? 'Gold H4' :
+        s.resolution === 'MINUTE_15' ? 'Gold M15' :
+        s.key;
+
+      msg += `${freshness} ${label}: ${s.count} candles (${s.ageMinutes}m ago)\n`;
+      totalCandles += s.count;
+      if (s.count < 10) coldCount++;
+    }
+
+    // Quota estimate
+    const dayOfWeek = new Date().getUTCDay();
+    const tradingDaysThisWeek = Math.min(Math.max(dayOfWeek - 1, 0), 4);
+    const estCallsUsed = 280 + (8 * 96 * tradingDaysThisWeek);
+    const estRemaining = Math.max(10000 - estCallsUsed, 0);
+
+    msg += `\n<b>Total cached:</b> ${totalCandles} candles\n`;
+    msg += `<b>Est. quota used:</b> ~${estCallsUsed.toLocaleString()} / 10,000\n`;
+    msg += `<b>Est. remaining:</b> ~${estRemaining.toLocaleString()} calls\n`;
+
+    // Next Monday reset
+    const now = new Date();
+    const daysUntilMonday = (8 - now.getUTCDay()) % 7 || 7;
+    const hoursUntilReset = (daysUntilMonday - 1) * 24 + (24 - now.getUTCHours());
+    msg += `\n🔄 Quota resets in ~${hoursUntilReset}h (Monday UTC)\n`;
+
+    if (coldCount > 0) {
+      msg += `\n⚠️ ${coldCount} cache(s) empty — cold start on next run`;
+    } else {
+      msg += '\n✅ All caches warm — running quota-efficient';
+    }
+
+    await tgSend(msg);
+  } catch (err) {
+    await tgSend(`❌ Cache check failed: ${err.message}`);
+  }
+}
+
+async function handleAnalyze() {
+  await tgSend('⚠️ /analyze is coming soon.\n\nFor now, pipeline runs automatically at :05 every hour. Use /status to see the latest plan.');
+}
+
 // ─── Router ───────────────────────────────────────────────────────────────────
 
 // routeCommand: pure routing, no security check. Called by webhook.js (which
@@ -534,6 +609,8 @@ export async function routeCommand(command, args, _chatId) {
     if (lower === '/performance') return await handlePerformance();
     if (lower === '/news') return await handleNews();
     if (lower === '/settings') return await handleSettings();
+    if (lower === '/cache') return await handleCache();
+    if (lower === '/analyze') return await handleAnalyze();
     if (lower === '/ask' && args) return await handleAsk(args);
     if (lower === '/ask') return await handleAsk('');
     if (!lower.startsWith('/')) return await handleAsk(fullText);
@@ -568,6 +645,8 @@ export async function processCommand(text, fromChatId) {
     if (lower === '/performance') return await handlePerformance();
     if (lower === '/news') return await handleNews();
     if (lower === '/settings') return await handleSettings();
+    if (lower === '/cache') return await handleCache();
+    if (lower === '/analyze') return await handleAnalyze();
     if (lower.startsWith('/ask ')) return await handleAsk(trimmed.slice(5));
     if (lower === '/ask') return await handleAsk('');
 

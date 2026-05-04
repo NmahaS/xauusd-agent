@@ -1,6 +1,5 @@
-# Bot-managed files: keep local version on merge to prevent push conflicts.
-# The bot overwrites these on every run, so merge conflicts are noise.
-README.md merge=ours
 plans/.last-run merge=ours
 plans/.last-update-id merge=ours
+README.md merge=ours
+cache/*.json merge=ours
 plans/**/daily-summary.json merge=ours

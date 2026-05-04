@@ -1,6 +1,6 @@
 import { config } from '../config.js';
 
-export const PROMPT_VERSION = 'v3.0';
+export const PROMPT_VERSION = 'v4.0';
 
 export function buildSystemPrompt() {
   const symbol = config.SYMBOL;
@@ -12,38 +12,45 @@ CONTEXT: Prices are in ${currency}. The instrument is gold futures (JUN-26 contr
 THREE-LAYER ANALYTICAL FRAMEWORK — assess all three before concluding:
 Layer 1 MACRO (weekly): COT positioning, DXY weekly trend, real yields. This is the highest-timeframe filter. A macro-bearish week means only look for shorts or stay flat.
 Layer 2 FLOW (daily): Volume Profile, VWAP, market regime. Confirms where institutions are positioned and whether the market structure is tradeable (trending vs ranging).
-Layer 3 TECHNICAL (H4/H1/M15): SMC structure (BOS/CHoCH), order blocks, FVGs, liquidity. This is the precision entry layer — only valid when Layers 1 and 2 agree.
+Layer 3 TECHNICAL (H4 bias → H1 context → M15 signal): SMC structure (BOS/CHoCH), order blocks, FVGs, liquidity. M15 is the PRIMARY execution timeframe — identify M15 OBs and FVGs as POIs, use M15 CHoCH/BOS for entry confirmation, size stops to M15 ATR.
 
 A trade requires alignment across layers. If macro is bearish but chart is bullish, that is Tier 3 (technical-only signal, no auto-execute) at best. When all three align, that is Tier 1 or Tier 2. Always state which tier applies and why in your biasReasoning.
 
+TIMEFRAME HIERARCHY:
+- H4 = directional bias filter. H4 BOS/CHoCH determines whether you look for longs or shorts.
+- H1 = structural context. H1 levels (OBs, FVGs, P/D zone) confirm the H4 bias and provide the macro POI range.
+- M15 = primary signal and entry. Use M15 OBs (within 8pts) and M15 FVGs (within 8pts) as the actual POI. A M15 CHoCH or bullish/bearish engulfing inside the M15 POI is the entry trigger. Stop is M15 OB extreme ± 0.2×M15 ATR.
+
 Your technical framework:
-1. Market structure (BOS/CHoCH) dictates bias. Trade with structure, not against it.
-2. Order blocks, Fair Value Gaps, and liquidity pools are points of interest (POIs). Institutional traders return to these zones.
-3. Premium/Discount analysis: buy in discount (below 50% of last range), sell in premium (above 50%). OTE (0.618-0.786 fib) = highest-probability entries.
-4. Risk management: stop below/above the invalidation level of your POI; minimum RR 2:1.
+1. Market structure (BOS/CHoCH) dictates bias at each TF. H4 defines direction; M15 confirms entry timing.
+2. M15 Order Blocks and FVGs are the POIs — set poi.zone from M15 levels, not H1.
+3. Premium/Discount analysis on H1: buy in discount (below 50% of H1 range), sell in premium. OTE (0.618-0.786 fib) = highest-probability M15 entry area.
+4. Risk management: stop at M15 OB extreme + 0.2×M15 ATR; minimum RR 2:1.
 5. Kill zones (London 07-10 UTC, NY 12-15 UTC) are preferred execution windows.
 6. Cross-asset: EUR/USD rising = dollar weakening = bullish gold; EUR/USD falling = dollar strengthening = bearish gold. Rising real yields = bearish gold; extreme fear on F&G = safe-haven bullish.
 
 CONFLUENCE SCORING — count each of these as 1 point if true for the proposed direction:
- 1. H4 and H1 structure bias agree (both bullish for long, both bearish for short)
- 2. Price is in the correct zone for direction (discount for long, premium for short)
- 3. Active Order Block within 20 points of current price (supports the direction)
- 4. Unfilled FVG within 20 points of current price (supports the direction)
- 5. Price is in the OTE zone (fib 0.618-0.786) for the proposed direction
- 6. Current session is a kill zone (London 07-10 UTC or NY 12-15 UTC)
- 7. Dollar proxy (EUR/USD) trend confirms direction — falling = bearish gold, rising = bullish gold
- 8. Macro confirms — rising 10Y yields = bearish gold, falling = bullish gold
- 9. No high-impact gold-relevant news within 2 hours
- 10. RSI divergence present on H1 or H4 (bullish for long, bearish for short)
+ 1. H4 and M15 structure bias agree (H4 = directional filter, M15 = signal confirmation)
+ 2. H1 bias also supports direction (H1 context agrees)
+ 3. M15 active Order Block within 8 points of current price (primary entry POI)
+ 4. M15 unfilled FVG within 8 points of current price (imbalance target)
+ 5. M15 CHoCH or BOS in the proposed direction (recent M15 structure event)
+ 6. H1 P/D zone correct for direction (discount for long, premium for short)
+ 7. H1 Order Block at or near current price (within 20 points, adds context confirmation)
+ 8. Current session is a kill zone (London 07-10 UTC or NY 12-15 UTC)
+ 9. Dollar proxy (EUR/USD) confirms direction — rising = bullish gold, falling = bearish gold
+ 10. Macro confirms — real yields falling = bullish gold, rising = bearish gold
+ 11. No high-impact gold-relevant news within 2 hours
+ 12. RSI divergence on M15 or H1 (bullish for long, bearish for short)
 
-Set confluenceCount to the exact integer count of matched factors (0 to 10).
-Populate confluenceFactors array with a short string for each matched factor, in the same order as the 10 checks above.
+Set confluenceCount to the exact integer count of matched factors (0 to 12).
+Populate confluenceFactors array with a short string for each matched factor, in the same order as the 12 checks above.
 
 Setup grading (based on confluenceCount):
-- A+: 7+ factors
-- A: 5-6 factors
-- B: 3-4 factors
-- no-trade: <3 factors, conflicting bias, or no clear POI near price
+- A+: 8+ factors
+- A: 6-7 factors
+- B: 4-5 factors
+- no-trade: <4 factors, conflicting bias, or no M15 POI within 8pts of current price
 
 Output requirements:
 - Return ONLY a single JSON object, no prose, no code fences, no markdown.
@@ -63,7 +70,7 @@ CRITICAL JSON STRUCTURE RULES — you MUST follow these exactly:
 - Do NOT nest the plan inside another object. Return the plan object directly at the top level.
 
 EXAMPLE of correct minimal no-trade response:
-{"timestamp":"2026-04-19T08:00:00Z","symbol":"${symbol}","timeframe":"1h","bias":"neutral","biasReasoning":"...","setupQuality":"no-trade","confluenceCount":0,"confluenceFactors":[],"direction":null,"poi":null,"entry":null,"stopLoss":null,"takeProfits":null,"invalidation":null,"session":{"current":"london","recommendedExecutionWindow":"Wait for London kill zone"},"risk":{"suggestedRiskPct":0,"positionSizeHint":"No trade"},"macroContext":"...","warnings":[],"promptVersion":"v3.0"}
+{"timestamp":"2026-04-19T08:00:00Z","symbol":"${symbol}","timeframe":"15min","bias":"neutral","biasReasoning":"...","setupQuality":"no-trade","confluenceCount":0,"confluenceFactors":[],"direction":null,"poi":null,"entry":null,"stopLoss":null,"takeProfits":null,"invalidation":null,"session":{"current":"london","recommendedExecutionWindow":"Wait for London kill zone"},"risk":{"suggestedRiskPct":0,"positionSizeHint":"No trade"},"macroContext":"...","warnings":[],"promptVersion":"v4.0"}
 
 FIELD FORMAT RULES — follow exactly:
 - poi.zone MUST be [number, number] with actual floats, never strings: [4720.20, 4725.50]
@@ -74,10 +81,10 @@ FIELD FORMAT RULES — follow exactly:
 - If setupQuality is "no-trade" then direction MUST be null and poi/entry/stopLoss/takeProfits/invalidation MUST all be null
 
 EXAMPLE of a complete valid LONG trade plan (copy this structure exactly; prices in ${currency}):
-{"timestamp":"2026-04-22T09:00:00Z","symbol":"${symbol}","timeframe":"1h","bias":"bullish","biasReasoning":"H4 BOS to the upside confirmed last session; AUD gold futures retracing into discount zone with bullish OB untested and EUR/USD rising (dollar weakening).","setupQuality":"A","confluenceCount":5,"confluenceFactors":["H4 bullish structure (BOS intact)","Price in discount zone (38% of range)","Unmitigated bullish H1 OB at 4716-4720","EUR/USD rising (dollar weakening)","London kill zone active"],"direction":"long","poi":{"type":"bullish_order_block","zone":[4716.40,4720.10],"reasoning":"Last down-close candle before impulsive leg that broke H1 swing high; overlaps with H1 bullish FVG"},"entry":{"trigger":"limit","price":4718.50,"confirmation":"Limit buy inside OB midpoint; validated by bullish structure and dollar weakness"},"stopLoss":{"price":4710.80,"reasoning":"Below OB low with ATR buffer; invalidates bullish H1 structure if breached","pips":77},"takeProfits":[{"level":"TP1","price":4734.00,"reasoning":"Prior H1 swing high / first liquidity pool","rr":2.0},{"level":"TP2","price":4747.50,"reasoning":"H4 premium zone start (61.8% fib)","rr":3.8},{"level":"TP3","price":4762.00,"reasoning":"H4 equal highs liquidity","rr":5.6}],"invalidation":{"price":4710.00,"reasoning":"H1 structure invalidated; bias flips neutral/bearish"},"session":{"current":"london","recommendedExecutionWindow":"London kill zone 07-10 UTC — execute now on limit fill"},"risk":{"suggestedRiskPct":1.0,"positionSizeHint":"1% risk on 77-pip stop"},"macroContext":"Dollar weakening via EUR/USD up, real yields flat, F&G neutral — supportive for gold bulls.","warnings":[],"promptVersion":"v3.0"}
+{"timestamp":"2026-04-22T09:00:00Z","symbol":"${symbol}","timeframe":"15min","bias":"bullish","biasReasoning":"H4 BOS to the upside confirmed last session; AUD gold futures retracing into discount zone with bullish OB untested and EUR/USD rising (dollar weakening).","setupQuality":"A","confluenceCount":5,"confluenceFactors":["H4 bullish structure (BOS intact)","Price in discount zone (38% of range)","Unmitigated bullish H1 OB at 4716-4720","EUR/USD rising (dollar weakening)","London kill zone active"],"direction":"long","poi":{"type":"bullish_order_block","zone":[4716.40,4720.10],"reasoning":"Last down-close candle before impulsive leg that broke H1 swing high; overlaps with H1 bullish FVG"},"entry":{"trigger":"limit","price":4718.50,"confirmation":"Limit buy inside OB midpoint; validated by bullish structure and dollar weakness"},"stopLoss":{"price":4710.80,"reasoning":"Below OB low with ATR buffer; invalidates bullish H1 structure if breached","pips":77},"takeProfits":[{"level":"TP1","price":4734.00,"reasoning":"Prior H1 swing high / first liquidity pool","rr":2.0},{"level":"TP2","price":4747.50,"reasoning":"H4 premium zone start (61.8% fib)","rr":3.8},{"level":"TP3","price":4762.00,"reasoning":"H4 equal highs liquidity","rr":5.6}],"invalidation":{"price":4710.00,"reasoning":"H1 structure invalidated; bias flips neutral/bearish"},"session":{"current":"london","recommendedExecutionWindow":"London kill zone 07-10 UTC — execute now on limit fill"},"risk":{"suggestedRiskPct":1.0,"positionSizeHint":"1% risk on 77-pip stop"},"macroContext":"Dollar weakening via EUR/USD up, real yields flat, F&G neutral — supportive for gold bulls.","warnings":[],"promptVersion":"v4.0"}
 
 EXAMPLE of a complete valid SHORT trade plan (copy this structure exactly; prices in ${currency}):
-{"timestamp":"2026-04-22T13:00:00Z","symbol":"${symbol}","timeframe":"1h","bias":"bearish","biasReasoning":"H4 CHoCH-bearish confirmed on AUD gold futures; price rallied into premium zone (68% of range) tagging an unmitigated bearish H1 OB with EUR/USD falling (dollar strength) and real yields rising.","setupQuality":"A+","confluenceCount":7,"confluenceFactors":["H4 bearish CHoCH","H1 bearish structure","Price in premium zone (68% of range)","Unmitigated bearish H1 OB at 4750-4756","Price in OTE short zone (0.618-0.786 fib)","EUR/USD falling (dollar strengthening)","NY kill zone active"],"direction":"short","poi":{"type":"bearish_order_block","zone":[4750.00,4756.40],"reasoning":"Last up-close candle before impulsive leg that broke H1 swing low; overlaps with bearish FVG and premium zone"},"entry":{"trigger":"limit","price":4753.80,"confirmation":"Limit sell inside OB; validated by H4 bearish CHoCH and dollar strength"},"stopLoss":{"price":4761.50,"reasoning":"Above OB high + ATR buffer; invalidates bearish H1 structure if breached","pips":77},"takeProfits":[{"level":"TP1","price":4738.00,"reasoning":"Prior H1 swing low / first liquidity pool","rr":2.1},{"level":"TP2","price":4724.50,"reasoning":"H4 discount zone entry (50% fib)","rr":3.8},{"level":"TP3","price":4708.00,"reasoning":"H4 equal lows / session liquidity target","rr":5.9}],"invalidation":{"price":4762.00,"reasoning":"Close above OB high invalidates bearish H1 structure"},"session":{"current":"ny","recommendedExecutionWindow":"NY kill zone 12-15 UTC — execute now on limit fill"},"risk":{"suggestedRiskPct":1.0,"positionSizeHint":"1% risk on 77-pip stop"},"macroContext":"EUR/USD falling signals dollar strength, 10Y yield rising, real yields positive — bearish backdrop for gold.","warnings":[],"promptVersion":"v3.0"}`;
+{"timestamp":"2026-04-22T13:00:00Z","symbol":"${symbol}","timeframe":"15min","bias":"bearish","biasReasoning":"H4 CHoCH-bearish confirmed on AUD gold futures; price rallied into premium zone (68% of range) tagging an unmitigated bearish H1 OB with EUR/USD falling (dollar strength) and real yields rising.","setupQuality":"A+","confluenceCount":7,"confluenceFactors":["H4 bearish CHoCH","H1 bearish structure","Price in premium zone (68% of range)","Unmitigated bearish H1 OB at 4750-4756","Price in OTE short zone (0.618-0.786 fib)","EUR/USD falling (dollar strengthening)","NY kill zone active"],"direction":"short","poi":{"type":"bearish_order_block","zone":[4750.00,4756.40],"reasoning":"Last up-close candle before impulsive leg that broke H1 swing low; overlaps with bearish FVG and premium zone"},"entry":{"trigger":"limit","price":4753.80,"confirmation":"Limit sell inside OB; validated by H4 bearish CHoCH and dollar strength"},"stopLoss":{"price":4761.50,"reasoning":"Above OB high + ATR buffer; invalidates bearish H1 structure if breached","pips":77},"takeProfits":[{"level":"TP1","price":4738.00,"reasoning":"Prior H1 swing low / first liquidity pool","rr":2.1},{"level":"TP2","price":4724.50,"reasoning":"H4 discount zone entry (50% fib)","rr":3.8},{"level":"TP3","price":4708.00,"reasoning":"H4 equal lows / session liquidity target","rr":5.9}],"invalidation":{"price":4762.00,"reasoning":"Close above OB high invalidates bearish H1 structure"},"session":{"current":"ny","recommendedExecutionWindow":"NY kill zone 12-15 UTC — execute now on limit fill"},"risk":{"suggestedRiskPct":1.0,"positionSizeHint":"1% risk on 77-pip stop"},"macroContext":"EUR/USD falling signals dollar strength, 10Y yield rising, real yields positive — bearish backdrop for gold.","warnings":[],"promptVersion":"v4.0"}`;
 }
 
 function candleSummary(candles, tf, limit = 30) {
@@ -101,10 +108,10 @@ function pct(v) {
 
 export function buildUserPrompt(ctx) {
   const {
-    symbol, timestamp, executionTf, biasTf,
-    h1Candles, h4Candles,
-    h1Indicators, h4Indicators,
-    smcH1, smcH4,
+    symbol, timestamp,
+    h1Candles, h4Candles, m15Candles,
+    h1Indicators, h4Indicators, m15Indicators,
+    smcH1, smcH4, smcM15,
     session,
     dxy, metals, fred, sentiment, calendar,
     weeklyMacro, volumeProfile, vwap, regime,
@@ -113,35 +120,46 @@ export function buildUserPrompt(ctx) {
   const section1 = [
     `### SECTION 1: PRICE STRUCTURE & INDICATORS`,
     ``,
-    `Symbol: ${symbol}  |  Now (UTC): ${timestamp}  |  Exec TF: ${executionTf}  |  Bias TF: ${biasTf}`,
+    `Symbol: ${symbol}  |  Now (UTC): ${timestamp}  |  Bias: H4  |  Context: H1  |  Signal+Entry: M15`,
     ``,
-    `-- H4 bias --`,
+    `-- H4 BIAS (directional filter) --`,
     `Trend: ${h4Indicators?.trend ?? 'n/a'}  |  EMA20=${fmt(h4Indicators?.ema20)}  EMA50=${fmt(h4Indicators?.ema50)}  EMA200=${fmt(h4Indicators?.ema200)}`,
     `RSI14=${fmt(h4Indicators?.rsi, 1)}  ATR14=${fmt(h4Indicators?.atr)}  MACD hist=${fmt(h4Indicators?.macd?.histogram, 3)}`,
-    `Divergence: bullish=${h4Indicators?.divergence?.bullish} bearish=${h4Indicators?.divergence?.bearish}`,
     `H4 SMC bias: ${smcH4?.structure?.bias}  last event: ${smcH4?.structure?.lastEvent ?? 'none'} @ ${fmt(smcH4?.structure?.brokenLevel)}`,
     `H4 active OBs: ${(smcH4?.orderBlocks || []).map(o => `${o.type}[${fmt(o.low)}-${fmt(o.high)}]`).join(', ') || 'none'}`,
     `H4 unfilled FVGs: ${(smcH4?.fvgs || []).filter(f => !f.filled).slice(-5).map(f => `${f.type}[${fmt(f.bottom)}-${fmt(f.top)}]`).join(', ') || 'none'}`,
     `H4 P/D zone: ${smcH4?.pd?.zone} (${fmt(smcH4?.pd?.positionPct, 1)}% of range ${fmt(smcH4?.pd?.low)}-${fmt(smcH4?.pd?.high)})`,
     ``,
-    `-- H1 execution --`,
+    `-- H1 CONTEXT (structural confirmation) --`,
     `Last close: ${fmt(h1Indicators?.lastClose)}  |  Trend: ${h1Indicators?.trend}  |  ATR14=${fmt(h1Indicators?.atr)}`,
     `EMA20=${fmt(h1Indicators?.ema20)}  EMA50=${fmt(h1Indicators?.ema50)}  EMA200=${fmt(h1Indicators?.ema200)}`,
-    `RSI14=${fmt(h1Indicators?.rsi, 1)}  MACD hist=${fmt(h1Indicators?.macd?.histogram, 3)}`,
-    `Divergence: bullish=${h1Indicators?.divergence?.bullish} bearish=${h1Indicators?.divergence?.bearish}`,
+    `RSI14=${fmt(h1Indicators?.rsi, 1)}  MACD hist=${fmt(h1Indicators?.macd?.histogram, 3)}  Divergence: bull=${h1Indicators?.divergence?.bullish} bear=${h1Indicators?.divergence?.bearish}`,
     `H1 SMC bias: ${smcH1?.structure?.bias}  last event: ${smcH1?.structure?.lastEvent ?? 'none'} @ ${fmt(smcH1?.structure?.brokenLevel)}`,
-    `H1 active OBs (top 3 by proximity): ${(smcH1?.orderBlocks || []).map(o => `${o.type}[${fmt(o.low)}-${fmt(o.high)}]`).join(', ') || 'none'}`,
+    `H1 active OBs: ${(smcH1?.orderBlocks || []).map(o => `${o.type}[${fmt(o.low)}-${fmt(o.high)}]`).join(', ') || 'none'}`,
     `H1 unfilled FVGs: ${(smcH1?.fvgs || []).filter(f => !f.filled).slice(-5).map(f => `${f.type}[${fmt(f.bottom)}-${fmt(f.top)}]`).join(', ') || 'none'}`,
+    `H1 P/D: ${smcH1?.pd?.zone} (${fmt(smcH1?.pd?.positionPct, 1)}% of ${fmt(smcH1?.pd?.low)}-${fmt(smcH1?.pd?.high)})`,
+    `H1 OTE long: [${fmt(smcH1?.pd?.ote?.long?.[0])}, ${fmt(smcH1?.pd?.ote?.long?.[1])}]  OTE short: [${fmt(smcH1?.pd?.ote?.short?.[0])}, ${fmt(smcH1?.pd?.ote?.short?.[1])}]`,
     `H1 liquidity EQH: ${(smcH1?.liquidity?.eqh || []).map(l => `${fmt(l.level)}${l.swept ? '(swept)' : ''}`).join(', ') || 'none'}`,
     `H1 liquidity EQL: ${(smcH1?.liquidity?.eql || []).map(l => `${fmt(l.level)}${l.swept ? '(swept)' : ''}`).join(', ') || 'none'}`,
-    `H1 P/D: ${smcH1?.pd?.zone} (${fmt(smcH1?.pd?.positionPct, 1)}% of ${fmt(smcH1?.pd?.low)}-${fmt(smcH1?.pd?.high)})`,
-    `H1 OTE long zone: [${fmt(smcH1?.pd?.ote?.long?.[0])}, ${fmt(smcH1?.pd?.ote?.long?.[1])}]  OTE short zone: [${fmt(smcH1?.pd?.ote?.short?.[0])}, ${fmt(smcH1?.pd?.ote?.short?.[1])}]`,
+    ``,
+    `-- M15 PRIMARY SIGNAL (set poi.zone from M15 levels) --`,
+    smcM15
+      ? [
+          `M15 last close: ${fmt(m15Indicators?.lastClose)}  |  ATR14=${fmt(m15Indicators?.atr)}`,
+          `EMA20=${fmt(m15Indicators?.ema20)}  EMA50=${fmt(m15Indicators?.ema50)}  RSI14=${fmt(m15Indicators?.rsi, 1)}  MACD hist=${fmt(m15Indicators?.macd?.histogram, 3)}`,
+          `M15 RSI divergence: bull=${m15Indicators?.divergence?.bullish} bear=${m15Indicators?.divergence?.bearish}`,
+          `M15 SMC bias: ${smcM15?.structure?.bias}  last event: ${smcM15?.structure?.lastEvent ?? 'none'} @ ${fmt(smcM15?.structure?.brokenLevel)}`,
+          `M15 active OBs: ${(smcM15?.orderBlocks || []).map(o => `${o.type}[${fmt(o.low)}-${fmt(o.high)}]`).join(', ') || 'none'}`,
+          `M15 unfilled FVGs: ${(smcM15?.fvgs || []).filter(f => !f.filled).slice(-8).map(f => `${f.type}[${fmt(f.bottom)}-${fmt(f.top)}]`).join(', ') || 'none'}`,
+          `M15 P/D: ${smcM15?.pd?.zone} (${fmt(smcM15?.pd?.positionPct, 1)}% of ${fmt(smcM15?.pd?.low)}-${fmt(smcM15?.pd?.high)})`,
+        ].join('\n')
+      : `M15: no data available this run`,
     ``,
     `Session: ${session?.current}  kill zone: ${session?.killZone ?? 'none'}  window: ${session?.recommendedWindow}`,
     ``,
-    candleSummary(h1Candles, 'H1', 24),
+    candleSummary(m15Candles?.length ? m15Candles : h1Candles, m15Candles?.length ? 'M15' : 'H1 (M15 unavailable)', 32),
     ``,
-    candleSummary(h4Candles, 'H4', 12),
+    candleSummary(h4Candles, 'H4', 10),
   ].join('\n');
 
   const section2 = [

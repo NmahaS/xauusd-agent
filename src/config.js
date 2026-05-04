@@ -23,7 +23,7 @@ const fullSchema = baseSchema.extend({
   FRED_API_KEY: z.string().default(''),
   SYMBOL: z.string().default('XAU/AUD'),
   CURRENCY: z.string().default('AUD'),
-  EXECUTION_TF: z.string().default('1h'),
+  EXECUTION_TF: z.string().default('15min'),
   BIAS_TF: z.string().default('4h'),
   CANDLES_LOOKBACK: z.coerce.number().int().min(100).default(200),
   DEFAULT_RISK_PCT: z.coerce.number().min(0.1).max(5).default(1),

@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { config, configIsFull } from './config.js';
-import { fetchAllIGData, IG_ENV } from './data/ig.js';
+import { fetchAllIGData, fetchIGCandles, IG_ENV } from './data/ig.js';
 import { fetchFredMacro as fetchMacroData } from './data/fred.js';
 import { fetchSentiment } from './data/sentiment.js';
 import { fetchCalendar as fetchEconomicCalendar } from './data/calendar.js';
@@ -124,13 +124,14 @@ async function runQuickPipeline() {
   }
   const prevM15Status = recent.plan.m15?.status ?? null;
 
-  const refinement = await refineEntry(
-    recent.plan,
-    igData.h1Candles,
-    igData.session,
-    igData.goldEpic,
-    igData.goldDivisor,
-  );
+  let quickM15Candles = [];
+  try {
+    quickM15Candles = await fetchIGCandles(igData.session, igData.goldEpic, 'MINUTE_15', 50, igData.goldDivisor);
+  } catch (err) {
+    console.warn(`[quick] M15 fetch failed: ${err.message}`);
+  }
+  const quickCurrentPrice = igData.h1Candles[igData.h1Candles.length - 1]?.close ?? null;
+  const refinement = refineEntry(recent.plan, quickM15Candles, quickCurrentPrice);
   console.log(`[m15] ${refinement.status}: ${refinement.reason}`);
 
   let stateChanged = false;
@@ -173,7 +174,7 @@ async function runFullPipeline() {
 
   console.log(`\n=== XAUUSD Agent run @ ${runTimestamp} ===`);
   console.log(
-    `symbol=${config.SYMBOL} exec=${config.EXECUTION_TF} bias=${config.BIAS_TF} ` +
+    `symbol=${config.SYMBOL} bias=4h context=1h exec=15min ` +
     `env=${IG_ENV} dryRun=${config.DRY_RUN} autoTrade=${config.AUTO_TRADE} dryExecute=${config.DRY_EXECUTE}`
   );
 
@@ -231,17 +232,30 @@ async function runFullPipeline() {
     console.warn(`[pipeline] reduced history: H1=${h1Candles.length} H4=${h4Candles.length} — continuing with degraded analysis`);
   }
 
+  // Fetch M15 candles (primary signal TF — separate from main cron fetch)
+  let m15Candles = [];
+  if (goldEpic && igSession) {
+    try {
+      m15Candles = await fetchIGCandles(igSession, goldEpic, 'MINUTE_15', 100, goldDivisor);
+      console.log(`[pipeline] M15: ${m15Candles.length} candles fetched`);
+    } catch (err) {
+      console.warn(`[pipeline] M15 fetch failed: ${err.message} — M15 SMC/refinement disabled this run`);
+    }
+  }
+
   // Resolve open trades from prior plans before computing new indicators
   await resolveOpenTrades(h1Candles).catch(err =>
     console.warn(`[outcome] resolution error: ${err.message}`)
   );
 
-  // Phase 2: indicators + SMC
+  // Phase 2: indicators + SMC (H4=bias, H1=context, M15=primary signal)
   const tCompute = time();
   const h1Indicators = computeClassicalIndicators(h1Candles);
   const h4Indicators = computeClassicalIndicators(h4Candles);
+  const m15Indicators = m15Candles.length >= 14 ? computeClassicalIndicators(m15Candles) : null;
   const smcH1 = smcForTimeframe(h1Candles, 5);
   const smcH4 = smcForTimeframe(h4Candles, 3);
+  const smcM15 = m15Candles.length >= 10 ? smcForTimeframe(m15Candles, 3) : null;
   const session = detectSession();
   const sessionLevels = computeSessionLevels(h1Candles);
 
@@ -263,7 +277,7 @@ async function runFullPipeline() {
     timestamp: runTimestamp,
     executionTf: config.EXECUTION_TF,
     biasTf: config.BIAS_TF,
-    h1Candles, h4Candles, h1Indicators, h4Indicators, smcH1, smcH4,
+    h1Candles, h4Candles, m15Candles, h1Indicators, h4Indicators, m15Indicators, smcH1, smcH4, smcM15,
     session, sessionLevels, dxy, currentPrice, spread, dailyHigh, dailyLow,
     marketStatus, igSentiment, fred: macro, sentiment: altSentiment, calendar,
     goldEpic, goldDivisor,
@@ -293,8 +307,8 @@ async function runFullPipeline() {
 
   // ── Step A: M15 entry refinement ───────────────────────────────────────────
   let m15 = { status: 'N/A', reason: 'no directional plan' };
-  if (plan?.direction && plan?.poi?.zone && igSession && goldEpic) {
-    const refinement = await refineEntry(plan, h1Candles, igSession, goldEpic, goldDivisor);
+  if (plan?.direction && plan?.poi?.zone) {
+    const refinement = refineEntry(plan, m15Candles, currentPrice);
     m15 = { status: refinement.status, reason: refinement.reason };
     if (refinement.refined) {
       plan = refinement.plan;
@@ -303,7 +317,7 @@ async function runFullPipeline() {
       console.log(`[m15] ${refinement.status}: ${refinement.reason}`);
     }
   } else {
-    console.log(`[m15] N/A — ${plan?.direction ? 'missing context' : 'no directional plan'}`);
+    console.log(`[m15] N/A — no directional plan`);
   }
   plan.m15 = m15;
 

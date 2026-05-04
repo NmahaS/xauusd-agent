@@ -72,26 +72,23 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-05-04T04:00:00Z
+**Generated:** 2026-05-04T06:00:00Z
 
 - **Bias:** neutral
 - **Setup Quality:** no-trade
 - **Confluence:** 0 — none
-- **Session:** asia — Wait for London kill zone (07:00-10:00 UTC) to reassess structure and confirm bias
+- **Session:** asia — Wait for London open (07:00 UTC) and RBA decision clarity (+1350m). Do not trade into high-impact AUD event.
 - **Direction:** no-trade
 
-**Macro Context:** Rising real yields (1.92%) bearish for gold; EUR/USD weakening (dollar weakness) bullish for gold; Fear & Greed at 40 (fear) neutral. Macro backdrop mixed; insufficient technical structure to override caution.
+**Macro Context:** Yields rising (bearish gold) offset by EUR/USD weakening (bullish gold); real yields +1.92% (negative for gold). RBA rate decision imminent in ~22.5 hours — AUD volatility expected. Fear & Greed at 40 (fear) with rising 7d trend suggests risk-on sentiment emerging, but insufficient confluence on chart to justify entry.
 
 **Warnings:**
-- ⚠ No H4, H1, or M15 SMC structure events detected — bias is neutral, not directional
-- ⚠ Missing critical indicator data (EMA, RSI, MACD, ATR) — cannot calculate stops or confirm divergences
-- ⚠ No active M15 Order Blocks within 8 points of current price — no primary POI available
-- ⚠ Market in transition regime — confluence threshold raised; current setup has 0 factors
-- ⚠ Current session is Asia (off-hours) — no kill-zone active; London open in ~3 hours
-- ⚠ H4 P/D zone shows extreme discount (-130% of range) — price may be dislocated; wait for structural confirmation
-- ⚠ Multiple small M15 bearish FVGs present but unconfirmed by structure — insufficient for entry
-- ⚠ COT data unavailable (HTTP 404) — cannot assess institutional positioning
-- ⚠ Volume Profile and VWAP unavailable — cannot confirm institutional bias or liquidity zones
+- ⚠ No H4 or H1 structure event detected — bias is neutral, not directional.
+- ⚠ M15 shows only unfilled bearish FVGs; no active OBs within 8 pips of current price.
+- ⚠ High-impact AUD economic calendar: RBA Cash Rate, Monetary Policy Statement, Rate Statement, and Press Conference all due in ~22.5 hours. Avoid trading into this event.
+- ⚠ Market transitioning regime — SMC effective but confluence too low (<4 factors) for entry.
+- ⚠ Insufficient data: H4/H1/M15 EMAs, RSI, MACD, VWAP, COT all unavailable. Reduce position sizing if trade is taken.
+- ⚠ Current price (4576.75 AUD) is in deep discount zone relative to H4 range (4539–4773), but no bullish structure to confirm reversal.
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

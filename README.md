@@ -72,30 +72,30 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-05-04T12:00:00Z
+**Generated:** 2026-05-04T13:00:00Z
 
 - **Bias:** bullish
 - **Setup Quality:** B
-- **Confluence:** 4 — M15 bullish BOS confirmed at 4619.27; M15 active bullish OB at 4597.32-4604.05 (within 8pts of current); Multiple bullish M15 FVGs unfilled (4579.70-4636.80 zone); EUR/USD weakening (dollar weakness = bullish gold)
-- **Session:** ny — NY kill zone active (12-15 UTC) — execute now on limit fill, but monitor RBA decision risk (+16.5h). Consider scaling position size due to macro event risk.
+- **Confluence:** 5 — M15 bullish BOS confirmed at 4619.27; M15 active bullish OB at 4597.32-4604.05 within 8pts of current price; Multiple M15 bullish FVGs unfilled (4590.60-4593.95, 4604.05-4609.65, 4620.10-4636.80); EUR/USD weakening (-0.45% 24h) = dollar weakness = bullish gold; NY kill zone active (execution window optimal)
+- **Session:** ny — NY kill zone 12-15 UTC — execute now on limit fill or dip-buy confirmation within OB zone
 - **Direction:** long
 - **POI:** bullish_order_block @ [4597.32, 4604.05]
-- **Entry:** limit @ 4600.5 — Limit buy inside M15 OB midpoint; requires bullish candle close above 4604.05 to validate structure. NY kill zone active but RBA decision risk within 16.5 hours — consider scaling or waiting for post-RBA clarity.
-- **Stop Loss:** 4589.8
-- **TP1:** 4620.1 (RR 1.8)
-- **TP2:** 4636.8 (RR 3.4)
-- **TP3:** 4655.55 (RR 5)
-- **Invalidation:** 4589
+- **Entry:** limit @ 4600.5 — Limit buy at OB midpoint (4600.50); validated by M15 bullish structure, dollar weakness via EUR/USD, and NY kill zone activity. Await M15 bullish candle close above 4604 or dip-buy confirmation within OB zone.
+- **Stop Loss:** 4591.2
+- **TP1:** 4620.1 (RR 2.1)
+- **TP2:** 4636.8 (RR 3.9)
+- **TP3:** 4672.57 (RR 9.7)
+- **Invalidation:** 4591
 
-**Macro Context:** EUR/USD weakening (dollar weakness bullish for gold), but real yields rising at 1.92% (bearish headwind). RBA Cash Rate decision imminent (+990m) with forecast 4.35% vs prev 4.10% — potential AUD strength could pressure AUD gold. Fear & Greed at 40 (fear) with rising 7d trend suggests risk-on sentiment supporting gold. Macro net: mixed — dollar weakness supports longs, but rising yields and AUD event risk create headwinds.
+**Macro Context:** EUR/USD weakening (dollar weakness bullish for gold), real yields rising at 1.92% (bearish headwind), Fear & Greed at 40 (fear, neutral). AUD RBA decision imminent (+930m) — high volatility risk. Yields rising is macro headwind but dollar weakness and M15 bullish structure provide tactical long opportunity in NY kill zone.
 
 **Warnings:**
-- ⚠ RBA Cash Rate decision imminent in 16.5 hours (high-impact AUD event) — volatility and gap risk post-announcement. Consider reducing position size or waiting for post-RBA confirmation.
-- ⚠ Real yields rising (1.92%) — macro bearish headwind for gold despite M15 bullish structure.
-- ⚠ H4 structure neutral — M15 bullish bias is isolated technical signal without H4 directional confirmation. Tier 3 setup (technical-only).
-- ⚠ M15 price currently in premium zone (67.1% of range) — entry requires pullback into OB; limit order may not fill if price continues higher.
-- ⚠ Volume Profile and VWAP data unavailable — cannot confirm institutional positioning or daily anchor.
-- ⚠ No H4 active OBs or recent H4 structure events — H4 bias filter is neutral, reducing setup conviction.
+- ⚠ HIGH IMPACT: AUD RBA Cash Rate decision in ~930 minutes (2026-05-05T02:30 UTC) — extreme volatility expected; consider closing or reducing position 30min before announcement
+- ⚠ Weekly macro neutral but yields rising (1.92% real yield) — bearish backdrop limits upside; TP3 may face resistance
+- ⚠ H4 data sparse (last candle 2026-03-23T21:00); H1/M15 structure more reliable for this trade
+- ⚠ Confluence count 5/12 = B-grade setup; not A-grade; requires strict risk discipline
+- ⚠ M15 premium zone (55.3%) means price is elevated; dip-buy into OB preferred over chase entries
+- ⚠ No volume profile data available; rely on SMC structure and kill zone timing
 - ⚠ ✅ Consensus: Claude + DeepSeek both long
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded

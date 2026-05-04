@@ -89,9 +89,10 @@ export function formatPlanForTelegram(plan, extras = {}) {
 
   lines.push(`<b>Confluence:</b> ${plan.confluenceCount}`);
   if (plan.confluenceFactors.length) {
-    for (const f of plan.confluenceFactors) {
-      lines.push(`  • ${esc(f)}`);
-    }
+    const shownC = plan.confluenceFactors.slice(0, 8);
+    const remainC = plan.confluenceFactors.length - shownC.length;
+    for (const f of shownC) lines.push(`  • ${esc(f)}`);
+    if (remainC > 0) lines.push(`  <i>... +${remainC} more</i>`);
   }
   lines.push('');
 
@@ -112,23 +113,18 @@ export function formatPlanForTelegram(plan, extras = {}) {
     lines.push('');
   }
 
-  // Three-layer analysis block
+  // Three-layer analysis block (compact — 2-3 lines max)
   if (plan.threeLayer) {
     const tl = plan.threeLayer;
     const aaT3 = tl.tier === 3 && ['A+', 'A'].includes(plan.setupQuality);
     const tierIcon = tl.tier === 1 ? '⚡' : tl.tier === 2 ? '✅' : aaT3 ? '✅' : tl.tier === 3 ? '📋' : '⛔';
     const tierRisk = tl.tier === 1 ? 'Risk: 1.5%' : tl.tier === 2 ? 'Risk: 1%' : aaT3 ? 'Risk: 0.5% (reduced)' : tl.tier === 3 ? 'Manual only' : 'No trade';
-    lines.push(`<b>🔬 3-Layer Analysis</b>`);
-    const wm = tl.layers?.macro;
-    const flow = tl.layers?.flow;
-    const tech = tl.layers?.technical;
-    if (wm) lines.push(`Layer 1 Macro: <b>${esc(wm.bias?.toUpperCase() || 'n/a')}</b> (${wm.score ?? 0} pts)`);
-    if (flow) lines.push(`Layer 2 Flow: ${esc(flow.regime || 'unknown')} regime | VP: ${esc(flow.vpSignal)} | VWAP: ${esc(flow.vwapBias)}`);
-    if (tech) lines.push(`Layer 3 Technical: ${tech.confluenceCount ?? 0} confluence factors (${esc(tech.confluenceGrade)})`);
+    const macro = tl.layers?.macro?.bias?.toUpperCase() || 'n/a';
+    const regime = tl.layers?.flow?.regime || 'unknown';
+    const techCount = tl.layers?.technical?.confluenceCount ?? 0;
+    lines.push(`<b>🔬 3-Layer:</b> Macro ${esc(macro)} | ${esc(regime)} | ${techCount}/12 confluence`);
     lines.push(`${tierIcon} <b>${esc(tl.tierLabel)}</b> — ${tierRisk}`);
-    if (tl.blockingFactors?.length) {
-      for (const bf of tl.blockingFactors) lines.push(`  ⛔ ${esc(bf)}`);
-    }
+    if (tl.blockingFactors?.length) lines.push(`  ⛔ ${esc(tl.blockingFactors[0])}`);
     lines.push('');
   }
 
@@ -232,9 +228,10 @@ export function formatPlanForTelegram(plan, extras = {}) {
   if (plan.warnings.length) {
     lines.push('');
     lines.push(`<b>⚠ Warnings:</b>`);
-    for (const w of plan.warnings) {
-      lines.push(`  • ${esc(w)}`);
-    }
+    const shownW = plan.warnings.slice(0, 5);
+    const remainW = plan.warnings.length - shownW.length;
+    for (const w of shownW) lines.push(`  • ${esc(w)}`);
+    if (remainW > 0) lines.push(`  <i>... +${remainW} more</i>`);
   }
 
   const newsResult = extras.newsResult;
@@ -275,7 +272,16 @@ export function formatPlanForTelegram(plan, extras = {}) {
     lines.push(`<i>📊 ~${minsUntilNextRun(plan.timestamp)}m to next run</i>`);
   }
 
-  return lines.join('\n');
+  const msg = truncateMessage(lines.join('\n'));
+  console.log(`[telegram] message length: ${msg.length}`);
+  return msg;
+}
+
+function truncateMessage(msg, maxLength = 4000) {
+  if (msg.length <= maxLength) return msg;
+  const truncated = msg.slice(0, maxLength - 100);
+  const lastNewline = truncated.lastIndexOf('\n');
+  return truncated.slice(0, lastNewline) + '\n\n<i>... message truncated (too long)</i>';
 }
 
 export function formatOutcomeMessage(outcome, dailySummary = null) {

@@ -61,12 +61,18 @@ export function loadCache(epic, resolution) {
   }
 }
 
-export function isCacheReady(epic, resolution, minCandles = 50) {
+export function isCacheReady(epic, resolution, minCandles = 10) {
   try {
     const filePath = getCachePath(epic, resolution);
     if (!fs.existsSync(filePath)) return false;
     const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    return (data.candles?.length || 0) >= minCandles;
+    const count = data.candles?.length || 0;
+    if (count >= minCandles) {
+      console.log(`[cache] ${epic} ${resolution}: ${count} candles — ready`);
+      return true;
+    }
+    console.log(`[cache] ${epic} ${resolution}: only ${count} candles (need ${minCandles}) — cold`);
+    return false;
   } catch {
     return false;
   }

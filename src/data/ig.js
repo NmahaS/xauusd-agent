@@ -189,18 +189,11 @@ async function discoverGoldEpic(session) {
     return null;
   }
 
-  console.log('[ig] gold market search results:');
-  if (Array.isArray(data?.markets)) {
-    data.markets.forEach(m => {
-      console.log(
-        `  epic=${m.epic} name=${m.instrumentName} ` +
-        `currency=${m.currency ?? m.instrumentCurrency ?? 'n/a'} ` +
-        `streamingPricesAvailable=${m.streamingPricesAvailable}`
-      );
-    });
-  } else {
-    console.log('  (no markets array in response)');
-  }
+  const tradeable = (data?.markets || []).filter(m => m.streamingPricesAvailable);
+  console.log(`[ig] found ${data?.markets?.length || 0} gold markets, ${tradeable.length} tradeable`);
+  tradeable.slice(0, 5).forEach(m => {
+    console.log(`  [ig] tradeable: ${m.epic} — ${m.instrumentName}`);
+  });
 
   // IG omits the `currency` field on the search response even when filtered with currencies=AUD.
   // Trust the server-side filter and instead exclude obvious non-contract names (mining stocks
@@ -556,11 +549,11 @@ export async function fetchIGCandles(session, epic, resolution, max, divisor = 1
   return rescaleCandles(raw, divisor || 1);
 }
 
-// Cache-aware candle fetcher. On cold start (cache < 50 candles) fetches full history once.
+// Cache-aware candle fetcher. On cold start (cache < 10 candles) fetches full history once.
 // On hot runs fetches only 2 candles and merges into cache — 99% fewer API calls per week.
 // On quota hit during hot run, returns existing cache rather than failing the pipeline.
 export async function fetchIGCandlesCached(epic, resolution, maxCount = 200, session) {
-  const cacheReady = isCacheReady(epic, resolution, 50);
+  const cacheReady = isCacheReady(epic, resolution);
 
   if (!cacheReady) {
     console.log(`[ig] COLD START ${epic} ${resolution} — fetching ${maxCount} candles`);

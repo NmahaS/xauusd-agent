@@ -45,8 +45,15 @@ export async function syncFileToGithub(filePath, content) {
     if (putRes.ok) {
       console.log(`[git-sync] ✓ ${filePath}`);
     } else {
-      const err = await putRes.text().catch(() => '');
-      console.warn(`[git-sync] failed ${filePath} HTTP ${putRes.status}: ${err.slice(0, 100)}`);
+      const errBody = await putRes.text().catch(() => '');
+      if (putRes.status === 403) {
+        console.warn('[git-sync] skipping — token lacks write permission (plans saved locally only)');
+        console.warn('[git-sync] Fix: GitHub → Settings → Developer settings → Fine-grained tokens → Contents: Read & Write');
+      } else if (putRes.status === 401) {
+        console.warn('[git-sync] skipping — token invalid or expired. Update GITHUB_TOKEN in Railway env vars.');
+      } else {
+        console.warn(`[git-sync] failed ${filePath} HTTP ${putRes.status}: ${errBody.slice(0, 100)}`);
+      }
     }
   } catch (err) {
     console.warn(`[git-sync] error syncing ${filePath}: ${err.message}`);

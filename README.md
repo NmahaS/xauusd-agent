@@ -72,25 +72,31 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-05-04T09:00:00Z
+**Generated:** 2026-05-04T10:00:00Z
 
-- **Bias:** neutral
-- **Setup Quality:** no-trade
-- **Confluence:** 0 — none
-- **Session:** london — Wait for H4/H1 structure clarity; avoid premium zone entries until price retraces into discount or H4 BOS/CHoCH confirmed
-- **Direction:** no-trade
+- **Bias:** bullish
+- **Setup Quality:** B
+- **Confluence:** 4 — M15 bullish BOS confirmed at 4583.90; M15 active bullish OB [4573.00-4579.70] unmitigated; M15 bullish FVGs unfilled [4579.70-4581.15] and [4590.60-4593.95]; London kill zone active (current session)
+- **Session:** london — London kill zone 07-10 UTC — execute on limit fill; monitor RBA decision risk at +1110m (high impact on AUD/gold correlation).
+- **Direction:** long
+- **POI:** bullish_order_block @ [4573, 4579.7]
+- **Entry:** limit @ 4576.35 — Limit buy at OB midpoint; wait for M15 pullback into zone with bullish candle close above 4579.70 to confirm continuation.
+- **Stop Loss:** 4568.5
+- **TP1:** 4593.95 (RR 2.2)
+- **TP2:** 4610 (RR 4.2)
+- **TP3:** 4630 (RR 7.7)
+- **Invalidation:** 4572
 
-**Macro Context:** Real yields rising at 1.92% (bearish gold), EUR/USD weakening (bullish gold offset), F&G at 40 (fear, neutral). Macro headwind from positive real yields conflicts with dollar weakness; no clear directional bias.
+**Macro Context:** Real yields rising (1.92%, bearish gold), EUR/USD flat (neutral dollar), Fear & Greed at 40 (fear, neutral). RBA decision in ~18.5 hours is high-impact catalyst for AUD/gold; rising yields are headwind but M15 structure remains bullish.
 
 **Warnings:**
-- ⚠ H4 and H1 structure undefined — no active OBs or recent BOS/CHoCH events to anchor bias
-- ⚠ Price in premium zone (210.6% of range) — historically unfavorable entry area for longs; no discount zone setup
-- ⚠ M15 unfilled FVG at 4579.70-4581.15 is 15+ pips below current price — outside 8-pip POI window
-- ⚠ Weekly macro bearish (rising real yields +1.92%) conflicts with EUR/USD bullish signal — no macro alignment
-- ⚠ Market transitioning regime — SMC effective but structure unclear; require higher confluence before entry
-- ⚠ No H4 active OBs, no H1 active OBs, no M15 active OBs within 8 pips — no primary entry POI
-- ⚠ Insufficient data (EMA, RSI, MACD, VWAP all n/a) limits technical confirmation
-- ⚠ Wait for H4 CHoCH or BOS to establish clear directional bias before considering entry
+- ⚠ Market transitioning regime — confluence score 4/12 is below A-grade threshold; treat as tactical setup only.
+- ⚠ RBA Cash Rate decision imminent (+1110m) — high volatility risk; consider reducing position size or waiting for post-decision clarity.
+- ⚠ H4 bias is neutral; this is M15 structure-only signal (Tier 3). Macro backdrop (rising yields) conflicts with bullish technicals.
+- ⚠ No H1 OBs or FVGs available; H1 context missing — reduces structural confirmation.
+- ⚠ Price in premium zone (63% of range) — typically higher-risk entry; prefer discount zone entries for long bias.
+- ⚠ Volume Profile and VWAP data unavailable — institutional flow confirmation missing.
+- ⚠ ✅ Consensus: Claude + DeepSeek both long
 - ⚠ Wide IG spread (0.80) — confirm before market orders
 - ⚠ Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded
 <!-- LATEST_PLAN_END -->

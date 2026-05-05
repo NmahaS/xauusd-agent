@@ -72,22 +72,23 @@ Each run (~60 seconds):
 ## Latest Plan
 
 <!-- LATEST_PLAN_START -->
-**Generated:** 2026-05-05T11:00:00.727Z
+**Generated:** 2026-05-05T12:00:00.117Z
 
 - **Bias:** bearish
 - **Setup Quality:** no-trade
-- **Confluence:** 4 — H4 bearish structure (CHoCH) intact; Price in discount zone (H1 discount); EUR/USD weakening (dollar strengthening) confirms bearish gold; Real yields positive (bearish gold)
-- **Session:** london — Wait for NY kill zone (12-15 UTC) or better M15 POI alignment
+- **Confluence:** 0 — none
+- **Session:** ny — Wait for clearer alignment or after ISM Services PMI release
 - **Direction:** no-trade
 
-**Macro Context:** Real yields positive (1.89%) bearish gold, EUR/USD weakening (dollar strengthening) bearish gold, Fear & Greed neutral (50) no safe-haven bid.
+**Macro Context:** Real yields stable at 1.89% (bearish), EUR/USD weakening (bearish gold), Fear & Greed neutral at 50.
 
 **Warnings:**
-- ⚠ M15 bias bullish conflicts with H4 bearish bias - no alignment
-- ⚠ No M15 OB or FVG within 8 points of current price for bearish entry
-- ⚠ High-impact USD data (ISM Services PMI, JOLTS) in 3 hours may cause volatility
+- ⚠ High-impact USD ISM Services PMI in 120 minutes
+- ⚠ Conflicting H4 bearish vs M15 bullish structure
+- ⚠ No M15 POI within 8 points of current price
 - ⚠ Market regime transitioning - require higher confluence
 - ⚠ ⚡ Single LLM only — DeepSeek (Claude failed)
+- ⚠ High-impact gold event in 120min: USD ISM Services PMI (High)
 <!-- LATEST_PLAN_END -->
 
 ---

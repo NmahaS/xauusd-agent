@@ -340,6 +340,7 @@ async function handleRisk() {
   const { RISK_RULES, readRiskState } = await import('../risk/manager.js');
   const state = await readRiskState();
 
+  const mat = RISK_RULES.executionMatrix;
   const lines = [
     `<b>🛡 Risk Rules</b>`,
     '',
@@ -350,13 +351,17 @@ async function handleRisk() {
     `Max daily trades: ${RISK_RULES.maxDailyTrades}`,
     `Min / Max lot: ${RISK_RULES.minLotSize} / ${RISK_RULES.maxLotSize}`,
     `Min RR: ${RISK_RULES.minRR}`,
-    `Required quality: ${RISK_RULES.requiredQuality.join(', ')}`,
-    `Required consensus: ${RISK_RULES.requiredConsensus.join(', ')}`,
-    `Blocked sessions: ${RISK_RULES.blockedSessions.join(', ')}`,
+    `Blocked sessions: off-hours (17:00-00:00 UTC)`,
     `Friday cutoff: ${RISK_RULES.fridayBlock}:00 UTC`,
     `News blackout: ${RISK_RULES.newsBlackout}m`,
     '',
-    `<b>📊 Current State</b>`,
+    `<b>📊 Execution Matrix</b>`,
+    `A+/A/B Tier 1: ${mat['A+'].tier1}% ✅`,
+    `A+/A/B Tier 2: ${mat['A+'].tier2}% ✅`,
+    `A+/A/B Tier 3: ${mat['A+'].tier3}% ✅`,
+    `Any    Tier 4: ⛔ blocked`,
+    '',
+    `<b>📈 Current State</b>`,
     `Daily trades: ${state.dailyTrades}`,
     `Daily P/L: ${state.dailyPL >= 0 ? '+' : ''}${state.dailyPL}`,
     `Weekly P/L: ${state.weeklyPL >= 0 ? '+' : ''}${state.weeklyPL}`,
@@ -469,13 +474,10 @@ async function handleSettings() {
     `DeepSeek ${process.env.DEEPSEEK_API_KEY ? '✅' : '❌'} | ` +
     `Perplexity ${process.env.PERPLEXITY_API_KEY ? '✅' : '❌'}\n\n` +
     `<b>Execution Matrix:</b>\n` +
-    `A+/A Tier 1: 1.5% ✅\n` +
-    `A+/A Tier 2: 1.0% ✅\n` +
-    `A+/A Tier 3: 0.5% ✅ (reduced)\n` +
-    `B   Tier 1:  1.0% ✅\n` +
-    `B   Tier 2:  0.5% ✅\n` +
-    `B   Tier 3:  📋 manual\n` +
-    `Any Tier 4:  ⛔ blocked`
+    `A+/A/B Tier 1: 2.0% ✅\n` +
+    `A+/A/B Tier 2: 1.5% ✅\n` +
+    `A+/A/B Tier 3: 1.0% ✅\n` +
+    `Any    Tier 4: ⛔ blocked`
   );
 }
 

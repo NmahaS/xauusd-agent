@@ -91,5 +91,20 @@
     "size": null,
     "riskAmount": null,
     "riskPct": null
+  },
+  "outcome": {
+    "status": "win",
+    "resolvedAt": "2026-05-05T00:59:21.686Z",
+    "resolvedCandle": null,
+    "exitPrice": 4725,
+    "tp1Hit": true,
+    "tp2Hit": true,
+    "tp3Hit": false,
+    "slHit": false,
+    "actualRR": 4.8,
+    "pnlPips": 31.5,
+    "holdingHours": 12,
+    "maxFavorableExcursion": 233.75,
+    "maxAdverseExcursion": 0
   }
 }

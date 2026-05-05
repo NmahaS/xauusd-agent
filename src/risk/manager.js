@@ -5,44 +5,38 @@ import path from 'node:path';
 import { config } from '../config.js';
 
 export const RISK_RULES = {
-  maxRiskPerTrade: 1.5,         // % of equity — up to A$1.50 on A$100 at Tier 1
-  maxDailyLoss: 3.0,            // stop trading after -3% daily P&L
-  maxWeeklyDrawdown: 8.0,       // pause until next week at -8%
-  maxOpenPositions: 1,          // single concurrent position on $100 account
-  maxDailyTrades: 4,
+  maxRiskPerTrade: 2.0,         // % of equity — up to A$2.00 on A$100 at Tier 1
+  maxDailyLoss: 6.0,            // stop trading after -6% daily P&L
+  maxWeeklyDrawdown: 15.0,      // pause until next week at -15%
+  maxOpenPositions: 2,          // up to 2 concurrent positions
+  maxDailyTrades: 6,
   minLotSize: 0.1,              // IG minimum
-  maxLotSize: 0.5,              // hard cap for $100 account
+  maxLotSize: 1.0,              // hard cap
   minRR: 1.5,                   // reject if TP1 RR < 1.5
   requiredConfluence: 5,
-  requiredQuality: ['A+', 'A'],
+  requiredQuality: ['A+', 'A', 'B'],
   requiredConsensus: ['full'],  // only when both LLMs agree
-  blockedSessions: ['off', 'asia'],
+  blockedSessions: ['off'],     // only block off-hours (17:00-00:00 UTC)
   fridayBlock: 15,              // no new trades after 15:00 UTC Friday
   newsBlackout: 30,             // minutes
 
-  // Quality gates — only auto-execute A and A+ with full consensus
-  autoExecuteQualities: ['A+', 'A'],
-  autoExecuteConsensus: ['full'],   // both LLMs must agree
+  // Quality gates — auto-execute A+, A, and B with full consensus
+  autoExecuteQualities: ['A+', 'A', 'B'],
+  autoExecuteConsensus: ['full'],
 
-  // B quality → Telegram signal only, never auto-execute
-  signalOnlyQualities: ['B'],
-
-  // Wednesday block — backtest showed 0% WR
-  blockedDays: [3],  // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
-
-  // Quality × tier execution matrix — risk % per trade (0 = signal only)
+  // Quality × tier execution matrix — risk % per trade (0 = blocked)
   executionMatrix: {
-    'A+': { tier1: 1.5, tier2: 1.0, tier3: 0.5, tier4: 0 },
-    'A':  { tier1: 1.5, tier2: 1.0, tier3: 0.5, tier4: 0 },
-    'B':  { tier1: 1.0, tier2: 0.5, tier3: 0,   tier4: 0 },
+    'A+': { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0 },
+    'A':  { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0 },
+    'B':  { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0 },
   },
 
   // B-grade specific gates — extra filters beyond the matrix
   bGradeRequirements: {
-    minTier: 2,
+    minTier: 3,                 // B executes at Tier 1, 2, and 3
     requireFullConsensus: true,
     minConfluence: 5,
-    maxRisk: 1.0,
+    maxRisk: 2.0,
   },
 };
 
@@ -126,7 +120,8 @@ export async function getAccountState(igSession) {
 // rounded down to nearest 0.1, bounded by min/max. Critical safety: if even 0.1 lots
 // produces actual risk > 1.5x budget, reject — caller should wait for tighter M15 entry.
 export function calculatePositionSize(balance, riskPct, entryPrice, slPrice) {
-  const riskAmount = balance * (riskPct / 100);
+  const maxRiskAmount = balance * (RISK_RULES.maxRiskPerTrade / 100);
+  const riskAmount = Math.min(balance * (riskPct / 100), maxRiskAmount);
   const slDistance = Math.abs(entryPrice - slPrice);
   if (!slDistance) {
     return { size: 0, reason: 'SL distance is zero — invalid plan', actualRisk: 0, riskPct: 0 };
@@ -205,16 +200,7 @@ export async function writeRiskState(state) {
 export async function checkRiskRules(plan, accountState, context = {}) {
   const log = (msg) => console.log(`[risk] ${msg}`);
 
-  // 1. Day-of-week block (Wednesday: 0% WR in backtest)
-  const dayOfWeek = new Date().getUTCDay();
-  if (RISK_RULES.blockedDays.includes(dayOfWeek)) {
-    const reason = 'Wednesday blocked — historically weakest day';
-    log(`REJECT dayOfWeek: ${reason}`);
-    return { allowed: false, reason };
-  }
-  log(`PASS dayOfWeek=${dayOfWeek}`);
-
-  // 2. Execution matrix — quality × tier determines allowed risk
+  // 1. Execution matrix — quality × tier determines allowed risk
   const tier = plan.threeLayer?.tier ?? 4;
   const quality = plan.setupQuality;
   const matrix = RISK_RULES.executionMatrix[quality];
@@ -225,9 +211,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   const allowedRisk = matrix[`tier${tier}`] ?? 0;
   if (allowedRisk === 0) {
-    const reason = (quality === 'B' && tier === 3)
-      ? 'B Tier 3 — manual only, macro not aligned'
-      : `${quality} at Tier ${tier} — signal only, no auto-execution`;
+    const reason = `${quality} at Tier ${tier} — signal only, no auto-execution`;
     log(`REJECT executionMatrix: ${reason}`);
     return { allowed: false, reason };
   }
@@ -235,8 +219,8 @@ export async function checkRiskRules(plan, accountState, context = {}) {
 
   // B-grade extra checks
   if (quality === 'B') {
-    if (tier > 2) {
-      const reason = 'B-grade requires Tier 1 or 2 (all layers must align)';
+    if (tier > RISK_RULES.bGradeRequirements.minTier) {
+      const reason = `B-grade requires Tier 1-${RISK_RULES.bGradeRequirements.minTier} (all layers must align)`;
       log(`REJECT bGrade: ${reason}`);
       return { allowed: false, reason };
     }
@@ -273,10 +257,10 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS confluence=${plan.confluenceCount}`);
 
-  // 5. Session
+  // 5. Session — only block off-hours (17:00-00:00 UTC), Asia is now allowed
   const sess = plan.session?.current || 'unknown';
-  if (RISK_RULES.blockedSessions.includes(sess)) {
-    const reason = `Blocked session: ${sess}`;
+  if (sess === 'off') {
+    const reason = 'Off-session (17:00-00:00 UTC) — no liquidity';
     log(`REJECT session: ${reason}`);
     return { allowed: false, reason };
   }

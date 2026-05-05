@@ -1,35 +1,40 @@
 {
   "date": "2026-05-05",
-  "totalPlans": 3,
-  "trades": 1,
+  "totalPlans": 4,
+  "trades": 2,
   "noTrades": 2,
   "setups": {
     "A+": 0,
     "A": 0,
-    "B": 1,
+    "B": 2,
     "no-trade": 2
   },
   "directions": {
     "long": 0,
-    "short": 1
+    "short": 2
   },
   "wins": {
-    "total": 0,
+    "total": 1,
     "losses": 0,
-    "partialWins": 0,
+    "partialWins": 1,
     "expired": 0,
     "open": 1,
-    "winRate": "0%",
+    "winRate": "100.0%",
     "winsByQuality": {
       "B": {
-        "wins": 0,
+        "wins": 1,
         "losses": 0,
-        "total": 1,
-        "winRate": "0.0%"
+        "total": 2,
+        "winRate": "50.0%"
       }
     },
     "winsBySession": {
       "london": {
+        "wins": 1,
+        "losses": 0,
+        "winRate": "100.0%"
+      },
+      "ny": {
         "wins": 0,
         "losses": 0,
         "winRate": "0.0%"
@@ -38,28 +43,59 @@
   },
   "plans": [
     {
-      "hour": "10",
+      "hour": "09",
       "setupQuality": "B",
       "direction": "short",
-      "entry": 4568,
-      "sl": 4576.1,
-      "slPips": 81,
+      "entry": 4560,
+      "sl": 4572.5,
+      "slPips": 12.5,
       "tp1": {
         "price": 4540,
-        "rr": 3.5
+        "rr": 1.6
       },
       "tp2": {
         "price": 4520,
-        "rr": 5.9
+        "rr": 3.2
       },
       "tp3": {
-        "price": 4500,
-        "rr": 8.4
+        "price": 4497,
+        "rr": 5
       },
-      "maxRR": 8.4,
+      "maxRR": 5,
       "session": "london",
       "bias": "bearish",
       "confluenceCount": 4,
+      "outcome": "partial_win",
+      "actualRR": 1.6,
+      "tpHits": [
+        true,
+        false,
+        false
+      ]
+    },
+    {
+      "hour": "14",
+      "setupQuality": "B",
+      "direction": "short",
+      "entry": 4572,
+      "sl": 4580,
+      "slPips": 80,
+      "tp1": {
+        "price": 4545,
+        "rr": 3.4
+      },
+      "tp2": {
+        "price": 4527,
+        "rr": 5.6
+      },
+      "tp3": {
+        "price": 4510,
+        "rr": 7.8
+      },
+      "maxRR": 7.8,
+      "session": "ny",
+      "bias": "bearish",
+      "confluenceCount": 5,
       "outcome": "open",
       "actualRR": null,
       "tpHits": [
@@ -70,22 +106,28 @@
     }
   ],
   "dailyRR": {
-    "totalPotentialRR_TP1": 3.5,
-    "totalPotentialRR_TP2": 5.9,
-    "totalPotentialRR_TP3": 8.4,
-    "totalActualRR": 0,
-    "avgRR_TP1": 3.5,
-    "avgRR_TP2": 5.9,
-    "avgRR_TP3": 8.4,
-    "avgActualRR": null,
-    "netRR": 0,
+    "totalPotentialRR_TP1": 5,
+    "totalPotentialRR_TP2": 8.8,
+    "totalPotentialRR_TP3": 12.8,
+    "totalActualRR": 1.6,
+    "avgRR_TP1": 2.5,
+    "avgRR_TP2": 4.4,
+    "avgRR_TP3": 6.4,
+    "avgActualRR": 1.6,
+    "netRR": 1.6,
     "bestSetup": {
-      "hour": "10",
-      "rr": 3.5,
+      "hour": "14",
+      "rr": 3.4,
       "direction": "short",
       "quality": "B",
       "outcome": "open"
     },
-    "worstSetup": null
+    "worstSetup": {
+      "hour": "09",
+      "rr": 1.6,
+      "direction": "short",
+      "quality": "B",
+      "outcome": "partial_win"
+    }
   }
 }

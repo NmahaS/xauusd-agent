@@ -139,15 +139,38 @@ export async function placeHLOrder({ coin, direction, size, limitPrice, stopLoss
   return { orderId, direction, size, limitPrice, status: 'placed' };
 }
 
-export async function getHLPositions() {
-  const wallet = getWallet();
-  const address = wallet.address;
+export async function getHLBalance() {
+  const address = process.env.HL_WALLET_ADDRESS;
+  if (!address) throw new Error('HL_WALLET_ADDRESS not set — add your main Hyperliquid wallet address to env vars');
 
   const res = await fetch(`${HL_BASE}/info`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'clearinghouseState', user: address }),
   });
+  if (!res.ok) throw new Error(`Hyperliquid balance HTTP ${res.status}`);
+
+  const data = await res.json();
+  const balance = parseFloat(data.marginSummary?.accountValue ?? 0);
+  const available = parseFloat(data.withdrawable ?? 0);          // top-level field
+  const unrealizedPnl = parseFloat(data.marginSummary?.totalNtlPos ?? 0);
+  const equity = parseFloat(data.crossMarginSummary?.accountValue ?? data.marginSummary?.accountValue ?? 0);
+
+  console.log(`[hl] balance=$${balance.toFixed(2)} available=$${available.toFixed(2)} pnl=$${unrealizedPnl.toFixed(2)}`);
+
+  return { balance, available, unrealizedPnl, equity };
+}
+
+export async function getHLPositions() {
+  const address = process.env.HL_WALLET_ADDRESS;
+  if (!address) throw new Error('HL_WALLET_ADDRESS not set');
+
+  const res = await fetch(`${HL_BASE}/info`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'clearinghouseState', user: address }),
+  });
+  if (!res.ok) throw new Error(`Hyperliquid positions HTTP ${res.status}`);
 
   const data = await res.json();
   return (data.assetPositions || [])
@@ -159,27 +182,8 @@ export async function getHLPositions() {
       entryPrice: parseFloat(p.position.entryPx),
       unrealizedPnl: parseFloat(p.position.unrealizedPnl),
       leverage: p.position.leverage?.value || 1,
+      liquidationPrice: parseFloat(p.position.liquidationPx ?? 0),
     }));
-}
-
-export async function getHLBalance() {
-  const wallet = getWallet();
-  const address = wallet.address;
-
-  const res = await fetch(`${HL_BASE}/info`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'clearinghouseState', user: address }),
-  });
-
-  const data = await res.json();
-  const balance = parseFloat(data.marginSummary?.accountValue ?? 0);
-  const available = parseFloat(data.marginSummary?.withdrawable ?? 0);
-  const unrealizedPnl = parseFloat(data.marginSummary?.totalUnrealizedPnl ?? 0);
-
-  console.log(`[hl] balance=$${balance.toFixed(2)} available=$${available.toFixed(2)} pnl=$${unrealizedPnl.toFixed(2)}`);
-
-  return { balance, available, unrealizedPnl };
 }
 
 // Closes an open position using a reduce-only market order.

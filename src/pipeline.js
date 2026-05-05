@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { config, configIsFull } from './config.js';
-import { fetchAllIGData, fetchIGCandles, IG_ENV } from './data/ig.js';
+import { fetchAllIGData, fetchIGCandlesCached, IG_ENV } from './data/ig.js';
 import { fetchFredMacro as fetchMacroData } from './data/fred.js';
 import { fetchSentiment } from './data/sentiment.js';
 import { fetchCalendar as fetchEconomicCalendar } from './data/calendar.js';
@@ -126,7 +126,15 @@ async function runQuickPipeline() {
 
   let quickM15Candles = [];
   try {
-    quickM15Candles = await fetchIGCandles(igData.session, igData.goldEpic, 'MINUTE_15', 50, igData.goldDivisor);
+    const rawM15 = await fetchIGCandlesCached(igData.goldEpic, 'MINUTE_15', 50, igData.session);
+    const div = igData.goldDivisor || 1;
+    quickM15Candles = div === 1 ? rawM15 : rawM15.map(c => ({
+      ...c,
+      open:  c.open  != null ? c.open  / div : null,
+      high:  c.high  != null ? c.high  / div : null,
+      low:   c.low   != null ? c.low   / div : null,
+      close: c.close != null ? c.close / div : null,
+    }));
   } catch (err) {
     console.warn(`[quick] M15 fetch failed: ${err.message}`);
   }
@@ -232,12 +240,21 @@ async function runFullPipeline() {
     console.warn(`[pipeline] reduced history: H1=${h1Candles.length} H4=${h4Candles.length} — continuing with degraded analysis`);
   }
 
-  // Fetch M15 candles (primary signal TF — separate from main cron fetch)
+  // Fetch M15 candles (cache-aware — falls back to synthetic H1 derivation on quota exhaustion)
   let m15Candles = [];
   if (goldEpic && igSession) {
     try {
-      m15Candles = await fetchIGCandles(igSession, goldEpic, 'MINUTE_15', 100, goldDivisor);
-      console.log(`[pipeline] M15: ${m15Candles.length} candles fetched`);
+      const rawM15 = await fetchIGCandlesCached(goldEpic, 'MINUTE_15', 100, igSession);
+      const div = goldDivisor || 1;
+      m15Candles = div === 1 ? rawM15 : rawM15.map(c => ({
+        ...c,
+        open:  c.open  != null ? c.open  / div : null,
+        high:  c.high  != null ? c.high  / div : null,
+        low:   c.low   != null ? c.low   / div : null,
+        close: c.close != null ? c.close / div : null,
+      }));
+      const isSynthetic = m15Candles[0]?.synthetic === true;
+      console.log(`[pipeline] M15: ${m15Candles.length} candles${isSynthetic ? ' (synthetic from H1)' : ''}`);
     } catch (err) {
       console.warn(`[pipeline] M15 fetch failed: ${err.message} — M15 SMC/refinement disabled this run`);
     }

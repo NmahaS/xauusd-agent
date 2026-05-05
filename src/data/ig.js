@@ -569,6 +569,26 @@ export async function fetchIGCandlesCached(epic, resolution, maxCount = 200, ses
         console.warn(`[ig] using stale cache (${stale.length} candles)`);
         return stale;
       }
+      // Last resort: derive M15 from H1 cache if available
+      if (resolution === 'MINUTE_15') {
+        const h1Cache = loadCache(epic, 'HOUR');
+        if (h1Cache?.length > 0) {
+          console.warn('[cache] M15 quota exhausted — using H1 as M15 approximation');
+          const synthetic = [];
+          h1Cache.forEach(c => {
+            for (let i = 0; i < 4; i++) {
+              synthetic.push({
+                ...c,
+                time: new Date(new Date(c.time).getTime() + i * 15 * 60000).toISOString(),
+                synthetic: true,
+              });
+            }
+          });
+          saveCache(epic, resolution, synthetic);
+          console.warn('[cache] synthetic M15 created from H1 — accuracy limited until quota resets Monday');
+          return synthetic;
+        }
+      }
       throw err;
     }
   }

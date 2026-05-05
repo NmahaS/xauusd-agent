@@ -1,0 +1,95 @@
+{
+  "timestamp": "2026-05-04T13:00:00.488Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 price is in premium zone (57.6% of range) with bearish FVG above; H1 structure shows recent lower highs and lower lows from 4786.15 to 4746.25, indicating bearish momentum. EUR/USD weakening (dollar strengthening) and rising real yields support bearish bias.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H1 bearish structure (lower highs/lows)",
+    "Price in premium zone (57.6% of H4 range)",
+    "EUR/USD falling (dollar strengthening)",
+    "NY kill zone active"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4755,
+      4758
+    ],
+    "reasoning": "Last up-close candle before impulsive move down from 4758.4 to 4746.25 on H1; overlaps with H4 bearish FVG 4773.95-4775.08 but closer to price."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4756.5,
+    "confirmation": "Limit sell inside OB; validated by H1 bearish structure and dollar strength."
+  },
+  "stopLoss": {
+    "price": 4763,
+    "reasoning": "Above OB high (4758.0) plus ATR buffer; invalidates bearish H1 structure if breached.",
+    "pips": 65
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4742,
+      "reasoning": "Recent H1 swing low / first liquidity pool.",
+      "rr": 2.2
+    },
+    {
+      "level": "TP2",
+      "price": 4725,
+      "reasoning": "H4 discount zone start (50% fib of 4722.63-4895.50).",
+      "rr": 4.8
+    }
+  ],
+  "invalidation": {
+    "price": 4763.5,
+    "reasoning": "Close above OB high invalidates bearish H1 structure."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone 12-15 UTC — execute now on limit fill."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 65-pip stop."
+  },
+  "macroContext": "EUR/USD falling (dollar strengthening), US 10Y yield rising, real yields positive (1.92%) — bearish backdrop for gold. Fear & Greed at 40 (fear) but rising, neutral.",
+  "warnings": [
+    "High-impact AUD events in next 16h (RBA rate decision) may cause volatility.",
+    "H4 bias neutral, only H1 structure bearish — lower confidence.",
+    "⚠️ Split: Claude=no-trade DeepSeek=short — manual only",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v3.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "short",
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "B",
+    "newsRisk": "high",
+    "newsSentiment": "neutral",
+    "newsHeadline": "No breaking news in last 2 hours; gold stable ahead of high-impact RBA events"
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "PENDING",
+    "executed": false,
+    "reason": "Auto-trade disabled — manual signal",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

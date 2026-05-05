@@ -109,17 +109,23 @@ export function appendToCache(epic, resolution, newCandles) {
 export function getCacheStats() {
   try {
     ensureCacheDir();
-    const files = fs.readdirSync(CACHE_DIR).filter(f => f.endsWith('.json'));
+    const files = fs.readdirSync(CACHE_DIR)
+      .filter(f => f.endsWith('.json'))
+      .filter(f => !f.includes('macro') && !f.includes('cot') && !f.includes('sync-test'));
+
     return files.map(f => {
       try {
         const data = JSON.parse(fs.readFileSync(path.join(CACHE_DIR, f), 'utf8'));
+        if (!Array.isArray(data.candles)) return null;
         const ageMin = (Date.now() - new Date(data.lastUpdated).getTime()) / 60000;
+        const isSynthetic = data.candles.length > 0 && data.candles[0].synthetic === true;
         return {
           key: f.replace('.json', ''),
-          count: data.count || data.candles?.length || 0,
+          count: data.candles.length,
           ageMinutes: Math.round(ageMin),
-          resolution: data.resolution,
-          epic: data.epic,
+          resolution: data.resolution || 'unknown',
+          epic: data.epic || 'unknown',
+          synthetic: isSynthetic,
         };
       } catch { return null; }
     }).filter(Boolean);

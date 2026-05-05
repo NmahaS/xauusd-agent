@@ -1,0 +1,88 @@
+{
+  "date": "2026-05-05",
+  "totalPlans": 1,
+  "trades": 1,
+  "noTrades": 0,
+  "setups": {
+    "A+": 0,
+    "A": 0,
+    "B": 1,
+    "no-trade": 0
+  },
+  "directions": {
+    "long": 0,
+    "short": 1
+  },
+  "wins": {
+    "total": 0,
+    "losses": 0,
+    "partialWins": 0,
+    "expired": 0,
+    "open": 1,
+    "winRate": "0%",
+    "winsByQuality": {
+      "B": {
+        "wins": 0,
+        "losses": 0,
+        "total": 1,
+        "winRate": "0.0%"
+      }
+    },
+    "winsBySession": {
+      "asia": {
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%"
+      }
+    }
+  },
+  "plans": [
+    {
+      "hour": "00",
+      "setupQuality": "B",
+      "direction": "short",
+      "entry": 4731.6,
+      "sl": 4743,
+      "slPips": 114,
+      "tp1": {
+        "price": 4710,
+        "rr": 0
+      },
+      "tp2": {
+        "price": 4690,
+        "rr": 0
+      },
+      "tp3": null,
+      "maxRR": 0,
+      "session": "asia",
+      "bias": "bearish",
+      "confluenceCount": 4,
+      "outcome": "open",
+      "actualRR": null,
+      "tpHits": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "dailyRR": {
+    "totalPotentialRR_TP1": 0,
+    "totalPotentialRR_TP2": 0,
+    "totalPotentialRR_TP3": 0,
+    "totalActualRR": 0,
+    "avgRR_TP1": 0,
+    "avgRR_TP2": 0,
+    "avgRR_TP3": 0,
+    "avgActualRR": null,
+    "netRR": 0,
+    "bestSetup": {
+      "hour": "00",
+      "rr": 0,
+      "direction": "short",
+      "quality": "B",
+      "outcome": "open"
+    },
+    "worstSetup": null
+  }
+}

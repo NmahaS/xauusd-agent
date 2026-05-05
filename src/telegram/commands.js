@@ -194,14 +194,17 @@ async function handleStatus() {
   try {
     const { getCacheStats } = await import('../data/candleCache.js');
     const stats = getCacheStats();
-    const goldH1 = stats.find(s => s.resolution === 'HOUR' && s.key.includes('GC'));
+    const goldH1 = stats.find(s => s.resolution === 'HOUR' && !s.key.includes('EURUSD'));
     const goldH4 = stats.find(s => s.resolution === 'HOUR_4');
     const m15Stat = stats.find(s => s.resolution === 'MINUTE_15');
+    const m15Label = m15Stat
+      ? `${m15Stat.count} candles (${m15Stat.ageMinutes}m ago)${m15Stat.synthetic ? ' ⚠️ synthetic' : ''}`
+      : '❌ empty';
     lines.push('');
     lines.push(`<b>📦 Cache</b>`);
     lines.push(`H1: ${goldH1 ? `${goldH1.count} candles (${goldH1.ageMinutes}m ago)` : '❌ empty — cold start on next run'}`);
     lines.push(`H4: ${goldH4 ? `${goldH4.count} candles (${goldH4.ageMinutes}m ago)` : '❌ empty'}`);
-    lines.push(`M15: ${m15Stat ? `${m15Stat.count} candles (${m15Stat.ageMinutes}m ago)` : '❌ empty'}`);
+    lines.push(`M15: ${m15Label}`);
   } catch {}
 
   await tgSend(lines.join('\n'));
@@ -552,7 +555,9 @@ async function handleCache() {
         s.resolution === 'MINUTE_15' ? 'Gold M15' :
         s.key;
 
-      msg += `${freshness} ${label}: ${s.count} candles (${s.ageMinutes}m ago)\n`;
+      msg += `${freshness} ${label}: ${s.count} candles (${s.ageMinutes}m ago)`;
+      if (s.resolution === 'MINUTE_15' && s.synthetic) msg += ' ⚠️ synthetic from H1';
+      msg += '\n';
       totalCandles += s.count;
       if (s.count < 10) coldCount++;
     }

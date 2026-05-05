@@ -298,3 +298,25 @@ xauusd-agent/
 This tool executes trades automatically on Hyperliquid DEX. Automated trading
 involves significant financial risk. Never trade with money you cannot afford
 to lose. See [DISCLAIMER.md](DISCLAIMER.md) for full risk disclosure.
+
+
+## Latest Plan
+
+<!-- LATEST_PLAN_START -->
+**Generated:** 2026-05-05T20:00:00.293Z
+
+- **Bias:** bearish
+- **Setup Quality:** no-trade
+- **Confluence:** 0 — none
+- **Session:** off — Wait for London kill zone (07-10 UTC)
+- **Direction:** no-trade
+
+**Macro Context:** Real yields positive (bearish gold), EUR/USD weakening (dollar strengthening, bearish gold), Fear & Greed neutral.
+
+**Warnings:**
+- ⚠ H4 and M15 structure conflict: H4 bearish, M15 bullish BOS.
+- ⚠ No M15 POI within 8 points of current price.
+- ⚠ Current session is off, no kill zone active.
+- ⚠ Funding rate slightly positive but not extreme.
+- ⚠ ⚡ Single LLM only — DeepSeek (Claude failed)
+<!-- LATEST_PLAN_END -->

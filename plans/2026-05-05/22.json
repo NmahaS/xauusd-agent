@@ -1,0 +1,104 @@
+{
+  "timestamp": "2026-05-05T22:00:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish CHoCH @ 4595.30 intact; H1 bearish structure confirmed; M15 bearish bias with active bearish OBs at 4549.90-4554.10 and 4576.10-4579.70. Price in discount zone (9.9% of M15 range) but below daily VWAP 4547.74 with institutional bearish bias. EUR/USD weakening (-8.2% 24h) supports bearish gold bias. However, high-impact NZD Unemployment event in 45min and M15 bullish RSI divergence create execution risk.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for NZD Unemployment Rate event (45min) to clear; reassess at London open 07:00 UTC"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — event risk and conflicting signals"
+  },
+  "macroContext": "EUR/USD weakening (-8.2% 24h) is bearish for gold; real yields unknown; Fear & Greed neutral at 50. High-impact NZD Unemployment event in 45min creates execution risk. Institutional bias bearish (below daily VWAP), but M15 bullish RSI divergence conflicts with H4/H1 bearish structure.",
+  "warnings": [
+    "HIGH-IMPACT EVENT IMMINENT: NZD Unemployment Rate (High) in 45 minutes — volatility spike likely; do not enter until event clears and new M15 structure forms",
+    "M15 bullish RSI divergence (RSI=44.4, price lower) conflicts with bearish H4/H1 bias — suggests potential reversal or consolidation, not clean short setup",
+    "No M15 active OB within 8pts of current price that aligns with bearish bias — nearest bearish OB at 4549.90-4554.10 is at current price, creating ambiguous entry zone",
+    "Market transitioning regime (SMC effective but regime uncertain) — require higher confluence (8+ factors) before execution",
+    "Funding rate +0.0013%/hr (longs paying) is neutral-to-mild-bearish but not extreme; no crowded short signal",
+    "Price near M15 EMA20 (4550.14) and EMA50 (4550.43) — consolidation zone, not trending; wait for breakout confirmation",
+    "High-impact gold event in 45min: NZD Unemployment Rate (High)",
+    "FRED macro data unavailable — yields/real-rate missing"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "low",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold holds mildly bullish near-term bias but faces weekly loss amid inflation fears and upcoming US data"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4546.79 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 0,
+        "confluenceGrade": "no-trade",
+        "factors": [],
+        "score": 0
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4546.79 (strong S/R)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 1 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

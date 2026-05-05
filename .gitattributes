@@ -2,4 +2,5 @@ plans/.last-run merge=ours
 plans/.last-update-id merge=ours
 README.md merge=ours
 cache/*.json merge=ours
+cache/.sync-test merge=ours
 plans/**/daily-summary.json merge=ours

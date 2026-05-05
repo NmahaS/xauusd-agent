@@ -1,6 +1,8 @@
 name: Hourly XAUUSD Analysis
 
 on:
+  schedule:
+    - cron: '5 * * * *'
   workflow_dispatch:
 
 concurrency:
@@ -31,10 +33,11 @@ jobs:
       - name: Run analysis
         if: steps.market.outcome == 'success'
         env:
-          IG_API_KEY: ${{ secrets.IG_API_KEY }}
-          IG_USERNAME: ${{ secrets.IG_USERNAME }}
-          IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
-          IG_DEMO: ${{ secrets.IG_DEMO }}
+          HL_PRIVATE_KEY: ${{ secrets.HL_PRIVATE_KEY }}
+          HL_WALLET_ADDRESS: ${{ secrets.HL_WALLET_ADDRESS }}
+          HL_COIN: PAXG
+          AUTO_TRADE: ${{ secrets.AUTO_TRADE }}
+          DRY_EXECUTE: ${{ secrets.DRY_EXECUTE }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           DEEPSEEK_MODEL: deepseek-chat
@@ -42,13 +45,18 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          SYMBOL: PAXG/USDC
+          CURRENCY: USDC
+          DEFAULT_RISK_PCT: '1'
+          DEFAULT_RR_MIN: '2'
+          CANDLES_LOOKBACK: '200'
         run: node src/run.js
       - name: Commit plan
         if: steps.market.outcome == 'success'
         run: |
           git config user.name "xauusd-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add plans/ README.md plans/.last-run
+          git add plans/ README.md plans/.last-run cache/
           git diff --staged --quiet || git commit -m "plan: $(date -u +'%Y-%m-%d %H:00 UTC')"
           git push
       - name: Notify failure

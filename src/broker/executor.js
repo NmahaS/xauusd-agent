@@ -112,7 +112,7 @@ export async function executeIfApproved(plan, context) {
   let placed;
   try {
     placed = await placeHLOrder({
-      coin: config.HL_COIN || 'XAU',
+      coin: config.HL_COIN || 'PAXG',
       direction: plan.direction,
       size: sizing.size,
       limitPrice,

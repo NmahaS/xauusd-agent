@@ -300,12 +300,6 @@ async function runFullPipeline() {
     if (!config.AUTO_TRADE) {
       execution = { executed: false, reason: 'Auto-trade disabled — manual signal' };
       console.log('[executor] AUTO_TRADE=false — signal only, no order placed');
-    } else if (threeLayer?.tier === 4) {
-      execution = { executed: false, reason: `Tier 4 blocked: ${(threeLayer.blockingFactors || []).join(', ') || threeLayer.tierLabel}` };
-      console.log(`[executor] ${execution.reason}`);
-    } else if (threeLayer?.tier === 3 && !['A+', 'A'].includes(mergedPlan.setupQuality)) {
-      execution = { executed: false, reason: 'B Tier 3 — manual only, macro not aligned' };
-      console.log(`[executor] ${execution.reason}`);
     } else if (mergedPlan.m15?.status === 'CONFIRMED' || mergedPlan.entry?.trigger === 'limit') {
       execution = await executeIfApproved(mergedPlan, ctx);
     } else {

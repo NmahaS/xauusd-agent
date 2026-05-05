@@ -1,31 +1,31 @@
 {
   "date": "2026-05-05",
-  "totalPlans": 4,
-  "trades": 1,
+  "totalPlans": 5,
+  "trades": 2,
   "noTrades": 3,
   "setups": {
     "A+": 0,
     "A": 0,
-    "B": 1,
+    "B": 2,
     "no-trade": 3
   },
   "directions": {
     "long": 0,
-    "short": 1
+    "short": 2
   },
   "wins": {
     "total": 1,
     "losses": 0,
     "partialWins": 1,
     "expired": 0,
-    "open": 0,
+    "open": 1,
     "winRate": "100.0%",
     "winsByQuality": {
       "B": {
         "wins": 1,
         "losses": 0,
-        "total": 1,
-        "winRate": "100.0%"
+        "total": 2,
+        "winRate": "50.0%"
       }
     },
     "winsBySession": {
@@ -33,6 +33,11 @@
         "wins": 1,
         "losses": 0,
         "winRate": "100.0%"
+      },
+      "off": {
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%"
       }
     }
   },
@@ -67,24 +72,55 @@
         false,
         false
       ]
+    },
+    {
+      "hour": "21",
+      "setupQuality": "B",
+      "direction": "short",
+      "entry": 4551.5,
+      "sl": 4557.8,
+      "slPips": 63,
+      "tp1": {
+        "price": 4538.8,
+        "rr": 2
+      },
+      "tp2": {
+        "price": 4527.1,
+        "rr": 3.1
+      },
+      "tp3": {
+        "price": 4513.91,
+        "rr": 5.6
+      },
+      "maxRR": 5.6,
+      "session": "off",
+      "bias": "bearish",
+      "confluenceCount": 4,
+      "outcome": "open",
+      "actualRR": null,
+      "tpHits": [
+        false,
+        false,
+        false
+      ]
     }
   ],
   "dailyRR": {
-    "totalPotentialRR_TP1": 1.6,
-    "totalPotentialRR_TP2": 3.2,
-    "totalPotentialRR_TP3": 5,
+    "totalPotentialRR_TP1": 3.6,
+    "totalPotentialRR_TP2": 6.3,
+    "totalPotentialRR_TP3": 10.6,
     "totalActualRR": 1.6,
-    "avgRR_TP1": 1.6,
-    "avgRR_TP2": 3.2,
-    "avgRR_TP3": 5,
+    "avgRR_TP1": 1.8,
+    "avgRR_TP2": 3.15,
+    "avgRR_TP3": 5.3,
     "avgActualRR": 1.6,
     "netRR": 1.6,
     "bestSetup": {
-      "hour": "09",
-      "rr": 1.6,
+      "hour": "21",
+      "rr": 2,
       "direction": "short",
       "quality": "B",
-      "outcome": "partial_win"
+      "outcome": "open"
     },
     "worstSetup": {
       "hour": "09",

@@ -1,5 +1,4 @@
-// Telegram bot command handlers. Only TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID are
-// required. IG / LLM keys are optional — each handler degrades gracefully if missing.
+// Telegram bot command handlers for Hyperliquid XAU/USDC perpetual agent.
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -41,64 +40,14 @@ async function loadMostRecentPlan() {
   }
 }
 
-// Opens a fresh IG session using process.env directly (not config.js) so the bot
-// can work when only TELEGRAM keys are in the full schema.
-async function openIGSession() {
-  const key = process.env.IG_API_KEY;
-  const username = process.env.IG_USERNAME;
-  const password = process.env.IG_PASSWORD;
-  if (!key || !username || !password) return null;
-
-  const isDemo = process.env.IG_DEMO !== 'false';
-  const base = isDemo
-    ? 'https://demo-api.ig.com/gateway/deal'
-    : 'https://api.ig.com/gateway/deal';
-
-  try {
-    const res = await fetch(`${base}/session`, {
-      method: 'POST',
-      headers: {
-        'X-IG-API-KEY': key,
-        'Content-Type': 'application/json',
-        Accept: 'application/json; charset=UTF-8',
-        Version: '2',
-      },
-      body: JSON.stringify({ identifier: username, password }),
-    });
-    if (!res.ok) return null;
-    const cst = res.headers.get('CST');
-    const xst = res.headers.get('X-SECURITY-TOKEN');
-    if (!cst || !xst) return null;
-    return { cst, xst, base };
-  } catch {
-    return null;
-  }
-}
-
-async function igGet(sess, p, version = 1) {
-  const res = await fetch(`${sess.base}${p}`, {
-    headers: {
-      'X-IG-API-KEY': process.env.IG_API_KEY,
-      CST: sess.cst,
-      'X-SECURITY-TOKEN': sess.xst,
-      Accept: 'application/json; charset=UTF-8',
-      Version: String(version),
-    },
-  });
-  if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    throw new Error(`IG GET ${p} HTTP ${res.status}: ${body.slice(0, 150)}`);
-  }
-  return res.json();
-}
-
 // ─── Handlers ─────────────────────────────────────────────────────────────────
 
 async function handleHelp() {
   await tgSend(
     `<b>📖 XAUUSD Agent Commands</b>\n\n` +
     `<b>Market</b>\n` +
-    `/price — Live gold price &amp; spread\n` +
+    `/price — Live XAU mark price &amp; funding\n` +
+    `/funding — Funding rate detail &amp; sentiment signal\n` +
     `/news — Upcoming calendar events\n\n` +
     `<b>Plans</b>\n` +
     `/status — Current plan, M15 &amp; execution\n` +
@@ -106,14 +55,13 @@ async function handleHelp() {
     `/confluence — Confluence factors\n` +
     `/analyze — Trigger a full pipeline run\n\n` +
     `<b>Account</b>\n` +
-    `/balance — IG account balance\n` +
+    `/balance — Hyperliquid account balance\n` +
     `/positions — Open positions\n` +
     `/today — Today's executed trades\n` +
     `/performance — Daily performance stats\n\n` +
     `<b>System</b>\n` +
     `/risk — Risk rules &amp; state\n` +
-    `/settings — Agent configuration\n` +
-    `/cache — Candle cache health + quota usage\n\n` +
+    `/settings — Agent configuration\n\n` +
     `<b>AI</b>\n` +
     `/ask &lt;question&gt; — Chat with Claude\n\n` +
     `<i>Or just type a question — I'll answer it.</i>`
@@ -121,33 +69,45 @@ async function handleHelp() {
 }
 
 async function handlePrice() {
-  const sess = await openIGSession();
-  if (!sess) {
-    await tgSend('⚠️ IG session unavailable — IG credentials not configured.');
-    return;
-  }
   try {
-    const epic = 'MT.D.GC.FWS2.IP';
-    const data = await igGet(sess, `/markets/${epic}`, 3);
-    const snap = data.snapshot ?? {};
-    const bid = Number(snap.bid ?? 0);
-    const offer = Number(snap.offer ?? 0);
-    const midVal = bid && offer ? ((bid + offer) / 2).toFixed(2) : 'n/a';
-    const spread = bid && offer ? (offer - bid).toFixed(2) : 'n/a';
-    const high = snap.high != null ? Number(snap.high).toFixed(2) : 'n/a';
-    const low = snap.low != null ? Number(snap.low).toFixed(2) : 'n/a';
+    const { fetchHLMarketData } = await import('../data/hyperliquid.js');
+    const data = await fetchHLMarketData('XAU');
+    const fundingPct = `${data.funding >= 0 ? '+' : ''}${(data.funding * 100).toFixed(4)}%/hr`;
+    const fundingSignal = data.funding > 0.0001 ? '⚠ crowded long' : data.funding < -0.0001 ? '⚠ crowded short' : '✅ balanced';
 
     await tgSend(
-      `<b>🥇 Gold Price (${epic})</b>\n\n` +
-      `Mid: <b>A$${midVal}</b>\n` +
-      `Bid: A$${snap.bid ?? 'n/a'} | Ask: A$${snap.offer ?? 'n/a'}\n` +
-      `Spread: ${spread} pts\n` +
-      `High: A$${high} | Low: A$${low}\n` +
-      `Status: <code>${snap.marketStatus ?? 'UNKNOWN'}</code>\n` +
+      `<b>🥇 XAU/USDC (Hyperliquid)</b>\n\n` +
+      `Mark: <b>$${data.markPrice.toFixed(2)}</b>\n` +
+      `Oracle: $${data.oraclePrice.toFixed(2)}  Gap: ${data.spread.toFixed(2)}pts\n` +
+      `Funding: ${fundingPct} ${fundingSignal}\n` +
+      `Open Interest: ${data.openInterest.toFixed(1)} XAU\n` +
+      `Status: <code>${data.marketStatus}</code>\n` +
       `<i>${new Date().toUTCString()}</i>`
     );
   } catch (err) {
     await tgSend(`⚠️ Price fetch failed: ${err.message}`);
+  }
+}
+
+async function handleFunding() {
+  try {
+    const { fetchHLMarketData, getFundingSignal } = await import('../data/hyperliquid.js');
+    const data = await fetchHLMarketData('XAU');
+    const signal = getFundingSignal(data.funding);
+
+    await tgSend(
+      `💰 <b>XAU Funding Rate</b>\n\n` +
+      `Rate: ${(data.funding * 100).toFixed(4)}%/hr\n` +
+      `Annualized: ${data.fundingAnnualized.toFixed(1)}%/yr\n` +
+      `Signal: ${signal.fundingNote}\n` +
+      `Long/Short: ${signal.longPct}% / ${signal.shortPct}%\n\n` +
+      `${data.funding > 0.0001 ? '⚠️ Longs paying — market overcrowded long' :
+         data.funding < -0.0001 ? '⚠️ Shorts paying — contrarian bullish' :
+         '✅ Balanced — no extreme positioning'}\n` +
+      `<i>${new Date().toUTCString()}</i>`
+    );
+  } catch (err) {
+    await tgSend(`⚠️ Funding fetch failed: ${err.message}`);
   }
 }
 
@@ -182,30 +142,13 @@ async function handleStatus() {
 
   if (exec.autoTradeEnabled) {
     if (exec.executed) {
-      lines.push(`<b>🚀 Executed:</b> ${exec.dealId ?? 'n/a'} | ${exec.size} lots | A$${exec.riskAmount} risk`);
+      lines.push(`<b>🚀 Executed:</b> ${exec.orderId ?? 'n/a'} | ${exec.size} XAU | $${exec.riskAmount} risk`);
     } else {
       lines.push(`<b>⏸ Not executed:</b> ${exec.reason}`);
     }
   } else {
     lines.push(`<b>Auto-trade:</b> disabled (signal only)`);
   }
-
-  // Cache health
-  try {
-    const { getCacheStats } = await import('../data/candleCache.js');
-    const stats = getCacheStats();
-    const goldH1 = stats.find(s => s.resolution === 'HOUR' && !s.key.includes('EURUSD'));
-    const goldH4 = stats.find(s => s.resolution === 'HOUR_4');
-    const m15Stat = stats.find(s => s.resolution === 'MINUTE_15');
-    const m15Label = m15Stat
-      ? `${m15Stat.count} candles (${m15Stat.ageMinutes}m ago)${m15Stat.synthetic ? ' ⚠️ synthetic' : ''}`
-      : '❌ empty';
-    lines.push('');
-    lines.push(`<b>📦 Cache</b>`);
-    lines.push(`H1: ${goldH1 ? `${goldH1.count} candles (${goldH1.ageMinutes}m ago)` : '❌ empty — cold start on next run'}`);
-    lines.push(`H4: ${goldH4 ? `${goldH4.count} candles (${goldH4.ageMinutes}m ago)` : '❌ empty'}`);
-    lines.push(`M15: ${m15Label}`);
-  } catch {}
 
   await tgSend(lines.join('\n'));
 }
@@ -217,6 +160,7 @@ async function handleLastPlan() {
     return;
   }
 
+  const esc = s => s == null ? '' : String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const biasEmoji = { bullish: '🟢', bearish: '🔴', neutral: '⚪' }[plan.bias] ?? '⚪';
   const lines = [
     `<b>${biasEmoji} Last Plan — ${plan.symbol}</b>`,
@@ -229,11 +173,11 @@ async function handleLastPlan() {
 
   if (plan.direction && plan.entry && plan.stopLoss) {
     lines.push(`<b>Direction:</b> ${plan.direction.toUpperCase()}`);
-    lines.push(`<b>Entry:</b> A$${plan.entry.price?.toFixed(2) ?? 'n/a'} (${plan.entry.trigger})`);
-    lines.push(`<b>SL:</b> A$${plan.stopLoss.price?.toFixed(2) ?? 'n/a'}`);
+    lines.push(`<b>Entry:</b> $${plan.entry.price?.toFixed(2) ?? 'n/a'} (${plan.entry.trigger})`);
+    lines.push(`<b>SL:</b> $${plan.stopLoss.price?.toFixed(2) ?? 'n/a'}`);
     if (plan.takeProfits?.length) {
       const tps = plan.takeProfits
-        .map((tp, i) => `TP${i + 1} A$${tp.price?.toFixed(2)} (${tp.rr?.toFixed(1)}R)`)
+        .map((tp, i) => `TP${i + 1} $${tp.price?.toFixed(2)} (${tp.rr?.toFixed(1)}R)`)
         .join(' | ');
       lines.push(`<b>TPs:</b> ${tps}`);
     }
@@ -244,7 +188,7 @@ async function handleLastPlan() {
   if (plan.consensus) {
     const c = plan.consensus;
     lines.push('');
-    lines.push(`<b>Consensus:</b> ${c.agreement} (${c.confidence}) — Claude: ${c.claudeDirection ?? 'n/a'} / DeepSeek: ${c.deepseekDirection ?? 'n/a'}`);
+    lines.push(`<b>Consensus:</b> ${c.agreement} (${c.confidence}) — Claude: ${esc(c.claudeDirection ?? 'n/a')} / DeepSeek: ${esc(c.deepseekDirection ?? 'n/a')}`);
   }
 
   await tgSend(lines.join('\n'));
@@ -273,32 +217,19 @@ async function handleConfluence() {
 }
 
 async function handleBalance() {
-  const sess = await openIGSession();
-  if (!sess) {
-    await tgSend('⚠️ IG session unavailable.');
-    return;
-  }
   try {
-    const accounts = await igGet(sess, '/accounts', 1);
-    const wantId = process.env.IG_ACCOUNT_ID;
-    const acct = wantId
-      ? (accounts.accounts || []).find(a => a.accountId === wantId) || (accounts.accounts || [])[0]
-      : (accounts.accounts || [])[0];
-    if (!acct) { await tgSend('No IG account found.'); return; }
-
-    const b = acct.balance ?? {};
-    const balance = b.balance ?? 0;
-    const pl = b.profitLoss ?? 0;
-    const equity = balance + pl;
+    const { getHLBalance } = await import('../broker/hyperliquid.js');
+    const { balance, available, unrealizedPnl } = await getHLBalance();
+    const equity = balance + unrealizedPnl;
 
     await tgSend(
-      `<b>💰 Account: ${acct.accountId}</b>\n\n` +
-      `Balance: <b>A$${balance.toFixed(2)}</b>\n` +
-      `Equity: A$${equity.toFixed(2)}\n` +
-      `Available: A$${(b.available ?? 0).toFixed(2)}\n` +
-      `Open P/L: ${pl >= 0 ? '+' : ''}A$${pl.toFixed(2)}\n` +
-      `Type: ${acct.accountType ?? 'n/a'} | ${acct.currency ?? 'AUD'}\n` +
-      `<i>${process.env.IG_DEMO === 'false' ? '🔴 LIVE account' : '🟡 DEMO account'}</i>`
+      `<b>💰 Hyperliquid Balance</b>\n\n` +
+      `Account Value: <b>$${balance.toFixed(2)}</b>\n` +
+      `Equity: $${equity.toFixed(2)}\n` +
+      `Available: $${available.toFixed(2)}\n` +
+      `Unrealized P/L: ${unrealizedPnl >= 0 ? '+' : ''}$${unrealizedPnl.toFixed(2)}\n` +
+      `Currency: USDC\n` +
+      `<i>${new Date().toUTCString()}</i>`
     );
   } catch (err) {
     await tgSend(`⚠️ Balance fetch failed: ${err.message}`);
@@ -306,28 +237,25 @@ async function handleBalance() {
 }
 
 async function handlePositions() {
-  const sess = await openIGSession();
-  if (!sess) {
-    await tgSend('⚠️ IG session unavailable.');
-    return;
-  }
   try {
-    const data = await igGet(sess, '/positions', 2);
-    const positions = data.positions || [];
-    if (!positions.length) { await tgSend('📭 No open positions.'); return; }
+    const { getHLPositions } = await import('../broker/hyperliquid.js');
+    const positions = await getHLPositions();
+
+    if (!positions.length) {
+      await tgSend('📭 No open positions.');
+      return;
+    }
 
     const lines = [`<b>📊 Open Positions (${positions.length})</b>`, ''];
     for (const pos of positions) {
-      const p = pos.position ?? {};
-      const m = pos.market ?? {};
-      const dirIcon = p.direction === 'BUY' ? '🟢 LONG' : '🔴 SHORT';
-      const pl = p.profitLoss != null
-        ? `${p.profitLoss >= 0 ? '+' : ''}A$${p.profitLoss.toFixed(2)}`
+      const dirIcon = pos.direction === 'long' ? '🟢 LONG' : '🔴 SHORT';
+      const pnl = pos.unrealizedPnl != null
+        ? `${pos.unrealizedPnl >= 0 ? '+' : ''}$${pos.unrealizedPnl.toFixed(2)}`
         : 'n/a';
-      lines.push(`${dirIcon} ${m.instrumentName ?? m.epic ?? 'n/a'}`);
-      lines.push(`  Size: ${p.size ?? p.contractSize ?? 'n/a'} | Level: ${p.level?.toFixed(2) ?? 'n/a'}`);
-      lines.push(`  SL: ${p.stopLevel?.toFixed(2) ?? 'n/a'} | TP: ${p.limitLevel?.toFixed(2) ?? 'n/a'}`);
-      lines.push(`  P/L: <b>${pl}</b>`);
+      lines.push(`${dirIcon} ${pos.coin}/USDC`);
+      lines.push(`  Size: ${pos.size} XAU | Entry: $${pos.entryPrice?.toFixed(2) ?? 'n/a'}`);
+      lines.push(`  Leverage: ${pos.leverage}x`);
+      lines.push(`  P/L: <b>${pnl}</b>`);
       lines.push('');
     }
     await tgSend(lines.join('\n'));
@@ -349,7 +277,6 @@ async function handleRisk() {
     `Max weekly drawdown: ${RISK_RULES.maxWeeklyDrawdown}%`,
     `Max open positions: ${RISK_RULES.maxOpenPositions}`,
     `Max daily trades: ${RISK_RULES.maxDailyTrades}`,
-    `Min / Max lot: ${RISK_RULES.minLotSize} / ${RISK_RULES.maxLotSize}`,
     `Min RR: ${RISK_RULES.minRR}`,
     `Blocked sessions: off-hours (17:00-00:00 UTC)`,
     `Friday cutoff: ${RISK_RULES.fridayBlock}:00 UTC`,
@@ -383,10 +310,10 @@ async function handleToday() {
   const lines = [`<b>📋 Today's Trades (${trades.length})</b>`, ''];
   for (const t of trades) {
     const dirIcon = t.direction === 'long' ? '🟢 LONG' : '🔴 SHORT';
-    lines.push(`${dirIcon} @ A$${(t.entry ?? 0).toFixed(2)}`);
-    lines.push(`  Size: ${t.size} lots | SL: A$${(t.sl ?? 0).toFixed(2)} | TP1: A$${(t.tp1 ?? 0).toFixed(2)}`);
-    lines.push(`  Risk: A$${t.riskAmount} (${t.riskPct}%)`);
-    if (t.dealId) lines.push(`  Deal: <code>${t.dealId}</code>`);
+    lines.push(`${dirIcon} @ $${(t.entry ?? 0).toFixed(2)}`);
+    lines.push(`  Size: ${t.size} XAU | SL: $${(t.sl ?? 0).toFixed(2)} | TP1: $${(t.tp1 ?? 0).toFixed(2)}`);
+    lines.push(`  Risk: $${t.riskAmount} (${t.riskPct}%)`);
+    if (t.orderId) lines.push(`  Order: <code>${t.orderId}</code>`);
     if (t.timestamp) lines.push(`  <i>${t.timestamp}</i>`);
     lines.push('');
   }
@@ -459,8 +386,8 @@ async function handleNews() {
 async function handleSettings() {
   await tgSend(
     `<b>⚙️ Agent Configuration</b>\n\n` +
-    `Symbol: ${process.env.SYMBOL || 'XAU/AUD'}\n` +
-    `Currency: ${process.env.CURRENCY || 'AUD'}\n` +
+    `Symbol: ${process.env.SYMBOL || 'XAU/USDC'}\n` +
+    `Currency: ${process.env.CURRENCY || 'USDC'}\n` +
     `Execution TF: ${process.env.EXECUTION_TF || '15min'}\n` +
     `Bias TF: ${process.env.BIAS_TF || '4h'}\n` +
     `Candles lookback: ${process.env.CANDLES_LOOKBACK || '200'}\n` +
@@ -468,7 +395,8 @@ async function handleSettings() {
     `Default min RR: ${process.env.DEFAULT_RR_MIN || '2'}\n\n` +
     `Auto-trade: <b>${process.env.AUTO_TRADE === 'true' ? '✅ ENABLED' : '❌ DISABLED'}</b>\n` +
     `Dry-execute: <b>${process.env.DRY_EXECUTE !== 'false' ? 'YES (no real orders)' : '⚠️ LIVE ORDERS'}</b>\n` +
-    `IG env: ${process.env.IG_DEMO === 'false' ? '🔴 LIVE' : '🟡 DEMO'}\n\n` +
+    `Broker: <b>Hyperliquid DEX</b>\n` +
+    `Wallet: ${process.env.HL_WALLET_ADDRESS ? process.env.HL_WALLET_ADDRESS.slice(0, 10) + '...' : '❌ not set'}\n\n` +
     `LLM keys: ` +
     `Claude ${process.env.ANTHROPIC_API_KEY ? '✅' : '❌'} | ` +
     `DeepSeek ${process.env.DEEPSEEK_API_KEY ? '✅' : '❌'} | ` +
@@ -506,8 +434,8 @@ async function handleAsk(question) {
         max_tokens: 500,
         temperature: 0.7,
         system:
-          'You are a concise trading assistant for an XAUUSD (Gold/AUD futures) day trading agent. ' +
-          'Answer questions about trading concepts, market structure, and Smart Money Concepts briefly. ' +
+          'You are a concise trading assistant for an XAU/USDC (Gold perpetual on Hyperliquid DEX) day trading agent. ' +
+          'Answer questions about trading concepts, market structure, Smart Money Concepts, and Hyperliquid DEX briefly. ' +
           'Keep responses under 400 words. Use plain text — no markdown, no asterisks.',
         messages: [{ role: 'user', content: question }],
       }),
@@ -526,86 +454,19 @@ async function handleAsk(question) {
   }
 }
 
-async function handleCache() {
-  try {
-    const { getCacheStats } = await import('../data/candleCache.js');
-    const stats = getCacheStats();
-
-    if (!stats || stats.length === 0) {
-      await tgSend(
-        '📦 <b>Cache Status</b>\n\n' +
-        '❌ No cache files found\n' +
-        'Next pipeline run will do a cold start\n' +
-        '(costs ~280 candle API calls)'
-      );
-      return;
-    }
-
-    let msg = '📦 <b>Candle Cache Status</b>\n\n';
-    let totalCandles = 0;
-    let coldCount = 0;
-
-    for (const s of stats) {
-      const freshness =
-        s.ageMinutes < 20 ? '✅' :
-        s.ageMinutes < 120 ? '⚠️' : '❌';
-
-      const label =
-        s.resolution === 'HOUR' && s.key.includes('EURUSD') ? 'EUR/USD H1' :
-        s.resolution === 'HOUR' ? 'Gold H1' :
-        s.resolution === 'HOUR_4' ? 'Gold H4' :
-        s.resolution === 'MINUTE_15' ? 'Gold M15' :
-        s.key;
-
-      msg += `${freshness} ${label}: ${s.count} candles (${s.ageMinutes}m ago)`;
-      if (s.resolution === 'MINUTE_15' && s.synthetic) msg += ' ⚠️ synthetic from H1';
-      msg += '\n';
-      totalCandles += s.count;
-      if (s.count < 10) coldCount++;
-    }
-
-    // Quota estimate
-    const dayOfWeek = new Date().getUTCDay();
-    const tradingDaysThisWeek = Math.min(Math.max(dayOfWeek - 1, 0), 4);
-    const estCallsUsed = 280 + (8 * 96 * tradingDaysThisWeek);
-    const estRemaining = Math.max(10000 - estCallsUsed, 0);
-
-    msg += `\n<b>Total cached:</b> ${totalCandles} candles\n`;
-    msg += `<b>Est. quota used:</b> ~${estCallsUsed.toLocaleString()} / 10,000\n`;
-    msg += `<b>Est. remaining:</b> ~${estRemaining.toLocaleString()} calls\n`;
-
-    // Next Monday reset
-    const now = new Date();
-    const daysUntilMonday = (8 - now.getUTCDay()) % 7 || 7;
-    const hoursUntilReset = (daysUntilMonday - 1) * 24 + (24 - now.getUTCHours());
-    msg += `\n🔄 Quota resets in ~${hoursUntilReset}h (Monday UTC)\n`;
-
-    if (coldCount > 0) {
-      msg += `\n⚠️ ${coldCount} cache(s) empty — cold start on next run`;
-    } else {
-      msg += '\n✅ All caches warm — running quota-efficient';
-    }
-
-    await tgSend(msg);
-  } catch (err) {
-    await tgSend(`❌ Cache check failed: ${err.message}`);
-  }
-}
-
 async function handleAnalyze() {
   await tgSend('⚠️ /analyze is coming soon.\n\nFor now, pipeline runs automatically at :05 every hour. Use /status to see the latest plan.');
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
 
-// routeCommand: pure routing, no security check. Called by webhook.js (which
-// already verified chatId) and internally by processCommand.
 export async function routeCommand(command, args, _chatId) {
   const lower = command.toLowerCase();
   const fullText = args ? `${command} ${args}` : command;
   try {
     if (lower === '/help' || lower === '/start') return await handleHelp();
     if (lower === '/price') return await handlePrice();
+    if (lower === '/funding') return await handleFunding();
     if (lower === '/status') return await handleStatus();
     if (lower === '/lastplan') return await handleLastPlan();
     if (lower === '/confluence') return await handleConfluence();
@@ -616,7 +477,6 @@ export async function routeCommand(command, args, _chatId) {
     if (lower === '/performance') return await handlePerformance();
     if (lower === '/news') return await handleNews();
     if (lower === '/settings') return await handleSettings();
-    if (lower === '/cache') return await handleCache();
     if (lower === '/analyze') return await handleAnalyze();
     if (lower === '/ask' && args) return await handleAsk(args);
     if (lower === '/ask') return await handleAsk('');
@@ -642,6 +502,7 @@ export async function processCommand(text, fromChatId) {
   try {
     if (lower === '/help' || lower === '/start') return await handleHelp();
     if (lower === '/price') return await handlePrice();
+    if (lower === '/funding') return await handleFunding();
     if (lower === '/status') return await handleStatus();
     if (lower === '/lastplan') return await handleLastPlan();
     if (lower === '/confluence') return await handleConfluence();
@@ -652,15 +513,12 @@ export async function processCommand(text, fromChatId) {
     if (lower === '/performance') return await handlePerformance();
     if (lower === '/news') return await handleNews();
     if (lower === '/settings') return await handleSettings();
-    if (lower === '/cache') return await handleCache();
     if (lower === '/analyze') return await handleAnalyze();
     if (lower.startsWith('/ask ')) return await handleAsk(trimmed.slice(5));
     if (lower === '/ask') return await handleAsk('');
 
-    // Free-form text → treat as /ask
     if (trimmed && !trimmed.startsWith('/')) return await handleAsk(trimmed);
 
-    // Unknown slash command
     await tgSend(`❓ Unknown command: <code>${trimmed.slice(0, 50)}</code>\n\nType /help for available commands.`);
   } catch (err) {
     console.error(`[bot] handler error for "${trimmed.slice(0, 40)}": ${err.message}`);

@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { config, configIsFull } from './config.js';
-import { fetchAllIGData, fetchIGCandlesCached, IG_ENV } from './data/ig.js';
+import { fetchAllHLData } from './data/hyperliquid.js';
 import { fetchFredMacro as fetchMacroData } from './data/fred.js';
 import { fetchSentiment } from './data/sentiment.js';
 import { fetchCalendar as fetchEconomicCalendar } from './data/calendar.js';
@@ -48,28 +48,17 @@ function smcForTimeframe(candles, n) {
   return { structure, fvgs, orderBlocks, liquidity, pd };
 }
 
-function buildCrossAssetWarnings({ dxy, fred, sentiment, marketStatus, spread, h1Count, h4Count }) {
+function buildCrossAssetWarnings({ dxy, fred, sentiment, h1Count, h4Count }) {
   const warnings = [];
-  if (!dxy?.ok) warnings.push('DXY proxy unavailable — cross-asset context reduced');
+  if (!dxy?.ok) warnings.push('EUR/USD dollar proxy unavailable — cross-asset context reduced');
   if (!fred?.ok) warnings.push('FRED macro data unavailable — yields/real-rate missing');
   if (!sentiment?.ok) warnings.push('Fear & Greed unavailable');
-  if (marketStatus === 'EDITS_ONLY') {
-    warnings.push('IG market status EDITS_ONLY — pre-open / closed window. Data is valid; execution restricted until open.');
-  } else if (marketStatus && marketStatus !== 'TRADEABLE') {
-    warnings.push(`IG market status: ${marketStatus} — execution may be restricted`);
-  }
-  if (spread != null && spread > 0.5) {
-    warnings.push(`Wide IG spread (${spread.toFixed(2)}) — confirm before market orders`);
-  }
   if (h1Count != null && h1Count < 50) {
     warnings.push(`Limited history (${h1Count} H1 / ${h4Count} H4 candles) — SMC and indicators degraded`);
   }
   return warnings;
 }
 
-// Run mode resolution. The hourly cron may eventually fire every 15 min; in that case
-// the first run of each hour (minute 0-9) does the full pipeline, the other three only
-// monitor positions and check M15 confirmation. Override via RUN_MODE env or --quick CLI.
 function resolveRunMode() {
   if (process.env.RUN_MODE === 'full') return 'full';
   if (process.env.RUN_MODE === 'quick') return 'quick';
@@ -96,23 +85,21 @@ async function loadMostRecentPlan() {
 }
 
 // QUICK run: outcome resolution + M15 confirmation check on the most recent pending plan.
-// No LLM calls — costs $0. Sends Telegram only when state changes (M15 confirmed,
-// SL/TP hit). Otherwise silent.
 async function runQuickPipeline() {
   const tTotal = time();
   const runTimestamp = new Date().toISOString();
   console.log(`\n=== XAUUSD Agent QUICK run @ ${runTimestamp} ===`);
-  console.log(`mode=quick env=${IG_ENV} dryRun=${config.DRY_RUN}`);
+  console.log(`mode=quick dryRun=${config.DRY_RUN}`);
 
-  // Phase 1: IG fetch only (no macro/sentiment/calendar — saves a second)
-  const igData = await fetchAllIGData();
-  if (!igData.h1Candles?.length) {
+  // Phase 1: HL fetch
+  const hlData = await fetchAllHLData();
+  if (!hlData.h1Candles?.length) {
     console.log('[quick] no H1 candles — skipping silently');
     return { mode: 'quick', skipped: true };
   }
 
   // Phase 2: outcome resolution
-  await resolveOpenTrades(igData.h1Candles).catch(err =>
+  await resolveOpenTrades(hlData.h1Candles).catch(err =>
     console.warn(`[outcome] resolution error: ${err.message}`)
   );
 
@@ -124,21 +111,9 @@ async function runQuickPipeline() {
   }
   const prevM15Status = recent.plan.m15?.status ?? null;
 
-  let quickM15Candles = [];
-  try {
-    const rawM15 = await fetchIGCandlesCached(igData.goldEpic, 'MINUTE_15', 50, igData.session);
-    const div = igData.goldDivisor || 1;
-    quickM15Candles = div === 1 ? rawM15 : rawM15.map(c => ({
-      ...c,
-      open:  c.open  != null ? c.open  / div : null,
-      high:  c.high  != null ? c.high  / div : null,
-      low:   c.low   != null ? c.low   / div : null,
-      close: c.close != null ? c.close / div : null,
-    }));
-  } catch (err) {
-    console.warn(`[quick] M15 fetch failed: ${err.message}`);
-  }
-  const quickCurrentPrice = igData.h1Candles[igData.h1Candles.length - 1]?.close ?? null;
+  const quickM15Candles = hlData.m15Candles || [];
+  const quickCurrentPrice = hlData.currentPrice;
+
   const refinement = refineEntry(recent.plan, quickM15Candles, quickCurrentPrice);
   console.log(`[m15] ${refinement.status}: ${refinement.reason}`);
 
@@ -149,17 +124,16 @@ async function runQuickPipeline() {
     await fs.writeFile(recent.filePath, JSON.stringify(refinedPlan, null, 2));
     console.log(`[quick] M15 CONFIRMED — plan updated at ${recent.filePath}`);
 
-    // Try execution if AUTO_TRADE is on
     if (config.AUTO_TRADE) {
-      const exec = await executeIfApproved(refinedPlan, { ...igData, calendar: null }, igData.session);
+      const exec = await executeIfApproved(refinedPlan, { ...hlData, calendar: null });
       console.log(`[executor] ${exec.executed ? 'EXECUTED' : 'BLOCKED'} — ${exec.reason}`);
     }
 
     if (!config.DRY_RUN) {
       await sendTelegramMessage(
         `🎯 <b>M15 confirmation</b>\n` +
-        `${recent.plan.direction.toUpperCase()} @ ${refinement.plan.entry.price.toFixed(2)}\n` +
-        `SL: ${refinement.plan.stopLoss.price.toFixed(2)}\n` +
+        `${recent.plan.direction.toUpperCase()} @ $${refinement.plan.entry.price.toFixed(2)}\n` +
+        `SL: $${refinement.plan.stopLoss.price.toFixed(2)}\n` +
         `<i>${refinement.reason}</i>`
       );
     }
@@ -169,11 +143,11 @@ async function runQuickPipeline() {
   return { mode: 'quick', updated: stateChanged };
 }
 
-// FULL run: existing behavior + Step A (M15 refinement) + Step B (auto-execute).
+// FULL run: complete pipeline with LLM analysis + three-layer consensus + execution.
 async function runFullPipeline() {
   if (!configIsFull) {
     throw new Error(
-      'Pipeline config incomplete — IG, ANTHROPIC, and DEEPSEEK credentials are required. See [config] warnings above.'
+      'Pipeline config incomplete — HL, ANTHROPIC, and DEEPSEEK credentials are required. See [config] warnings above.'
     );
   }
 
@@ -183,13 +157,13 @@ async function runFullPipeline() {
   console.log(`\n=== XAUUSD Agent run @ ${runTimestamp} ===`);
   console.log(
     `symbol=${config.SYMBOL} bias=4h context=1h exec=15min ` +
-    `env=${IG_ENV} dryRun=${config.DRY_RUN} autoTrade=${config.AUTO_TRADE} dryExecute=${config.DRY_EXECUTE}`
+    `dryRun=${config.DRY_RUN} autoTrade=${config.AUTO_TRADE} dryExecute=${config.DRY_EXECUTE}`
   );
 
-  // Phase 1: parallel fetch (weeklyMacro is cached — adds <100ms when warm)
+  // Phase 1: parallel fetch — Hyperliquid has no quota, always fresh
   const tFetch = time();
-  const [igData, macro, altSentiment, calendar, weeklyMacro] = await Promise.all([
-    fetchAllIGData(),
+  const [hlData, macro, altSentiment, calendar, weeklyMacro] = await Promise.all([
+    fetchAllHLData(),
     fetchMacroData(config.FRED_API_KEY),
     fetchSentiment(),
     fetchEconomicCalendar(),
@@ -200,33 +174,16 @@ async function runFullPipeline() {
   ]);
 
   const {
-    h1Candles, h4Candles, currentPrice, spread, marketStatus, igSentiment, dxy,
-    dailyHigh, dailyLow, goldEpic, goldDivisor, session: igSession, snapshotOnly,
-  } = igData;
+    h1Candles, h4Candles, m15Candles, currentPrice, spread, marketStatus, igSentiment, dxy,
+    dailyHigh, dailyLow, funding, fundingAnnualized, openInterest, oraclePrice,
+  } = hlData;
   console.log(`[pipeline] fetch phase done in ${time() - tFetch}ms`);
 
-  if (snapshotOnly) {
-    console.warn('[pipeline] IG candle quota exhausted — snapshot-only, no analysis possible this run');
-    const priceStr = currentPrice != null ? `A$${currentPrice.toFixed(2)}` : 'unknown';
-    const alert =
-      `⚠️ <b>IG candle quota exhausted</b>\n` +
-      `No historical data until quota resets (weekly — Mon UTC).\n\n` +
-      `Current gold price: <b>${priceStr}</b> (${goldEpic})\n` +
-      `Market: ${marketStatus ?? 'UNKNOWN'}\n\n` +
-      `Analysis paused — will resume automatically when quota resets.`;
-    try { await sendTelegramMessage(alert); }
-    catch (e) { console.error(`[pipeline] alert send failed: ${e.message}`); }
-    return { plan: null, telegramText: alert, skipped: true };
-  }
-
   if (h1Candles.length === 0) {
-    console.error('[pipeline] no gold data available — sending alert and skipping this run');
+    console.error('[pipeline] no gold data from Hyperliquid — sending alert and skipping');
     const alert =
       `⚠️ <b>Gold data unavailable</b>\n` +
-      `All IG epics failed. Possible causes:\n` +
-      `• IG API rate limit hit\n` +
-      `• Contract rolled to new expiry\n` +
-      `• IG server issue\n` +
+      `Hyperliquid API failed to return XAU candles.\n` +
       `Will retry next run automatically.`;
     try { await sendTelegramMessage(alert); }
     catch (e) { console.error(`[pipeline] alert send failed: ${e.message}`); }
@@ -237,30 +194,13 @@ async function runFullPipeline() {
     console.warn('[pipeline] no H4 candles — H4 SMC will be empty, continuing with H1 only');
   }
   if (h1Candles.length < 50 || h4Candles.length < 50) {
-    console.warn(`[pipeline] reduced history: H1=${h1Candles.length} H4=${h4Candles.length} — continuing with degraded analysis`);
+    console.warn(`[pipeline] reduced history: H1=${h1Candles.length} H4=${h4Candles.length}`);
   }
 
-  // Fetch M15 candles (cache-aware — falls back to synthetic H1 derivation on quota exhaustion)
-  let m15Candles = [];
-  if (goldEpic && igSession) {
-    try {
-      const rawM15 = await fetchIGCandlesCached(goldEpic, 'MINUTE_15', 100, igSession);
-      const div = goldDivisor || 1;
-      m15Candles = div === 1 ? rawM15 : rawM15.map(c => ({
-        ...c,
-        open:  c.open  != null ? c.open  / div : null,
-        high:  c.high  != null ? c.high  / div : null,
-        low:   c.low   != null ? c.low   / div : null,
-        close: c.close != null ? c.close / div : null,
-      }));
-      const isSynthetic = m15Candles[0]?.synthetic === true;
-      console.log(`[pipeline] M15: ${m15Candles.length} candles${isSynthetic ? ' (synthetic from H1)' : ''}`);
-    } catch (err) {
-      console.warn(`[pipeline] M15 fetch failed: ${err.message} — M15 SMC/refinement disabled this run`);
-    }
-  }
+  const isSynthetic = m15Candles[0]?.synthetic === true;
+  console.log(`[pipeline] M15: ${m15Candles.length} candles${isSynthetic ? ' (synthetic)' : ''}`);
 
-  // Resolve open trades from prior plans before computing new indicators
+  // Resolve open trades from prior plans before computing indicators
   await resolveOpenTrades(h1Candles).catch(err =>
     console.warn(`[outcome] resolution error: ${err.message}`)
   );
@@ -276,7 +216,7 @@ async function runFullPipeline() {
   const session = detectSession();
   const sessionLevels = computeSessionLevels(h1Candles);
 
-  // Layer 2: flow analysis (pure computation — no API calls)
+  // Layer 2: flow analysis
   const volumeProfileRaw = computeVolumeProfile(h1Candles, 'week');
   const vpSignal = getVolumeProfileSignal(currentPrice, volumeProfileRaw);
   const dailyVWAP = computeVWAP(h1Candles, 'day');
@@ -297,8 +237,11 @@ async function runFullPipeline() {
     h1Candles, h4Candles, m15Candles, h1Indicators, h4Indicators, m15Indicators, smcH1, smcH4, smcM15,
     session, sessionLevels, dxy, currentPrice, spread, dailyHigh, dailyLow,
     marketStatus, igSentiment, fred: macro, sentiment: altSentiment, calendar,
-    goldEpic, goldDivisor,
-    // Layer 1 + 2 context for prompt
+    // HL-specific
+    funding: { rate: funding, annualized: fundingAnnualized, signal: funding > 0 ? 'longs_paying' : 'shorts_paying' },
+    openInterest,
+    oraclePrice,
+    // Layer 1 + 2 context
     weeklyMacro, volumeProfile: vpSignal, vwap: vwapSignal, regime,
   };
 
@@ -306,7 +249,7 @@ async function runFullPipeline() {
   let { plan, ok: llmOk } = await generatePlan(ctx);
   console.log(`[pipeline] LLM phase done in ${time() - tLlm}ms (ok=${llmOk})`);
 
-  // ── Three-layer consensus (post-LLM — uses plan.confluenceCount for Layer 3) ──
+  // Three-layer consensus (post-LLM)
   const threeLayer = await computeThreeLayerConsensus({
     weeklyMacro, smcH4, smcH1,
     volumeProfile: vpSignal, vwap: vwapSignal, regime,
@@ -316,13 +259,12 @@ async function runFullPipeline() {
     return null;
   });
 
-  // Apply Tier 1 risk boost before merging (1.5× risk when all layers strongly align)
   if (threeLayer?.tier === 1 && plan.risk) {
     plan.risk.suggestedRiskPct = Math.min(1.5, (plan.risk.suggestedRiskPct || 1) * 1.5);
     plan.risk.positionSizeHint = 'Tier 1 — 1.5% risk (all layers strongly aligned)';
   }
 
-  // ── Step A: M15 entry refinement ───────────────────────────────────────────
+  // Step A: M15 entry refinement
   let m15 = { status: 'N/A', reason: 'no directional plan' };
   if (plan?.direction && plan?.poi?.zone) {
     const refinement = refineEntry(plan, m15Candles, currentPrice);
@@ -338,11 +280,11 @@ async function runFullPipeline() {
   }
   plan.m15 = m15;
 
-  // Merge warnings (calendar + cross-asset)
+  // Merge warnings
   const extraWarnings = [
     ...(calendar?.warnings || []),
     ...buildCrossAssetWarnings({
-      dxy, fred: macro, sentiment: altSentiment, marketStatus, spread,
+      dxy, fred: macro, sentiment: altSentiment,
       h1Count: h1Candles.length, h4Count: h4Candles.length,
     }),
   ];
@@ -350,11 +292,9 @@ async function runFullPipeline() {
     ...plan,
     warnings: [...new Set([...(plan.warnings || []), ...extraWarnings])],
   };
-
-  // Attach three-layer result before merging warnings
   mergedPlan.threeLayer = threeLayer ?? null;
 
-  // ── Step B: Auto-execution ─────────────────────────────────────────────────
+  // Step B: Auto-execution
   let execution = { executed: false, reason: 'N/A' };
   if (mergedPlan.direction) {
     if (!config.AUTO_TRADE) {
@@ -367,7 +307,7 @@ async function runFullPipeline() {
       execution = { executed: false, reason: 'B Tier 3 — manual only, macro not aligned' };
       console.log(`[executor] ${execution.reason}`);
     } else if (mergedPlan.m15?.status === 'CONFIRMED' || mergedPlan.entry?.trigger === 'limit') {
-      execution = await executeIfApproved(mergedPlan, { ...ctx, goldEpic, goldDivisor }, igSession);
+      execution = await executeIfApproved(mergedPlan, ctx);
     } else {
       execution = { executed: false, reason: 'Awaiting M15 confirmation' };
       console.log(`[executor] awaiting M15 confirmation (current status=${mergedPlan.m15?.status})`);
@@ -381,7 +321,7 @@ async function runFullPipeline() {
     tierLabel: threeLayer?.tierLabel ?? null,
     executed: execution.executed,
     reason: execution.reason,
-    dealId: execution.trade?.dealId || null,
+    orderId: execution.trade?.orderId || null,
     size: execution.trade?.size || null,
     riskAmount: execution.trade?.riskAmount || null,
     riskPct: execution.trade?.riskPct || null,
@@ -408,6 +348,7 @@ async function runFullPipeline() {
   const telegramText = formatPlanForTelegram(mergedPlan, {
     dxy, sentiment: altSentiment, fred: macro, calendar, session,
     igSentiment, currentPrice, spread, marketStatus, dailySummary,
+    funding, fundingAnnualized, openInterest, oraclePrice,
   });
   console.log(`[telegram] SENDING NOW (bias=${mergedPlan.bias} setup=${mergedPlan.setupQuality} dryRun=${config.DRY_RUN})`);
   await sendTelegramMessage(telegramText);

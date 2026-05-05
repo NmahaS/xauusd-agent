@@ -7,13 +7,20 @@ const baseSchema = z.object({
 });
 
 const fullSchema = baseSchema.extend({
-  IG_API_KEY: z.string().min(1, 'IG_API_KEY is required'),
-  IG_USERNAME: z.string().min(1, 'IG_USERNAME is required'),
-  IG_PASSWORD: z.string().min(1, 'IG_PASSWORD is required'),
+  // Hyperliquid (primary broker + market data)
+  HL_PRIVATE_KEY: z.string().min(1, 'HL_PRIVATE_KEY required — your Hyperliquid API wallet private key'),
+  HL_WALLET_ADDRESS: z.string().min(1, 'HL_WALLET_ADDRESS required'),
+  HL_COIN: z.string().default('PAXG'),
+
+  // IG Trading (deprecated — kept optional for backward compatibility)
+  IG_API_KEY: z.string().default(''),
+  IG_USERNAME: z.string().default(''),
+  IG_PASSWORD: z.string().default(''),
   IG_ACCOUNT_ID: z.string().default(''),
   IG_DEMO: z.string()
     .transform(v => v === 'false' ? false : true)
     .default('true'),
+
   AUTO_TRADE: z.string().transform(v => v === 'true').default('false'),
   DRY_EXECUTE: z.string().transform(v => v === 'true').default('true'),
   DEEPSEEK_API_KEY: z.string().min(1, 'DEEPSEEK_API_KEY is required'),
@@ -21,8 +28,8 @@ const fullSchema = baseSchema.extend({
   ANTHROPIC_API_KEY: z.string().min(1, 'ANTHROPIC_API_KEY is required'),
   PERPLEXITY_API_KEY: z.string().default(''),
   FRED_API_KEY: z.string().default(''),
-  SYMBOL: z.string().default('XAU/AUD'),
-  CURRENCY: z.string().default('AUD'),
+  SYMBOL: z.string().default('XAU/USDC'),
+  CURRENCY: z.string().default('USDC'),
   EXECUTION_TF: z.string().default('15min'),
   BIAS_TF: z.string().default('4h'),
   CANDLES_LOOKBACK: z.coerce.number().int().min(100).default(200),
@@ -45,8 +52,6 @@ export const reportConfig = (() => {
   return baseParsed.data;
 })();
 
-// Pipeline (src/run.js) needs the full schema. Monthly report (src/plan/generateMonthlyReport.js)
-// only needs reportConfig. When we fall back to reportConfig, log loudly so the caller can detect it.
 export const config = (() => {
   if (fullParsed.success) return fullParsed.data;
   console.warn('[config] Full schema validation failed — pipeline will not work. Missing/invalid:');

@@ -1,20 +1,10 @@
-// Telegram HTML message formatting.
+// Telegram HTML message formatting for XAU/USDC perpetual on Hyperliquid.
 // Emojis: 🟢 bullish, 🔴 bearish, ⚪ neutral, ⏸ no-trade, 🔥 kill zone, ⚠ warning, 📅 calendar.
 
-import { config } from '../config.js';
-
-const CURRENCY_PREFIX = {
-  AUD: 'A$',
-  USD: '$',
-  EUR: '€',
-  GBP: '£',
-};
-
-function currencyPrice(v, currency, d = 2) {
+function usdPrice(v, d = 2) {
   if (v == null || Number.isNaN(v)) return 'n/a';
-  const prefix = CURRENCY_PREFIX[currency] ?? `${currency} `;
   const num = typeof v === 'number' ? v.toFixed(d) : String(v);
-  return `${prefix}${num}`;
+  return `$${num}`;
 }
 
 const BIAS_EMOJI = {
@@ -59,24 +49,32 @@ function fmtSign(v) {
 }
 
 export function formatPlanForTelegram(plan, extras = {}) {
-  const { dxy, metals, sentiment, fred, calendar, session, dailySummary } = extras;
+  const { dxy, sentiment, fred, calendar, session, dailySummary, funding, oraclePrice, currentPrice } = extras;
   const biasEmoji = BIAS_EMOJI[plan.bias] ?? '⚪';
   const qualityEmoji = QUALITY_EMOJI[plan.setupQuality] ?? '';
   const killZoneIcon = session?.inKillZone ? ' 🔥' : '';
 
-  const currency = extras.currency ?? config.CURRENCY ?? 'USD';
-  const cp = (v, d = 2) => currencyPrice(v, currency, d);
+  const cp = usdPrice;
 
   const lines = [];
-  lines.push(`<b>${biasEmoji} 🥇 ${esc(plan.symbol)} Futures — ${esc(plan.bias.toUpperCase())} | ${esc(plan.setupQuality)} ${qualityEmoji}</b>`);
+  lines.push(`<b>${biasEmoji} 🥇 ${esc(plan.symbol)} Perp — ${esc(plan.bias.toUpperCase())} | ${esc(plan.setupQuality)} ${qualityEmoji}</b>`);
   lines.push(`<i>${esc(plan.timestamp)} UTC</i>${killZoneIcon}`);
+
+  // Price + funding line
+  if (currentPrice != null) {
+    const fundingPct = funding != null ? `${funding >= 0 ? '+' : ''}${(funding * 100).toFixed(4)}%/hr` : 'n/a';
+    const fundingSignal = funding > 0.0001 ? '⚠ crowded long' : funding < -0.0001 ? '⚠ crowded short' : '✅ balanced';
+    lines.push(`Price: <b>${cp(currentPrice)}</b>  Funding: ${fundingPct} ${fundingSignal}`);
+    if (oraclePrice != null) {
+      const gap = Math.abs(currentPrice - oraclePrice).toFixed(2);
+      lines.push(`Oracle: ${cp(oraclePrice)}  Gap: ${gap}pts`);
+    }
+  }
   lines.push('');
 
   // Cross-asset context line
   const xsParts = [];
-  if (dxy?.last != null) xsParts.push(`${esc(dxy.symbol ?? 'DXY')} ${fmt(dxy.last, 5)} (${pct(dxy.change24hPct)})`);
-  if (metals?.auAg != null) xsParts.push(`Au/Ag ${fmt(metals.auAg, 1)}`);
-  if (metals?.auPt != null) xsParts.push(`Au/Pt ${fmt(metals.auPt, 2)}`);
+  if (dxy?.last != null) xsParts.push(`EUR/USD ${fmt(dxy.last, 5)} (${pct(dxy.change24hPct)})`);
   if (sentiment?.value != null) xsParts.push(`F&amp;G ${fmt(sentiment.value, 0)}`);
   if (fred?.tenYearYield != null) xsParts.push(`10Y ${fmt(fred.tenYearYield, 2)}%`);
   if (xsParts.length) {
@@ -113,7 +111,7 @@ export function formatPlanForTelegram(plan, extras = {}) {
     lines.push('');
   }
 
-  // Three-layer analysis block (compact — 2-3 lines max)
+  // Three-layer analysis block
   if (plan.threeLayer) {
     const tl = plan.threeLayer;
     const aaT3 = tl.tier === 3 && ['A+', 'A'].includes(plan.setupQuality);
@@ -161,8 +159,8 @@ export function formatPlanForTelegram(plan, extras = {}) {
   if (exec) {
     if (exec.executed) {
       lines.push(
-        `<b>🚀 Executed:</b> Deal ${esc(exec.dealId ?? 'n/a')} | ` +
-        `${exec.size} lots | A$${exec.riskAmount} (${exec.riskPct}%)`
+        `<b>🚀 Executed:</b> Order ${esc(exec.orderId ?? 'n/a')} | ` +
+        `${exec.size} XAU | $${exec.riskAmount} (${exec.riskPct}%)`
       );
     } else if (exec.autoTradeEnabled) {
       lines.push(`<b>⏸ Auto-trade blocked:</b> ${esc(exec.reason)}`);
@@ -170,11 +168,8 @@ export function formatPlanForTelegram(plan, extras = {}) {
   }
   if ((m15?.status && m15.status !== 'N/A') || exec) lines.push('');
 
-  // Manual-only signal banners — B quality or split consensus A/A+
+  // Manual-only signal banners
   if (plan.direction && plan.entry && plan.stopLoss) {
-    const tp1 = plan.takeProfits?.[0];
-    const tp1Str = tp1 ? ` | TP1: ${cp(tp1.price)}` : '';
-
     if (plan.setupQuality === 'B') {
       const bTier = plan.threeLayer?.tier ?? 4;
       if (bTier <= 2) {
@@ -288,10 +283,10 @@ export function formatOutcomeMessage(outcome, dailySummary = null) {
   const dirIcon = outcome.direction === 'long' ? '🟢' : '🔴';
   const resultIcon = outcome.outcome === 'WIN' ? '🏆' : outcome.outcome === 'LOSS' ? '💀' : '⏸';
   const lines = [
-    `<b>${resultIcon} Trade Closed — ${esc(outcome.symbol ?? 'XAU/AUD')}</b>`,
+    `<b>${resultIcon} Trade Closed — ${esc(outcome.symbol ?? 'XAU/USDC')}</b>`,
     '',
-    `${dirIcon} ${(outcome.direction ?? '').toUpperCase()} @ A$${outcome.entry?.toFixed(2) ?? 'n/a'}`,
-    `Exit: A$${outcome.exit?.toFixed(2) ?? 'n/a'} | Result: <b>${outcome.outcome ?? 'UNKNOWN'}</b>`,
+    `${dirIcon} ${(outcome.direction ?? '').toUpperCase()} @ $${outcome.entry?.toFixed(2) ?? 'n/a'}`,
+    `Exit: $${outcome.exit?.toFixed(2) ?? 'n/a'} | Result: <b>${outcome.outcome ?? 'UNKNOWN'}</b>`,
     `Actual RR: ${outcome.actualRR != null ? (outcome.actualRR >= 0 ? '+' : '') + outcome.actualRR.toFixed(2) + 'R' : 'n/a'}`,
   ];
   if (dailySummary) {
@@ -305,15 +300,15 @@ export function formatOutcomeMessage(outcome, dailySummary = null) {
 export function formatM15ConfirmedMessage(plan) {
   const dirIcon = plan.direction === 'long' ? '🟢' : '🔴';
   const lines = [
-    `<b>🎯 M15 Confirmed — ${esc(plan.symbol ?? 'XAU/AUD')}</b>`,
+    `<b>🎯 M15 Confirmed — ${esc(plan.symbol ?? 'XAU/USDC')}</b>`,
     '',
     `${dirIcon} ${(plan.direction ?? '').toUpperCase()} entry refined`,
-    `Entry: A$${plan.entry?.price?.toFixed(2) ?? 'n/a'} (${esc(plan.entry?.trigger ?? '')})`,
-    `SL: A$${plan.stopLoss?.price?.toFixed(2) ?? 'n/a'}`,
+    `Entry: $${plan.entry?.price?.toFixed(2) ?? 'n/a'} (${esc(plan.entry?.trigger ?? '')})`,
+    `SL: $${plan.stopLoss?.price?.toFixed(2) ?? 'n/a'}`,
   ];
   if (plan.takeProfits?.length) {
     const tp1 = plan.takeProfits[0];
-    lines.push(`TP1: A$${tp1.price?.toFixed(2) ?? 'n/a'} (${tp1.rr?.toFixed(1) ?? '?'}R)`);
+    lines.push(`TP1: $${tp1.price?.toFixed(2) ?? 'n/a'} (${tp1.rr?.toFixed(1) ?? '?'}R)`);
   }
   if (plan.m15?.reason) lines.push(`<i>${esc(plan.m15.reason)}</i>`);
   return lines.join('\n');
@@ -325,7 +320,7 @@ export function formatMonthlyReportForTelegram(report) {
   const monthName = new Date(`${month}-01`).toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
   const lines = [];
 
-  lines.push(`<b>📊 XAUUSD Monthly Report — ${monthName} ${year}</b>`);
+  lines.push(`<b>📊 XAU/USDC Monthly Report — ${monthName} ${year}</b>`);
   lines.push('');
   lines.push(`📈 ${s.totalDays} days · ${s.totalTrades} trades · ${s.totalNoTrades} skip`);
   lines.push('');

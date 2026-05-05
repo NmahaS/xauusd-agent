@@ -44,44 +44,45 @@ async function loadMostRecentPlan() {
 
 async function handleHelp() {
   await tgSend(
-    `<b>📖 XAUUSD Agent Commands</b>\n\n` +
-    `<b>Market</b>\n` +
-    `/price — Live XAU mark price &amp; funding\n` +
-    `/funding — Funding rate detail &amp; sentiment signal\n` +
-    `/news — Upcoming calendar events\n\n` +
-    `<b>Plans</b>\n` +
-    `/status — Current plan, M15 &amp; execution\n` +
+    `📖 <b>XAUUSD Agent Commands</b>\n\n` +
+    `<b>📊 Market:</b>\n` +
+    `/price — Live PAXG mark price + funding\n` +
+    `/funding — Funding rate detail + sentiment\n` +
+    `/news — Upcoming economic events\n\n` +
+    `<b>📈 Analysis:</b>\n` +
+    `/status — Current plan + M15 + execution status\n` +
     `/lastplan — Most recent trading plan\n` +
-    `/confluence — Confluence factors\n` +
-    `/analyze — Trigger a full pipeline run\n\n` +
-    `<b>Account</b>\n` +
+    `/confluence — Live M15 confluence score\n` +
+    `/analyze — Trigger full pipeline run NOW\n\n` +
+    `<b>💰 Account:</b>\n` +
     `/balance — Hyperliquid account balance\n` +
-    `/positions — Open positions\n` +
+    `/positions — Open positions + PnL\n` +
     `/today — Today's executed trades\n` +
     `/performance — Daily performance stats\n\n` +
-    `<b>System</b>\n` +
-    `/risk — Risk rules &amp; state\n` +
+    `<b>⚙️ System:</b>\n` +
+    `/risk — Risk rules + current limits\n` +
     `/settings — Agent configuration\n\n` +
-    `<b>AI</b>\n` +
-    `/ask &lt;question&gt; — Chat with Claude\n\n` +
-    `<i>Or just type a question — I'll answer it.</i>`
+    `<b>💬 AI:</b>\n` +
+    `/ask [question] — Chat with Claude\n` +
+    `<i>Or just type any question directly</i>`
   );
 }
 
 async function handlePrice() {
   try {
-    const { fetchHLMarketData } = await import('../data/hyperliquid.js');
-    const data = await fetchHLMarketData('XAU');
-    const fundingPct = `${data.funding >= 0 ? '+' : ''}${(data.funding * 100).toFixed(4)}%/hr`;
-    const fundingSignal = data.funding > 0.0001 ? '⚠ crowded long' : data.funding < -0.0001 ? '⚠ crowded short' : '✅ balanced';
-
+    const coin = process.env.HL_COIN || 'PAXG';
+    const { fetchAllHLData, getFundingSignal } = await import('../data/hyperliquid.js');
+    const data = await fetchAllHLData();
+    const sentiment = getFundingSignal(data.funding);
     await tgSend(
-      `<b>🥇 XAU/USDC (Hyperliquid)</b>\n\n` +
-      `Mark: <b>$${data.markPrice.toFixed(2)}</b>\n` +
-      `Oracle: $${data.oraclePrice.toFixed(2)}  Gap: ${data.spread.toFixed(2)}pts\n` +
-      `Funding: ${fundingPct} ${fundingSignal}\n` +
-      `Open Interest: ${data.openInterest.toFixed(1)} XAU\n` +
-      `Status: <code>${data.marketStatus}</code>\n` +
+      `💰 <b>${coin}/USDC Live</b>\n\n` +
+      `Price: <b>$${data.currentPrice.toFixed(2)}</b>\n` +
+      `Oracle: $${data.oraclePrice.toFixed(2)}\n` +
+      `24h High: $${data.dailyHigh?.toFixed(2) || 'N/A'}\n` +
+      `24h Low: $${data.dailyLow?.toFixed(2) || 'N/A'}\n\n` +
+      `Funding: ${(data.funding * 100).toFixed(4)}%/hr\n` +
+      `Signal: ${sentiment.fundingNote}\n` +
+      `Open Interest: ${data.openInterest?.toFixed(2)} ${coin}\n` +
       `<i>${new Date().toUTCString()}</i>`
     );
   } catch (err) {
@@ -91,18 +92,18 @@ async function handlePrice() {
 
 async function handleFunding() {
   try {
+    const coin = process.env.HL_COIN || 'PAXG';
     const { fetchHLMarketData, getFundingSignal } = await import('../data/hyperliquid.js');
-    const data = await fetchHLMarketData('XAU');
+    const data = await fetchHLMarketData(coin);
     const signal = getFundingSignal(data.funding);
-
+    const annualized = (data.funding * 24 * 365 * 100).toFixed(2);
     await tgSend(
-      `💰 <b>XAU Funding Rate</b>\n\n` +
-      `Rate: ${(data.funding * 100).toFixed(4)}%/hr\n` +
-      `Annualized: ${data.fundingAnnualized.toFixed(1)}%/yr\n` +
-      `Signal: ${signal.fundingNote}\n` +
-      `Long/Short: ${signal.longPct}% / ${signal.shortPct}%\n\n` +
-      `${data.funding > 0.0001 ? '⚠️ Longs paying — market overcrowded long' :
-         data.funding < -0.0001 ? '⚠️ Shorts paying — contrarian bullish' :
+      `💸 <b>${coin} Funding Rate</b>\n\n` +
+      `Current: ${(data.funding * 100).toFixed(4)}%/hr\n` +
+      `Annualized: ${annualized}%/yr\n\n` +
+      `${signal.fundingNote}\n\n` +
+      `${data.funding > 0.0001 ? '🔴 Longs paying — overcrowded long\nContrarian: bearish signal' :
+         data.funding < -0.0001 ? '🟢 Shorts paying — overcrowded short\nContrarian: bullish signal' :
          '✅ Balanced — no extreme positioning'}\n` +
       `<i>${new Date().toUTCString()}</i>`
     );
@@ -195,25 +196,72 @@ async function handleLastPlan() {
 }
 
 async function handleConfluence() {
-  const plan = await loadMostRecentPlan();
-  if (!plan) {
-    await tgSend('📋 No plan found for today.');
-    return;
+  await tgSend('🔍 Computing live confluence...');
+  try {
+    const { fetchAllHLData } = await import('../data/hyperliquid.js');
+    const { computeClassicalIndicators } = await import('../indicators/classical.js');
+    const { detectSession } = await import('../indicators/session.js');
+    const { analyzeStructure } = await import('../smc/structure.js');
+    const { detectOrderBlocks } = await import('../smc/orderBlocks.js');
+    const { detectFVGs } = await import('../smc/fvg.js');
+    const { computePremiumDiscount } = await import('../smc/premiumDiscount.js');
+    const { detectLiquidity } = await import('../smc/liquidity.js');
+    const { computeConfluence } = await import('../plan/confluence.js');
+    const { fetchFredMacro } = await import('../data/fred.js');
+    const { fetchSentiment } = await import('../data/sentiment.js');
+    const { fetchCalendar } = await import('../data/calendar.js');
+
+    const [hlData, fred, sentiment, calendar] = await Promise.all([
+      fetchAllHLData(),
+      fetchFredMacro().catch(() => null),
+      fetchSentiment().catch(() => null),
+      fetchCalendar().catch(() => null),
+    ]);
+
+    const { h1Candles, h4Candles, m15Candles, currentPrice, dxy, igSentiment } = hlData;
+
+    function smcFor(candles, n) {
+      return {
+        structure: analyzeStructure(candles, n),
+        fvgs: detectFVGs(candles),
+        orderBlocks: detectOrderBlocks(candles, n),
+        liquidity: detectLiquidity(candles, n),
+        pd: computePremiumDiscount(candles, n),
+      };
+    }
+
+    const h1Indicators = computeClassicalIndicators(h1Candles);
+    const h4Indicators = computeClassicalIndicators(h4Candles);
+    const m15Indicators = m15Candles.length >= 14 ? computeClassicalIndicators(m15Candles) : null;
+    const smcH1 = smcFor(h1Candles, 5);
+    const smcH4 = smcFor(h4Candles, 3);
+    const smcM15 = m15Candles.length >= 10 ? smcFor(m15Candles, 3) : null;
+    const session = detectSession();
+
+    const conf = computeConfluence({
+      currentPrice,
+      h1Indicators, h4Indicators, m15Indicators,
+      smcH1, smcH4, smcM15,
+      session, dxy, fred, sentiment, calendar, igSentiment,
+    });
+
+    let msg = `🎯 <b>Live Confluence</b>\n\n`;
+    msg += `Score: <b>${conf.count}/12</b> — Grade: <b>${conf.grade}</b>\n`;
+    msg += `H4 bias: ${smcH4.structure.bias}\n`;
+    msg += `M15 bias: ${smcM15?.structure?.bias ?? 'n/a'}\n`;
+    msg += `Price: $${currentPrice?.toFixed(2)} | ${smcM15?.pd?.zone ?? smcH1?.pd?.zone ?? 'n/a'}\n\n`;
+
+    if (conf.factors?.length > 0) {
+      msg += `✅ <b>Active factors:</b>\n`;
+      for (const f of conf.factors) msg += `  • ${f}\n`;
+    } else {
+      msg += `❌ No confluence factors active\n`;
+    }
+    msg += `\n${session.inKillZone ? '🔥 Kill zone active!' : '⏳ Outside kill zone'}`;
+    await tgSend(msg);
+  } catch (err) {
+    await tgSend(`❌ Confluence failed: ${err.message.slice(0, 200)}`);
   }
-
-  const lines = [
-    `<b>🔍 Confluence — ${plan.symbol}</b>`,
-    `Count: <b>${plan.confluenceCount}</b> factors`,
-    '',
-  ];
-
-  if (plan.confluenceFactors?.length) {
-    for (const f of plan.confluenceFactors) lines.push(`  ✅ ${f}`);
-  } else {
-    lines.push('No factors recorded.');
-  }
-
-  await tgSend(lines.join('\n'));
 }
 
 async function handleBalance() {
@@ -283,10 +331,19 @@ async function handleRisk() {
     `News blackout: ${RISK_RULES.newsBlackout}m`,
     '',
     `<b>📊 Execution Matrix</b>`,
-    `A+/A/B Tier 1: ${mat['A+'].tier1}% ✅`,
-    `A+/A/B Tier 2: ${mat['A+'].tier2}% ✅`,
-    `A+/A/B Tier 3: ${mat['A+'].tier3}% ✅`,
-    `Any    Tier 4: ⛔ blocked`,
+    `All grades Tier 1: ${mat['A+'].tier1}% ✅`,
+    `All grades Tier 2: ${mat['A+'].tier2}% ✅`,
+    `All grades Tier 3: ${mat['A+'].tier3}% ✅`,
+    `All grades Tier 4: ${mat['A+'].tier4}% ✅ (conflicted — caution)`,
+    '',
+    `<b>Hard blocks (safety only):</b>`,
+    `Off session (17-00 UTC): ⛔`,
+    `Friday after 15:00 UTC: ⛔`,
+    `News within 30 min: ⛔`,
+    `Daily loss &gt;6%: ⛔`,
+    `Weekly DD &gt;15%: ⛔`,
+    `Positions full (2/2): ⛔`,
+    `Trades full (6/day): ⛔`,
     '',
     `<b>📈 Current State</b>`,
     `Daily trades: ${state.dailyTrades}`,
@@ -402,10 +459,10 @@ async function handleSettings() {
     `DeepSeek ${process.env.DEEPSEEK_API_KEY ? '✅' : '❌'} | ` +
     `Perplexity ${process.env.PERPLEXITY_API_KEY ? '✅' : '❌'}\n\n` +
     `<b>Execution Matrix:</b>\n` +
-    `A+/A/B Tier 1: 2.0% ✅\n` +
-    `A+/A/B Tier 2: 1.5% ✅\n` +
-    `A+/A/B Tier 3: 1.0% ✅\n` +
-    `Any    Tier 4: ⛔ blocked`
+    `All grades Tier 1: 2.0% ✅\n` +
+    `All grades Tier 2: 1.5% ✅\n` +
+    `All grades Tier 3: 1.0% ✅\n` +
+    `All grades Tier 4: 0.5% ✅ (conflicted — caution)`
   );
 }
 
@@ -455,7 +512,14 @@ async function handleAsk(question) {
 }
 
 async function handleAnalyze() {
-  await tgSend('⚠️ /analyze is coming soon.\n\nFor now, pipeline runs automatically at :05 every hour. Use /status to see the latest plan.');
+  await tgSend('🔍 Running full analysis... (30-60 seconds)');
+  try {
+    const { runPipeline } = await import('../pipeline.js');
+    await runPipeline();
+    await tgSend('✅ Analysis complete — check the plan above.');
+  } catch (err) {
+    await tgSend(`❌ Analysis failed: ${err.message.slice(0, 200)}`);
+  }
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────

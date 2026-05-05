@@ -1,0 +1,156 @@
+{
+  "timestamp": "2026-05-05T09:03:57.421Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish structure (CHoCH @ 4595.30) confirmed; H1 also bearish with active bearish OB at 4553.90-4571.20. M15 shows bullish BOS @ 4545.10 but price is in premium zone (80.9% of M15 range 4537.40-4551.00), conflicting with H4/H1 bearish bias. Weekly macro neutral but yields rising (bearish gold). EUR/USD weakening (-8.33% 24h) = dollar strengthening = bearish gold. Institutional bias bearish (below weekly VWAP 4564.5). M15 bullish structure is a lower-TF counter-trend signal within a dominant H4 bearish regime.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish structure (CHoCH intact at 4595.30)",
+    "H1 bearish bias confirmed; active bearish OB at 4553.90-4571.20",
+    "EUR/USD weakening (dollar strengthening = bearish gold)",
+    "Price in premium zone (80.9% of M15 range) — optimal short entry area"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4553.9,
+      4571.2
+    ],
+    "reasoning": "H1 active bearish OB formed during recent down-close candles; overlaps with H1 bearish FVG 4557.80-4563.80 on M15. Price currently at 4548.40, just below this zone. M15 premium zone (80.9%) confirms optimal short entry area. This OB is the primary institutional liquidity pool for shorts."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4560,
+    "confirmation": "Limit sell at upper edge of H1 bearish OB; validated by H4 bearish structure, H1 bearish bias, and M15 premium zone. Await M15 bearish engulfing or rejection candle at this level during London kill zone (active now 07-10 UTC)."
+  },
+  "stopLoss": {
+    "price": 4572.5,
+    "reasoning": "Above H1 bearish OB high (4571.20) + 0.2×M15 ATR (5.99×0.2=1.20); invalidates H1 bearish structure if breached. Tight stop justified by premium zone entry and H4 bearish regime.",
+    "pips": 12.5
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4540,
+      "reasoning": "M15 bullish FVG low (4518.40-4521.80 zone); first liquidity pool on downside. Partial profit target.",
+      "rr": 1.6
+    },
+    {
+      "level": "TP2",
+      "price": 4520,
+      "reasoning": "H1 OTE long zone lower bound (4527.02); strong support confluence with M15 bullish FVG.",
+      "rr": 3.2
+    },
+    {
+      "level": "TP3",
+      "price": 4497,
+      "reasoning": "H4 discount zone floor; H1 liquidity EQL (4597.40 swept, next target lower); equal lows liquidity.",
+      "rr": 5
+    }
+  ],
+  "invalidation": {
+    "price": 4572.5,
+    "reasoning": "Break above H1 bearish OB high invalidates H1 bearish structure; bias flips to neutral/bullish. Exit all shorts immediately."
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC (ACTIVE NOW) — execute limit sell on rejection at 4560.00 within next 60 minutes for optimal liquidity and volatility."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 12.5-pip stop; position size = (account_risk_usd / 12.5 pips) × contract_multiplier. Reduce to 0.5% if ISM Services PMI (High impact, +296m) surprises."
+  },
+  "macroContext": "Yields rising (1.89% real yield = bearish gold), EUR/USD weakening sharply (-8.33% 24h = dollar strengthening = bearish gold), institutional bias bearish (below weekly VWAP), Fear & Greed neutral. Macro backdrop supports shorts. ISM Services PMI due in ~5 hours (high impact) — monitor for surprise upside (bullish USD, bearish gold) or downside (risk-off, bullish gold).",
+  "warnings": [
+    "M15 bullish BOS @ 4545.10 conflicts with H4/H1 bearish bias — this is a counter-trend short setup (Tier 3 technical signal, not Tier 1/2 macro-aligned). Confluence is B-grade (4 factors), not A-grade. Require strict stop discipline.",
+    "Price currently in M15 premium zone (80.9%) — entry at 4560.00 requires pullback or rejection candle. If price rallies above 4565 without entry, abort and wait for next M15 structure event.",
+    "ISM Services PMI (High impact, +296m ~14:00 UTC) could trigger sharp volatility. Consider closing or reducing position 30min before release if still in trade.",
+    "Funding rate +0.0003%/hr (longs paying) is near-neutral but slightly bullish contrarian signal — mild headwind for shorts.",
+    "London kill zone active now; NY kill zone begins in ~3 hours (12-15 UTC). Optimal execution window is next 60 minutes.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold recovers slightly on USD weakness but tracks for weekly loss amid Middle East tensions and Fed hawkishness"
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4547.50 not at M15 POI [4553.90-4571.20] yet"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4539.13 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (CHoCH intact at 4595.30)",
+          "H1 bearish bias confirmed; active bearish OB at 4553.90-4571.20",
+          "EUR/USD weakening (dollar strengthening = bearish gold)",
+          "Price in premium zone (80.9% of M15 range) — optimal short entry area"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4539.13 (strong S/R)",
+      "H4 bearish structure (CHoCH intact at 4595.30)",
+      "H1 bearish bias confirmed; active bearish OB at 4553.90-4571.20",
+      "EUR/USD weakening (dollar strengthening = bearish gold)",
+      "Price in premium zone (80.9% of M15 range) — optimal short entry area"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 6 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "WAITING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Auto-trade disabled — manual signal",
+    "orderId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

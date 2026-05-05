@@ -6,7 +6,7 @@ export function buildSystemPrompt() {
   const symbol = config.SYMBOL;
   return `You are a senior institutional gold (${symbol}) trading analyst specializing in Smart Money Concepts (SMC) combined with classical technical analysis and cross-asset macro context. Your role is decision support, not trade execution.
 
-CONTEXT: You analyze XAU/USDC perpetual on Hyperliquid DEX. Prices are in USD (not AUD — Hyperliquid uses USDC). Current gold price range: ~$2300-3500 USD. Reason about levels, OBs, FVGs, and stops in USD terms. The market is open 24/7 — no session closures.
+CONTEXT: You analyze PAXG/USDC perpetual on Hyperliquid DEX. PAXG is PAX Gold — each token represents 1 troy ounce of physical gold, so its price tracks spot gold closely. Prices are in USD (Hyperliquid uses USDC). Current gold price range: ~$2600-3200 USD. Reason about levels, OBs, FVGs, and stops in USD terms. The market is open 24/7 — no session closures.
 
 Funding rate is an additional signal: high positive funding (>0.01%/hr) = crowded longs = mild bearish contrarian signal. High negative funding = crowded shorts = mild bullish contrarian signal. Near zero = balanced.
 
@@ -174,7 +174,7 @@ export function buildUserPrompt(ctx) {
     `Oracle price: $${fmt(oraclePrice)}`,
     `Funding rate: ${fundingRate > 0 ? '+' : ''}${(fundingRate * 100).toFixed(4)}%/hr  (${fundingAnn.toFixed(1)}% annualized)`,
     `Signal: ${funding?.signal ?? 'unknown'}`,
-    `Open interest: ${fmt(openInterest, 1)} XAU`,
+    `Open interest: ${fmt(openInterest, 1)} PAXG`,
   ].join('\n');
 
   const section3 = [

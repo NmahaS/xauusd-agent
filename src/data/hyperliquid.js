@@ -43,7 +43,11 @@ export async function fetchHLCandles(coin, interval, count = 200) {
 export async function fetchHLMarketData(coin = process.env.HL_COIN || 'PAXG') {
   const [meta, assetCtxs] = await hlPost({ type: 'metaAndAssetCtxs' });
   const idx = meta.universe.findIndex(a => a.name === coin);
-  if (idx === -1) throw new Error(`${coin} not found on Hyperliquid`);
+  if (idx === -1) {
+    const allCoins = meta.universe.map(a => a.name).join(', ');
+    console.error(`[hl] ${coin} not found. Available: ${allCoins}`);
+    throw new Error(`${coin} not found on Hyperliquid. Check HL_COIN env var.`);
+  }
 
   const asset = assetCtxs[idx];
   const markPrice = parseFloat(asset.markPx);

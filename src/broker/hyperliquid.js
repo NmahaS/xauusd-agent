@@ -3,8 +3,15 @@ import { ethers } from 'ethers';
 const HL_BASE = 'https://api.hyperliquid.xyz';
 
 function getWallet() {
-  const privateKey = process.env.HL_PRIVATE_KEY;
+  let privateKey = process.env.HL_PRIVATE_KEY;
   if (!privateKey) throw new Error('HL_PRIVATE_KEY not set');
+  if (!privateKey.startsWith('0x')) privateKey = '0x' + privateKey;
+  if (privateKey.length !== 66) {
+    throw new Error(
+      `HL_PRIVATE_KEY invalid length: got ${privateKey.length} chars, need 66 (0x + 64 hex). ` +
+      `Check env var — copy the full private key from Hyperliquid API wallet.`
+    );
+  }
   return new ethers.Wallet(privateKey);
 }
 
@@ -82,7 +89,7 @@ async function placeHLStopLoss({ assetIdx, direction, size, stopLoss, wallet, no
   return result;
 }
 
-export async function placeHLOrder({ coin, direction, size, limitPrice, stopLoss, takeProfit }) {
+export async function placeHLOrder({ coin, direction, size, limitPrice, stopLoss }) {
   const wallet = getWallet();
   const assetIdx = await getAssetIndex(coin);
   const isBuy = direction === 'long';
@@ -189,7 +196,7 @@ export async function closeHLPosition(coin, direction, size) {
   });
   const [meta2, assetCtxs] = await markRes.json();
   const idx2 = meta2.universe.findIndex(a => a.name === coin);
-  const markPrice = parseFloat(assetCtxs[idx2]?.markPrice ?? 0);
+  const markPrice = parseFloat(assetCtxs[idx2]?.markPx ?? 0);
   const closePrice = isBuy ? markPrice * 1.005 : markPrice * 0.995;
 
   const closeAction = {

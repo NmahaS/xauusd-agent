@@ -12,25 +12,18 @@ export const RISK_RULES = {
   minRR: 1.5,                   // reject if TP1 RR < 1.5
   requiredConfluence: 5,
   requiredQuality: ['A+', 'A', 'B'],
-  requiredConsensus: ['full'],
+  requiredConsensus: ['full', 'split'],
   blockedSessions: ['off'],
   fridayBlock: 15,              // no new trades after 15:00 UTC Friday
   newsBlackout: 30,             // minutes
 
   autoExecuteQualities: ['A+', 'A', 'B'],
-  autoExecuteConsensus: ['full'],
+  autoExecuteConsensus: ['full', 'split'],
 
   executionMatrix: {
-    'A+': { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0 },
-    'A':  { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0 },
-    'B':  { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0 },
-  },
-
-  bGradeRequirements: {
-    minTier: 3,
-    requireFullConsensus: true,
-    minConfluence: 5,
-    maxRisk: 2.0,
+    'A+': { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0.5 },
+    'A':  { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0.5 },
+    'B':  { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0.5 },
   },
 };
 
@@ -146,7 +139,6 @@ export async function writeRiskState(state) {
 export async function checkRiskRules(plan, accountState, context = {}) {
   const log = (msg) => console.log(`[risk] ${msg}`);
 
-  // 1. Execution matrix — quality × tier determines allowed risk
   const tier = plan.threeLayer?.tier ?? 4;
   const quality = plan.setupQuality;
   const matrix = RISK_RULES.executionMatrix[quality];
@@ -155,46 +147,9 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     log(`REJECT executionMatrix: ${reason}`);
     return { allowed: false, reason };
   }
-  const allowedRisk = matrix[`tier${tier}`] ?? 0;
-  if (allowedRisk === 0) {
-    const reason = `${quality} at Tier ${tier} — signal only, no auto-execution`;
-    log(`REJECT executionMatrix: ${reason}`);
-    return { allowed: false, reason };
-  }
-  log(`PASS executionMatrix: ${quality} Tier ${tier} → ${allowedRisk}%`);
+  log(`PASS executionMatrix: ${quality} Tier ${tier}`);
 
-  // B-grade extra checks
-  if (quality === 'B') {
-    if (tier > RISK_RULES.bGradeRequirements.minTier) {
-      const reason = `B-grade requires Tier 1-${RISK_RULES.bGradeRequirements.minTier} (all layers must align)`;
-      log(`REJECT bGrade: ${reason}`);
-      return { allowed: false, reason };
-    }
-    if (plan.consensus?.agreement !== 'full') {
-      const reason = 'B-grade requires full LLM consensus (both agree)';
-      log(`REJECT bGrade: ${reason}`);
-      return { allowed: false, reason };
-    }
-    if ((plan.confluenceCount ?? 0) < RISK_RULES.bGradeRequirements.minConfluence) {
-      const reason = `B-grade needs ${RISK_RULES.bGradeRequirements.minConfluence}+ confluence (got ${plan.confluenceCount})`;
-      log(`REJECT bGrade: ${reason}`);
-      return { allowed: false, reason };
-    }
-    log(`PASS bGrade: Tier ${tier} | consensus=full | confluence=${plan.confluenceCount}`);
-  }
-
-  plan.risk.suggestedRiskPct = Math.min(allowedRisk, RISK_RULES.maxRiskPerTrade);
-
-  // 3. Consensus
-  const agreement = plan.consensus?.agreement || 'unknown';
-  if (!RISK_RULES.autoExecuteConsensus.includes(agreement)) {
-    const reason = 'Split consensus — both LLMs must agree for auto-execution';
-    log(`REJECT consensus: ${reason}`);
-    return { allowed: false, reason };
-  }
-  log(`PASS consensus=${agreement}`);
-
-  // 4. Confluence
+  // 1. Confluence
   if ((plan.confluenceCount ?? 0) < RISK_RULES.requiredConfluence) {
     const reason = `Confluence ${plan.confluenceCount}/${RISK_RULES.requiredConfluence} too low`;
     log(`REJECT confluence: ${reason}`);
@@ -202,7 +157,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS confluence=${plan.confluenceCount}`);
 
-  // 5. Session — only block off-hours (17:00-00:00 UTC)
+  // 2. Session — only block off-hours (17:00-00:00 UTC)
   const sess = plan.session?.current || 'unknown';
   if (sess === 'off') {
     const reason = 'Off-session (17:00-00:00 UTC) — no liquidity';
@@ -211,7 +166,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS session=${sess}`);
 
-  // 6. Friday cutoff
+  // 3. Friday cutoff
   if (isAfterFridayCutoff()) {
     const reason = 'Friday afternoon cutoff (>=15:00 UTC)';
     log(`REJECT fridayCutoff: ${reason}`);
@@ -219,7 +174,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS fridayCutoff`);
 
-  // 7. News blackout
+  // 4. News blackout
   const imminent = imminentHighImpactNews(context.calendar);
   if (imminent) {
     const reason = `News blackout: ${imminent.title} in ${imminent.minutesAway}m`;
@@ -228,7 +183,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS news blackout`);
 
-  // 8. Open positions
+  // 5. Open positions
   const openCount = accountState.openPositions?.length ?? 0;
   if (openCount >= RISK_RULES.maxOpenPositions) {
     const reason = `${openCount} position(s) already open (max ${RISK_RULES.maxOpenPositions})`;
@@ -237,7 +192,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS openPositions=${openCount}`);
 
-  // 9. Daily trade count
+  // 6. Daily trade count
   const dailyTrades = (await getDailyTradeHistory()).length;
   if (dailyTrades >= RISK_RULES.maxDailyTrades) {
     const reason = `${dailyTrades} trades today — daily limit ${RISK_RULES.maxDailyTrades}`;
@@ -246,7 +201,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS dailyTrades=${dailyTrades}`);
 
-  // 10. Daily P&L floor
+  // 7. Daily P&L floor
   const dailyPctLoss = accountState.balance > 0 ? (accountState.dailyPL / accountState.balance) * 100 : 0;
   if (dailyPctLoss <= -RISK_RULES.maxDailyLoss) {
     const reason = `Daily loss limit hit (${dailyPctLoss.toFixed(2)}% <= -${RISK_RULES.maxDailyLoss}%)`;
@@ -255,7 +210,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS dailyPL=${dailyPctLoss.toFixed(2)}%`);
 
-  // 11. Weekly drawdown
+  // 8. Weekly drawdown
   const state = await readRiskState();
   const weekBase = state.weekStartBalance || 10000;
   const weeklyPct = ((accountState.balance - weekBase) / weekBase) * 100;
@@ -266,7 +221,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS weeklyDrawdown=${weeklyPct.toFixed(2)}%`);
 
-  // 12. Min RR on TP1
+  // 9. Min RR on TP1
   const tp1rr = plan.takeProfits?.[0]?.rr ?? 0;
   if (tp1rr < RISK_RULES.minRR) {
     const reason = `TP1 RR ${tp1rr} < ${RISK_RULES.minRR} minimum`;
@@ -275,5 +230,31 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   log(`PASS minRR=${tp1rr}`);
 
-  return { allowed: true, reason: `${quality} Tier ${tier} approved at ${plan.risk.suggestedRiskPct}% risk` };
+  // Apply tier-based risk override
+  const tierRisk = {
+    1: matrix.tier1 || 2.0,
+    2: matrix.tier2 || 1.5,
+    3: matrix.tier3 || 1.0,
+    4: 0.5,
+  }[tier] ?? 0.5;
+
+  plan.risk.suggestedRiskPct = tierRisk;
+
+  if (tier === 4) {
+    plan.warnings = [...(plan.warnings || []),
+      '⚠️ Tier 4 — macro/flow layers conflict with technicals',
+      '⚠️ Executing at reduced 0.5% risk due to layer conflict',
+    ];
+    log(`WARN tier4: executing at 0.5% (reduced)`);
+  }
+
+  if (plan.consensus?.agreement === 'split') {
+    plan.warnings = [...(plan.warnings || []),
+      '⚠️ Split consensus — Claude and DeepSeek disagree',
+    ];
+    log(`WARN splitConsensus: proceeding with warning`);
+  }
+
+  log(`APPROVE: ${quality} Tier ${tier} → ${tierRisk}%`);
+  return { allowed: true, reason: `${quality} Tier ${tier} approved at ${tierRisk}%` };
 }

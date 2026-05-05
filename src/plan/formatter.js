@@ -114,14 +114,17 @@ export function formatPlanForTelegram(plan, extras = {}) {
   // Three-layer analysis block
   if (plan.threeLayer) {
     const tl = plan.threeLayer;
-    const aaT3 = tl.tier === 3 && ['A+', 'A'].includes(plan.setupQuality);
-    const tierIcon = tl.tier === 1 ? '⚡' : tl.tier === 2 ? '✅' : aaT3 ? '✅' : tl.tier === 3 ? '📋' : '⛔';
-    const tierRisk = tl.tier === 1 ? 'Risk: 1.5%' : tl.tier === 2 ? 'Risk: 1%' : aaT3 ? 'Risk: 0.5% (reduced)' : tl.tier === 3 ? 'Manual only' : 'No trade';
+    const tierIcon = tl.tier === 1 ? '⚡' : tl.tier === 2 ? '✅' : tl.tier === 3 ? '🔵' : '🟡';
+    const tierLabel = tl.tier === 1 ? 'TIER 1 — Maximum confidence' :
+                      tl.tier === 2 ? 'TIER 2 — Strong signal' :
+                      tl.tier === 3 ? 'TIER 3 — Technical signal' :
+                                      'TIER 4 — Conflicted (caution)';
+    const tierRisk = tl.tier === 1 ? 'Risk: 2.0%' : tl.tier === 2 ? 'Risk: 1.5%' : tl.tier === 3 ? 'Risk: 1.0%' : 'Risk: 0.5% (caution)';
     const macro = tl.layers?.macro?.bias?.toUpperCase() || 'n/a';
     const regime = tl.layers?.flow?.regime || 'unknown';
     const techCount = tl.layers?.technical?.confluenceCount ?? 0;
     lines.push(`<b>🔬 3-Layer:</b> Macro ${esc(macro)} | ${esc(regime)} | ${techCount}/12 confluence`);
-    lines.push(`${tierIcon} <b>${esc(tl.tierLabel)}</b> — ${tierRisk}`);
+    lines.push(`${tierIcon} <b>${esc(tierLabel)}</b> — ${tierRisk}`);
     if (tl.blockingFactors?.length) lines.push(`  ⛔ ${esc(tl.blockingFactors[0])}`);
     lines.push('');
   }
@@ -167,45 +170,6 @@ export function formatPlanForTelegram(plan, extras = {}) {
     }
   }
   if ((m15?.status && m15.status !== 'N/A') || exec) lines.push('');
-
-  // Manual-only signal banners
-  if (plan.direction && plan.entry && plan.stopLoss) {
-    if (plan.setupQuality === 'B') {
-      const bTier = plan.threeLayer?.tier ?? 4;
-      if (bTier <= 2) {
-        const bRisk = bTier === 1 ? '1.0%' : '0.5%';
-        lines.push(
-          `🟡 <b>B SIGNAL — Tier ${bTier} auto-execute</b>\n` +
-          `⚡ 3-layer alignment qualifies B for execution\n` +
-          `Risk: ${bRisk} (half size — B quality caution)`
-        );
-      } else {
-        const bReason = bTier === 3
-          ? 'Macro not aligned — technical signal only'
-          : 'Insufficient alignment for execution';
-        lines.push(
-          `📋 <b>B SIGNAL — Tier ${bTier} manual only</b>\n` +
-          `${bReason}`
-        );
-      }
-      lines.push('');
-    } else if (['A+', 'A'].includes(plan.setupQuality) && plan.threeLayer?.tier === 3) {
-      lines.push(
-        `⚡ <b>${esc(plan.setupQuality)} Tier 3 — technical only</b>\n` +
-        `Auto-executing at reduced risk (0.5%)\n` +
-        `⚠️ Macro not aligned — proceed with caution`
-      );
-      lines.push('');
-    } else if (['A+', 'A'].includes(plan.setupQuality) && plan.consensus?.agreement !== 'full' && plan.consensus) {
-      const c = plan.consensus;
-      lines.push(
-        `⚠️ <b>SPLIT SIGNAL — manual only</b>\n` +
-        `Claude: ${esc(c.claudeDirection ?? 'n/a')} | DeepSeek: ${esc(c.deepseekDirection ?? 'n/a')}\n` +
-        `Entry: ${cp(plan.entry.price)} if you agree`
-      );
-      lines.push('');
-    }
-  }
 
   lines.push(`<b>Session:</b> ${esc(plan.session.current)} — ${esc(plan.session.recommendedExecutionWindow)}`);
   lines.push(`<b>Risk:</b> ${fmt(plan.risk.suggestedRiskPct, 2)}% — ${esc(plan.risk.positionSizeHint)}`);

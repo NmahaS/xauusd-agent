@@ -1,0 +1,151 @@
+{
+  "timestamp": "2026-05-06T00:00:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4595.30 confirmed; price in premium zone (61.2% H4, 299.3% M15); M15 BOS-bearish @ 4543.80 intact; H1 bearish structure active; RSI14 overbought on M15 (68.9) and H1 (65.7); positive real yields (1.98%) bearish for gold; EUR/USD weakening (-8.2% 24h) supports dollar strength = bearish gold. Macro neutral but technicals decisively bearish.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 and M15 structure bias agree (both bearish)",
+    "M15 unfilled bearish FVG within 8pts [4611.40-4611.70]",
+    "M15 BOS-bearish @ 4543.80 recent structure event",
+    "Price in premium zone (H4 61.2%, M15 299.3%)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_fvg",
+    "zone": [
+      4611.4,
+      4611.7
+    ],
+    "reasoning": "M15 unfilled bearish FVG created by impulsive down-close candles; represents imbalance liquidity pool; price currently 28.5pts below, pullback into FVG likely before continuation lower"
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4611.55,
+    "confirmation": "Limit sell at FVG midpoint; validated by M15 bearish structure (BOS @ 4543.80 intact) and H1 bearish CHoCH; entry on pullback into premium zone"
+  },
+  "stopLoss": {
+    "price": 4620.5,
+    "reasoning": "Above M15 FVG high + 0.2×M15 ATR buffer (7.22×0.2=1.44); invalidates bearish M15 structure if breached; protects against false pullback",
+    "pips": 89
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4597.7,
+      "reasoning": "H1 bearish FVG low [4593.70-4597.70]; first liquidity pool target",
+      "rr": 1.55
+    },
+    {
+      "level": "TP2",
+      "price": 4575,
+      "reasoning": "H1 OTE short zone midpoint [4545.82-4559.09]; structural support",
+      "rr": 4.08
+    },
+    {
+      "level": "TP3",
+      "price": 4545.4,
+      "reasoning": "H4 bearish OB low [4586.20-4610.60] confluence with M15 BOS @ 4543.80; major liquidity pool",
+      "rr": 9.35
+    }
+  ],
+  "invalidation": {
+    "price": 4620.5,
+    "reasoning": "Break above M15 FVG high invalidates bearish structure; signals potential H1 CHoCH-bullish and bias flip to neutral/bullish"
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London open (07:00 UTC) for kill zone execution; higher volume and volatility confirm entry"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 89-pip stop; position size = (account_risk_usd / 89) / PAXG_contract_size"
+  },
+  "macroContext": "Positive real yields (1.98%) and strengthening dollar (EUR/USD -8.2%) are bearish for gold; neutral macro backdrop does not override technical bearish structure; ADP employment data in +735min adds event risk but does not invalidate current short bias.",
+  "warnings": [
+    "M15 confluence score is B (4/12 factors) — not highest conviction; requires strict stop discipline",
+    "Price currently 28.5pts below POI; pullback entry depends on buyer exhaustion — monitor M15 structure for confirmation",
+    "ADP Non-Farm Employment Change (Medium impact) in ~12h — consider reducing size or closing early if approaching event window",
+    "Funding rate +0.0013%/hr (longs paying) is mild bearish signal but not extreme; no crowded short squeeze risk",
+    "H1 RSI 65.7 overbought but not divergent — watch for RSI rejection at 70 as additional confirmation",
+    "Asia session low liquidity — execution may be slippage-prone; prefer London kill zone entry",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "low",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold holds mild recovery but tracks for weekly loss amid inflation fears and reduced Fed cut bets"
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4582.85 not at M15 POI [4611.40-4611.70] yet"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "in_va",
+        "vwapBias": "bullish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 and M15 structure bias agree (both bearish)",
+          "M15 unfilled bearish FVG within 8pts [4611.40-4611.70]",
+          "M15 BOS-bearish @ 4543.80 recent structure event",
+          "Price in premium zone (H4 61.2%, M15 299.3%)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "H4 and M15 structure bias agree (both bearish)",
+      "M15 unfilled bearish FVG within 8pts [4611.40-4611.70]",
+      "M15 BOS-bearish @ 4543.80 recent structure event",
+      "Price in premium zone (H4 61.2%, M15 299.3%)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 4 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "WAITING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Risk: Confluence 4/5 too low",
+    "orderId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

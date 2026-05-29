@@ -121,35 +121,39 @@ app.get('/api/dashboard', async (_req, res) => {
                 (f.closedPnl || 0) < -0.01 ? 'LOSS' : 'BE',
       }));
 
-    /* ── Last trading plan ──────────────────────────────────── */
+    /* ── Last trading plan (3-tier fallback) ────────────────── */
     let lastPlan = null;
     let signal   = null;
     let planMeta = null;
 
+    // Tier 1: plans filesystem
     try {
       const plansDir = path.join(process.cwd(), 'plans');
       if (fs.existsSync(plansDir)) {
         const dates = fs.readdirSync(plansDir)
           .filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d))
-          .sort()
-          .slice(-1);
-
+          .sort().slice(-1);
         if (dates[0]) {
           const dayDir = path.join(plansDir, dates[0]);
           const files  = fs.readdirSync(dayDir)
             .filter(f => f.endsWith('.json') && f !== 'daily-summary.json')
-            .sort()
-            .slice(-1);
-
+            .sort().slice(-1);
           if (files[0]) {
             lastPlan = JSON.parse(fs.readFileSync(path.join(dayDir, files[0]), 'utf8'));
           }
         }
       }
     } catch (e) {
-      console.error('[dashboard] plan read error:', e.message);
+      console.log('[dashboard] plans folder error:', e.message);
     }
 
+    // Tier 2: in-memory plan from last pipeline run (persists between requests, resets on deploy)
+    if (!lastPlan && globalThis._lastPlan) {
+      lastPlan = globalThis._lastPlan;
+      console.log('[dashboard] using in-memory plan fallback');
+    }
+
+    // Build signal from plan (tiers 1 & 2)
     if (lastPlan) {
       signal = {
         bias:          lastPlan.direction === 'long'  ? 'BULLISH' :
@@ -167,16 +171,68 @@ app.get('/api/dashboard', async (_req, res) => {
         executed:      lastPlan.execution?.executed    || false,
         blockedReason: lastPlan.execution?.reason      ||
                        lastPlan.blockedReason          || null,
+        source:        'plan',
       };
       planMeta = {
-        sl:  lastPlan.stopLoss?.price    || 0,
+        sl:  lastPlan.stopLoss?.price         || 0,
         tp1: lastPlan.takeProfits?.[0]?.price || 0,
         tp2: lastPlan.takeProfits?.[1]?.price || 0,
       };
     }
 
-    console.log('[dashboard] price:', priceData?.markPrice, '| atr:', atr,
-                '| plan keys:', lastPlan ? Object.keys(lastPlan).slice(0, 8).join(',') : 'none');
+    // Tier 3: RAG database — most recent recorded signal
+    if (!signal) {
+      try {
+        const { getDB } = await import('./memory/tradeDB.js');
+        const last = getDB().prepare(
+          'SELECT * FROM trades ORDER BY openTime DESC LIMIT 1'
+        ).get();
+        if (last) {
+          console.log('[dashboard] using RAG fallback, trade:', last.orderId);
+          signal = {
+            bias:          last.direction === 'long'  ? 'BULLISH' :
+                           last.direction === 'short' ? 'BEARISH' : 'NEUTRAL',
+            tier:          last.tier        || 3,
+            confluence:    last.confluence  || 0,
+            direction:     last.direction   || null,
+            factors:       [],
+            tfAlignment:   '—',
+            session:       last.session     || 'Unknown',
+            regime:        'unknown',
+            quality:       last.outcome === 'OPEN'    ? 'active'  :
+                           last.outcome === 'BLOCKED' ? 'blocked' : 'no-trade',
+            biasReasoning: 'Last recorded signal from trade database (plan file unavailable).',
+            blockedReason: last.blockReason || null,
+            executed:      last.isExecuted === 1,
+            source:        'RAG',
+          };
+        }
+      } catch (e) {
+        console.log('[dashboard] RAG fallback error:', e.message);
+      }
+    }
+
+    // Tier 4: minimal live signal — agent running, no analysis yet
+    if (!signal) {
+      signal = {
+        bias:          'NEUTRAL',
+        tier:          null,
+        confluence:    0,
+        direction:     null,
+        factors:       [],
+        tfAlignment:   '—',
+        session:       'Unknown',
+        regime:        'unknown',
+        quality:       'waiting',
+        biasReasoning: 'Agent is running — next analysis in ~15 minutes.',
+        blockedReason: null,
+        executed:      false,
+        source:        'live fallback',
+      };
+    }
+
+    console.log('[dashboard] signal source:', signal.source,
+                '| bias:', signal.bias, '| confluence:', signal.confluence);
 
     /* ── Position with correct field names ──────────────────── */
     const pos = positions[0];

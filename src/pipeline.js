@@ -438,7 +438,12 @@ async function runFullPipeline() {
   console.log(`[pipeline] notify phase done in ${time() - tNotify}ms`);
 
   console.log(`=== run complete in ${time() - tTotal}ms ===\n`);
+  globalThis._lastPlan = mergedPlan;
   return { plan: mergedPlan, telegramText };
+}
+
+export function getLatestPlan() {
+  return globalThis._lastPlan || null;
 }
 
 let pipelineRunning = false;

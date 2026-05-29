@@ -550,6 +550,82 @@ body {
   color: var(--muted);
   font-size: 12px;
 }
+
+/* ── Price chart section ─────────────────────────────────── */
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+#price-chart-section canvas {
+  display: block;
+}
+
+/* ── Tab buttons (TF switcher) ───────────────────────────── */
+.tab-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  outline: none;
+}
+.tab-btn.active {
+  background: rgba(55,138,221,0.14);
+  color: var(--blue);
+  border-color: rgba(55,138,221,0.42);
+}
+.tab-btn:not(.active):hover {
+  background: rgba(255,255,255,0.03);
+  color: var(--sec);
+}
+
+/* ── Key levels strip ────────────────────────────────────── */
+#key-levels {
+  display: flex;
+  gap: 10px;
+  padding: 8px 14px 10px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.kl-item {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 4px 11px;
+}
+.kl-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 1px;
+}
+.kl-val {
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
 </style>
 </head>
 <body>
@@ -630,6 +706,27 @@ body {
       <div class="stat-sub">closed positions</div>
     </div>
 
+  </div>
+
+  <!-- ══ PRICE CHART ════════════════════════════════════════ -->
+  <div class="section" id="price-chart-section">
+    <div class="section-header">
+      <span>PAXG/USDC — LIVE CANDLES</span>
+      <div style="display:flex;gap:6px">
+        <button class="tab-btn active" onclick="setChartTF('15m',this)">M15</button>
+        <button class="tab-btn"        onclick="setChartTF('1h',this)">H1</button>
+        <button class="tab-btn"        onclick="setChartTF('4h',this)">H4</button>
+      </div>
+    </div>
+    <div style="position:relative;height:280px;width:100%;padding:10px 14px 0">
+      <canvas id="price-chart"></canvas>
+      <div id="chart-overlay" style="
+        position:absolute;inset:0;display:flex;
+        align-items:center;justify-content:center;
+        color:var(--muted);font-size:12px;pointer-events:none;
+      ">Loading chart…</div>
+    </div>
+    <div id="key-levels"></div>
   </div>
 
   <!-- ══ 3 · MAIN GRID ══════════════════════════════════════ -->
@@ -733,12 +830,14 @@ const WEEKLY_GOAL = 5;
 const DAY_NAMES   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
 /* ── State ──────────────────────────────────────────────────── */
-let lastData   = null;
-let plChart    = null;
-let chartMode  = 'week';
-let cdSecs     = 15;
-let cdTimer    = null;
-let prevPrice  = 0;
+let lastData    = null;
+let plChart     = null;
+let priceChart  = null;
+let chartMode   = 'week';
+let currentTF   = '15m';
+let cdSecs      = 15;
+let cdTimer     = null;
+let prevPrice   = 0;
 
 /* ── Helpers ────────────────────────────────────────────────── */
 const $    = id => document.getElementById(id);
@@ -1175,6 +1274,150 @@ function renderTrades(d) {
   }).join('');
 }
 
+/* ── Price chart ─────────────────────────────────────────────── */
+async function fetchCandles(interval) {
+  const endTime   = Date.now();
+  const lookback  = interval === '15m' ? 24 * 3600e3
+                  : interval === '1h'  ?  7 * 24 * 3600e3
+                  :                      30 * 24 * 3600e3;
+  const startTime = endTime - lookback;
+  const res = await fetch('https://api.hyperliquid.xyz/info', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'candleSnapshot', req: { coin: 'PAXG', interval, startTime, endTime } }),
+  });
+  if (!res.ok) throw new Error('Candle HTTP ' + res.status);
+  return res.json();
+}
+
+function setChartTF(tf, btn) {
+  currentTF = tf;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPriceChart(tf);
+}
+
+async function renderPriceChart(interval) {
+  const overlay = $('chart-overlay');
+  overlay.textContent = 'Loading…';
+  overlay.style.display = 'flex';
+  try {
+    const raw = await fetchCandles(interval);
+    if (!Array.isArray(raw) || raw.length === 0) { overlay.textContent = 'No data'; return; }
+
+    const data = raw.slice(-80);
+    const labels = data.map(c => {
+      const d = new Date(c.t);
+      if (interval === '15m') return d.toISOString().slice(11, 16);
+      if (interval === '1h')  return d.toISOString().slice(5, 13).replace('T', ' ');
+      return d.toISOString().slice(5, 10);
+    });
+    const opens  = data.map(c => parseFloat(c.o));
+    const highs  = data.map(c => parseFloat(c.h));
+    const lows   = data.map(c => parseFloat(c.l));
+    const closes = data.map(c => parseFloat(c.c));
+    const colors = data.map(c => parseFloat(c.c) >= parseFloat(c.o) ? '#00D4A0' : '#FF4D6A');
+
+    overlay.style.display = 'none';
+
+    if (priceChart) { priceChart.destroy(); priceChart = null; }
+
+    priceChart = new Chart($('price-chart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          /* wick — high to low, 1px wide */
+          {
+            data: data.map((c, i) => ({ x: labels[i], y: [parseFloat(c.l), parseFloat(c.h)] })),
+            backgroundColor: colors,
+            barThickness: 1,
+            order: 2,
+          },
+          /* body — open to close, 4px wide */
+          {
+            data: data.map((c, i) => ({
+              x: labels[i],
+              y: [Math.min(parseFloat(c.o), parseFloat(c.c)), Math.max(parseFloat(c.o), parseFloat(c.c))],
+            })),
+            backgroundColor: colors,
+            barThickness: 4,
+            order: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 400 },
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            filter: item => item.datasetIndex === 1,
+            backgroundColor: '#0F1220',
+            borderColor: '#1E2235',
+            borderWidth: 1,
+            titleColor: '#9AA0C0',
+            bodyColor: '#E8EAF6',
+            titleFont: { family: 'IBM Plex Mono', size: 10 },
+            bodyFont:  { family: 'IBM Plex Mono', size: 11, weight: '600' },
+            padding: 10,
+            callbacks: {
+              title: items => labels[items[0].dataIndex],
+              label: item => {
+                const c = data[item.dataIndex];
+                const chg = parseFloat(c.c) - parseFloat(c.o);
+                return [
+                  'O: $' + parseFloat(c.o).toFixed(2),
+                  'H: $' + parseFloat(c.h).toFixed(2),
+                  'L: $' + parseFloat(c.l).toFixed(2),
+                  'C: $' + parseFloat(c.c).toFixed(2),
+                  (chg >= 0 ? '+' : '') + chg.toFixed(2) + ' pts',
+                ];
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            ticks: { color: '#5A6080', font: { size: 9, family: 'IBM Plex Mono' }, maxTicksLimit: 12, maxRotation: 0 },
+            grid: { color: 'rgba(255,255,255,0.03)' },
+            border: { color: '#1E2235' },
+          },
+          y: {
+            position: 'right',
+            ticks: { color: '#5A6080', font: { size: 9, family: 'IBM Plex Mono' }, callback: v => '$' + v.toFixed(0) },
+            grid: { color: 'rgba(255,255,255,0.03)' },
+            border: { color: '#1E2235' },
+          },
+        },
+      },
+    });
+
+    /* key levels strip */
+    const lastClose = closes[closes.length - 1];
+    const firstOpen = opens[0];
+    const rangeHigh = Math.max(...highs);
+    const rangeLow  = Math.min(...lows);
+    const chg = lastClose - firstOpen;
+    const levels = [
+      { lbl: 'RANGE HIGH', val: '$' + rangeHigh.toFixed(2), cls: 'c-red'   },
+      { lbl: 'RANGE LOW',  val: '$' + rangeLow.toFixed(2),  cls: 'c-green' },
+      { lbl: 'LAST CLOSE', val: '$' + lastClose.toFixed(2), cls: 'c-text'  },
+      { lbl: 'PERIOD CHG', val: (chg >= 0 ? '+' : '') + chg.toFixed(2) + ' pts', cls: chg >= 0 ? 'c-green' : 'c-red' },
+    ];
+    $('key-levels').innerHTML = levels.map(k =>
+      `<div class="kl-item"><div class="kl-label">${k.lbl}</div><div class="kl-val ${k.cls}">${k.val}</div></div>`
+    ).join('');
+
+  } catch (e) {
+    overlay.textContent = 'Chart error: ' + e.message;
+    overlay.style.display = 'flex';
+    console.error('[price-chart]', e);
+  }
+}
+
 /* ── Main fetch ─────────────────────────────────────────────── */
 async function fetchAndRender() {
   const dot = $('dot');
@@ -1217,6 +1460,8 @@ function startCountdown() {
 
 /* ── Boot ───────────────────────────────────────────────────── */
 fetchAndRender().then(startCountdown);
+renderPriceChart('15m');
+setInterval(() => renderPriceChart(currentTF), 15 * 60 * 1000);
 </script>
 </body>
 </html>

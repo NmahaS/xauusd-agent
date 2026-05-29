@@ -329,3 +329,4 @@ to lose. See [DISCLAIMER.md](DISCLAIMER.md) for full risk disclosure.
 - ⚠ ⚡ DeepSeek: unavailable — using Claude direction
 - ⚠ FRED macro data unavailable — yields/real-rate missing
 <!-- LATEST_PLAN_END -->
+Fri May 29 16:55:24 AEST 2026

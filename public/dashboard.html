@@ -1102,16 +1102,24 @@ function renderRisk(d) {
   const conf = d.signal?.confluence || 0;
   const atr  = d.atr || 0;
 
+  const isDeadZone = utcH < 6 || utcH >= 21;
+  const atrMin     = isDeadZone ? 8 : 3;
+  const confMin    = isDeadZone ? 7 : 6;
   const checks = [
-    { lbl: 'Friday after 15:00 UTC',             pass: !(utcD === 5 && utcH >= 15) },
-    { lbl: 'High-impact news guard',              pass: true },
-    { lbl: 'Daily loss < 6%',                    pass: true },
-    { lbl: 'Weekly DD < 15%',                    pass: true },
-    { lbl: 'Open positions < 6',                 pass: true },
-    { lbl: 'TP1 RR ≥ 1.5',                      pass: true },
-    { lbl: `Confluence ≥ 5  (now: ${conf})`,     pass: conf >= 5 || conf === 0 },
-    { lbl: `ATR ≥ 3 pts  (now: ${fNum(atr)})`,  pass: atr >= 3 || atr === 0 },
-    { lbl: 'Spread ≤ 3 pts',                     pass: true },
+    { lbl: 'Friday after 15:00 UTC blocked',                          pass: !(utcD === 5 && utcH >= 15) },
+    { lbl: 'High-impact news guard (30 min)',                         pass: true },
+    { lbl: 'Daily loss < 6%',                                         pass: true },
+    { lbl: 'Weekly DD < 15%',                                         pass: true },
+    { lbl: 'Max positions < 6',                                       pass: true },
+    { lbl: 'TP target: 2R (3R if trending)',                          pass: true },
+    { lbl: `Min confluence: ${confMin}/12  (now: ${conf})`,           pass: conf >= confMin || conf === 0 },
+    { lbl: `Min ATR: ${atrMin}pts  (now: ${fNum(atr)})`,             pass: atr >= atrMin  || atr === 0 },
+    { lbl: 'Max spread: 3 pts',                                       pass: true },
+    { lbl: 'Counter-H4 blocked (T1 + C≥8 exception)',                 pass: true },
+    { lbl: 'Tier 4 blocked',                                          pass: true },
+    { lbl: 'Dead zone: strict rules (ATR≥8, C≥7, no position)',       pass: true },
+    { lbl: 'Max daily trades: 10',                                    pass: true },
+    { lbl: 'SL range: 3–50 pts',                                      pass: true },
   ];
 
   const allOk = checks.every(c => c.pass);

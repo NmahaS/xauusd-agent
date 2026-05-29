@@ -1479,16 +1479,20 @@ async function renderPriceChart(interval) {
     });
 
     /* key levels strip */
-    const lastClose = closes[closes.length - 1];
-    const firstOpen = opens[0];
-    const rangeHigh = Math.max(...highs);
-    const rangeLow  = Math.min(...lows);
-    const chg = lastClose - firstOpen;
+    const lastClose  = closes[closes.length - 1];
+    const firstOpen  = opens[0];
+    const rangeHigh  = Math.max(...highs);
+    const rangeLow   = Math.min(...lows);
+    const chg        = lastClose - firstOpen;
+    const changePct  = firstOpen ? ((chg / firstOpen) * 100).toFixed(2) : '0.00';
+    const tfHigh = interval === '15m' ? '24H HIGH' : interval === '1h' ? '7D HIGH'  : '30D HIGH';
+    const tfLow  = interval === '15m' ? '24H LOW'  : interval === '1h' ? '7D LOW'   : '30D LOW';
+    const tfChg  = interval === '15m' ? '24H CHANGE': interval === '1h' ? '7D CHANGE': '30D CHANGE';
     const levels = [
-      { lbl: 'RANGE HIGH', val: '$' + rangeHigh.toFixed(2), cls: 'c-red'   },
-      { lbl: 'RANGE LOW',  val: '$' + rangeLow.toFixed(2),  cls: 'c-green' },
-      { lbl: 'LAST CLOSE', val: '$' + lastClose.toFixed(2), cls: 'c-text'  },
-      { lbl: 'PERIOD CHG', val: (chg >= 0 ? '+' : '') + chg.toFixed(2) + ' pts', cls: chg >= 0 ? 'c-green' : 'c-red' },
+      { lbl: tfHigh, val: '$' + rangeHigh.toFixed(2), cls: 'c-red'   },
+      { lbl: tfLow,  val: '$' + rangeLow.toFixed(2),  cls: 'c-green' },
+      { lbl: 'CURRENT', val: '$' + lastClose.toFixed(2), cls: 'c-text'  },
+      { lbl: tfChg,  val: (chg >= 0 ? '+' : '') + chg.toFixed(2) + ' pts (' + (chg >= 0 ? '+' : '') + changePct + '%)', cls: chg >= 0 ? 'c-green' : 'c-red' },
     ];
     $('key-levels').innerHTML = levels.map(k =>
       `<div class="kl-item"><div class="kl-label">${k.lbl}</div><div class="kl-val ${k.cls}">${k.val}</div></div>`

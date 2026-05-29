@@ -1,0 +1,10 @@
+.git
+plans
+cache
+data
+backtest
+tests
+*.log
+*.csv
+.env
+.env.*

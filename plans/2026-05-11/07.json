@@ -1,0 +1,158 @@
+{
+  "timestamp": "2026-05-11T07:16:04.521Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "M15 SMC bias is bearish (BOS-bearish @ 4662.40); price in premium zone (86.9% of M15 range); H4 last event was BOS-bullish but current M15 structure has broken below recent support and is printing lower lows. H1 shows bullish bias but M15 signal overrides with bearish structure. EUR/USD weakening (dollar strengthening) is bearish for gold. Positive real yields (1.96%) are structurally bearish. Funding rate +0.0013%/hr indicates mild long crowding. M15 is in premium and has multiple unfilled bearish FVGs above current price.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 bearish structure (BOS-bearish @ 4662.40 intact)",
+    "Price in premium zone (86.9% of M15 range 4643.20-4672.10)",
+    "Multiple unfilled bearish M15 FVGs above price (4719.40-4721.10, 4717.80-4718.20, 4714.20-4716.30)",
+    "EUR/USD weakening (dollar strengthening = bearish for gold)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4716.3,
+      4717.8
+    ],
+    "reasoning": "M15 active bearish OB; represents recent resistance where price failed to sustain; overlaps with unfilled bearish FVG 4717.80-4718.20; within 8pts of current price (4668.30)"
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4716.8,
+    "confirmation": "Limit sell at OB midpoint; validated by M15 bearish structure and dollar strength; execute on touch of OB zone during London kill zone"
+  },
+  "stopLoss": {
+    "price": 4724.5,
+    "reasoning": "Above M15 bearish OB high (4717.80) + 0.2×M15 ATR (7.71×0.2=1.54); invalidates M15 bearish bias if breached; protects against H1 bullish structure reassertion",
+    "pips": 77
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4704.2,
+      "reasoning": "M15 unfilled bearish FVG low (4704.20-4711.90); first liquidity pool in bearish direction",
+      "rr": 1.6
+    },
+    {
+      "level": "TP2",
+      "price": 4690,
+      "reasoning": "H1 bullish OB low (4544.80-4552.80) extended; prior swing support; discount zone entry",
+      "rr": 3.4
+    },
+    {
+      "level": "TP3",
+      "price": 4675,
+      "reasoning": "H4 bullish FVG low (4584.40-4632.50) extended; major structural support",
+      "rr": 5.3
+    }
+  ],
+  "invalidation": {
+    "price": 4724.5,
+    "reasoning": "Break above M15 bearish OB + buffer invalidates short bias; price would reclaim premium and confirm H1 bullish structure; flip to neutral/bullish"
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC — execute now on limit fill at OB"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 77-pip stop; size accordingly to account for elevated volatility (6.6x)"
+  },
+  "macroContext": "Dollar strengthening (EUR/USD -8.90% 24h), positive real yields (1.96%), neutral sentiment (F&G 48) — structurally bearish for gold; M15 bearish structure + premium zone alignment supports short bias despite H1 bullish context.",
+  "warnings": [
+    "H1 bias is bullish (BOS-bullish @ 4714.20) — conflicts with M15 bearish signal; this is a Tier 3 (technical-only) setup, not Tier 1/2",
+    "Macro is neutral; no strong tailwind for shorts; rely on M15 structure and premium zone mean reversion",
+    "Elevated volatility (6.6x) — use tight stops; M15 ATR 7.71 is elevated; expect whipsaws",
+    "Positive real yields are structurally bearish but not extreme; macro does not strongly confirm",
+    "H1 OTE long zone [4711.55, 4714.02] is very close to entry; price may find support there before reaching TP1",
+    "No high-impact news in next 24h, but macro data (yields, DXY) can shift quickly; monitor real yields and EUR/USD intraday",
+    "✅ Consensus: Claude + DeepSeek both short"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15PendingSince": "2026-05-11T07:16:23.809Z",
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4668.35 not at M15 POI [4716.30-4717.80] yet"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "volatile_tradeable",
+        "vpSignal": "at_poc",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at POC 4683.03 (institutional equilibrium)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bearish structure (BOS-bearish @ 4662.40 intact)",
+          "Price in premium zone (86.9% of M15 range 4643.20-4672.10)",
+          "Multiple unfilled bearish M15 FVGs above price (4719.40-4721.10, 4717.80-4718.20, 4714.20-4716.30)",
+          "EUR/USD weakening (dollar strengthening = bearish for gold)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at POC 4683.03 (institutional equilibrium)",
+      "M15 bearish structure (BOS-bearish @ 4662.40 intact)",
+      "Price in premium zone (86.9% of M15 range 4643.20-4672.10)",
+      "Multiple unfilled bearish M15 FVGs above price (4719.40-4721.10, 4717.80-4718.20, 4714.20-4716.30)",
+      "EUR/USD weakening (dollar strengthening = bearish for gold)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors",
+    "warnings": [
+      "⚠️ Elevated volatility — use tight stops"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "WAITING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Waiting for price to reach M15 POI 4716.3-4717.8",
+    "orderId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

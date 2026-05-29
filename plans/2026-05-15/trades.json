@@ -1,0 +1,36 @@
+[
+  {
+    "timestamp": "2026-05-15T01:25:43.516Z",
+    "orderId": 426452929687,
+    "direction": "short",
+    "size": 0.012,
+    "entry": 4614.4,
+    "sl": 4688.5,
+    "tp": 4471,
+    "targetRR": 2,
+    "slPlaced": true,
+    "tpPlaced": true,
+    "riskAmount": 0.86,
+    "riskPct": "0.97",
+    "tier": 3,
+    "confluenceCount": 7,
+    "quality": "B",
+    "plan": {
+      "symbol": "PAXG/USDC",
+      "timestamp": "2026-05-15T01:25:08.600Z",
+      "setupQuality": "B",
+      "confluenceCount": 7,
+      "consensus": {
+        "agreement": "full",
+        "confidence": "high",
+        "claudeDirection": "short",
+        "deepseekDirection": "short",
+        "claudeQuality": "B",
+        "deepseekQuality": "B",
+        "newsRisk": null,
+        "newsSentiment": null,
+        "newsHeadline": null
+      }
+    }
+  }
+]

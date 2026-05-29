@@ -1,0 +1,156 @@
+{
+  "timestamp": "2026-05-14T09:00:00.934Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "M15 BOS-bullish @ 4702.90 confirmed; H1 CHoCH-bullish @ 4704.30 intact; price in discount zone (10.7% of M15 range); bullish M15 OB at 4666.80-4669.70 unmitigated and within 8pts; EUR/USD weakening (dollar weakness = bullish for gold); London kill zone active. H4 bearish CHoCH @ 4643.20 is older structure; M15/H1 bullish bias overrides for short-term entry. Positive funding (+0.0013%/hr) shows longs crowded but not extreme; macro neutral with rising real yields (1.99%) is mild headwind, but technical confluence is strong.",
+  "setupQuality": "A",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "M15 BOS-bullish @ 4702.90 (recent structure event)",
+    "H1 CHoCH-bullish @ 4704.30 (H1 bias supports direction)",
+    "M15 active bullish OB at 4666.80-4669.70 within 8pts (primary entry POI)",
+    "Price in M15 discount zone (10.7% of range — optimal long entry area)",
+    "EUR/USD weakening (dollar weakness bullish for gold)",
+    "London kill zone active (07-10 UTC execution window)",
+    "M15 unfilled bullish FVG at 4669.70-4673.20 (imbalance target nearby)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4666.8,
+      4669.7
+    ],
+    "reasoning": "M15 active bullish OB formed during recent impulsive leg; unmitigated and overlaps with M15 discount zone (10.7% of range). This is the primary entry POI for long confirmation."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4686.45,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4665.21,
+    "reasoning": "Below M15 OB low (4666.80) with 0.2×M15 ATR (7.79×0.2≈1.56) buffer; invalidates M15 bullish structure and H1 CHoCH if breached. + 0.2 × M15 ATR buffer",
+    "pips": 21.24
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4709,
+      "reasoning": "Prior M15 swing high and H1 liquidity pool (4709.10 swept); structural reference — system places TP at 2R automatically.",
+      "rr": 1.06
+    }
+  ],
+  "invalidation": {
+    "price": 4659.5,
+    "reasoning": "Break below M15 OB low with close below 4659.50 invalidates bullish M15/H1 structure; bias flips to neutral/bearish."
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC — execute now on limit fill or bullish confirmation candle inside OB."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 84-pip stop; position size = (account_size × 0.01) / 84 pips."
+  },
+  "macroContext": "Real yields rising (1.99%) and positive funding (+0.0013%/hr) are mild headwinds; EUR/USD weakening (dollar weakness) is bullish for gold; Fear & Greed at 34 (fear) is neutral; high-impact retail sales data in +210m (Core Retail Sales, Retail Sales, Unemployment Claims) — monitor for volatility but no immediate conflict with entry.",
+  "warnings": [
+    "High-impact USD economic data (Core Retail Sales, Retail Sales, Unemployment Claims) due in ~210 minutes — consider tightening stops or taking profits early if volatility spikes.",
+    "H4 structure is bearish (CHoCH @ 4643.20); this is a M15/H1 tactical long only — not a swing long. Respect the M15 OB invalidation level (4659.50) strictly.",
+    "Positive funding rate (+0.0013%/hr) indicates crowded longs — exit on first sign of M15 structure breakdown or if price closes below OB.",
+    "Weekly macro is neutral and real yields are positive (1.99%) — avoid scaling into this trade; 1% risk max.",
+    "✅ Consensus: Claude + DeepSeek both long"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "long",
+    "deepseekDirection": "long",
+    "claudeQuality": "A",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "bullish",
+    "newsHeadline": "Gold holds bullish structure above key support; retail sales data looms as key catalyst"
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4686.45 — M15 bullish bias confirms",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 7,
+        "confluenceGrade": "A",
+        "factors": [
+          "M15 BOS-bullish @ 4702.90 (recent structure event)",
+          "H1 CHoCH-bullish @ 4704.30 (H1 bias supports direction)",
+          "M15 active bullish OB at 4666.80-4669.70 within 8pts (primary entry POI)",
+          "Price in M15 discount zone (10.7% of range — optimal long entry area)",
+          "EUR/USD weakening (dollar weakness bullish for gold)",
+          "London kill zone active (07-10 UTC execution window)",
+          "M15 unfilled bullish FVG at 4669.70-4673.20 (imbalance target nearby)"
+        ],
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)",
+      "M15 BOS-bullish @ 4702.90 (recent structure event)",
+      "H1 CHoCH-bullish @ 4704.30 (H1 bias supports direction)",
+      "M15 active bullish OB at 4666.80-4669.70 within 8pts (primary entry POI)",
+      "Price in M15 discount zone (10.7% of range — optimal long entry area)",
+      "EUR/USD weakening (dollar weakness bullish for gold)",
+      "London kill zone active (07-10 UTC execution window)",
+      "M15 unfilled bullish FVG at 4669.70-4673.20 (imbalance target nearby)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 8 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.11 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

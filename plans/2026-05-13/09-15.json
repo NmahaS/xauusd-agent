@@ -1,0 +1,152 @@
+{
+  "timestamp": "2026-05-13T09:15:00.435Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4643.20 with active bearish OB [4762.30-4782.50] unmitigated; H1 shows bullish CHoCH @ 4704.30 but price is now in premium zone (62.5%) and below H1 EMA20/EMA50; M15 shows bullish CHoCH @ 4700.50 but price has retreated to 4687.30 (discount on M15 scale). Macro: rising real yields (1.95%) bearish for gold; EUR/USD weakening (-8.69% 24h) = dollar strengthening = bearish gold. Weekly VWAP 4700.89 acts as resistance; price below it signals institutional bearish bias. High-impact PPI data in 195m adds uncertainty. Funding rate -0.0004%/hr (shorts paying) = mild bullish contrarian, but macro + structure override.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish structure (CHoCH intact, bearish OB unmitigated)",
+    "Price in premium zone on H1 (62.5% of range)",
+    "EUR/USD weakening (dollar strengthening = bearish gold)",
+    "Real yields rising (1.95% = bearish gold)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4711.6,
+      4715.4
+    ],
+    "reasoning": "M15 active bearish OB [4711.60-4715.40] is the primary POI for short entry; price must rally into this zone to trigger. This OB represents the last bullish candle before the bearish structure took hold on M15. Overlaps with M15 bearish FVG [4707.80-4711.10] and sits just above current price (4687.30), making it a natural resistance target within 8pts of structure."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4713.5,
+    "confirmation": "Limit sell at OB midpoint; validated by H4 bearish structure, rising real yields, and dollar strength. Requires price to rally into premium zone and touch OB before entry executes. M15 bearish bias + H4 CHoCH confirmation."
+  },
+  "stopLoss": {
+    "price": 4722.8,
+    "reasoning": "Above M15 bearish OB high (4715.40) + 0.2×M15 ATR (5.50×0.2=1.1); invalidates bearish structure if breached. Protects against H1 bullish CHoCH continuation.",
+    "pips": 91
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4670,
+      "reasoning": "H1 bullish OB low [4646.70-4663.50] midpoint + H1 discount zone floor; first structural liquidity pool below current price. System will place TP at 2R automatically.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4722.8,
+    "reasoning": "Break above M15 bearish OB + buffer invalidates short bias; H1 bullish CHoCH would be confirmed and bias flips to bullish."
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC active now; execute on limit fill into OB. Caution: Core PPI data in 195m (high impact) — consider tightening stops or waiting for post-data clarity."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.8% risk on 91-pip stop; reduced from 1% due to transitioning regime and imminent high-impact PPI release. Avoid size increase until post-data confirmation."
+  },
+  "macroContext": "Rising real yields (1.95%) and strengthening dollar (EUR/USD -8.69%) are bearish for gold; weekly VWAP 4700.89 acts as institutional resistance; fear sentiment (42) is neutral. High-impact PPI data in 195m adds event risk.",
+  "warnings": [
+    "Transitioning market regime — SMC effective but volatility may spike. Require higher confluence (B-grade setup, not A-grade).",
+    "High-impact USD Core PPI and PPI data in 195m (09:30 UTC approx). Consider waiting for post-data confirmation or tightening stops.",
+    "H1 bullish CHoCH @ 4704.30 conflicts with H4 bearish bias — this is a lower-confidence short. If price breaks above 4722.80, flip to bullish bias immediately.",
+    "M15 bullish CHoCH @ 4700.50 is recent; price has only retreated 13pts. Ensure OB entry is confirmed before size.",
+    "Funding rate -0.0004%/hr (shorts paying) is mild bullish contrarian signal — do not add to shorts on weakness.",
+    "No M15 RSI divergence detected; momentum is neutral. Entry relies on structure + macro alignment, not momentum confirmation.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold faces bearish pressure ahead of US inflation data and Fed Chair vote; XAU/AUD at 4687.15 with technical weakness"
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4687.15 not at M15 POI [4711.60-4715.40] yet",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (CHoCH intact, bearish OB unmitigated)",
+          "Price in premium zone on H1 (62.5% of range)",
+          "EUR/USD weakening (dollar strengthening = bearish gold)",
+          "Real yields rising (1.95% = bearish gold)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4689.59 (strong S/R)",
+      "H4 bearish structure (CHoCH intact, bearish OB unmitigated)",
+      "Price in premium zone on H1 (62.5% of range)",
+      "EUR/USD weakening (dollar strengthening = bearish gold)",
+      "Real yields rising (1.95% = bearish gold)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 6 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "WAITING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: 423772193734",
+    "orderId": 423772193734,
+    "entry": 4687.7,
+    "size": 0.012,
+    "riskAmount": 0.43,
+    "riskPct": "0.49",
+    "timestamp": "2026-05-13T09:15:33.145Z"
+  }
+}

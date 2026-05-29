@@ -1,0 +1,115 @@
+{
+  "timestamp": "2026-05-12T20:30:00.484Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bullish structure (CHoCH at 4723.10) but H1 has flipped bearish (CHoCH at 4643.20); M15 is bearish (CHoCH at 4678.40). Price is in premium zone (101.9% of H1 range), RSI14 on M15 is overbought at 67.5, and M15 active bearish OBs at 4711.60-4715.40 and 4714.30-4717.00 are untested above current price. Positive real yields (1.95%) remain bearish for gold. EUR/USD weakening 8.69% in 24h (dollar strengthening) is bearish gold. Funding rate is negative (-0.0008%/hr) indicating shorts are paying, suggesting crowded short positioning but also structural weakness. High-impact PPI data in ~16 hours adds uncertainty. Market is transitioning; confluence is weak for any direction.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) with fresh structure confirmation post-PPI data"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — market transitioning, conflicting timeframe bias, no M15 POI within 8pts of current price, high-impact news within 24h"
+  },
+  "macroContext": "Positive real yields (1.95%) bearish for gold; EUR/USD weakening sharply (dollar strengthening) is bearish gold; Fear & Greed neutral at 49 but rising (risk-on). High-impact PPI data in ~16 hours creates event risk. Macro leans bearish but not extreme.",
+  "warnings": [
+    "H4 bullish vs H1/M15 bearish — conflicting timeframe bias; no clear directional alignment",
+    "Price in premium zone (101.9% of H1 range) — unfavorable for long entry; no discount zone for bullish confluence",
+    "M15 RSI overbought at 67.5 with no bullish divergence — bearish signal for continuation",
+    "M15 active bearish OBs (4711.60-4715.40, 4714.30-4717.00) are above current price (4705.60) — no immediate M15 OB within 8pts for short entry",
+    "M15 bullish FVGs are numerous but price is above most of them; no clear FVG target within 8pts for short",
+    "EUR/USD weakening 8.69% in 24h (dollar strengthening) is bearish gold — macro headwind",
+    "Positive real yields (1.95%) remain bearish for gold — macro filter against longs",
+    "High-impact PPI data (Core PPI, PPI) in ~16 hours — avoid entry before event; wait for post-event structure",
+    "Funding rate negative (-0.0008%/hr) suggests shorts are crowded — contrarian signal against shorts, but not strong enough to override structure",
+    "Market transitioning per regime analysis — SMC effective but require higher confluence; current setup does not meet threshold",
+    "No kill zone active (off-session) — execution window not optimal",
+    "H1 OTE zones (long 4650.38-4661.91, short 4678.09-4689.62) do not align with current price (4705.60) — price is above both OTE zones in premium"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at HVN 4711.92 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bearish",
+        "confluenceCount": 0,
+        "confluenceGrade": "no-trade",
+        "factors": [],
+        "score": 0
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4711.92 (strong S/R)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 2 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

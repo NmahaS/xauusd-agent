@@ -1,0 +1,156 @@
+{
+  "timestamp": "2026-05-20T06:25:04.221Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish structure (BOS-bearish @ 4525.70 intact); H1 CHoCH-bearish @ 4478.20 confirmed; M15 BOS-bearish @ 4457.10 active. Price in discount zone (5.1% below H4 range) but M15 in premium (63.5%). Weekly macro neutral but yields rising (bearish gold). EUR/USD weakening (-7.59% 24h) supports dollar strength = bearish gold. Institutional bias bearish (below weekly VWAP). Market transitioning — require higher confluence for entry.",
+  "setupQuality": "B",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 BOS-bearish confirms direction",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4500.2,
+      4505.7
+    ],
+    "reasoning": "M15 active bearish OB formed on recent impulsive down-close candle (2026-05-20T00:30:00Z close 4504.7); price must pullback into this zone before entry. This OB is unmitigated and sits 27-33pts above current price, providing a clear pullback target aligned with H4 bearish bias."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4472.4,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4507.06,
+    "reasoning": "Above M15 OB high (4505.70) + 0.2×M15 ATR (7.98×0.2=1.6pts) = 4507.30; rounded to 4510.70 for structural clarity. Invalidates M15 bearish OB if breached; signals potential H1 structure flip. + 0.2 × M15 ATR buffer",
+    "pips": 34.66
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4466.7,
+      "reasoning": "H4 support level (nearest HVN 4526.08 and H4 FVG floor 4480.00 below); first structural liquidity pool on bearish move. System places TP at 2R automatically; this is structural reference only.",
+      "rr": 0.16
+    }
+  ],
+  "invalidation": {
+    "price": 4510.7,
+    "reasoning": "Close above M15 OB high + buffer invalidates bearish structure; H1 CHoCH-bearish @ 4478.20 also invalidated if price reclaims 4510+. Bias flips neutral/bullish."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for higher liquidity and confirmation. Current Asia session has low volume — pullback may not occur until London open."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.8,
+    "positionSizeHint": "0.8% risk on 80-pip stop. Confluence is B-tier (4 factors) — reduce size vs A-tier setups. Market transitioning; require pullback confirmation before entry."
+  },
+  "macroContext": "Yields rising (bearish gold), EUR/USD weakening sharply (-7.59% 24h, dollar strengthening = bearish gold), Fear & Greed at 27 (fear, risk-off neutral). Institutional bias bearish (below weekly VWAP). Funding rate -0.0010%/hr (shorts paying) = mild bullish contrarian, but macro and structure override.",
+  "warnings": [
+    "Market transitioning — SMC effective but volatility may spike. Require pullback into M15 OB before entry; do NOT enter at current price (4472.80).",
+    "Confluence is B-tier (4 factors). Missing H1 P/D zone confirmation (price in discount, not premium for short). Missing kill zone (Asia session, low volume).",
+    "Entry price (4502.50) is 29.7pts above current price. Price must pullback significantly. If pullback does not occur by London open, invalidate setup.",
+    "EUR/USD weakness (-7.59%) is strong dollar headwind. Monitor DXY for reversal; if EUR/USD stabilizes/rises, bullish bias may emerge.",
+    "No high-impact news in next 24h, but yields rising trend is persistent bearish pressure. Watch for yield inversion or Fed commentary.",
+    "M15 RSI at 47.2 (neutral, not oversold). No RSI divergence. Entry on structure only — not on momentum confirmation.",
+    "✅ Consensus: Claude + DeepSeek both short",
+    "FRED macro data unavailable — yields/real-rate missing"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4472.40 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "below_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 7,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 BOS-bearish confirms direction",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 BOS-bearish confirms direction",
+      "No imminent gold-relevant news",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 8 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Position held: Position losing $-1.04 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

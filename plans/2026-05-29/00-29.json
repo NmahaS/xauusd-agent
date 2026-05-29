@@ -1,0 +1,148 @@
+{
+  "timestamp": "2026-05-29T00:29:59.860Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bias is bearish (CHoCH-bearish @ 4514.30, EMA20 4473.46 < EMA50 4501.42 < EMA200 4592.08, RSI 52.3 neutral-to-bearish). H1 shows bullish CHoCH @ 4461.40 but is in extreme premium (89.2% of range), creating structural conflict. M15 shows bullish BOS @ 4505.30 but price is now 4491.70, below that level, and M15 RSI 62.4 is overbought. Institutional bias is bearish (price below weekly VWAP 4493.84, 2σ above daily VWAP). Weekly yields falling (bullish gold) but macro is neutral overall. EUR/USD weakening (dollar strengthening = bearish gold). Fear & Greed at 23 (extreme fear) supports safe-haven demand but is offset by institutional selling pressure and overbought technicals. H4 bearish structure is the primary filter; H1 bullish context is secondary noise in a transitioning regime.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish structure (CHoCH-bearish intact, EMA alignment bearish)",
+    "Price in premium zone (89.2% H1, 61.1% H4) — short bias favored",
+    "M15 overbought RSI 62.4 — bearish divergence setup",
+    "Institutional bias bearish (price below weekly VWAP)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4498.2,
+      4498.7
+    ],
+    "reasoning": "M15 bearish FVG at 4498.20-4498.70 is the nearest unfilled imbalance above current price (4491.70). Price must retrace into this zone before continuation lower. This is the primary POI for short entry confirmation."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4491.95,
+    "confirmation": "Market entry at current price (4491.95). No M15 OB within 30pts; H4 bearish bias confirmed. Enter short on next M15 bearish candle close below 4490 or on limit fill at 4498.20 (top of bearish FVG) if price retraces. Prefer limit at 4498.20 for better risk/reward."
+  },
+  "stopLoss": {
+    "price": 4506.2,
+    "reasoning": "H4 resistance and recent M15 BOS high @ 4505.30. Stop above this level invalidates bearish H4 structure. Distance: 14.25 pts (3.5× M15 ATR of 4.01), acceptable for H4-level trade.",
+    "pips": 14
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4481.8,
+      "reasoning": "H4 support level (10.1 pts below current price). First structural target; represents 2R from market entry at 4491.95 (SL 14.25 pts = 1R, TP 10.25 pts down = 0.72R, adjust to 2R = 28.5 pts down to 4463.45, but structural reference is 4481.80 — system will place TP at 2R automatically).",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4506.2,
+    "reasoning": "Break above H4 resistance and M15 BOS high (4505.30) invalidates bearish bias. If price closes above 4506.20 on H4, structure flips bullish and short is invalidated."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London open (07:00 UTC, ~6.5 hours). London kill zone 07:00-10:00 UTC preferred for short execution. Current Asia session is low-volatility; avoid entry now."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 14-pip stop. Historical WR 33% (2W/4L) with 0R expectancy — reduce size. Blocked signals 100% win rate suggests this setup is marginal; wait for London kill zone confirmation before entry."
+  },
+  "macroContext": "Weekly yields falling (bullish gold) but EUR/USD weakening (dollar strengthening = bearish gold). Extreme fear (F&G 23) supports safe-haven demand, but institutional bias is bearish (price below weekly VWAP). Macro is neutral-to-bearish; technical bearish bias dominates. High positive funding (0.0013%/hr, 11% annualized) indicates crowded longs — mild bearish contrarian signal.",
+  "warnings": [
+    "H4 bearish vs H1 bullish creates structural conflict — confluence is only B (4 factors). Require London kill zone confirmation before entry.",
+    "Market transitioning regime — SMC effective but volatility may be low. Avoid entry in Asia session; wait for London.",
+    "Historical performance marginal (33% WR, 0R expectancy). Blocked signals 100% win rate — this setup type has been correctly blocked before. Proceed with caution.",
+    "M15 overbought RSI 62.4 but no bearish divergence yet. Wait for RSI rollover or M15 candle close below 4490 for confirmation.",
+    "German Prelim CPI (Medium, +359m) and BOE Gov Bailey Speaks (High, +470m) upcoming — avoid entry within 1 hour of these events.",
+    "No M15 OB within 30pts; market entry at 4491.95 is acceptable but prefer limit at 4498.20 (bearish FVG) for better entry quality.",
+    "Funding rate positive (longs paying) — mild bearish signal but not primary driver. Do not over-weight.",
+    "⚡ DeepSeek: unavailable — using Claude direction",
+    "FRED macro data unavailable — yields/real-rate missing"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "failed",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Blocked",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields falling (bullish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "m15Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (CHoCH-bearish intact, EMA alignment bearish)",
+          "Price in premium zone (89.2% H1, 61.1% H4) — short bias favored",
+          "M15 overbought RSI 62.4 — bearish divergence setup",
+          "Institutional bias bearish (price below weekly VWAP)"
+        ],
+        "h4AndM15Agree": false,
+        "h1AlignsWithH4": false,
+        "h1PullbackInH4": true,
+        "score": 4
+      }
+    },
+    "allFactors": [],
+    "blockingFactors": [
+      "M15 long conflicts with H4 short trend — execution TF misaligned"
+    ],
+    "summary": "Tier 4: Blocked — M15 long conflicts with H4 short trend — execution TF misaligned"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Blocked",
+    "executed": false,
+    "reason": "Dead zone: ATR 4.01pts too low (need 8pts in dead zone)",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "timestamp": "2026-05-12T04:37:42.693Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH bearish, M15 BOS bearish, price in H1 premium zone, but macro neutral and EUR/USD weakening (bullish for gold) creates conflict. Confluence low due to conflicting layers and no M15 POI within 8pts.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "M15 bearish OB within 8pts [4714.30-4717.00]",
+    "M15 BOS-bearish confirms direction",
+    "H1 price in premium zone (75.8%)",
+    "No imminent gold-relevant news"
+  ],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields positive (bearish gold), EUR/USD weakening (bullish gold), F&G neutral — conflicting macro signals.",
+  "warnings": [
+    "Conflicting H4 bearish vs H1 bullish structure",
+    "No M15 POI within 8pts of current price",
+    "High-impact CPI data in ~8 hours",
+    "Market transitioning regime — require higher confluence",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "failed",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at HVN 4721.34 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 5,
+        "confluenceGrade": "no-trade",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "M15 bearish OB within 8pts [4714.30-4717.00]",
+          "M15 BOS-bearish confirms direction",
+          "H1 price in premium zone (75.8%)",
+          "No imminent gold-relevant news"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4721.34 (strong S/R)",
+      "H4+M15 bias agree (short)",
+      "M15 bearish OB within 8pts [4714.30-4717.00]",
+      "M15 BOS-bearish confirms direction",
+      "H1 price in premium zone (75.8%)",
+      "No imminent gold-relevant news"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 6 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

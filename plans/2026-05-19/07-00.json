@@ -1,0 +1,134 @@
+{
+  "timestamp": "2026-05-19T07:00:00.074Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish BOS intact, price below weekly VWAP, M15 CHoCH bearish, but H1 BOS bullish and price in premium on M15. Conflicting layers: macro neutral with rising yields bearish, flow bearish, technical mixed. No clear alignment for a trade.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "M15 CHoCH-bearish confirms direction",
+    "H1 price in premium zone (63.2%)",
+    "london-killzone active",
+    "10Y yield rising confirms direction",
+    "No imminent gold-relevant news",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "Wait for clearer alignment across layers"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Rising real yields (2.11%) are bearish gold; EUR/USD weakening (dollar strengthening) is bearish gold; Fear & Greed at 25 (fear) is neutral. Overall macro bearish.",
+  "warnings": [
+    "Conflicting H4 bearish vs H1 bullish structure",
+    "Price in premium on M15 (116.9%) not ideal for shorts",
+    "No M15 POI within 8 points of current price for either direction",
+    "High-impact CAD CPI data in 330 minutes",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "failed",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold holds a softer tone with no major fresh catalysts, as markets await key CPI releases and housing data"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4544.23 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 7,
+        "confluenceGrade": "no-trade",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "M15 CHoCH-bearish confirms direction",
+          "H1 price in premium zone (63.2%)",
+          "london-killzone active",
+          "10Y yield rising confirms direction",
+          "No imminent gold-relevant news",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4544.23 (strong S/R)",
+      "H4+M15 bias agree (short)",
+      "M15 CHoCH-bearish confirms direction",
+      "H1 price in premium zone (63.2%)",
+      "london-killzone active",
+      "10Y yield rising confirms direction",
+      "No imminent gold-relevant news",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 9 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

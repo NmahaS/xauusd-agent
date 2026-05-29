@@ -1,0 +1,152 @@
+{
+  "timestamp": "2026-05-18T04:30:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish structure (BOS-bearish @ 4664.10) confirmed; H1 shows bullish recovery but remains below H4 EMA50 (4602.61); M15 CHoCH-bearish @ 4526.30 with price now testing discount zone. Macro neutral but real yields rising (1.98%) and EUR/USD weakening (-7.67% 24h) create headwinds. H4 bias is bearish directional filter; M15 structure supports short setup into unfilled bearish FVG.",
+  "setupQuality": "B",
+  "confluenceCount": 6,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "M15 unfilled bearish FVG within 8pts [4528.20-4538.10]",
+    "M15 CHoCH-bearish confirms direction",
+    "10Y yield rising confirms direction",
+    "No imminent gold-relevant news",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_fvg",
+    "zone": [
+      4528.2,
+      4538.1
+    ],
+    "reasoning": "M15 bearish FVG created by impulsive down-close candle; unfilled and within 10pts of current price (4528.20). Target for short entry into imbalance; aligns with H4 bearish bias and M15 CHoCH structure."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4533,
+    "confirmation": "Limit sell at midpoint of M15 bearish FVG; validated by H4 bearish structure and M15 CHoCH-bearish. Entry on retest of FVG high into discount zone."
+  },
+  "stopLoss": {
+    "price": 4542.5,
+    "reasoning": "Above M15 bearish FVG high (4538.10) + 0.2×M15 ATR (11.09 × 0.2 = 2.22); invalidates M15 bearish structure if breached. Tight stop justified by elevated volatility (4.4x).",
+    "pips": 95
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4515,
+      "reasoning": "H1 liquidity pool at 4514.50 (swept but structural reference); nearest major support below current price. System places TP at 2R automatically.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4542.5,
+    "reasoning": "Break above M15 FVG high invalidates bearish M15 structure; H4 bias remains intact but M15 entry thesis negated. Flip to neutral/bullish bias if breached."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for higher volume confirmation; Asia session low liquidity. Entry valid on limit fill anytime, but prefer London open for tighter fills."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 95-pip stop; position size = (account_risk_usd / 95) PAXG contracts. Elevated volatility (4.4x) warrants tight stops and smaller size."
+  },
+  "macroContext": "Real yields rising (1.98%) and EUR/USD weakening (-7.67% 24h) create mixed signals; macro neutral but slightly bearish for gold. Positive funding rate (0.0013%/hr) indicates crowded longs — mild contrarian short signal. Fear & Greed at 28 (fear) supports defensive positioning.",
+  "warnings": [
+    "H1 structure is bullish (BOS-bullish @ 4541.10) — conflicts with H4 bearish bias. This is a Tier 3 (technical-only) setup; macro/flow do not strongly support shorts.",
+    "No active M15 order blocks within 8pts; entry relies solely on FVG imbalance fill. Confluence is moderate (4/12 factors).",
+    "Elevated volatility (4.4x) — use tight stops and reduce position size. M15 ATR = 11.09; expect whipsaws.",
+    "Asia session (low liquidity) — prefer London kill zone execution for confirmation and tighter fills.",
+    "Positive funding rate (longs paying) is mild contrarian bearish signal but not strong enough to override structural conflict between H4 (bearish) and H1 (bullish).",
+    "Real yields rising and EUR/USD weakening are headwinds for gold shorts — macro does not support this direction strongly.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "volatile_tradeable",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 6,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "M15 unfilled bearish FVG within 8pts [4528.20-4538.10]",
+          "M15 CHoCH-bearish confirms direction",
+          "10Y yield rising confirms direction",
+          "No imminent gold-relevant news",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 6
+      }
+    },
+    "allFactors": [
+      "H4+M15 bias agree (short)",
+      "M15 unfilled bearish FVG within 8pts [4528.20-4538.10]",
+      "M15 CHoCH-bearish confirms direction",
+      "10Y yield rising confirms direction",
+      "No imminent gold-relevant news",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 6 total factors",
+    "warnings": [
+      "⚠️ Elevated volatility — use tight stops"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.25 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

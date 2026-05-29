@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-05-28T14:39:41.253Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 CHoCH bullish, M15 CHoCH bullish, price in discount on H4, EUR/USD weakening (bullish gold), extreme fear (safe haven demand), NY kill zone active. However, H1 is bearish and price is in premium on H1, creating conflict. Confluence score 5, setup B.",
+  "setupQuality": "B",
+  "confluenceCount": 6,
+  "confluenceFactors": [
+    "H4+M15 bias agree (long)",
+    "M15 CHoCH-bullish confirms direction",
+    "ny-killzone active",
+    "DXY proxy weakening confirms direction",
+    "10Y yield falling confirms direction",
+    "No imminent gold-relevant news"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_fvg",
+    "zone": [
+      4403.5,
+      4425.6
+    ],
+    "reasoning": "M15 bullish FVG from 4403.50-4425.60, overlaps with H1 bullish FVG (4392.70-4418.00) and M15 bullish OB (4382.80-4388.50) below. Price currently at 4454.80, above POI, but POI is within 30pts? No, 4454.80 - 4425.60 = 29.2pts, within 30pts. Entry at top of FVG (4425.60) as limit order."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4454.8,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4400.83,
+    "reasoning": "Below M15 bullish FVG low (4403.50) minus 0.2*M15 ATR (12.01) = 4403.50 - 2.40 = 4401.10, but nearest M15 swing low is 4383.40 (from 12:30 candle). Using M15 ATR*1.0 = 12.01, so SL distance from entry 4425.60 - 12.01 = 4413.59. This is above the FVG low but respects ATR rule. + 0.2 × M15 ATR buffer",
+    "pips": 53.97
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4465,
+      "reasoning": "Nearest major structural level: top of M15 bearish OB (4432.60-4465.00) and prior H1 swing high. Structural reference only; system places TP at 2R.",
+      "rr": 0.19
+    }
+  ],
+  "invalidation": {
+    "price": 4383.4,
+    "reasoning": "Below M15 swing low (4383.40) invalidates M15 bullish structure; bias flips neutral/bearish."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone active — execute now on limit fill"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 120.1-pip stop"
+  },
+  "macroContext": "Yields falling (bullish gold), EUR/USD weakening (bullish gold), extreme fear (safe haven demand). Real yields high (2.11%) but falling trend supports gold.",
+  "warnings": [
+    "H1 bearish bias conflicts with H4/M15 bullish — caution required.",
+    "Price in premium on H1 (93.2%) — not ideal for long entry.",
+    "Funding rate slightly positive (0.0013%/hr) — mild bearish signal.",
+    "High-impact news (BOE Gov Bailey Speaks) in ~1060 minutes — may cause volatility.",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "long",
+    "claudeQuality": "failed",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4454.80 — M15 bullish bias confirms",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — H4+M15 aligned (H1 pullback)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "long",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields falling (bullish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bearish",
+        "m15Bias": "bullish",
+        "confluenceCount": 6,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (long)",
+          "M15 CHoCH-bullish confirms direction",
+          "ny-killzone active",
+          "DXY proxy weakening confirms direction",
+          "10Y yield falling confirms direction",
+          "No imminent gold-relevant news"
+        ],
+        "h4AndM15Agree": true,
+        "h1AlignsWithH4": false,
+        "h1PullbackInH4": true,
+        "score": 6
+      }
+    },
+    "allFactors": [
+      "Yields falling (bullish gold)",
+      "H4+M15 bias agree (long)",
+      "M15 CHoCH-bullish confirms direction",
+      "ny-killzone active",
+      "DXY proxy weakening confirms direction",
+      "10Y yield falling confirms direction",
+      "No imminent gold-relevant news"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — H4+M15 aligned (H1 pullback) | long | 7 total factors",
+    "warnings": [
+      "H1 pullback in H4 trend — corrective move, weaker signal"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 3,
+    "tierLabel": "TIER 3 — H4+M15 aligned (H1 pullback)",
+    "executed": false,
+    "reason": "Risk: SL too wide: 54.0pts (max 50pts)",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

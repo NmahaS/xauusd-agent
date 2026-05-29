@@ -1,0 +1,104 @@
+{
+  "timestamp": "2026-05-18T14:00:00.443Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish BOS intact, H1 bearish CHoCH, but M15 bullish BOS creates conflict. Price in premium on H1 and M15, suggesting potential short from premium zone. However, M15 bullish structure and EUR/USD weakening (bullish for gold) add uncertainty. Confluence count low, no clear M15 POI within 8pts for short. Setup quality no-trade.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for clearer alignment or M15 POI within 8pts"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields rising (1.98%) bearish gold, EUR/USD weakening (dollar strengthening) bearish gold, but Fear & Greed at 28 (fear) provides safe-haven support. Macro mixed.",
+  "warnings": [
+    "H4 bearish vs M15 bullish structure conflict",
+    "No M15 POI within 8pts of current price",
+    "Price in premium on both H1 and M15, but no clear short OB/FVG nearby",
+    "Funding rate near zero, no contrarian signal",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "failed",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "No fresh macro shocks; gold steadies as dollar and yields hold firm ahead of key North American data"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "volatile_tradeable",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 0,
+        "confluenceGrade": "no-trade",
+        "factors": [],
+        "score": 0
+      }
+    },
+    "allFactors": [],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 0 total factors",
+    "warnings": [
+      "⚠️ Elevated volatility — use tight stops"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

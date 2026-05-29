@@ -1,0 +1,149 @@
+{
+  "timestamp": "2026-05-13T09:30:00.310Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H1 CHoCH-bullish @ 4704.30 confirmed; M15 CHoCH-bullish @ 4700.50 active. Price in deep discount (-50.9% of M15 range 4690.50-4706.40). H4 bearish structure (CHoCH @ 4643.20) is being challenged by H1/M15 bullish impulsive moves. EUR/USD weakening (dollar strengthening) is headwind, but institutional bias (VWAP below, 2σ oversold) and M15 bullish FVGs untested create contrarian long setup. London kill zone active. Shorts paying (-0.0002%/hr funding) = mild bullish contrarian signal.",
+  "setupQuality": "A",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H1 bullish CHoCH @ 4704.30 (structural confirmation)",
+    "M15 bullish CHoCH @ 4700.50 (recent structure event)",
+    "M15 price in deep discount zone (-50.9% of range)",
+    "London kill zone active (07-10 UTC execution window)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4659.3,
+      4665.5
+    ],
+    "reasoning": "M15 bullish FVGs at 4659.30-4660.40 and 4664.80-4665.50 are unmitigated imbalances in discount zone. Price currently 4682.40, retracing into these FVGs. Confluence with H1 bullish OB 4646.70-4663.50 (lower band). Primary entry POI for long confirmation."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4681.75,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4658.15,
+    "reasoning": "Below M15 FVG zone and H1 bullish OB low (4646.70) with 0.2×M15 ATR (5.67) buffer = ~1.1pt. Invalidates H1 bullish structure if breached. + 0.2 × M15 ATR buffer",
+    "pips": 23.6
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4704.3,
+      "reasoning": "H1 CHoCH-bullish level and recent M15 swing high; first structural liquidity pool. System places TP at 2R automatically.",
+      "rr": 0.96
+    }
+  ],
+  "invalidation": {
+    "price": 4646.7,
+    "reasoning": "Break below H1 bullish OB low invalidates H1 bullish structure; bias flips to neutral/bearish. H4 bearish bias reasserts."
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC — NOW active. Execute on limit fill at 4662.50 or wait for M15 wick rejection into FVG zone."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 77-pip stop = ~0.13 PAXG per 1000 USDC account. Macro headwind (rising yields, EUR/USD weakening) and H4 bearish bias warrant reduced size or wait for stronger confirmation."
+  },
+  "macroContext": "Real yields rising (1.95%, bearish gold), EUR/USD weakening (dollar strengthening, bearish gold), Fear & Greed at 42 (fear, neutral). Shorts paying funding (mild bullish contrarian). Core PPI due in 180min (high impact, potential volatility). Macro is net bearish; this is a technical-only contrarian long setup.",
+  "warnings": [
+    "MACRO HEADWIND: Rising real yields (1.95%) and strengthening dollar (EUR/USD -8.69% 24h) are bearish for gold. This is a Tier 3 (technical-only) setup, not Tier 1/2.",
+    "H4 BIAS CONFLICT: H4 remains bearish (CHoCH @ 4643.20). H1/M15 bullish structure is intraday mean-reversion, not trend reversal. Risk of H4 reassertion.",
+    "VWAP BEARISH: Price 2σ below daily VWAP (4696.82) and below weekly VWAP (4700.86). Institutional bias is bearish; long entry is contrarian.",
+    "HIGH-IMPACT NEWS: Core PPI m/m due in 180min (fcst 0.3% vs prev 0.1%). Potential volatility spike. Consider waiting for print or tightening stops.",
+    "CONFLUENCE ONLY 4/12: Setup lacks macro alignment. Proceed only if risk tolerance permits contrarian intraday trade. Reduce size.",
+    "VOLUME PROFILE AT HVN: Price at high-volume node (4708.61 POC, 4689.59 nearest HVN). Strong S/R; breakout may be rejected.",
+    "✅ Consensus: Claude + DeepSeek both long"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "long",
+    "deepseekDirection": "long",
+    "claudeQuality": "B",
+    "deepseekQuality": "A",
+    "newsRisk": "high",
+    "newsSentiment": "neutral",
+    "newsHeadline": "PPI data anticipation drives gold volatility around $2550 support ahead of US release"
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4681.75 — M15 bullish bias confirms",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "A",
+        "factors": [
+          "H1 bullish CHoCH @ 4704.30 (structural confirmation)",
+          "M15 bullish CHoCH @ 4700.50 (recent structure event)",
+          "M15 price in deep discount zone (-50.9% of range)",
+          "London kill zone active (07-10 UTC execution window)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4689.59 (strong S/R)",
+      "H1 bullish CHoCH @ 4704.30 (structural confirmation)",
+      "M15 bullish CHoCH @ 4700.50 (recent structure event)",
+      "M15 price in deep discount zone (-50.9% of range)",
+      "London kill zone active (07-10 UTC execution window)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 6 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Existing T4/4 short stronger than new T4/4 long — holding",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

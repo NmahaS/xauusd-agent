@@ -1,0 +1,149 @@
+{
+  "timestamp": "2026-05-13T22:30:00.407Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "M15 CHoCH-bullish @ 4686.30 with price now at 4688.50 (above pivot); H1 also shows CHoCH-bullish @ 4704.30 and active bullish OB at 4646.70-4663.50. H4 is bearish (CHoCH-bearish @ 4643.20) but M15/H1 structure is bullish. EUR/USD weakening (-8.47% 24h) is bearish for gold, but M15 structure is fresh bullish. Macro is neutral (stable yields, fear at 42). Price is in premium zone but near H1 bullish OB and multiple unfilled bullish FVGs. M15 RSI at 56.3 (neutral-bullish). Setup is Tier 3 (technical-only, M15 bullish structure vs H4 bearish bias).",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 CHoCH-bullish @ 4686.30 (recent structure event)",
+    "H1 CHoCH-bullish @ 4704.30 (H1 context supports)",
+    "M15 unfilled bullish FVG at 4683.80-4684.00 within 8pts of current price",
+    "H1 active bullish OB at 4646.70-4663.50 (structural context)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_fvg",
+    "zone": [
+      4683.8,
+      4684
+    ],
+    "reasoning": "M15 unfilled bullish FVG (imbalance) within 4pts of current price; represents liquidity pool where institutional buyers may have exited; retest likely on pullback or consolidation"
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4683.9,
+    "confirmation": "Limit buy at FVG midpoint; validated by M15 bullish structure (CHoCH intact) and H1 bullish OB context; wait for M15 close above 4686 to confirm no reversal"
+  },
+  "stopLoss": {
+    "price": 4679.6,
+    "reasoning": "Below M15 active bearish OB low (4711.60-4715.40 is above; use lower structure); 4679.60 is ~4.3pts below entry, ~1.1×M15 ATR buffer; invalidates M15 bullish structure if breached",
+    "pips": 43
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4704.3,
+      "reasoning": "H1 CHoCH level and prior swing high; first structural liquidity pool (system places TP at 2R automatically)",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4679,
+    "reasoning": "M15 bullish structure invalidated; close below M15 EMA20 (4684.35) on daily close signals reversal to bearish; H4 bearish bias reasserts"
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for better liquidity and confirmation; current session is off-hours (Asia early morning)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 43-pip stop; conservative due to H4 bearish bias conflicting with M15 bullish signal (Tier 3 setup); reduce size if macro deteriorates or EUR/USD continues weakening"
+  },
+  "macroContext": "Neutral macro (stable yields at 1.99% real, fear at 42); EUR/USD weakening sharply (-8.47% 24h) is bearish for gold, but M15 structure is bullish; high-impact UK GDP and US retail sales in next 24h add event risk; funding rate +0.0013%/hr (longs paying) is mild bearish contrarian signal.",
+  "warnings": [
+    "H4 bias is bearish (CHoCH-bearish @ 4643.20); M15 bullish structure conflicts with higher timeframe — this is Tier 3 (technical-only signal, not auto-execute)",
+    "EUR/USD weakening sharply (-8.47% 24h) — dollar strengthening is headwind for gold; monitor for reversal",
+    "Price in premium zone (209.1% of M15 range) — limited upside room before resistance",
+    "High-impact economic calendar in next 24h (UK GDP, US retail sales, unemployment claims) — event risk may spike volatility; consider tightening stops or waiting for post-event confirmation",
+    "Funding rate +0.0013%/hr (longs paying) suggests crowded long positioning — mild contrarian bearish signal; use smaller size",
+    "Off-hours session (Asia early morning) — low liquidity; wait for London or NY kill zone for better execution",
+    "⚠️ Split: Claude=long DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 CHoCH-bullish @ 4686.30 (recent structure event)",
+          "H1 CHoCH-bullish @ 4704.30 (H1 context supports)",
+          "M15 unfilled bullish FVG at 4683.80-4684.00 within 8pts of current price",
+          "H1 active bullish OB at 4646.70-4663.50 (structural context)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)",
+      "M15 CHoCH-bullish @ 4686.30 (recent structure event)",
+      "H1 CHoCH-bullish @ 4704.30 (H1 context supports)",
+      "M15 unfilled bullish FVG at 4683.80-4684.00 within 8pts of current price",
+      "H1 active bullish OB at 4646.70-4663.50 (structural context)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

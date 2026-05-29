@@ -1,0 +1,96 @@
+{
+  "timestamp": "2026-04-28T14:00:18.774Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish CHoCH confirmed after impulsive drop from 4886.9 to 4720.55; price is in premium zone (45.6% is discount, so above 45.6% is premium) and H4 bullish FVGs remain unfilled above, suggesting bearish continuation. EUR/USD weakening (dollar strengthening) supports gold downside.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish CHoCH (impulsive drop from 4886.9 to 4720.55)",
+    "Price in premium zone (above 45.6% of range)",
+    "EUR/USD weakening (dollar strengthening) - bearish for gold",
+    "NY kill zone active"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4749.65,
+      4759.57
+    ],
+    "reasoning": "H4 bullish FVG at 4749.65-4759.57 is unfilled and acts as resistance; price is currently below this zone, but a retest would provide a short entry."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4754.61,
+    "confirmation": "Limit sell at midpoint of H4 bullish FVG; wait for price to retest and show rejection."
+  },
+  "stopLoss": {
+    "price": 4762,
+    "reasoning": "Above the FVG high (4759.57) plus ATR buffer; invalidates bearish bias if breached.",
+    "pips": 73.9
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4730,
+      "reasoning": "Near recent swing low and discount zone entry.",
+      "rr": 3.3
+    },
+    {
+      "level": "TP2",
+      "price": 4720.55,
+      "reasoning": "H4 range low (4720.55) as major support.",
+      "rr": 4.6
+    }
+  ],
+  "invalidation": {
+    "price": 4762,
+    "reasoning": "Close above 4762.00 invalidates bearish structure and FVG resistance."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone 12-15 UTC - active now"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 74-pip stop"
+  },
+  "macroContext": "EUR/USD weakening (dollar strengthening), US 10Y yield unknown, Fear & Greed at 33 (fear) - neutral for gold, but dollar strength is bearish.",
+  "warnings": [
+    "High-impact AUD CPI data in 690 minutes (approx 11.5 hours) - may cause volatility.",
+    "H4 bullish FVGs above may act as resistance but could also be filled if price rallies.",
+    "⚠️ Split: Claude=no-trade DeepSeek=short — manual only",
+    "FRED macro data unavailable — yields/real-rate missing",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v3.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "short",
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "neutral",
+    "newsHeadline": "No breaking news in last 2 hours; upcoming AUD CPI and BOC events key risks"
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4810.35 not at POI [4749.65-4759.57] yet"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "WAITING",
+    "executed": false,
+    "reason": "Auto-trade disabled — manual signal",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "timestamp": "2026-05-12T17:45:00.728Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "M15 CHoCH-bearish @ 4678.40 with price now at 4674.20 (below that pivot). H1 bias is bullish (BOS @ 4738.40) but M15 structure has flipped bearish and price is in premium zone (56.1% of range). H4 shows bullish CHoCH but recent H4 candle (16:00-20:00 UTC) printed a large wick down to 4660.6 and closed at 4674.2, suggesting rejection of higher levels. Institutional bias (VWAP) is bearish — price below weekly VWAP 4686.41. Funding rate is negative (-0.0004%/hr, shorts paying), indicating shorts are crowded but not extreme. EUR/USD weakened 8.69% in 24h (dollar strengthening), which is bearish for gold. Real yields remain positive at 1.91%, also bearish. Macro is neutral but directionally unsupportive. M15 is the primary signal layer and it is bearish.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 bearish structure (CHoCH-bearish @ 4678.40 intact; price below pivot)",
+    "Price in premium zone (56.1% of M15 range) — unfavorable for long entry",
+    "EUR/USD weakening 8.69% in 24h (dollar strengthening = bearish gold)",
+    "Institutional bias bearish (price below weekly VWAP 4686.41)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4690.5,
+      4699
+    ],
+    "reasoning": "M15 active bearish OB at 4690.50-4699.00 is the primary POI. This block formed during the recent impulsive down move and remains unmitigated. Price is currently 4674.20, so a bounce/retest into this OB zone (15-25 pips above current) is the expected entry area for a short."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4674.65,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4700.76,
+    "reasoning": "Stop placed above bearish OB high (4699.00) plus 0.2×M15 ATR (0.2×8.79≈1.76). Invalidation: if price closes above 4703.5 on M15, bearish structure is broken and bias flips bullish. + 0.2 × M15 ATR buffer",
+    "pips": 26.11
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4659.3,
+      "reasoning": "M15 bullish FVG at 4659.30-4660.40 is the first structural target. System will place TP at 2R automatically; this is the structural reference level (nearest liquidity pool below current price).",
+      "rr": 0.59
+    }
+  ],
+  "invalidation": {
+    "price": 4703.5,
+    "reasoning": "If price closes above 4703.5 on M15, the bearish OB is fully mitigated and H1 bullish structure (BOS @ 4738.40) reasserts. Bias flips to neutral/bullish; short is invalidated."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for next London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for higher probability fill and volatility. Current session is off-hours; liquidity may be lower."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 85-pip stop. Position size = (account risk in USD) / (85 pips × contract multiplier). Adjust for illiquidity if off-hours execution."
+  },
+  "macroContext": "Dollar strengthening (EUR/USD -8.69% in 24h), positive real yields (1.91%), and institutional bearish bias (price below weekly VWAP) create a mildly bearish macro backdrop for gold. High-impact US PPI data due in ~19 hours may drive volatility; avoid holding through that window.",
+  "warnings": [
+    "Market is in transitioning regime (SMC effective but caution required). Confluence is moderate (B grade, 4 factors). This is a tactical short, not a high-conviction setup.",
+    "M15 bearish OB is the only M15 POI within 8 pips; no M15 FVG confluence for entry. Rely on structure confirmation (M15 candle close, M5 reversal) before executing.",
+    "High-impact US PPI (Core PPI, PPI m/m) due in ~19 hours. Consider closing or reducing position 1 hour before release to avoid gap risk.",
+    "Funding rate is negative (shorts paying), indicating shorts are crowded. This is a mild contrarian bearish signal — be prepared for a short squeeze if macro sentiment shifts.",
+    "H1 bias is bullish (BOS @ 4738.40) and H4 shows bullish CHoCH. If price bounces above 4703.5, H1 structure reasserts and short is invalidated. Tight stop discipline required.",
+    "Off-hours execution (current session = off). Liquidity may be lower; slippage risk on limit orders. Consider waiting for London kill zone (07-10 UTC) for better fills.",
+    "✅ Consensus: Claude + DeepSeek both short"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4674.65 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_poc",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at POC 4689.44 (institutional equilibrium)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bearish structure (CHoCH-bearish @ 4678.40 intact; price below pivot)",
+          "Price in premium zone (56.1% of M15 range) — unfavorable for long entry",
+          "EUR/USD weakening 8.69% in 24h (dollar strengthening = bearish gold)",
+          "Institutional bias bearish (price below weekly VWAP 4686.41)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at POC 4689.44 (institutional equilibrium)",
+      "M15 bearish structure (CHoCH-bearish @ 4678.40 intact; price below pivot)",
+      "Price in premium zone (56.1% of M15 range) — unfavorable for long entry",
+      "EUR/USD weakening 8.69% in 24h (dollar strengthening = bearish gold)",
+      "Institutional bias bearish (price below weekly VWAP 4686.41)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.45 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-05-12T04:15:00.000Z",
+  "bias": "bearish",
+  "setupQuality": "B",
+  "direction": "short",
+  "confluenceCount": 5,
+  "threeLayer": {
+    "tier": 4
+  },
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium"
+  },
+  "stopLoss": {
+    "price": 4760.1
+  },
+  "execution": {
+    "executed": true,
+    "orderId": "421921492702",
+    "entry": 4753.5,
+    "fillSize": 0.01,
+    "size": 0.01,
+    "riskPct": 0.5,
+    "riskAmount": 0.49,
+    "reason": "market order executed",
+    "timestamp": "2026-05-12T04:15:00.000Z"
+  }
+}

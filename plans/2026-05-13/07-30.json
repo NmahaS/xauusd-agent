@@ -1,0 +1,153 @@
+{
+  "timestamp": "2026-05-13T07:30:00.254Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 trend is bullish (EMA20 > EMA200) but H4 SMC shows bearish CHoCH at 4643.20 with active bearish OB at 4762.30-4782.50; H1 shows bullish CHoCH at 4704.30 with active bullish OBs at 4646.70-4663.50; M15 shows bullish CHoCH at 4700.50 with price near daily VWAP (4698.53). Price is in premium zone (65.1% on M15, 77.5% on H1) but H4 structure remains ambiguous post-CHoCH. EUR/USD weakening (-8.69% 24h) is bearish for gold. Rising real yields (1.95%) are bearish. Macro is neutral-to-bearish; market is transitioning. Confluence is weak due to macro headwinds and premium positioning.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H1 bullish structure (CHoCH at 4704.30 intact)",
+    "M15 bullish CHoCH at 4700.50 recent",
+    "M15 active bullish OB at 4646.70-4663.50 (unmitigated from prior session)",
+    "London kill zone active (07-10 UTC)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4646.7,
+      4663.5
+    ],
+    "reasoning": "H1 bullish OB unmitigated; overlaps with M15 bullish FVGs at 4659.30-4660.40 and 4664.80-4665.50. Price currently 4699.70 is above this zone but retracement into OB midpoint (4655.10) would confirm entry on bullish structure."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4655.1,
+    "confirmation": "Limit buy at H1 bullish OB midpoint; validated by M15 bullish structure and kill zone execution window. Requires retracement from current 4699.70."
+  },
+  "stopLoss": {
+    "price": 4643.8,
+    "reasoning": "Below H1 bullish OB low (4646.70) minus M15 ATR buffer (6.37 × 0.2 = 1.27); invalidates H1 bullish structure if breached. Aligns with H4 bearish CHoCH level at 4643.20.",
+    "pips": 11.3
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4714.2,
+      "reasoning": "H1 liquidity pool (EQH swept at 4714.20); first structural resistance above entry. System places TP at 2R automatically.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4643.2,
+    "reasoning": "H4 bearish CHoCH level; if breached, H4 structure flips to confirmed bearish and H1 bullish bias becomes invalidated. Bias reverts to neutral/bearish."
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC — active now. Await retracement to OB zone or wait for next London session if price does not pull back."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 11.3-pip stop due to macro headwinds (rising yields, weakening EUR/USD, premium zone). Reduce size vs. higher-confluence setups."
+  },
+  "macroContext": "Real yields rising (1.95%, bearish gold); EUR/USD weakening 8.69% (bullish gold but contradicted by yield trend); Fear & Greed at 42 (fear, neutral). Macro is net bearish; high-impact PPI data in +300m creates headline risk. Institutional bias is bearish (below weekly VWAP). Setup is technical-only (Tier 3) — macro does not support aggression.",
+  "warnings": [
+    "Macro is bearish (rising real yields, institutional bias below weekly VWAP). This is a technical-only setup with limited macro support.",
+    "Price is in premium zone (77.5% on H1, 65.1% on M15). Retracement required to reach POI; no immediate entry at current price.",
+    "High-impact PPI data (Core PPI, PPI m/m) due in +300m. Avoid holding through data release; consider closing before 08:30 UTC.",
+    "H4 structure is ambiguous post-bearish CHoCH at 4643.20. If price breaks below 4643.20, bias flips bearish and this setup is invalidated.",
+    "Market is transitioning (SMC effective but regime unstable). Require higher confluence for execution; this setup scores only 4/12 factors.",
+    "Funding rate is positive (+0.0007%/hr, 5.8% annualized) — longs are paying, mild contrarian bearish signal.",
+    "Volume Profile shows price at HVN (4708.61) — strong resistance. Breakout above HVN required for sustained upside.",
+    "⚠️ Split: Claude=long DeepSeek=short — manual only",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "A",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4699.75 not at M15 POI [4646.70-4663.50] yet",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4708.61 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H1 bullish structure (CHoCH at 4704.30 intact)",
+          "M15 bullish CHoCH at 4700.50 recent",
+          "M15 active bullish OB at 4646.70-4663.50 (unmitigated from prior session)",
+          "London kill zone active (07-10 UTC)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4708.61 (strong S/R)",
+      "H1 bullish structure (CHoCH at 4704.30 intact)",
+      "M15 bullish CHoCH at 4700.50 recent",
+      "M15 active bullish OB at 4646.70-4663.50 (unmitigated from prior session)",
+      "London kill zone active (07-10 UTC)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 6 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "WAITING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: 423676738280",
+    "orderId": 423676738280,
+    "entry": 4698.2,
+    "size": 0.008,
+    "riskAmount": 0.45,
+    "riskPct": "0.51",
+    "timestamp": "2026-05-13T07:30:29.995Z"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "timestamp": "2026-04-28T04:20:35.209Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 SMC bias is neutral with no active structure events; H1 SMC bias also neutral with no confirmed BOS or CHoCH. H4 price sits in premium zone (52.5% of range 4631.57–4886.90) near 4835 AUD, between an unfilled bearish FVG (4791.25–4798.20) below and an unfilled bullish FVG (4819.30–4829.05) above. No active order blocks on either timeframe. EUR/USD weakening (dollar strengthening) is mildly bearish for gold, but real yields are positive (1.87%) and F&G is neutral (33 = fear, stable). Data is stale (last H1 candle 2026-04-16T18:00Z, 12 days old); no recent price action to confirm structure. High-impact AUD CPI data due in ~21 hours (1269m from now) creates event risk.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London open (07:00 UTC) and fresh price action; avoid trading into AUD CPI event (1269m away)"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — insufficient data and event risk"
+  },
+  "macroContext": "EUR/USD weakening (dollar strengthening) is bearish for gold; positive real yields (1.87%) add headwind; F&G neutral at 33 (fear). High-impact AUD CPI data in ~21 hours creates event risk and invalidates stale technical setup.",
+  "warnings": [
+    "Data is severely stale: last H1 candle is 2026-04-16T18:00Z (12 days old); no current price action to confirm H1 or H4 structure.",
+    "H4 and H1 SMC bias both neutral — no confirmed BOS, CHoCH, or active order blocks to trade.",
+    "Price in premium zone (52.5%) but no unmitigated OB nearby to anchor a short; bullish FVG above (4819.30–4829.05) is unfilled but too far and lacks confluence.",
+    "Bearish FVG (4791.25–4798.20) is below current price; would require a sharp drop to become a valid short entry, but no structure supports it.",
+    "High-impact AUD CPI data due in ~21 hours (1269m) — m/m fcst 1.3% vs prev 0.0%, y/y fcst 4.8% vs prev 3.7%. Event risk invalidates any pre-event trade.",
+    "EUR/USD weakening (dollar strengthening) is bearish for gold; real yields positive (1.87%) add downside pressure.",
+    "No RSI divergence, no kill zone active (Asia session, no London/NY yet), no macro confluence.",
+    "Recommend: wait for London open (07:00 UTC), refresh price data, and reassess structure post-CPI event.",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v3.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "No breaking news in last 2 hours; technicals mixed but lean bearish ahead of high-impact AUD CPI"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "N/A",
+    "executed": false,
+    "reason": "N/A",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "timestamp": "2026-05-18T14:30:00.728Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bearish but M15 bullish BOS and active bullish OB within 8pts; EUR/USD weakening (bullish for gold); price in premium on H1 but discount on H4; conflicting layers but M15 structure favors long with tight stop.",
+  "setupQuality": "B",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "M15 bullish BOS at 4551.10",
+    "M15 active bullish OB at 4529.00-4535.30 within 8pts",
+    "M15 unfilled bullish FVG at 4535.30-4547.00 within 8pts",
+    "EUR/USD weakening (bullish for gold)",
+    "NY kill zone active"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4529,
+      4535.3
+    ],
+    "reasoning": "M15 bullish OB from last down-close candle before impulsive move up; overlaps with M15 bullish FVG."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4557.95,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4526.48,
+    "reasoning": "Below OB low (4529.00) minus 0.2*M15 ATR (11.03) = 4526.50; invalidates bullish structure if broken. + 0.2 × M15 ATR buffer",
+    "pips": 31.47
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4560,
+      "reasoning": "Nearest major structural level: prior H1 swing high / liquidity pool; system places TP at 2R automatically.",
+      "rr": 0.07
+    }
+  ],
+  "invalidation": {
+    "price": 4526,
+    "reasoning": "Below stop loss; H4 bearish bias reasserts; bias flips neutral/bearish."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone active — execute now on limit fill"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 56.5-pip stop"
+  },
+  "macroContext": "Real yields rising (1.98%) bearish for gold, but EUR/USD weakening (dollar strength) is bullish; Fear & Greed at 28 (fear) neutral. Mixed macro, but technicals favor long.",
+  "warnings": [
+    "H4 bias is bearish — conflicting with M15 bullish signal; this is a counter-trend trade.",
+    "High-impact CAD CPI data in 20 minutes may cause volatility; consider waiting or reducing size.",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "long",
+    "claudeQuality": "failed",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4557.95 — M15 bullish bias confirms",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "volatile_tradeable",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 5,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bullish BOS at 4551.10",
+          "M15 active bullish OB at 4529.00-4535.30 within 8pts",
+          "M15 unfilled bullish FVG at 4535.30-4547.00 within 8pts",
+          "EUR/USD weakening (bullish for gold)",
+          "NY kill zone active"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "M15 bullish BOS at 4551.10",
+      "M15 active bullish OB at 4529.00-4535.30 within 8pts",
+      "M15 unfilled bullish FVG at 4535.30-4547.00 within 8pts",
+      "EUR/USD weakening (bullish for gold)",
+      "NY kill zone active"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 5 total factors",
+    "warnings": [
+      "⚠️ Elevated volatility — use tight stops"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": true,
+    "reason": "Order placed: null",
+    "orderId": null,
+    "entry": 4557.95,
+    "size": null,
+    "riskAmount": 0.91,
+    "riskPct": "1.01",
+    "timestamp": "2026-05-18T14:30:22.318Z"
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "timestamp": "2026-05-18T16:30:00.165Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bearish but price at discount and M15 bullish BOS; M15 bullish OB at 4529-4535.3 within 8pts; EUR/USD weakening (dollar strengthening) but gold safe-haven bid from fear; real yields rising bearish but fear index 28 supports gold. Confluence count 5: Tier 2 (flow+technical alignment).",
+  "setupQuality": "B",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "M15 bullish structure (BOS at 4560.50)",
+    "M15 active bullish OB within 8pts (4529-4535.3)",
+    "M15 unfilled bullish FVGs within 8pts (4505.1-4508, 4508.7-4518.6)",
+    "Price in discount zone on H1 (75.8% premium but M15 discount 9.9%)",
+    "Fear & Greed at 28 (fear) supports safe-haven bid"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4529,
+      4535.3
+    ],
+    "reasoning": "M15 bullish OB from last down-close candle before impulsive up move; overlaps with M15 bullish FVG 4508.7-4518.6; price currently at 4533.9 within zone."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4532,
+    "confirmation": "Limit buy inside OB midpoint; confirmed by M15 BOS and bullish engulfing on M15 at 16:00 candle."
+  },
+  "stopLoss": {
+    "price": 4526,
+    "reasoning": "Below OB low (4529) minus 0.2*M15 ATR (10.69*0.2=2.14) = 4526.86, rounded to 4526.0",
+    "pips": 60
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4554,
+      "reasoning": "Nearest major structural level: H1 bearish FVG 4542.3-4558.9; TP1 at 4554 (midpoint) as structural reference.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4525,
+    "reasoning": "Below H4 BOS-bearish level 4525.7; invalidates bullish M15 structure."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY session 12-15 UTC (current) - execute now on limit fill"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 60-pip stop"
+  },
+  "macroContext": "Real yields rising (1.98%) bearish gold, but EUR/USD weakening (dollar strengthening) and Fear & Greed at 28 (fear) provide mixed macro; neutral macro filter.",
+  "warnings": [
+    "H4 bias bearish conflicts with M15 bullish; trade is counter-trend on higher timeframe.",
+    "Funding rate slightly positive (0.0005%/hr) but not extreme.",
+    "Upcoming CAD CPI (high impact) in 1200 minutes may cause volatility.",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "long",
+    "claudeQuality": "failed",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4527.95 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 5,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bullish structure (BOS at 4560.50)",
+          "M15 active bullish OB within 8pts (4529-4535.3)",
+          "M15 unfilled bullish FVGs within 8pts (4505.1-4508, 4508.7-4518.6)",
+          "Price in discount zone on H1 (75.8% premium but M15 discount 9.9%)",
+          "Fear & Greed at 28 (fear) supports safe-haven bid"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4527.95 (strong S/R)",
+      "M15 bullish structure (BOS at 4560.50)",
+      "M15 active bullish OB within 8pts (4529-4535.3)",
+      "M15 unfilled bullish FVGs within 8pts (4505.1-4508, 4508.7-4518.6)",
+      "Price in discount zone on H1 (75.8% premium but M15 discount 9.9%)",
+      "Fear & Greed at 28 (fear) supports safe-haven bid"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 6 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Position held: Position losing $-1.44 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

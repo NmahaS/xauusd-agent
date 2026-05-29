@@ -1,0 +1,162 @@
+{
+  "timestamp": "2026-05-14T13:15:00.035Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 structure shows bearish CHoCH @ 4643.20 with active bearish OB at 4762.30-4782.50; H1 shows bullish CHoCH @ 4703.00 but price is in premium zone (73% of range) and below weekly VWAP 4698.08 (institutional bearish bias). M15 shows bearish CHoCH @ 4684.60 with price currently at 4696.60 in premium. Macro: positive real yields (1.99%) are bearish for gold; EUR/USD weakening (-8.47% 24h) is mildly bullish but insufficient to override structural bearish setup. Funding rate +0.0013%/hr indicates mild long crowding (contrarian bearish). Volume Profile shows price at HVN 4689.59 with strong S/R. Overall: H4 bearish structure + H1 premium + M15 bearish CHoCH + positive real yields = bearish bias.",
+  "setupQuality": "B",
+  "confluenceCount": 8,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "M15 CHoCH-bearish confirms direction",
+    "H1 price in premium zone (73.0%)",
+    "ny-killzone active",
+    "10Y yield rising confirms direction",
+    "No imminent gold-relevant news",
+    "Below weekly VWAP — institutional bearish",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4707.8,
+      4711.1
+    ],
+    "reasoning": "M15 bearish FVG at 4707.80-4711.10 is unfilled and within 8pts of current price (4696.60); represents imbalance from recent bearish move. Overlaps with H1 bearish FVG zone 4723.20-4738.80 (higher timeframe confirmation). Price currently 10pts below this zone — ideal entry area for short into resistance."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4709.5,
+    "confirmation": "Limit sell at M15 FVG midpoint (4709.45); validated by bearish M15 CHoCH structure and price rejection from premium zone. NY kill zone active (12-15 UTC) — execute on limit fill."
+  },
+  "stopLoss": {
+    "price": 4716.8,
+    "reasoning": "Above M15 FVG high (4711.10) + 0.2×M15 ATR (6.93×0.2=1.39, rounded to 5.7pts buffer). Invalidates bearish M15 structure if breached; also above H1 bullish OB low 4663.50 context.",
+    "pips": 71
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4689.59,
+      "reasoning": "Volume Profile POC at 4689.59 — major liquidity pool and structural support. System will place TP at 2R automatically (~4702.20 from entry 4709.50 with 71pip stop).",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4716.8,
+    "reasoning": "Break above M15 FVG high + buffer invalidates bearish structure; bias flips to neutral/bullish if H1 bullish CHoCH is confirmed with new higher high."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone 12-15 UTC — execute now on limit fill (kill zone active)"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 71-pip stop; position size = (account_risk_usd / 71) PAXG contracts"
+  },
+  "macroContext": "Positive real yields (1.99%) and rising 10Y yield (4.460%) are bearish for gold; EUR/USD weakening (-8.47% 24h) provides mild bullish offset but insufficient to override structural bearish setup. Fear & Greed at 34 (fear) is neutral. Funding rate +0.0013%/hr shows mild long crowding (contrarian bearish signal). Overall macro leans bearish for gold.",
+  "warnings": [
+    "Confluence count is 4 (B-grade setup) — moderate conviction only. Requires strict stop discipline.",
+    "H1 shows bullish CHoCH @ 4703.00 which conflicts with bearish M15 bias — watch for H1 structure invalidation.",
+    "Price is in premium zone (107.6% on M15) — mean reversion risk if market reverses sharply.",
+    "Positive real yields are headwind; any yield decline would flip bias bullish quickly.",
+    "Volume Profile HVN at 4689.59 is strong support — if price breaks below, expect acceleration lower.",
+    "No high-impact news in next 24h, but macro data (yields, DXY) can shift intraday.",
+    "Funding rate is positive (longs paying) — mild contrarian bearish signal but not extreme.",
+    "✅ Consensus: Claude + DeepSeek both short"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 8,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "M15 CHoCH-bearish confirms direction",
+          "H1 price in premium zone (73.0%)",
+          "ny-killzone active",
+          "10Y yield rising confirms direction",
+          "No imminent gold-relevant news",
+          "Below weekly VWAP — institutional bearish",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "score": 8
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)",
+      "H4+M15 bias agree (short)",
+      "M15 CHoCH-bearish confirms direction",
+      "H1 price in premium zone (73.0%)",
+      "ny-killzone active",
+      "10Y yield rising confirms direction",
+      "No imminent gold-relevant news",
+      "Below weekly VWAP — institutional bearish",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 9 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.27 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

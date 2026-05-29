@@ -1,0 +1,142 @@
+{
+  "timestamp": "2026-05-14T12:00:00.415Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4643.20 confirmed; H1 CHoCH-bearish @ 4664.10 active; M15 CHoCH-bearish @ 4684.60 in force. Price at 4689.90 is in premium zone (60% of M15 range, 67.2% of H1 range). H1 bearish FVG [4723.20-4738.80] unfilled above. Weekly VWAP 4698.75 acts as resistance. EUR/USD weakening (-8.47% 24h) = dollar strengthening = bearish for gold. Real yields rising at 1.99% = bearish macro. Institutional bias bearish (price below daily VWAP). High-impact US retail data in 30min adds volatility risk but does not change structural bias.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 9,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 CHoCH-bearish confirms direction",
+    "H1 price in premium zone (67.2%)",
+    "ny-killzone active",
+    "10Y yield rising confirms direction",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "HOLD — high-impact US retail data (Core Retail Sales, Retail Sales, Unemployment Claims) in 30min. Do not enter until post-data volatility settles and structure re-confirms."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — wait for post-data confirmation"
+  },
+  "macroContext": "Real yields rising (1.99%), EUR/USD weakening (dollar strengthening), F&G at 34 (fear/risk-off) — macro bearish for gold; however, high-impact US retail data in 30min creates unquantifiable volatility. Structural bias is bearish (H4/H1/M15 all CHoCH-bearish), but entry timing is invalidated by imminent news.",
+  "warnings": [
+    "HIGH-IMPACT NEWS WITHIN 30MIN: USD Core Retail Sales m/m (High impact, gold-relevant) — forecast 0.7% vs prev 1.9%",
+    "HIGH-IMPACT NEWS WITHIN 30MIN: USD Retail Sales m/m (High impact, gold-relevant) — forecast 0.5% vs prev 1.7%",
+    "HIGH-IMPACT NEWS WITHIN 30MIN: USD Unemployment Claims (Medium impact, gold-relevant) — forecast 205K vs prev 200K",
+    "NO M15 POI WITHIN 8PTS: Nearest M15 bullish OB [4666.80-4669.70] is 20.2pts below current price (4689.90); nearest M15 bearish FVG [4707.80-4711.10] is 17.9pts above. No actionable M15 entry zone in immediate vicinity.",
+    "PRICE IN PREMIUM ZONE: M15 premium (60%), H1 premium (67.2%) — bearish bias confirmed but no confluence with M15 OB/FVG for entry. Avoid chasing shorts into premium without structural confirmation.",
+    "FUNDING RATE POSITIVE: +0.0013%/hr (11.0% annualized) — longs paying shorts. Mild contrarian bearish signal, but not strong enough to override news risk.",
+    "VOLATILITY SPIKE EXPECTED: Post-data candles will likely create new M15 OBs/FVGs and invalidate current structure. Re-assess after 12:30 UTC when data is released and volatility settles.",
+    "High-impact gold event in 30min: USD Core Retail Sales m/m (High)",
+    "High-impact gold event in 30min: USD Retail Sales m/m (High)",
+    "High-impact gold event in 30min: USD Unemployment Claims (Medium)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "High-impact US retail sales data due in 30m amid bearish gold technicals and weekly loss trend"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 9,
+        "confluenceGrade": "no-trade",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 CHoCH-bearish confirms direction",
+          "H1 price in premium zone (67.2%)",
+          "ny-killzone active",
+          "10Y yield rising confirms direction",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "score": 9
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)",
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 CHoCH-bearish confirms direction",
+      "H1 price in premium zone (67.2%)",
+      "ny-killzone active",
+      "10Y yield rising confirms direction",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 10 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

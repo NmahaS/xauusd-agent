@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-04-28T03:59:46.259Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 structure shows a bearish FVG at 4791-4798 and price is in premium zone (52.5%). H1 has a bullish FVG but no clear structure. EUR/USD weakening supports gold bearish. Real yields positive (1.87%) are bearish for gold. No active OBs near price. Confluence is low.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 2,
+  "confluenceFactors": [
+    "H4 bearish FVG within 20 points",
+    "EUR/USD weakening (dollar strengthening)"
+  ],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "EUR/USD weakening (dollar strengthening), US 10Y yield stable at 4.31%, real yield positive at 1.87% (bearish for gold), Fear & Greed at 33 (fear) neutral.",
+  "warnings": [
+    "No clear H1 or H4 structure bias (neutral SMC)",
+    "No active order blocks near price",
+    "Price in premium zone but no short entry trigger",
+    "Upcoming high-impact AUD CPI data in ~21.5 hours may cause volatility",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

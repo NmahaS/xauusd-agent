@@ -1,0 +1,153 @@
+{
+  "timestamp": "2026-05-18T23:30:01.082Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bearish bias but price is in discount zone and H1 CHoCH bullish, M15 BOS bullish. EUR/USD weakening (bullish for gold). However, price is in premium on M15 and H1, and no kill zone active. Confluence moderate.",
+  "setupQuality": "B",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "H4 bearish structure but price in discount zone",
+    "H1 CHoCH bullish",
+    "M15 BOS bullish",
+    "M15 unfilled FVG within 8 points",
+    "EUR/USD weakening (bullish gold)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4551.7,
+      4554.3
+    ],
+    "reasoning": "M15 bullish FVG from 4551.70-4554.30 overlaps with H1 bullish FVG and recent M15 OB."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4580.45,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4550.9,
+    "reasoning": "Below M15 OB low (4551.70) minus 0.2*M15 ATR (5.90) = 4551.70-1.18=4550.52, rounded to 4545 for buffer. + 0.2 × M15 ATR buffer",
+    "pips": 29.55
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4620,
+      "reasoning": "H1 EMA200 and prior swing high area, structural reference.",
+      "rr": 1.34
+    }
+  ],
+  "invalidation": {
+    "price": 4540,
+    "reasoning": "Below H1 bullish OB (4529.70-4541.70) invalidates H1 structure."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC"
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 80-pip stop"
+  },
+  "macroContext": "Yields rising (bearish gold), EUR/USD weakening (bullish gold), sentiment neutral. Mixed macro.",
+  "warnings": [
+    "No kill zone active - wait for London session",
+    "Price in premium on M15 and H1 - poor entry location",
+    "H4 bias bearish - conflicting with lower timeframes",
+    "⚡ Single LLM only — DeepSeek (Claude failed)",
+    "FRED macro data unavailable — yields/real-rate missing",
+    "Fear & Greed unavailable",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "long",
+    "claudeQuality": "failed",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4580.45 — M15 bullish bias confirms",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 5,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure but price in discount zone",
+          "H1 CHoCH bullish",
+          "M15 BOS bullish",
+          "M15 unfilled FVG within 8 points",
+          "EUR/USD weakening (bullish gold)"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4 bearish structure but price in discount zone",
+      "H1 CHoCH bullish",
+      "M15 BOS bullish",
+      "M15 unfilled FVG within 8 points",
+      "EUR/USD weakening (bullish gold)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 6 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: 432084601489",
+    "orderId": 432084601489,
+    "entry": 4580.5,
+    "size": 0.001,
+    "riskAmount": 0.47,
+    "riskPct": "0.51",
+    "timestamp": "2026-05-18T23:30:23.275Z"
+  }
+}

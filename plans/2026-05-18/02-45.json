@@ -1,0 +1,148 @@
+{
+  "timestamp": "2026-05-18T02:45:00.826Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish BOS intact, price below weekly VWAP, and EUR/USD weakening (dollar strengthening) despite a recent bullish CHoCH on H1. M15 shows bearish CHoCH and price in premium zone, suggesting a short opportunity from the unfilled bearish FVG at 4540.70-4541.50.",
+  "setupQuality": "B",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "H4 bearish structure (BOS intact)",
+    "M15 bearish CHoCH",
+    "M15 unfilled bearish FVG within 8 points",
+    "H1 P/D zone correct for short (premium)",
+    "EUR/USD weakening (dollar strengthening)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_fvg",
+    "zone": [
+      4540.7,
+      4541.5
+    ],
+    "reasoning": "Unfilled bearish FVG on M15, aligned with H4 bearish bias and premium zone."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4541.1,
+    "confirmation": "Limit sell inside FVG midpoint; confirmed by M15 bearish CHoCH and H4 bearish structure."
+  },
+  "stopLoss": {
+    "price": 4545,
+    "reasoning": "Above FVG high + 0.2*M15 ATR (11.73) = 4541.50 + 2.35 = 4543.85, rounded to 4545.00 for safety.",
+    "pips": 39
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4505,
+      "reasoning": "Nearest major structural level: M15 bullish FVG low at 4505.10, also near prior swing low.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4546,
+    "reasoning": "Break above 4545.00 invalidates bearish setup; H1 structure would flip bullish."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for better liquidity."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "1% risk on 39-pip stop"
+  },
+  "macroContext": "Real yields rising (1.98%) bearish for gold; EUR/USD weakening (dollar strengthening) bearish; Fear & Greed at 28 (fear) neutral.",
+  "warnings": [
+    "H1 shows bullish CHoCH, conflicting with H4 bearish bias; wait for M15 confirmation.",
+    "Funding rate slightly positive (0.0013%/hr) but not extreme.",
+    "⚠️ Split: Claude=no-trade DeepSeek=short — manual only",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "short",
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "volatile_tradeable",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 5,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (BOS intact)",
+          "M15 bearish CHoCH",
+          "M15 unfilled bearish FVG within 8 points",
+          "H1 P/D zone correct for short (premium)",
+          "EUR/USD weakening (dollar strengthening)"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "H4 bearish structure (BOS intact)",
+      "M15 bearish CHoCH",
+      "M15 unfilled bearish FVG within 8 points",
+      "H1 P/D zone correct for short (premium)",
+      "EUR/USD weakening (dollar strengthening)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors",
+    "warnings": [
+      "⚠️ Elevated volatility — use tight stops"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: 430566098313",
+    "orderId": 430566098313,
+    "entry": 4531.3,
+    "size": 0.034,
+    "riskAmount": 0.46,
+    "riskPct": "0.51",
+    "timestamp": "2026-05-18T02:45:23.612Z"
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "timestamp": "2026-05-12T19:45:00.667Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bullish structure intact but M15 has broken into bearish CHoCH (4678.40); price now in premium zone (99.6% of M15 range) with RSI overbought at 68.8. H1 also neutral-to-bearish context: last close at 4704 is at top of H1 range, OTE short zone (4680.96–4691.22) already swept. EUR/USD weakening (-8.69% 24h) = dollar strengthening = bearish for gold. Real yields positive (1.91%) = macro headwind. M15 active bearish OBs at 4711.60–4715.40 and 4714.30–4717.00 are within 8pts of current price (4704). High-impact PPI data in ~17h adds event risk. Shorts are paying (-0.0012%/hr funding) = crowded short, but structure and technicals favor downside retest.",
+  "setupQuality": "B",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "M15 bearish CHoCH confirmed (4678.40 break)",
+    "M15 RSI overbought (68.8) in premium zone",
+    "M15 active bearish OBs within 8pts (4711.60–4715.40, 4714.30–4717.00)",
+    "EUR/USD weakening (dollar strengthening = bearish gold)",
+    "Positive real yields (1.91%) = macro headwind"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4711.6,
+      4715.4
+    ],
+    "reasoning": "M15 active bearish OB formed on recent down-close candles; overlaps with second bearish OB (4714.30–4717.00). Price currently 4704, within 8pts of zone. Represents institutional sell-side liquidity and invalidation of recent bullish push."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4713.5,
+    "confirmation": "Limit sell at midpoint of primary bearish OB (4711.60–4715.40); confirmed by M15 bearish structure, overbought RSI, and dollar strength. Entry on retest of OB after recent high at 4705.1."
+  },
+  "stopLoss": {
+    "price": 4722.8,
+    "reasoning": "Above M15 bearish OB high (4715.40) plus 0.2×M15 ATR (7.61×0.2=1.52); invalidates bearish structure if breached. Protects against H4 bullish bias continuation.",
+    "pips": 91
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4685,
+      "reasoning": "H1 OTE short zone lower bound (4680.96) and confluence with multiple bullish FVGs (4680.70–4686.00, 4677.50–4680.20); structural liquidity pool and prior support. System will place TP at 2R automatically.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4722.8,
+    "reasoning": "Break above M15 bearish OB high invalidates short thesis; H4 bullish structure would remain intact and bias would flip to neutral/bullish."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07–10 UTC) or NY kill zone (12–15 UTC) for best liquidity and confirmation. Current session is off-hours; avoid size until next major session."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 91-pip stop; size conservatively given transitioning regime and high-impact PPI data in ~17h. Consider half-size or wait for post-data clarity."
+  },
+  "macroContext": "Dollar strengthening (EUR/USD -8.69%), positive real yields (1.91%), and neutral sentiment (F&G=49) create mild headwind for gold; high-impact PPI data (Core PPI, PPI m/m) in ~17h adds event risk and volatility.",
+  "warnings": [
+    "Market transitioning regime — SMC effective but volatility elevated; require higher confluence for size.",
+    "M15 bearish structure conflicts with H4 bullish bias; this is a Tier 2 (flow + technical) setup, not Tier 1 macro-aligned.",
+    "High-impact PPI data in ~17h (Core PPI, PPI m/m) — consider reducing size or waiting for post-data confirmation.",
+    "Shorts are crowded (funding -0.0012%/hr); contrarian signal suggests caution on aggressive short sizing.",
+    "Price in extreme premium (99.6% of M15 range); mean reversion risk if H4 bullish structure resumes.",
+    "H1 OTE short zone already swept; entry is retest-based, not fresh imbalance.",
+    "Off-hours session — liquidity lower; wait for London or NY kill zone for optimal execution.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "long",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at HVN 4711.92 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bullish",
+        "confluenceCount": 5,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bearish CHoCH confirmed (4678.40 break)",
+          "M15 RSI overbought (68.8) in premium zone",
+          "M15 active bearish OBs within 8pts (4711.60–4715.40, 4714.30–4717.00)",
+          "EUR/USD weakening (dollar strengthening = bearish gold)",
+          "Positive real yields (1.91%) = macro headwind"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4711.92 (strong S/R)",
+      "M15 bearish CHoCH confirmed (4678.40 break)",
+      "M15 RSI overbought (68.8) in premium zone",
+      "M15 active bearish OBs within 8pts (4711.60–4715.40, 4714.30–4717.00)",
+      "EUR/USD weakening (dollar strengthening = bearish gold)",
+      "Positive real yields (1.91%) = macro headwind"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | long | 6 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

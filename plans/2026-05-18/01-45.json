@@ -1,0 +1,128 @@
+{
+  "timestamp": "2026-05-18T01:45:00.050Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish structure (BOS-bearish @ 4664.10) confirmed; H1 shows CHoCH-bullish @ 4537.20 but price is in deep discount (-114% of H1 range) and below daily VWAP 4504.81. M15 bearish bias (CHoCH-bearish @ 4526.30) with multiple unfilled bearish FVGs. Macro: positive real yields (1.98%) bearish for gold; EUR/USD weakening (-7.67% 24h) is bearish for gold. Institutional bias is bearish (below weekly VWAP 4630.25). Market transitioning — require higher confluence.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "M15 unfilled bearish FVG within 8pts [4512.10-4512.60]",
+    "M15 CHoCH-bearish confirms direction",
+    "10Y yield rising confirms direction",
+    "No imminent gold-relevant news",
+    "Below weekly VWAP — institutional bearish",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone 07:00-10:00 UTC; market transitioning — require structural confirmation (H4 BOS hold or H1 CHoCH reversal with M15 OB confluence)"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — conflicting structure and macro headwinds"
+  },
+  "macroContext": "Positive real yields (1.98%) and EUR/USD weakness (-7.67%) are bearish for gold; institutional bias bearish (below weekly VWAP); market transitioning — insufficient confluence for entry.",
+  "warnings": [
+    "H4 bearish bias conflicts with H1 CHoCH-bullish @ 4537.20 — structure is mixed",
+    "No M15 active order blocks within 8 points of current price (4508.10) — no primary POI",
+    "M15 unfilled FVGs are all bearish and above current price — no bullish imbalance target nearby",
+    "Price in extreme discount (-114% H1 range) but below daily VWAP — institutional selling pressure",
+    "Positive real yields (1.98%) and EUR/USD weakness are macro headwinds for gold",
+    "Funding rate +0.0013%/hr (longs paying) — mild bearish contrarian signal",
+    "Market transitioning — SMC effective but volatility and structure unclear; wait for London open and clearer directional confirmation",
+    "No high-impact news in next 24h, but macro backdrop is bearish; do not force entry in transitional regime"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "below_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 7,
+        "confluenceGrade": "no-trade",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "M15 unfilled bearish FVG within 8pts [4512.10-4512.60]",
+          "M15 CHoCH-bearish confirms direction",
+          "10Y yield rising confirms direction",
+          "No imminent gold-relevant news",
+          "Below weekly VWAP — institutional bearish",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "H4+M15 bias agree (short)",
+      "M15 unfilled bearish FVG within 8pts [4512.10-4512.60]",
+      "M15 CHoCH-bearish confirms direction",
+      "10Y yield rising confirms direction",
+      "No imminent gold-relevant news",
+      "Below weekly VWAP — institutional bearish",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 7 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

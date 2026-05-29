@@ -1,0 +1,159 @@
+{
+  "timestamp": "2026-05-13T14:15:00.218Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4643.20 confirmed; M15 BOS-bearish @ 4685.80 active; price in discount zone (20.7% M15 range) but structure is decisively bearish. H1 shows bullish CHoCH but M15 structure dominates entry signal. Weekly macro neutral but yields rising (bearish gold). EUR/USD weakening (dollar strengthening = bearish gold). NY kill zone active.",
+  "setupQuality": "B",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "M15 unfilled bearish FVG within 8pts [4677.00-4680.40]",
+    "M15 BOS-bearish confirms direction",
+    "ny-killzone active",
+    "No imminent gold-relevant news",
+    "Below weekly VWAP — institutional bearish",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4692.8,
+      4696.9
+    ],
+    "reasoning": "M15 bearish OB formed after BOS-bearish @ 4685.80; price currently 4674.40 (18.4pts below OB). Retracement into OB zone provides optimal short entry with tight stop. OB represents unmitigated supply from recent bearish impulse."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4675.25,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4698.3,
+    "reasoning": "Above M15 bearish OB high (4696.90) + 0.2×M15 ATR (7.03×0.2=1.41pts); invalidates bearish M15 structure if breached. Tight stop respects H1 bullish CHoCH context. + 0.2 × M15 ATR buffer",
+    "pips": 23.05
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4664.1,
+      "reasoning": "Prior M15 swing low / H1 support zone (structural reference — system places TP at 2R automatically)",
+      "rr": 0.48
+    }
+  ],
+  "invalidation": {
+    "price": 4703.5,
+    "reasoning": "Break above M15 bearish OB high invalidates short bias; H1 bullish structure reasserts control; flip to neutral/bullish."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone 12-15 UTC — execute now on limit fill into OB zone"
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "1% risk on 87-pip stop; size for 1R = 87 pips max loss"
+  },
+  "macroContext": "Yields rising (1.95% real yield = bearish gold), EUR/USD weakening (dollar strengthening = bearish gold), Fear & Greed at 42 (fear = neutral). Macro leans bearish; NY kill zone active with high-impact retail sales data incoming (+1335m). Bearish structure + macro alignment supports short.",
+  "warnings": [
+    "H1 bullish CHoCH @ 4704.30 conflicts with M15 bearish bias — this is a Tier 3 (technical-only) setup, not Tier 1. Confluence is moderate (5/12 factors).",
+    "High-impact economic data (Fed Chair vote, GBP GDP, USD retail sales) within 24h — volatility risk. Stop at 87 pips is tight; slippage possible during news.",
+    "Funding rate +0.0013%/hr (longs paying) = mild bearish contrarian signal but not extreme. Market is balanced.",
+    "Price is in discount zone (20.7% of M15 range) — typically bullish bias, but M15 structure is bearish. Retracement into OB required; may not fill if market rallies.",
+    "If limit order does not fill within 2 candles, cancel and reassess. Do not chase.",
+    "✅ Consensus: Claude + DeepSeek both short",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4675.25 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "below_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 7,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "M15 unfilled bearish FVG within 8pts [4677.00-4680.40]",
+          "M15 BOS-bearish confirms direction",
+          "ny-killzone active",
+          "No imminent gold-relevant news",
+          "Below weekly VWAP — institutional bearish",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4+M15 bias agree (short)",
+      "M15 unfilled bearish FVG within 8pts [4677.00-4680.40]",
+      "M15 BOS-bearish confirms direction",
+      "ny-killzone active",
+      "No imminent gold-relevant news",
+      "Below weekly VWAP — institutional bearish",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 8 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: null",
+    "orderId": null,
+    "entry": 4675.25,
+    "size": null,
+    "riskAmount": 0.44,
+    "riskPct": "0.49",
+    "timestamp": "2026-05-13T14:15:26.383Z"
+  }
+}

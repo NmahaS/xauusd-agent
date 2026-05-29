@@ -1,0 +1,155 @@
+{
+  "timestamp": "2026-05-19T03:00:00.818Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish structure (BOS-bearish @ 4525.70) dominates; H1 shows bullish CHoCH but price is in premium zone (64.9%) and below weekly VWAP 4593.55. M15 shows bullish BOS @ 4559.70 but RSI bearish divergence and price rejection from 4583.30 high. Macro: rising real yields (2.11%, strongly bearish gold) + EUR/USD weakening 7.85% (dollar strengthening, bearish gold). Institutional bias is bearish (below weekly VWAP). H4 bearish OBs at 4681.20-4697.20 and 4762.30-4782.50 remain unmitigated targets. Current price 4543.20 is in discount on M15 (20.8%) but trapped between H1 premium and H4 bearish structure.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish structure (BOS-bearish intact, EMA20 < EMA50 < EMA200)",
+    "M15 RSI bearish divergence (price higher, RSI lower)",
+    "Price in H1 premium zone (64.9% of range) — sell signal",
+    "Rising real yields (2.11%) and dollar strengthening (EUR/USD -7.85%) — macro bearish gold"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4555.8,
+      4558.3
+    ],
+    "reasoning": "M15 bearish FVG at 4555.80-4558.30 is the nearest unfilled imbalance; price currently at 4543.20 is below this zone. Rejection from 4583.30 high (H4 candle high) confirms bearish momentum. This FVG is a natural resistance/entry zone for shorts."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4557,
+    "confirmation": "Limit sell at upper edge of M15 bearish FVG (4555.80-4558.30); confirmed by H4 bearish structure, H1 premium zone, and M15 RSI bearish divergence. Entry on retest of FVG resistance."
+  },
+  "stopLoss": {
+    "price": 4565.8,
+    "reasoning": "Above M15 bullish OB high (4538.90) and M15 BOS level (4559.70); stop at 4565.80 invalidates the short thesis if price reclaims the bullish structure. ATR14 M15 = 8.19; stop is ~8.8 pips above entry, within risk tolerance.",
+    "pips": 8.8
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4529.7,
+      "reasoning": "H1 bullish OB low (4529.70) is the first structural support and liquidity pool; aligns with H4 discount zone entry. Structural reference for 2R target.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4565.8,
+    "reasoning": "Break above M15 BOS (4559.70) + ATR buffer invalidates bearish bias; price would reclaim bullish structure and negate the short setup."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for higher volume confirmation; CAD CPI at 12:30 UTC (+570m) is gold-relevant — avoid entry within 30min of release."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "1% risk on 8.8-pip stop; position size = (account_risk / 8.8 pips). Moderate setup (B grade) — use 1% max."
+  },
+  "macroContext": "Real yields rising sharply (2.11%, strongly bearish gold); EUR/USD weakening 7.85% (dollar strengthening, bearish gold); institutional bias bearish (price below weekly VWAP 4593.55); Fear & Greed at 25 (fear) but trending down — macro heavily favors shorts.",
+  "warnings": [
+    "H1 shows bullish CHoCH @ 4551.70 — conflicting with H4 bearish bias; this is a lower-confidence setup (B grade, not A).",
+    "M15 bullish BOS @ 4559.70 is recent; price may retest this level before continuing lower — be prepared for a false breakout.",
+    "CAD CPI (high impact) at 12:30 UTC (+570m) — avoid entry within 30min of release; volatility spike risk.",
+    "Funding rate is -0.0009%/hr (shorts paying) — mild contrarian signal for longs, but macro dominates.",
+    "Volume Profile shows price at HVN (4544.28) — strong support; shorts must break below this for continuation.",
+    "Setup quality is B (4 confluence factors); not A-tier. Execute only if London kill zone confirms with volume.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "No major new shocks; gold drifts lower as dollar strength and bearish technicals persist"
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4544.28 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (BOS-bearish intact, EMA20 < EMA50 < EMA200)",
+          "M15 RSI bearish divergence (price higher, RSI lower)",
+          "Price in H1 premium zone (64.9% of range) — sell signal",
+          "Rising real yields (2.11%) and dollar strengthening (EUR/USD -7.85%) — macro bearish gold"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4544.28 (strong S/R)",
+      "H4 bearish structure (BOS-bearish intact, EMA20 < EMA50 < EMA200)",
+      "M15 RSI bearish divergence (price higher, RSI lower)",
+      "Price in H1 premium zone (64.9% of range) — sell signal",
+      "Rising real yields (2.11%) and dollar strengthening (EUR/USD -7.85%) — macro bearish gold"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 6 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: 432312099284",
+    "orderId": 432312099284,
+    "entry": 4541.3,
+    "size": 0.019,
+    "riskAmount": 0.43,
+    "riskPct": "0.49",
+    "timestamp": "2026-05-19T03:00:37.151Z"
+  }
+}

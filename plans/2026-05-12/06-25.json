@@ -1,0 +1,148 @@
+{
+  "timestamp": "2026-05-12T06:25:04.452Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4701.10 confirmed; M15 BOS-bearish @ 4708.50 active; price now 4689.30 below both pivots. H1 shows bullish structure (BOS @ 4738.40) but M15 is in clear downtrend with bearish OBs untested (4711.60-4715.40, 4714.30-4717.00). Macro neutral but real yields positive (1.91%) and EUR/USD weakening 8.94% (dollar strengthening = bearish gold). High-impact CPI data in +365min adds execution risk. Confluence favors SHORT into H1 premium zone.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 CHoCH-bearish structure intact (4701.10 pivot)",
+    "M15 BOS-bearish confirmed (4708.50); price below",
+    "M15 bearish OBs active within 8pts (4711.60-4715.40)",
+    "Price in H1 premium zone (57.7% of range); OTE short zone [4716.93-4736.97] nearby"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4711.6,
+      4715.4
+    ],
+    "reasoning": "M15 active bearish OB formed after BOS-bearish @ 4708.50; overlaps with M15 bearish FVG [4703.20-4703.50] and sits in H1 premium zone. Unmitigated and within 8pts of current price (4689.30)."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4688.85,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4716.74,
+    "reasoning": "Above M15 bearish OB high (4715.40) + 0.2×M15 ATR (7.34×0.2=1.47≈1.5pts buffer). Invalidates M15 bearish structure if breached; also above H1 OTE short zone. + 0.2 × M15 ATR buffer",
+    "pips": 27.89
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4670,
+      "reasoning": "H1 bullish FVG [4661.30-4662.20] and H1 bullish OB low [4646.70-4663.50] provide structural support; 4670 is near H1 OTE long zone floor and prior swing low. System will place TP at 2R automatically.",
+      "rr": 0.68
+    }
+  ],
+  "invalidation": {
+    "price": 4723,
+    "reasoning": "Break above M15 bearish OB high + buffer invalidates bearish bias; price would reclaim H1 premium zone and threaten H1 BOS-bullish structure (4738.40). Flip to neutral/bullish if breached."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone 07:00-10:00 UTC for higher volatility and institutional participation. CPI data at +365min (12:25 UTC) is HIGH IMPACT — consider executing before or after, not during."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.8% risk on 91-pip stop. Reduce to 0.5% if executing within 1hr of CPI release due to event risk."
+  },
+  "macroContext": "Real yields positive (1.91%) and EUR/USD weakening 8.94% (dollar strengthening) = bearish gold headwind. Fear & Greed neutral (49), but high-impact CPI data in +365min adds volatility risk. Macro leans bearish; technical setup is B-grade short into H1 premium.",
+  "warnings": [
+    "HIGH-IMPACT CPI data (Core CPI, CPI m/m, CPI y/y) scheduled in +365min (12:25 UTC). Avoid execution within 30min of release; consider closing or tightening stops.",
+    "Confluence count is 4 (B-grade); not A-tier. Requires strict risk discipline and kill-zone execution.",
+    "H1 structure is bullish (BOS @ 4738.40); short is counter to H1 bias. This is a M15 tactical short into H1 premium, not a structural reversal. Risk of H1 bullish continuation if London opens strong.",
+    "Funding rate +0.0013%/hr (longs paying) is mild bearish contrarian signal but not extreme. Monitor for shift.",
+    "EUR/USD weakness is structural headwind; watch for reversal if dollar stabilizes.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4688.85 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at HVN 4688.37 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 CHoCH-bearish structure intact (4701.10 pivot)",
+          "M15 BOS-bearish confirmed (4708.50); price below",
+          "M15 bearish OBs active within 8pts (4711.60-4715.40)",
+          "Price in H1 premium zone (57.7% of range); OTE short zone [4716.93-4736.97] nearby"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4688.37 (strong S/R)",
+      "H4 CHoCH-bearish structure intact (4701.10 pivot)",
+      "M15 BOS-bearish confirmed (4708.50); price below",
+      "M15 bearish OBs active within 8pts (4711.60-4715.40)",
+      "Price in H1 premium zone (57.7% of range); OTE short zone [4716.93-4736.97] nearby"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: null",
+    "orderId": null,
+    "entry": 4688.85,
+    "size": null,
+    "riskAmount": 0.47,
+    "riskPct": "0.49",
+    "timestamp": "2026-05-12T06:25:29.777Z"
+  }
+}

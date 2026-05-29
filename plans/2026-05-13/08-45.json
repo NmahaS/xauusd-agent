@@ -1,0 +1,152 @@
+{
+  "timestamp": "2026-05-13T08:45:00.768Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H1 CHoCH-bullish @ 4704.30 confirmed; M15 CHoCH-bullish @ 4700.50 active. Price in discount zone (-10.1% of M15 range). H4 bearish bias conflicts but H1/M15 structure is bullish. EUR/USD weakening (dollar strengthening = headwind), but M15 structure and H1 OBs provide local bullish setup. London kill zone active. Macro bearish (rising yields) but transitioning regime allows tactical long on structure confluence.",
+  "setupQuality": "B",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "H1 bullish CHoCH @ 4704.30 (structural confirmation)",
+    "M15 bullish CHoCH @ 4700.50 (primary signal active)",
+    "Price in M15 discount zone (-10.1% of range)",
+    "Unmitigated bullish H1 OB at 4646.70-4663.50 (within 25pts)",
+    "London kill zone active (07-10 UTC execution window)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4646.7,
+      4663.5
+    ],
+    "reasoning": "H1 bullish OB formed during prior consolidation; overlaps with H1 OTE long zone [4653.38-4667.25]. M15 bullish FVGs at 4664.80-4665.50 and 4667.10-4671.60 nest within this block. Primary entry POI for bullish structure confirmation."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4688.95,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4645.53,
+    "reasoning": "Below H1 bullish OB low (4646.70) minus M15 ATR buffer (5.44 × 0.2 = 1.09). Invalidates H1 bullish structure and M15 CHoCH if breached. + 0.2 × M15 ATR buffer",
+    "pips": 43.42
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4712.3,
+      "reasoning": "Prior H1 liquidity pool (EQH swept at 4712.30); first structural resistance. System places TP at 2R automatically.",
+      "rr": 0.54
+    }
+  ],
+  "invalidation": {
+    "price": 4643.2,
+    "reasoning": "H4 CHoCH-bearish @ 4643.20 invalidates bullish setup if breached. Bias flips to bearish; exit long."
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC — execute now on limit fill or wait for M15 confirmation candle"
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 11.2-pip stop; tight stop due to transitioning regime and macro headwinds (rising yields, EUR/USD weakening). Scale in on confirmation."
+  },
+  "macroContext": "Rising real yields (1.95%) and EUR/USD weakening (dollar strengthening) are bearish for gold; however, fear sentiment (42) and transitioning market regime allow tactical long on H1/M15 bullish structure confluence. Core PPI data in +225m is high-impact risk.",
+  "warnings": [
+    "H4 bias is bearish (CHoCH-bearish @ 4643.20) — conflicts with H1/M15 bullish structure. This is a Tier 3 (technical-only) setup; macro headwinds present.",
+    "Rising real yields (1.95%) and EUR/USD weakening are structural headwinds for gold longs.",
+    "Core PPI m/m due in +225m (high impact) — consider reducing size or exiting before data.",
+    "Funding rate +0.0005%/hr (longs paying) suggests mild crowding; contrarian caution.",
+    "Price at HVN (4689.59) — strong resistance; breakout required for sustained move.",
+    "Transitioning market regime — require higher confluence; this setup is B-grade (4-5 factors). Reduce position size accordingly.",
+    "⚠️ Split: Claude=long DeepSeek=short — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "bullish",
+    "newsHeadline": "Gold holds bullish bias amid anticipation of high-impact US PPI data and Fed nomination vote"
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4688.95 — M15 bullish bias confirms",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 5,
+        "confluenceGrade": "B",
+        "factors": [
+          "H1 bullish CHoCH @ 4704.30 (structural confirmation)",
+          "M15 bullish CHoCH @ 4700.50 (primary signal active)",
+          "Price in M15 discount zone (-10.1% of range)",
+          "Unmitigated bullish H1 OB at 4646.70-4663.50 (within 25pts)",
+          "London kill zone active (07-10 UTC execution window)"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4689.59 (strong S/R)",
+      "H1 bullish CHoCH @ 4704.30 (structural confirmation)",
+      "M15 bullish CHoCH @ 4700.50 (primary signal active)",
+      "Price in M15 discount zone (-10.1% of range)",
+      "Unmitigated bullish H1 OB at 4646.70-4663.50 (within 25pts)",
+      "London kill zone active (07-10 UTC execution window)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 7 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Existing T4/7 short stronger than new T4/5 long — holding",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

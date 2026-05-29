@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-05-01T01:26:03.300Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H1 SMC bias is bearish (CHoCH-bearish confirmed at 4621.28); price is in premium zone (79% of range 4620.41–4649.40), well above the 50% threshold. H4 bias is neutral with no active structure, but H1 bearish structure dominates execution timeframe. Positive real yields (1.96%) are bearish for gold. Fear & Greed at 26 (fear) with falling 7d trend suggests risk-off sentiment, which is neutral-to-slightly-bullish for safe-haven gold, but the H1 bearish structure and premium positioning override this.",
+  "setupQuality": "B",
+  "confluenceCount": 3,
+  "confluenceFactors": [
+    "H1 bearish structure (CHoCH-bearish @ 4621.28)",
+    "Price in premium zone (79% of range)",
+    "Positive real yields (1.96%) bearish for gold"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_structure_premium_zone",
+    "zone": [
+      4638.32,
+      4643.19
+    ],
+    "reasoning": "Price is in the H1 OTE short zone (0.618–0.786 fib of the bearish move from 4649.95 to 4620.06). This is the highest-probability entry zone for shorts in a bearish structure. The zone overlaps with premium positioning and the recent swing high liquidity at 4649.95."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4641,
+    "confirmation": "Limit sell at midpoint of OTE short zone; validated by H1 bearish CHoCH and premium zone positioning. Await London kill zone (07:00 UTC) for execution confirmation."
+  },
+  "stopLoss": {
+    "price": 4650.5,
+    "reasoning": "Above H1 liquidity EQH (4649.95) + ATR buffer (21.86); invalidates bearish H1 structure if breached. Protects against reversal into bullish structure.",
+    "pips": 95
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4625,
+      "reasoning": "H1 liquidity EQL (4620.06) + buffer; first support zone in discount",
+      "rr": 1.7
+    },
+    {
+      "level": "TP2",
+      "price": 4610,
+      "reasoning": "Extended discount zone; prior swing low area",
+      "rr": 3.3
+    },
+    {
+      "level": "TP3",
+      "price": 4595,
+      "reasoning": "Deep discount; session liquidity target",
+      "rr": 4.8
+    }
+  ],
+  "invalidation": {
+    "price": 4650.5,
+    "reasoning": "Close above H1 EQH (4649.95) + buffer invalidates bearish H1 structure; bias flips to neutral/bullish."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00 UTC) for optimal execution; current Asia session has low liquidity."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 95-pip stop; position size = account risk / 95 pips"
+  },
+  "macroContext": "Positive real yields (1.96%) and rising 10Y yield (4.420%) are bearish for gold; Fear & Greed at 26 (fear) is neutral; DXY and EUR/USD data unavailable, but macro backdrop supports gold weakness.",
+  "warnings": [
+    "H4 bias is neutral with no active structure — confluence is weak (only 3 factors). Trade is B-grade setup; consider waiting for stronger H4 confirmation or additional H1 confluence.",
+    "H4 data unavailable (no candles provided); cannot confirm multi-timeframe alignment. Execution risk elevated.",
+    "ISM Manufacturing PMI and Prices due in ~754 minutes (high-impact USD data); avoid holding through this event.",
+    "No active H1 order blocks or unfilled FVGs near entry — entry is based on OTE zone and premium positioning only.",
+    "Asia session liquidity is low; execution may be slippage-prone. Strongly recommend waiting for London open (07:00 UTC).",
+    "✅ Consensus: Claude + DeepSeek both short",
+    "DXY proxy unavailable — cross-asset context reduced",
+    "Wide IG spread (0.80) — confirm before market orders"
+  ],
+  "promptVersion": "v3.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "No breaking news in last 2 hours; upcoming ISM Manufacturing PMI looms with bearish technical bias"
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "M15 fetch failed: IG GET /prices/MT.D.GC.FWS2.IP?resolution=MINUTE_15&max=50 HTTP 403: {\"errorCode\":\"error.public-api.exceeded-account-historical-data-allowance\"}"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "PENDING",
+    "executed": false,
+    "reason": "Auto-trade disabled — manual signal",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "timestamp": "2026-05-13T10:30:00.576Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish (CHoCH-bearish @ 4643.20); H1 shows bullish structure (CHoCH-bullish @ 4704.30) but price is in premium zone (68.5%) and below weekly VWAP (4700.82), signaling institutional bearish bias. M15 bias is bearish (CHoCH-bearish @ 4690.50) with active bearish OBs at 4711.60-4715.40 and 4714.30-4717.00 very close to current price (4692.30). Weekly macro is neutral but yields are rising (bearish for gold). EUR/USD weakening (-8.69% 24h) = dollar strengthening = bearish gold. High-impact PPI data in 120min adds execution risk.",
+  "setupQuality": "B",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "M15 CHoCH-bearish confirms direction",
+    "H1 price in premium zone (68.5%)",
+    "Below weekly VWAP — institutional bearish",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4711.6,
+      4715.4
+    ],
+    "reasoning": "M15 active bearish OB formed on recent down-close candles; overlaps with second bearish OB at 4714.30-4717.00. This is the primary M15 POI for short entry. Price currently at 4692.30, OB is 19-23pts above — within entry range."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4692.35,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4716.49,
+    "reasoning": "Above M15 bearish OB high (4715.40) plus 0.2×M15 ATR (5.96×0.2≈1.2pts). Invalidates bearish M15 structure if breached; signals potential H1 bullish continuation. + 0.2 × M15 ATR buffer",
+    "pips": 24.14
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4680,
+      "reasoning": "Prior M15 swing low and H1 bullish FVG support zone (4674.50-4680.20). Structural reference for 2R target — system places TP at 2R automatically.",
+      "rr": 0.51
+    }
+  ],
+  "invalidation": {
+    "price": 4721.8,
+    "reasoning": "Break above M15 bearish OB high invalidates short bias; signals potential H1 bullish reversal or breakout. Flip to neutral/bullish if breached."
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "Avoid entry within 120min (USD PPI data release at ~10:30 UTC+2 / 12:30 UTC). Wait for post-data volatility to settle (post-13:00 UTC) or execute after data if bearish structure holds."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.8% risk on 81-pip stop. Reduce size due to high-impact economic data in 120min; consider waiting for post-data confirmation."
+  },
+  "macroContext": "Yields rising (1.95% real yield = bearish gold), EUR/USD weakening sharply (-8.69% 24h = dollar strengthening = bearish gold), Fear & Greed at 42 (fear) = neutral. High-impact PPI data in 120min adds volatility risk. Institutional bias bearish (price below weekly VWAP, in premium zone on H1).",
+  "warnings": [
+    "HIGH-IMPACT USD PPI DATA IN 120MIN — avoid entry within 30min of release; consider waiting for post-data confirmation",
+    "EUR/USD weakening sharply (-8.69% 24h) — strong dollar headwind for gold; confirms bearish bias but increases volatility risk",
+    "Price in H1 premium zone (68.5%) — bearish setup, but H1 structure is bullish (CHoCH-bullish @ 4704.30); conflicting structure signals caution",
+    "M15 bearish OB is only 19-23pts above current price — tight entry zone; requires precise limit execution",
+    "Funding rate is negative (-0.0003%/hr) — shorts paying, mild bullish contrarian signal; not strong enough to override structure",
+    "✅ Consensus: Claude + DeepSeek both short",
+    "High-impact gold event in 120min: USD Core PPI m/m (High)",
+    "High-impact gold event in 120min: USD PPI m/m (High)",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold price at 4702.19 tests key supports amid bearish technicals and upcoming high-impact US data"
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4692.35 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 5,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "M15 CHoCH-bearish confirms direction",
+          "H1 price in premium zone (68.5%)",
+          "Below weekly VWAP — institutional bearish",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4689.59 (strong S/R)",
+      "H4+M15 bias agree (short)",
+      "M15 CHoCH-bearish confirms direction",
+      "H1 price in premium zone (68.5%)",
+      "Below weekly VWAP — institutional bearish",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 7 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: 423844785314",
+    "orderId": 423844785314,
+    "entry": 4692.3,
+    "size": 0.018,
+    "riskAmount": 0.43,
+    "riskPct": "0.50",
+    "timestamp": "2026-05-13T10:30:33.178Z"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "date": "2026-05-21",
+  "totalPlans": 6,
+  "trades": 0,
+  "signals": 5,
+  "noTrades": 1,
+  "setups": {
+    "A+": 0,
+    "A": 0,
+    "B": 5,
+    "no-trade": 1
+  },
+  "directions": {
+    "long": 0,
+    "short": 5
+  },
+  "wins": {
+    "total": 0,
+    "losses": 0,
+    "partialWins": 0,
+    "expired": 0,
+    "open": 0,
+    "winRate": "0%",
+    "winsByQuality": {},
+    "winsBySession": {}
+  },
+  "plans": [],
+  "dailyRR": {
+    "totalPotentialRR_TP1": 0,
+    "totalPotentialRR_TP2": 0,
+    "totalPotentialRR_TP3": 0,
+    "totalActualRR": 0,
+    "avgRR_TP1": null,
+    "avgRR_TP2": null,
+    "avgRR_TP3": null,
+    "avgActualRR": null,
+    "netRR": 0,
+    "bestSetup": null,
+    "worstSetup": null
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "timestamp": "2026-05-14T05:30:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "neutral",
+  "biasReasoning": "H4 bearish CHoCH @ 4643.20 conflicts with H1 bullish CHoCH @ 4704.30 and M15 bullish CHoCH @ 4690.70. Price near daily VWAP (4684.99) but below weekly VWAP (4702.1) signals institutional bearish bias. Macro neutral (stable yields, EUR/USD weakening slightly). High-impact GBP GDP events in 30min create execution risk. M15 structure is bullish but lacks confluence with macro and H4 directional filter.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London open (07:00 UTC) after GBP GDP events clear; reassess H4/H1 alignment then"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — structural conflict and imminent high-impact news"
+  },
+  "macroContext": "Neutral macro (stable yields 1.99% real, EUR/USD weakening slightly bullish for gold, fear at 34 neutral). High-impact GBP GDP events in 30min create execution risk. Institutional bias bearish (price below weekly VWAP 4702.1). H4 bearish structure conflicts with M15 bullish structure — no clear directional alignment.",
+  "warnings": [
+    "H4 bearish CHoCH @ 4643.20 conflicts with H1/M15 bullish structure — no macro-level directional filter",
+    "Price below weekly VWAP 4702.1 — institutional bias bearish despite M15 bullish signal",
+    "HIGH-IMPACT GBP GDP m/m (High) in 30min — avoid entry until event clears",
+    "HIGH-IMPACT GBP Prelim GDP q/q (Medium) in 30min — avoid entry until event clears",
+    "Ranging market (2.7×ATR) with moderate volatility — wait for clearer structure post-news",
+    "Funding rate +0.0013%/hr (longs paying) — mild contrarian bearish signal",
+    "M15 POI (bullish OB 4666.80-4669.70) is 16.2 pts below current price — entry would be counter-trend to recent impulsive move up",
+    "High-impact gold event in 30min: GBP GDP m/m (High)",
+    "High-impact gold event in 30min: GBP Prelim GDP q/q (Medium)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "neutral",
+    "newsHeadline": "Gold is consolidating with mild support from softer USD tone ahead of upcoming UK and US data"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 0,
+        "confluenceGrade": "no-trade",
+        "factors": [],
+        "score": 0
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 1 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

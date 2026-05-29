@@ -1,0 +1,149 @@
+{
+  "timestamp": "2026-05-18T08:45:00.385Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish BOS and H1 bearish CHoCH dominate; M15 bullish BOS is a retracement within larger downtrend. EUR/USD weakening (dollar strengthening) aligns with bearish gold. Price in H1 premium zone, suggesting sell. No M15 OB or FVG within 8pts for long; bearish FVGs above. Confluence score 6: H4 bearish, H1 bearish, H1 premium, EUR/USD bearish, London kill zone active, no high-impact news. Setup grade A.",
+  "setupQuality": "A",
+  "confluenceCount": 6,
+  "confluenceFactors": [
+    "H4 bearish structure (BOS intact)",
+    "H1 bearish structure (CHoCH intact)",
+    "H1 premium zone (88.6% of range)",
+    "EUR/USD weakening (dollar strengthening, bearish gold)",
+    "London kill zone active",
+    "No high-impact gold-relevant news within 2 hours"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4545.9,
+      4553.7
+    ],
+    "reasoning": "M15 bullish BOS at 4545.90 created a bullish OB; however, price is now above it and retesting. This zone aligns with H1 premium and H4 bearish FVGs above. Selling into this OB with confirmation."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4548,
+    "confirmation": "Limit sell inside OB zone; wait for M15 bearish engulfing or CHoCH below 4545.90 for confirmation."
+  },
+  "stopLoss": {
+    "price": 4557,
+    "reasoning": "Above OB high (4553.70) plus 0.2x M15 ATR (9.17) = 4555.53, rounded to 4557.00. Invalidates bearish bias if broken.",
+    "pips": 90
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4527,
+      "reasoning": "Nearest structural liquidity below: H1 swing low at 4525.70 and weekly HVN at 4542.17. TP1 at 4527.00 as reference; system uses 2R.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4558,
+    "reasoning": "Break above 4557.00 invalidates bearish structure; bias flips neutral/bullish."
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC — execute now on limit fill"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 90-pip stop"
+  },
+  "macroContext": "Real yields rising (1.98%) bearish for gold; EUR/USD weakening (dollar strengthening) bearish; Fear & Greed at 28 (fear) neutral. Overall macro bearish.",
+  "warnings": [
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "short",
+    "claudeQuality": "failed",
+    "deepseekQuality": "A",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "volatile_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4542.17 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 6,
+        "confluenceGrade": "A",
+        "factors": [
+          "H4 bearish structure (BOS intact)",
+          "H1 bearish structure (CHoCH intact)",
+          "H1 premium zone (88.6% of range)",
+          "EUR/USD weakening (dollar strengthening, bearish gold)",
+          "London kill zone active",
+          "No high-impact gold-relevant news within 2 hours"
+        ],
+        "score": 6
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4542.17 (strong S/R)",
+      "H4 bearish structure (BOS intact)",
+      "H1 bearish structure (CHoCH intact)",
+      "H1 premium zone (88.6% of range)",
+      "EUR/USD weakening (dollar strengthening, bearish gold)",
+      "London kill zone active",
+      "No high-impact gold-relevant news within 2 hours"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 7 total factors",
+    "warnings": [
+      "⚠️ Elevated volatility — use tight stops"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Risk: Spread too wide: 3.45pts > 3pts — low liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

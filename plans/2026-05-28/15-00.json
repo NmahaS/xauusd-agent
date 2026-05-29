@@ -1,0 +1,164 @@
+{
+  "timestamp": "2026-05-28T15:00:40.531Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 SMC shows bullish CHoCH @ 4546.90 (most recent structure event), though H4 trend EMA is bearish (EMA20 4467.15 < EMA50 4502.68 < EMA200 4595.01). M15 SMC is bullish with CHoCH @ 4404.00 and price now at 4466.70 in premium zone. H1 shows bearish BOS @ 4408.40 but M15 bullish structure dominates entry timeframe. EUR/USD weakening (-7.56% 24h) is bearish for gold, but extreme fear (F&G=22) and falling real yields (2.11% but trend falling) provide macro support. Market transitioning regime requires higher confluence. H4 allows LONG only per directional filter.",
+  "setupQuality": "B",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "H4+M15 bias agree (long)",
+    "M15 unfilled bullish FVG within 8pts [4464.90-4465.00]",
+    "M15 CHoCH-bullish confirms direction",
+    "DXY proxy weakening confirms direction",
+    "10Y yield falling confirms direction",
+    "No imminent gold-relevant news",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_fvg",
+    "zone": [
+      4464.9,
+      4465
+    ],
+    "reasoning": "M15 bullish FVG at 4464.90-4465.00 (most recent unfilled imbalance); price currently at 4466.70, just above this zone. This is the nearest M15 liquidity target. Alternatively, bullish FVG at 4432.00-4449.40 is 18-35pts below current price and represents secondary target."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4467.65,
+    "confirmation": "Market entry at current price. No M15 OB within 30pts (nearest bullish OB at 4382.80-4388.50 is 79pts below). M15 bullish structure (CHoCH @ 4404.00) is confirmed; enter on next bullish candle close above 4466.70 or on limit fill at 4467.65. Confirmation: bullish engulfing or higher high on M15."
+  },
+  "stopLoss": {
+    "price": 4451.5,
+    "reasoning": "Below M15 swing low at 4458.40 (from 14:45 candle) with ATR buffer. M15 ATR14=11.73; stop is ~16pts below entry, providing 1.4× ATR cushion. Invalidates M15 bullish structure if breached.",
+    "pips": 16
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4481.8,
+      "reasoning": "H4 support level (approaching 14.2pts above current price); first structural resistance and liquidity pool. System will place actual TP at 2R from entry (4483.80 approx).",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4451.5,
+    "reasoning": "Break below M15 swing low at 4458.40 invalidates bullish M15 structure; bias flips to neutral/bearish. H1 bearish BOS @ 4408.40 becomes active downside target."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Current NY session (15:00 UTC). No kill zone active. Execute on market confirmation within next 2-4 M15 candles. Avoid holding through London open (23:00 UTC) due to transitioning regime."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 16-pip stop. Position size = (account_risk_usd / 16) / 100 PAXG contracts. Given 50% historical WR on NY session, use 1% max."
+  },
+  "macroContext": "Real yields falling (bullish gold), extreme fear sentiment (safe-haven demand), but EUR/USD weakening sharply (-7.56% 24h, bearish for gold). Transitioning market regime requires caution; higher confluence needed. Upcoming BOE Bailey speech (+1039m) and CAD GDP (+1289m) are medium-term risks.",
+  "warnings": [
+    "Market transitioning regime — SMC effective but volatility may spike. Require strict M15 confirmation before entry.",
+    "EUR/USD weakening significantly (-7.56% 24h) — dollar strength headwind for gold. Monitor EUR/USD closely; if it continues falling, bias may flip bearish.",
+    "H4 trend EMA bearish (20 < 50 < 200) conflicts with H4 bullish SMC structure. This is a Tier 3 (technical-only) signal; macro/flow do not strongly support.",
+    "H1 bearish BOS @ 4408.40 is active; if price breaks below 4451.50, downside target is 4408.40 (59pts below entry).",
+    "Funding rate +0.0013%/hr (11% annualized) — longs paying shorts. Mild bearish contrarian signal; avoid size.",
+    "No kill zone active in NY session. Execution window is narrow; price may move away quickly.",
+    "Real yields at 2.11% remain elevated despite falling trend. Macro support is weak; rely on M15 structure and fear sentiment.",
+    "Upcoming economic calendar: BOE Bailey speech (+1039m) and CAD GDP (+1289m) are high-impact. Consider closing or reducing position 30min before these events.",
+    "✅ Consensus: Claude + DeepSeek both long"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "long",
+    "deepseekDirection": "long",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "bullish",
+    "newsHeadline": "Gold holds firm near recent highs as USD eases and policy uncertainty supports safe‑haven demand"
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — H4+M15 aligned (H1 pullback)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "long",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields falling (bullish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_lvn",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bearish",
+        "m15Bias": "bullish",
+        "confluenceCount": 7,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (long)",
+          "M15 unfilled bullish FVG within 8pts [4464.90-4465.00]",
+          "M15 CHoCH-bullish confirms direction",
+          "DXY proxy weakening confirms direction",
+          "10Y yield falling confirms direction",
+          "No imminent gold-relevant news",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "h4AndM15Agree": true,
+        "h1AlignsWithH4": false,
+        "h1PullbackInH4": true,
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "Yields falling (bullish gold)",
+      "H4+M15 bias agree (long)",
+      "M15 unfilled bullish FVG within 8pts [4464.90-4465.00]",
+      "M15 CHoCH-bullish confirms direction",
+      "DXY proxy weakening confirms direction",
+      "10Y yield falling confirms direction",
+      "No imminent gold-relevant news",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — H4+M15 aligned (H1 pullback) | long | 8 total factors",
+    "warnings": [
+      "H1 pullback in H4 trend — corrective move, weaker signal"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — H4+M15 aligned (H1 pullback)",
+    "executed": false,
+    "reason": "Compound blocked: total position would exceed 0.05 PAXG",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

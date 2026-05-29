@@ -1,0 +1,156 @@
+{
+  "timestamp": "2026-05-14T18:45:00.599Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4643.20 confirmed; H1 CHoCH-bearish @ 4663.00 active; M15 BOS-bearish @ 4671.80 fresh. Price 4664.90 is in deep discount (-15% of M15 range) but structure is decisively bearish across all timeframes. H1 RSI bullish divergence present but overridden by structural breakdown. EUR/USD weakening (dollar strengthening) is mildly bearish for gold. Institutional bias (VWAP below daily/weekly) confirms downside pressure.",
+  "setupQuality": "B",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 unfilled bearish FVG within 8pts [4671.00-4674.00]",
+    "M15 BOS-bearish confirms direction",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4676.6,
+      4681.1
+    ],
+    "reasoning": "M15 bearish OB formed after BOS-bearish @ 4671.80; overlaps with H1 bearish structure. Price currently 4664.90 is 11-16 points below OB, requiring pullback into zone for entry confirmation."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4679,
+    "confirmation": "Limit sell into M15 bearish OB midpoint (4678.85); validated by H4/H1/M15 structural alignment and bearish CHoCH cascade. Requires pullback from current 4664.90 into OB zone."
+  },
+  "stopLoss": {
+    "price": 4685.8,
+    "reasoning": "Above M15 bearish OB high (4681.10) + 0.2×M15 ATR (6.29×0.2=1.26); invalidates bearish structure if breached. Pips: 68.",
+    "pips": 68
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4661.1,
+      "reasoning": "H1 liquidity pool (EQL 4661.10 unswept); first structural support below current price. System places TP at 2R automatically.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4685.8,
+    "reasoning": "Break above M15 OB high + buffer invalidates bearish bias; H1 structure flips to neutral/bullish if breached."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for best liquidity and execution confirmation."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "1% risk on 68-pip stop; position size = account_risk / 68 pips."
+  },
+  "macroContext": "Dollar strengthening (EUR/USD -8.35% in 24h), real yields unknown, Fear & Greed at 34 (fear) — mildly supportive for gold shorts. Institutional bias bearish (price below daily/weekly VWAP). Funding rate +0.0013%/hr indicates mild long crowding (contrarian bearish signal).",
+  "warnings": [
+    "Price currently 11-16 points below M15 OB entry zone — requires pullback to 4676-4681 for entry confirmation; no immediate entry available.",
+    "H1 RSI bullish divergence (40.1) present — watch for potential bounce; entry should wait for M15 confirmation inside OB.",
+    "Macro data (yields, COT) unavailable — bias relies on structure and flow only (Tier 3 technical signal).",
+    "Ranging market (3.2×ATR) — trade with caution; tight stops required.",
+    "Session is 'off' (between London/NY) — liquidity lower; wait for next kill zone for optimal execution.",
+    "Setup is B-grade (4 confluence factors) — acceptable but not high-conviction; only execute on strict M15 OB entry confirmation.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "FRED macro data unavailable — yields/real-rate missing"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "below_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 7,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 unfilled bearish FVG within 8pts [4671.00-4674.00]",
+          "M15 BOS-bearish confirms direction",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 unfilled bearish FVG within 8pts [4671.00-4674.00]",
+      "M15 BOS-bearish confirms direction",
+      "No imminent gold-relevant news",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 7 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "timestamp": "2026-05-21T14:31:14.679Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish structure (BOS-bearish @ 4478.20 intact); H1 shows bullish CHoCH but sits in premium zone (54.5%) with multiple unfilled bearish FVGs below. M15 bullish CHoCH @ 4515.20 conflicts with H4 bearish bias. Weekly macro neutral but yields rising (bearish gold). EUR/USD weakening (bullish gold) provides mild offset. Institutional bias bearish (below weekly VWAP). Market transitioning — confluence required.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish structure (BOS-bearish intact at 4478.20)",
+    "Price in premium zone on H1 (54.5% — sell zone)",
+    "Multiple unfilled bearish M15 FVGs below current price (4513.40-4553.40)",
+    "NY kill zone active (12-15 UTC)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4494.3,
+      4501.6
+    ],
+    "reasoning": "M15 bullish OB formed during recent upswing; price currently at 4505.70 (above zone). Pullback into this OB would confirm short entry. OB sits atop H1 OTE short zone (4510.58-4521.80) and above multiple unfilled bearish FVGs. Breaking below 4494.30 targets first bearish FVG at 4513.40-4525.80."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4501.6,
+    "confirmation": "Limit sell at top of M15 bullish OB (4501.60). Price must pullback from current 4505.70 into this zone. Confirmation: bearish candle close below 4501.60 or rejection from H1 premium zone. Do NOT chase — wait for pullback."
+  },
+  "stopLoss": {
+    "price": 4510.2,
+    "reasoning": "Above M15 bullish OB high (4501.60) + 0.2×M15 ATR (8.65 ≈ 1.7pts) = 4510.20. Invalidates H4 bearish structure if breached; signals H1 bullish continuation.",
+    "pips": 86
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4478.2,
+      "reasoning": "H4 BOS-bearish level (prior support, structural liquidity pool). System places TP at 2R automatically; this is structural reference only.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4510.2,
+    "reasoning": "Close above M15 OB + buffer invalidates short bias. H1 bullish structure would dominate; flip to neutral/bullish."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone 12-15 UTC active NOW — execute limit on pullback into 4501.60 zone"
+  },
+  "risk": {
+    "suggestedRiskPct": 0.8,
+    "positionSizeHint": "0.8% risk on 86-pip stop. Reduced from 1% due to transitioning regime and H1/M15 structure conflict."
+  },
+  "macroContext": "Yields rising (2.23% real yield = bearish gold); EUR/USD weakening (bullish gold offset); Fear & Greed at 29 (fear, risk-off). Institutional bias bearish (below weekly VWAP 4535.47). Macro neutral but tilted bearish on yields; cross-asset mixed.",
+  "warnings": [
+    "Market transitioning — confluence only B-grade (4 factors). Require pullback confirmation before entry; do NOT chase breakout.",
+    "H1 bullish CHoCH @ 4515.20 conflicts with H4 bearish bias — this is a Tier 3 (technical-only) signal. Macro/flow do not confirm.",
+    "M15 currently in premium zone (66.3%) — short bias weaker here. Pullback into discount or OB boundary required.",
+    "BOE Gov Bailey speaks in +29m (high impact). GBP volatility may spike; monitor for slippage on entry.",
+    "Funding rate +0.0012%/hr (longs paying) — mild bearish contrarian signal but not extreme.",
+    "H4 nearest target (4478.20) is 27.6pts away — requires sustained bearish momentum. Intermediate targets: 4485.60 (M15 P/D low), 4494.30 (M15 OB low).",
+    "✅ Consensus: Claude + DeepSeek both short"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold holds near recent lows as firm US Dollar and easing Iran tensions cap safe-haven demand"
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Blocked",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "m15Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (BOS-bearish intact at 4478.20)",
+          "Price in premium zone on H1 (54.5% — sell zone)",
+          "Multiple unfilled bearish M15 FVGs below current price (4513.40-4553.40)",
+          "NY kill zone active (12-15 UTC)"
+        ],
+        "h4AndM15Agree": false,
+        "h1AlignsWithH4": false,
+        "h1PullbackInH4": true,
+        "score": 4
+      }
+    },
+    "allFactors": [],
+    "blockingFactors": [
+      "M15 long conflicts with H4 short trend — execution TF misaligned"
+    ],
+    "summary": "Tier 4: Blocked — M15 long conflicts with H4 short trend — execution TF misaligned"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Blocked",
+    "executed": false,
+    "reason": "Risk: Tier 4 blocked — conflicting layers, no edge. Wait for Tier 1-3 setup.",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

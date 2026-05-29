@@ -1,0 +1,155 @@
+{
+  "timestamp": "2026-05-14T22:45:00.985Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4643.20 confirmed; H1 CHoCH-bearish @ 4663.00 intact; M15 BOS-bearish @ 4666.60 active. Price in discount zone but structural bias is down. Weekly macro neutral but yields rising (bearish gold). EUR/USD weakening (bullish gold) provides mild counter-signal. Institutional bias (VWAP below weekly) is bearish. Market transitioning — require high confluence for entry.",
+  "setupQuality": "B",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 unfilled bearish FVG within 8pts [4660.40-4663.40]",
+    "M15 BOS-bearish confirms direction",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4676.6,
+      4681.1
+    ],
+    "reasoning": "M15 bearish OB formed during impulsive down-move; overlaps with M15 unfilled bearish FVGs at 4671.00-4674.00 and 4667.50-4669.40. Price currently at 4657.40, below OB. Retest of OB zone on recovery would provide short entry confirmation."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4657.55,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4681.94,
+    "reasoning": "Above M15 bearish OB high (4681.10) + 0.2×M15 ATR (4.66×0.2≈0.93); invalidates bearish structure if breached. + 0.2 × M15 ATR buffer",
+    "pips": 24.39
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4642.3,
+      "reasoning": "M15 swing low / H1 liquidity pool at 4661.10 (swept); structural reference — system places TP at 2R automatically.",
+      "rr": 0.63
+    }
+  ],
+  "invalidation": {
+    "price": 4685.8,
+    "reasoning": "Break above M15 bearish OB high invalidates short bias; H4/H1 structure would flip to neutral/bullish."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone 07-10 UTC (next session) for higher liquidity and confirmation; or execute on limit fill if price recovers to OB zone during current off-hours."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.4,
+    "positionSizeHint": "0.8% risk on 63-pip stop; market transitioning and confluence is moderate (B-grade) — reduce size vs A-grade setups."
+  },
+  "macroContext": "Yields rising (bearish gold), EUR/USD weakening (bullish gold offset), real yields positive at 1.99% (bearish), F&G at 34 (fear, neutral). Institutional bias bearish (below weekly VWAP). Macro-neutral but structural bearish bias dominates.",
+  "warnings": [
+    "Market transitioning — SMC effective but volatility may spike; require strict stop discipline.",
+    "Confluence count is 4 (B-grade) — not A-tier; execute only on confirmed limit fill at OB zone.",
+    "Funding rate +0.0013%/hr (longs paying) — mild bearish contrarian signal but not dominant.",
+    "No kill zone active; off-hours execution carries lower liquidity risk — wait for London if possible.",
+    "EUR/USD weakening is a counter-signal to short bias; monitor dollar strength for invalidation.",
+    "Yields rising is macro-bearish for gold, but real yields at 1.99% are not extreme; watch for yield spike as hard stop.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4657.55 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "below_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 7,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 unfilled bearish FVG within 8pts [4660.40-4663.40]",
+          "M15 BOS-bearish confirms direction",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 unfilled bearish FVG within 8pts [4660.40-4663.40]",
+      "M15 BOS-bearish confirms direction",
+      "No imminent gold-relevant news",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 8 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

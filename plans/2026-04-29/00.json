@@ -1,0 +1,65 @@
+{
+  "timestamp": "2026-04-29T00:02:54.989Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 SMC bias is neutral with no active structure events; H1 also neutral with no active OBs or FVGs. Price is in premium zone (57.7% of H1 range) but lacks confluence of bullish or bearish structure. H4 unfilled bullish FVG [4749.65-4759.57] exists but is 50+ pips above current price. No clear directional bias from structure; macro backdrop mixed (positive real yields bearish, EUR/USD weakening bullish, F&G fear-neutral). High-impact AUD CPI data in 87 minutes creates execution risk.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London open (07:00 UTC) and post-AUD CPI clarity (after 01:30 UTC); avoid trading within 2 hours of high-impact AUD CPI release at 01:30 UTC"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — wait for structure clarity and macro event pass"
+  },
+  "macroContext": "Positive real yields (1.91%) bearish for gold; EUR/USD weakening (bullish for gold); F&G at 26 (fear, neutral); high-impact AUD CPI in 87 minutes creates volatility risk and invalidates current technical setup until post-event consolidation.",
+  "warnings": [
+    "High-impact AUD CPI m/m, y/y, and Trimmed Mean CPI releases in 87 minutes — avoid entry until post-event price action and volatility settle",
+    "H4 and H1 SMC bias both neutral; no active OBs or clear structure events to anchor trade",
+    "H4 unfilled bullish FVG [4749.65-4759.57] exists but is 50+ pips away; price currently in premium zone without confluence",
+    "Positive real yields (1.91%) create bearish headwind for gold despite EUR/USD weakness",
+    "No RSI divergence, no kill zone active, no clear POI within 20 pips of current price",
+    "Recommend waiting for London open and post-CPI consolidation before initiating any directional trade",
+    "High-impact gold event in 87min: AUD CPI m/m (High)",
+    "High-impact gold event in 87min: AUD CPI y/y (High)",
+    "High-impact gold event in 87min: AUD Trimmed Mean CPI m/m (High)",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v3.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "neutral",
+    "newsHeadline": "No breaking news in last 2 hours; upcoming AUD CPI and BOC/Fed events loom"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "N/A",
+    "executed": false,
+    "reason": "N/A",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

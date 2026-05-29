@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-04-19T13:58:36.477Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bullish",
+  "biasReasoning": "H4 and H1 SMC biases are bullish with last CHoCH events at 4838.06 and 4806.14 respectively, indicating upward market structure. H4 trend is bullish with price above key EMAs (EMA20=4826.07, EMA50=4798.53, EMA200=4665.02).",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for clearer POI and discount zone entry"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields are positive at 1.96%, bearish for gold; Fear & Greed index at 27 indicates fear but trending risk-on, neutral for gold; CAD high-impact CPI data due in ~22.5 hours may increase volatility.",
+  "warnings": [
+    "Price is in extreme premium zone (96.8% on H1, 54.7% on H4), reducing entry probability",
+    "No clear POI (order block or FVG) near current price for high-probability setup",
+    "High-impact CAD CPI news in ~22.5 hours could disrupt market conditions"
+  ],
+  "promptVersion": "v2.0"
+}

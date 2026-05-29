@@ -1,0 +1,149 @@
+{
+  "timestamp": "2026-05-13T02:45:00.448Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "M15 BOS-bullish @ 4711.70 confirmed; price now retracing into discount zone (−98.7% of M15 range) with multiple unfilled bullish FVGs below current price. H4 bearish CHoCH @ 4643.20 is stale; H1 structure neutral but H1 bullish OBs at 4646.70–4663.50 and 4544.80–4552.80 remain unmitigated. EUR/USD weakening (−8.69% 24h) is bearish for gold macro, but M15 structure is bullish and price is deeply oversold vs daily VWAP (2σ below). Transitioning regime requires higher confluence; M15 bullish FVGs and OBs provide entry POI. Yield rising (1.95% real) is macro headwind, but M15 technical setup is valid for tactical long into London kill zone.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 BOS-bullish @ 4711.70 (recent structure event)",
+    "M15 unfilled bullish FVGs within 8pts: 4680.70–4686.00, 4677.50–4680.20, 4674.50–4674.90",
+    "Price in M15 discount zone (−98.7% of range)",
+    "H1 bullish OB at 4646.70–4663.50 unmitigated (structural context)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_fvg_cluster",
+    "zone": [
+      4677.5,
+      4686
+    ],
+    "reasoning": "Cluster of three unfilled bullish FVGs (4680.70–4686.00, 4677.50–4680.20, 4674.50–4674.90) in M15 timeframe; price currently at 4688.10, just above this zone. FVGs represent imbalance and institutional buy-side liquidity. M15 BOS-bullish @ 4711.70 confirms upside bias; retracement into FVG cluster is high-probability entry area."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4682,
+    "confirmation": "Limit buy at midpoint of primary bullish FVG cluster (4677.50–4686.00). Confirm on M15 close above 4680 or on touch of FVG low with bullish candle structure (engulfing or hammer). Entry valid only if price does not break below 4675 before fill."
+  },
+  "stopLoss": {
+    "price": 4673.2,
+    "reasoning": "Below M15 bullish FVG cluster low (4677.50) with 0.2×M15 ATR buffer (5.78×0.2≈1.16). Invalidates M15 bullish structure and H1 bullish OB context if breached. Pips: 8.8.",
+    "pips": 8.8
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4711.7,
+      "reasoning": "M15 BOS-bullish level @ 4711.70 (prior swing high and structural resistance); also near H1 bearish FVG low @ 4707.80–4711.10. Structural reference for 2R target (system places TP at 2R automatically).",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4673,
+    "reasoning": "Break below M15 bullish FVG cluster and H1 bullish OB context. Invalidates M15 BOS-bullish structure; bias flips to bearish if this level is breached on close."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00–10:00 UTC, ~4h 15m from now). Avoid Asia low-liquidity window; London open will provide volume confirmation and tighter spreads for entry execution."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 8.8-pip stop. Transitioning regime and macro headwind (rising yields, EUR/USD weakness) warrant reduced position size. Confluence score B (4 factors) is below A threshold; use smaller size and wait for London kill zone confirmation."
+  },
+  "macroContext": "Real yields rising (1.95%) and EUR/USD weakening (−8.69% 24h) are bearish for gold macro; however, price is 2σ oversold vs daily VWAP and institutional bias is bearish (below weekly VWAP 4694.76), creating tactical long opportunity into oversold discount zone. Fear & Greed at 42 (fear) supports safe-haven bid. Core PPI data in ~9.7h is high-impact gold-relevant event; position should be closed or reduced before release.",
+  "warnings": [
+    "Macro headwind: rising real yields (1.95%) and weakening EUR/USD (−8.69%) are bearish for gold; this is a tactical M15 setup only, not a macro long.",
+    "Transitioning market regime: confluence score B (4 factors) is below A threshold. Require strict entry discipline and tighter stops.",
+    "High-impact economic event (Core PPI, PPI) in ~9.7h (05:30 UTC). Close or reduce position before release to avoid gap risk.",
+    "Funding rate +0.0004%/hr (longs paying) is neutral but slightly bearish contrarian signal; watch for funding spike if position fills.",
+    "H4 bearish CHoCH @ 4643.20 is stale but still valid context; if price breaks below 4635.70 (H4 discount low), H4 bias flips bearish and long invalidates.",
+    "Volume Profile at HVN (4691.78) suggests strong resistance; entry at 4682 is below HVN but TP at 4711.70 will face resistance at HVN and H1 bearish FVG zone (4707.80–4711.10).",
+    "⚠️ Split: Claude=long DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4691.78 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 BOS-bullish @ 4711.70 (recent structure event)",
+          "M15 unfilled bullish FVGs within 8pts: 4680.70–4686.00, 4677.50–4680.20, 4674.50–4674.90",
+          "Price in M15 discount zone (−98.7% of range)",
+          "H1 bullish OB at 4646.70–4663.50 unmitigated (structural context)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4691.78 (strong S/R)",
+      "M15 BOS-bullish @ 4711.70 (recent structure event)",
+      "M15 unfilled bullish FVGs within 8pts: 4680.70–4686.00, 4677.50–4680.20, 4674.50–4674.90",
+      "Price in M15 discount zone (−98.7% of range)",
+      "H1 bullish OB at 4646.70–4663.50 unmitigated (structural context)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 6 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.09 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

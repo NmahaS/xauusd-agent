@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-04-27T23:07:27.391Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 structure shows a bearish CHoCH after the impulsive drop from 4886.9 to 4728.45, with price currently in premium zone on H1 (82.2%) and H4 discount (41.1%) suggesting potential for further downside. H1 bearish FVG at 4791.25-4798.20 and bearish OB zones provide resistance. EUR/USD weakening supports dollar strength, bearish for gold.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish CHoCH (impulsive drop from 4886.9 to 4728.45)",
+    "Price in premium zone on H1 (82.2% of range)",
+    "Unfilled bearish FVG on H4 at 4791.25-4798.20",
+    "EUR/USD weakening (dollar strengthening)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4791.25,
+      4798.2
+    ],
+    "reasoning": "H4 bearish FVG zone that remains unfilled; also aligns with H1 premium zone and potential resistance from the recent sell-off."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4794.73,
+    "confirmation": "Limit sell at midpoint of bearish FVG; wait for price to reach zone with bearish confirmation (e.g., rejection candle)."
+  },
+  "stopLoss": {
+    "price": 4803.2,
+    "reasoning": "Above the FVG high (4798.20) plus ATR buffer; invalidates bearish setup if breached.",
+    "pips": 84.7
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4758.4,
+      "reasoning": "H4 bearish FVG low (4757.68-4758.40) as first target.",
+      "rr": 4.3
+    },
+    {
+      "level": "TP2",
+      "price": 4728.45,
+      "reasoning": "Recent swing low on H4 (4728.45) as second target.",
+      "rr": 7.8
+    },
+    {
+      "level": "TP3",
+      "price": 4700,
+      "reasoning": "Psychological level and potential liquidity below.",
+      "rr": 11.2
+    }
+  ],
+  "invalidation": {
+    "price": 4803.2,
+    "reasoning": "Close above 4803.20 invalidates bearish structure and FVG zone."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone 07-10 UTC or NY kill zone 12-15 UTC"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 84.7-pip stop"
+  },
+  "macroContext": "EUR/USD weakening (dollar strengthening), US 10Y yield stable at 4.31%, real yield positive at 1.87% (bearish for gold), Fear & Greed neutral at 47.",
+  "warnings": [
+    "Current session is off; wait for kill zone for better execution.",
+    "H4 discount zone suggests potential support; monitor price action near POI.",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

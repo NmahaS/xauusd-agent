@@ -1,0 +1,155 @@
+{
+  "timestamp": "2026-05-07T17:40:13.279Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "M15 CHoCH-bearish @ 4722.60 confirmed; price now 4695.90 in discount zone but M15 structure is bearish. H4 remains bullish but M15 signal is bearish rejection from premium. High real yields (2.01%) are structurally bearish for gold. EUR/USD weakening (-8.98% 24h) = dollar strengthening = bearish gold. Multiple high-impact NFP/employment data in +1130m window creates execution risk. Macro headwinds (rising yields, strong dollar) override H4 bullish bias.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 CHoCH-bearish structure confirmed @ 4722.60",
+    "Price rejected from premium zone (92.4% of H4 range)",
+    "EUR/USD weakening sharply (-8.98% 24h) = dollar strengthening = bearish gold",
+    "Real yields elevated at 2.01% = structurally bearish gold"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4712.5,
+      4716.1
+    ],
+    "reasoning": "M15 bearish FVG [4712.50-4716.10] unfilled; price currently 4695.90 below this zone. Retest of FVG midpoint (4714.30) provides entry confirmation. This FVG was created by the bearish rejection candle at 13:00 UTC that broke down from 4722.6 CHoCH."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4696.15,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4718.56,
+    "reasoning": "Above M15 bearish FVG high (4716.10) + 0.2×M15 ATR (11.19×0.2=2.24); invalidates bearish M15 structure if breached. Stop at 4724.80 = 10.5 pips risk. + 0.2 × M15 ATR buffer",
+    "pips": 22.41
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4680.7,
+      "reasoning": "M15 swing low from 17:15 UTC candle; first liquidity pool on bearish move",
+      "rr": 0.69
+    },
+    {
+      "level": "TP2",
+      "price": 4665,
+      "reasoning": "H1 OTE short zone lower bound [4645.60-4674.94]; 61.8% fib of recent impulsive leg",
+      "rr": 1.39
+    },
+    {
+      "level": "TP3",
+      "price": 4645.6,
+      "reasoning": "H1 OTE short zone entry; H4 bullish OB low [4543.80-4559.20] provides structural support below",
+      "rr": 2.26
+    }
+  ],
+  "invalidation": {
+    "price": 4724.8,
+    "reasoning": "Break above M15 bearish FVG high invalidates bearish structure; bias flips neutral/bullish if this level is taken with conviction."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone 07-10 UTC (next session); avoid entry now due to imminent high-impact NFP/employment data at +1130m (12:10 UTC approx). Volatility spike likely; re-assess after data."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 10.5-pip stop; reduce size due to macro headwinds (high real yields, strong dollar) and upcoming NFP volatility. Tier 3 signal (technical only, no macro alignment)."
+  },
+  "macroContext": "Real yields elevated at 2.01% (bearish gold); EUR/USD weakening sharply (-8.98% 24h) = dollar strengthening (bearish gold); Fear & Greed neutral at 47. High-impact NFP/employment data in +1130m creates execution risk. Macro is bearish gold; M15 technical is bearish but H4 remains bullish — conflicting signals warrant reduced size and caution.",
+  "warnings": [
+    "MACRO CONFLICT: H4 bullish bias vs. M15 bearish signal vs. macro bearish (high real yields, strong dollar). This is Tier 3 (technical-only) — no auto-execute.",
+    "HIGH-IMPACT NEWS IMMINENT: NFP, unemployment, earnings data at +1130m (approx 12:10 UTC). Volatility spike likely. Consider waiting for post-data consolidation.",
+    "M15 POI at 4714.30 is only 18.4 pips above current price (4695.90). Tight entry zone; requires precise limit order execution.",
+    "Funding rate +0.0003%/hr is neutral (longs not crowded). No contrarian signal.",
+    "H4 structure remains bullish (EMA20 4652.68 > EMA50 4629.86 > EMA200 4691.76 is mixed; RSI 63.7 overbought). Pullback into discount may reverse to H4 bullish continuation.",
+    "Volume Profile shows price above VA (premium zone). Rejection from premium is expected; but H4 bullish bias suggests eventual retest higher.",
+    "RECOMMENDATION: Reduce position size to 0.5% risk. Wait for London kill zone and post-NFP consolidation before entry. If price retests 4714.30 after data, enter on limit with tight stop.",
+    "✅ Consensus: Claude + DeepSeek both short"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold at 4696.15 AUD faces headwinds ahead of critical US employment data and central bank speeches"
+  },
+  "m15": {
+    "status": "CONFIRMED",
+    "reason": "Extended zone market entry at 4696.15 — M15 bearish bias confirms"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "above_va",
+        "vwapBias": "bullish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 CHoCH-bearish structure confirmed @ 4722.60",
+          "Price rejected from premium zone (92.4% of H4 range)",
+          "EUR/USD weakening sharply (-8.98% 24h) = dollar strengthening = bearish gold",
+          "Real yields elevated at 2.01% = structurally bearish gold"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "M15 CHoCH-bearish structure confirmed @ 4722.60",
+      "Price rejected from premium zone (92.4% of H4 range)",
+      "EUR/USD weakening sharply (-8.98% 24h) = dollar strengthening = bearish gold",
+      "Real yields elevated at 2.01% = structurally bearish gold"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

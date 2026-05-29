@@ -1,0 +1,153 @@
+{
+  "timestamp": "2026-05-20T05:51:40.142Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish structure (BOS-bearish @ 4525.70) confirmed; H1 CHoCH-bearish @ 4478.20; M15 BOS-bearish @ 4457.10. Price in deep discount (-9.3% H4, -17.3% M15), below daily VWAP 4478.9, institutional bias bearish. However, macro headwinds: rising real yields (2.12%, strongly bearish gold), EUR/USD weakening (-7.59%, bullish for gold). High-impact GBP CPI event in 8min creates execution risk. M15 structure is bearish but price is near key support 4466.70 (2.1pts below) — setup is conditional on pullback confirmation and news clearance.",
+  "setupQuality": "B",
+  "confluenceCount": 6,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 BOS-bearish confirms direction",
+    "10Y yield rising confirms direction",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4500.2,
+      4505.7
+    ],
+    "reasoning": "M15 bearish OB formed after impulsive down-move; unmitigated and 32-36pts above current price. Price must pullback into this zone for entry confirmation. This is the primary POI for short entry."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4502.5,
+    "confirmation": "Limit sell at midpoint of M15 bearish OB (4500.20-4505.70). Entry requires: (1) price pullback to OB zone (not current breakout), (2) GBP CPI event (8min) clears without shock, (3) M15 bearish candle confirmation inside OB. Do NOT enter at current price 4468.40 — wait for pullback."
+  },
+  "stopLoss": {
+    "price": 4510.9,
+    "reasoning": "Above M15 bearish OB high (4505.70) + 0.2×M15 ATR (8.09 × 0.2 = 1.62 ≈ 5.2pts). Invalidates M15 bearish structure if breached.",
+    "pips": 8
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4466.7,
+      "reasoning": "H4 support level (nearest key support, 2.1pts below current); first structural liquidity pool. System will place TP at 2R automatically (~4494pts below entry).",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4510.9,
+    "reasoning": "Close above M15 OB high invalidates bearish bias; flips to neutral/bullish if H1 CHoCH is broken upside."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "WAIT — GBP CPI event in 8min (High impact). Execute after 06:00 UTC news clear, or defer to London kill zone 07:00-10:00 UTC for cleaner entry confirmation."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 8-pip stop due to imminent high-impact news (GBP CPI). Reduce size until event clears. If pullback to OB occurs post-news, increase to 1% risk."
+  },
+  "macroContext": "Real yields rising sharply (2.12%, strongly bearish gold); EUR/USD weakening (-7.59%, bullish for gold — conflicting signal). Fear & Greed at 27 (fear, risk-off). GBP CPI event in 8min creates headline risk. Macro is mixed: yields push down, dollar weakness pushes up. Execution risk elevated until news clears.",
+  "warnings": [
+    "⚠ HIGH-IMPACT NEWS IMMINENT: GBP CPI y/y in 8 minutes — do NOT enter until event published and volatility settles.",
+    "⚠ CONFLICTING MACRO: Rising real yields (bearish gold) vs. EUR/USD weakness (bullish gold). Bias is technical-only (Tier 3) until macro clarity.",
+    "⚠ ENTRY NOT AT CURRENT PRICE: Current price 4468.40 is 32-36pts below M15 bearish OB (4500.20-4505.70). Price must pullback into OB zone for entry — do not chase breakout.",
+    "⚠ FUNDING RATE NEGATIVE: -0.0011%/hr (shorts paying) — mild contrarian signal for longs, but overridden by H4/M15 bearish structure.",
+    "⚠ CONFLUENCE SCORE 4/12: Below A-grade threshold. Setup is B-grade (technical-only, no macro alignment). Requires strict news clearance and pullback confirmation before execution.",
+    "⚠ TRANSITIONING REGIME: Market in transition — SMC effective but volatility may spike on news. Tighten stops post-event.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "High-impact gold event in 8min: GBP CPI y/y (High)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "No fresh gold-specific shocks; markets position cautiously ahead of FOMC minutes and key AUD labor data"
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4468.75 not at M15 POI [4500.20-4505.70] yet",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "below_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 6,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 BOS-bearish confirms direction",
+          "10Y yield rising confirms direction",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 6
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 BOS-bearish confirms direction",
+      "10Y yield rising confirms direction",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 7 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "WAITING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.49 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "timestamp": "2026-05-12T21:45:00.643Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bullish structure (CHoCH-bullish @ 4704.30) with price above EMA20/EMA50; H1 bearish CHoCH @ 4643.20 but M15 shows fresh bullish CHoCH @ 4704.30 with price near daily VWAP (4690.16). EUR/USD weakening (dollar strengthening = mild headwind), but institutional bias bullish (above weekly VWAP). Yields rising (bearish macro), but transitional regime requires higher confluence. M15 bullish structure intact with multiple unfilled bullish FVGs above current price.",
+  "setupQuality": "A",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "H4+M15 bias agree (long)",
+    "M15 unfilled bullish FVG within 8pts [4698.50-4704.20]",
+    "M15 CHoCH-bullish confirms direction",
+    "DXY proxy weakening confirms direction",
+    "No imminent gold-relevant news",
+    "Above weekly VWAP — institutional bullish",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4691.9,
+      4698.5
+    ],
+    "reasoning": "M15 bullish FVG at 4691.90-4698.50 is the primary imbalance target; overlaps with H1 bullish OB zone (4646.70-4663.50 context) and sits within premium zone. Price currently 4704.60 — slight pullback into this FVG zone would confirm entry."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4704.55,
+    "confirmation": "M15 CHoCH-bullish inside POI"
+  },
+  "stopLoss": {
+    "price": 4691.03,
+    "reasoning": "Below M15 bullish FVG low (4691.90) minus 0.2×M15 ATR (5.18×0.2=1.04); invalidates M15 bullish structure if breached. Protects against H1 bearish CHoCH retest. + 0.2 × M15 ATR buffer",
+    "pips": 13.52
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4723.1,
+      "reasoning": "H1 liquidity pool (EQH 4723.10 swept but structural resistance); prior H4 swing high context. System places TP at 2R automatically.",
+      "rr": 1.37
+    }
+  ],
+  "invalidation": {
+    "price": 4688,
+    "reasoning": "Break below M15 bullish FVG low invalidates bullish bias; H1 bearish structure reasserts control; bias flips neutral/bearish."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) for higher liquidity confirmation; current session off-hours (21:45 UTC). Monitor M15 structure overnight; enter on limit fill if triggered before London."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.75,
+    "positionSizeHint": "0.75% risk on 8.3-pip stop; transitional regime + rising yields warrant reduced size. Confluence score B (4/12 factors) — not A-tier setup."
+  },
+  "macroContext": "Yields rising (1.95% real yield = bearish gold headwind); EUR/USD weakening (dollar strengthening = mild bearish); F&G neutral (49). Institutional bias bullish (above weekly VWAP), but macro backdrop is mixed. Transitional regime requires discipline.",
+  "warnings": [
+    "Macro headwind: positive real yields (1.95%) are bearish for gold — this is a technical-only setup (Tier 3), not macro-confirmed.",
+    "H1 bearish CHoCH @ 4643.20 conflicts with M15 bullish bias — wait for H1 structure to confirm before scaling up.",
+    "Transitional market regime: SMC effective but volatility may spike. Reduce position size and tighten stops.",
+    "EUR/USD weakening (dollar strengthening) is a mild headwind; watch for reversal before entry.",
+    "Off-hours execution: liquidity lower; use limit orders and monitor funding rate (currently +0.0007%/hr = longs paying, mild bearish contrarian signal).",
+    "No high-impact news in next 24h, but yields and dollar moves can shift intraday. Monitor 10Y yield and EUR/USD closely.",
+    "✅ Consensus: Claude + DeepSeek both long"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "long",
+    "deepseekDirection": "long",
+    "claudeQuality": "B",
+    "deepseekQuality": "A",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED",
+    "reason": "CHoCH-bullish on M15 inside POI",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at HVN 4711.92 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bearish",
+        "confluenceCount": 7,
+        "confluenceGrade": "A",
+        "factors": [
+          "H4+M15 bias agree (long)",
+          "M15 unfilled bullish FVG within 8pts [4698.50-4704.20]",
+          "M15 CHoCH-bullish confirms direction",
+          "DXY proxy weakening confirms direction",
+          "No imminent gold-relevant news",
+          "Above weekly VWAP — institutional bullish",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4711.92 (strong S/R)",
+      "H4+M15 bias agree (long)",
+      "M15 unfilled bullish FVG within 8pts [4698.50-4704.20]",
+      "M15 CHoCH-bullish confirms direction",
+      "DXY proxy weakening confirms direction",
+      "No imminent gold-relevant news",
+      "Above weekly VWAP — institutional bullish",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 9 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

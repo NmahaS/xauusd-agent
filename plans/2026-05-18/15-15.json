@@ -1,0 +1,146 @@
+{
+  "timestamp": "2026-05-18T15:15:00.596Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bearish but price at discount and M15 bullish BOS with bullish OB; EUR/USD weakening supports gold; confluence moderate.",
+  "setupQuality": "B",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "M15 bullish BOS (4560.50) and active bullish OB (4529-4535.30)",
+    "Price in discount on H1 (78.2% premium) but M16.4% discount on M15",
+    "M15 unfilled bullish FVGs (4505-4508, 4508-4518) within 8 pts",
+    "EUR/USD weakening (dollar proxy bullish for gold)",
+    "No high-impact gold news within 2 hours"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4529,
+      4535.3
+    ],
+    "reasoning": "M15 bullish OB from last down-close candle before impulsive move to 4560.50; overlaps with M15 discount zone."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4532.15,
+    "confirmation": "Limit buy at OB midpoint; M15 BOS confirms bullish structure."
+  },
+  "stopLoss": {
+    "price": 4526.83,
+    "reasoning": "Below OB low (4529.00) minus 0.2*M15 ATR (11.62*0.2=2.32) = 4526.68, rounded to 4526.83.",
+    "pips": 53.2
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4565,
+      "reasoning": "Prior H1 swing high / first liquidity pool; structural reference only.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4526,
+    "reasoning": "Below stop level; H1 structure invalidated if broken."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY session active (12-15 UTC) - execute now on limit fill"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 53.2-pip stop"
+  },
+  "macroContext": "Real yields rising (bearish gold), EUR/USD weakening (bullish gold), Fear & Greed at 28 (fear) - mixed but slightly supportive for safe-haven.",
+  "warnings": [
+    "H4 bearish bias conflicts with M15 bullish; setup is B grade only.",
+    "Funding slightly negative (-0.0003%/hr) but not extreme.",
+    "CAD CPI high-impact news in ~1275 min - not immediate.",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "long",
+    "claudeQuality": "failed",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4542.17 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 5,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bullish BOS (4560.50) and active bullish OB (4529-4535.30)",
+          "Price in discount on H1 (78.2% premium) but M16.4% discount on M15",
+          "M15 unfilled bullish FVGs (4505-4508, 4508-4518) within 8 pts",
+          "EUR/USD weakening (dollar proxy bullish for gold)",
+          "No high-impact gold news within 2 hours"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4542.17 (strong S/R)",
+      "M15 bullish BOS (4560.50) and active bullish OB (4529-4535.30)",
+      "Price in discount on H1 (78.2% premium) but M16.4% discount on M15",
+      "M15 unfilled bullish FVGs (4505-4508, 4508-4518) within 8 pts",
+      "EUR/USD weakening (dollar proxy bullish for gold)",
+      "No high-impact gold news within 2 hours"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 6 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Position held: Position losing $-1.13 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

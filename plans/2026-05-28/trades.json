@@ -1,0 +1,110 @@
+[
+  {
+    "timestamp": "2026-05-28T14:40:58.745Z",
+    "orderId": 446402254763,
+    "direction": "long",
+    "size": 0.012,
+    "entry": 4460,
+    "sl": 4374,
+    "tp": 4481,
+    "targetRR": 2,
+    "slPlaced": true,
+    "tpPlaced": true,
+    "riskAmount": 0.99,
+    "riskPct": "0.97",
+    "tier": 3,
+    "confluenceCount": 6,
+    "quality": "B",
+    "orderMode": "taker",
+    "feeRate": 0.035,
+    "plan": {
+      "symbol": "PAXG/USDC",
+      "timestamp": "2026-05-28T14:40:28.676Z",
+      "setupQuality": "B",
+      "confluenceCount": 6,
+      "consensus": {
+        "agreement": "split",
+        "confidence": "medium",
+        "claudeDirection": null,
+        "deepseekDirection": "long",
+        "claudeQuality": "no-trade",
+        "deepseekQuality": "B",
+        "newsRisk": null,
+        "newsSentiment": null,
+        "newsHeadline": null
+      }
+    }
+  },
+  {
+    "timestamp": "2026-05-28T15:22:38.625Z",
+    "orderId": 446454997324,
+    "direction": "long",
+    "size": 0.028,
+    "entry": 4465.3,
+    "sl": 4429.11,
+    "tp": 4489,
+    "targetRR": 2,
+    "slPlaced": true,
+    "tpPlaced": true,
+    "riskAmount": 1.03,
+    "riskPct": "1.00",
+    "tier": 3,
+    "confluenceCount": 7,
+    "quality": "B",
+    "orderMode": "maker",
+    "feeRate": 0.01,
+    "plan": {
+      "symbol": "PAXG/USDC",
+      "timestamp": "2026-05-28T15:22:02.605Z",
+      "setupQuality": "B",
+      "confluenceCount": 7,
+      "consensus": {
+        "agreement": "full",
+        "confidence": "high",
+        "claudeDirection": "long",
+        "deepseekDirection": "long",
+        "claudeQuality": "B",
+        "deepseekQuality": "B",
+        "newsRisk": null,
+        "newsSentiment": null,
+        "newsHeadline": null
+      }
+    }
+  },
+  {
+    "timestamp": "2026-05-28T15:30:00.966Z",
+    "orderId": 446463504116,
+    "direction": "long",
+    "size": 0.063,
+    "entry": 4472,
+    "sl": 4456,
+    "tp": 4497,
+    "targetRR": 2,
+    "slPlaced": true,
+    "tpPlaced": true,
+    "riskAmount": 1.02,
+    "riskPct": "1.00",
+    "tier": 3,
+    "confluenceCount": 6,
+    "quality": "A",
+    "orderMode": "maker",
+    "feeRate": 0.01,
+    "plan": {
+      "symbol": "PAXG/USDC",
+      "timestamp": "2026-05-28T15:29:20.302Z",
+      "setupQuality": "A",
+      "confluenceCount": 6,
+      "consensus": {
+        "agreement": "full",
+        "confidence": "high",
+        "claudeDirection": "long",
+        "deepseekDirection": "long",
+        "claudeQuality": "B",
+        "deepseekQuality": "A",
+        "newsRisk": null,
+        "newsSentiment": null,
+        "newsHeadline": null
+      }
+    }
+  }
+]

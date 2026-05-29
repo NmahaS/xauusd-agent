@@ -1,0 +1,161 @@
+{
+  "timestamp": "2026-05-18T05:30:00.939Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish structure (BOS-bearish @ 4664.10) confirmed by H1 CHoCH-bearish @ 4525.70 and M15 CHoCH-bearish @ 4526.30. Price in premium zone (95.2% of M15 range, 89.1% of H1 range). Multiple unfilled bearish FVGs on H4/H1 below current price. Institutional bias bearish (price below weekly VWAP 4626.85, 2σ above daily VWAP). Rising real yields (1.98%) and positive funding rate (+0.0013%/hr) add bearish context. EUR/USD weakening (-7.67% 24h) supports dollar strength = bearish for gold.",
+  "setupQuality": "B",
+  "confluenceCount": 8,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 CHoCH-bearish confirms direction",
+    "H1 price in premium zone (89.1%)",
+    "10Y yield rising confirms direction",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4535.97,
+      4544.8
+    ],
+    "reasoning": "M15 OTE short zone [4523.62-4535.97] overlaps with recent M15 swing high structure. Current price 4543.70 sits at top of M15 premium zone. Nearest unfilled bearish FVG on H1 at [4626.90-4644.60] is target; intermediate resistance at H1 OTE short [4523.62-4535.97] provides entry confirmation zone."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4540.5,
+    "confirmation": "Limit sell at M15 OTE short midpoint (4535.97); validated by M15 bearish structure and price rejection from premium zone. Await M15 bearish candle close below 4535 for confirmation before entry."
+  },
+  "stopLoss": {
+    "price": 4552.8,
+    "reasoning": "Above M15 swing high (4544.80) + 0.2×M15 ATR (11.59×0.2=2.32). Invalidates M15 bearish structure if breached; signals potential H1 bullish reversal.",
+    "pips": 123
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4515,
+      "reasoning": "H1 unfilled bearish FVG [4603.00-4605.00] and H1 liquidity pool at 4514.50 (swept). Structural reference for 2R target; system places TP at 2R automatically.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4552.8,
+    "reasoning": "Break above M15 swing high + buffer invalidates bearish M15 structure; H1 bias flips neutral/bullish if this level holds as support."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone 07:00-10:00 UTC for tighter spreads and higher volume confirmation"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 123-pip stop; position size = (account_risk_usd / 123) PAXG"
+  },
+  "macroContext": "Rising real yields (1.98%) and dollar strength (EUR/USD -7.67%) are bearish for gold; positive funding rate (+0.0013%/hr) signals crowded longs = contrarian short bias. Fear & Greed at 28 (fear) supports risk-off, but gold typically benefits from fear — mixed macro, technical bias dominates.",
+  "warnings": [
+    "Confluence count is 4 (B-grade setup) — below A-threshold. Proceed with caution and tight risk management.",
+    "No active M15 order blocks within 8pts; entry relies on OTE zone and M15 structure confirmation. Await clear M15 bearish candle close for confirmation.",
+    "Elevated volatility (4.6x) — use tight stops and consider half-sizing.",
+    "Asia session (low liquidity) — prefer entry during London kill zone 07:00-10:00 UTC.",
+    "Positive funding rate indicates crowded longs; short squeeze risk if macro turns bullish. Monitor EUR/USD and real yields for reversal signals.",
+    "No high-impact news in next 24h, but macro backdrop (rising yields, dollar strength) is fragile — watch for Fed commentary or inflation data.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "volatile_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4542.17 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 8,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 CHoCH-bearish confirms direction",
+          "H1 price in premium zone (89.1%)",
+          "10Y yield rising confirms direction",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 8
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4542.17 (strong S/R)",
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 CHoCH-bearish confirms direction",
+      "H1 price in premium zone (89.1%)",
+      "10Y yield rising confirms direction",
+      "No imminent gold-relevant news",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 9 total factors",
+    "warnings": [
+      "⚠️ Elevated volatility — use tight stops"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.40 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

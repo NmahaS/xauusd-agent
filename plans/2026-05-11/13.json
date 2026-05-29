@@ -1,0 +1,112 @@
+{
+  "timestamp": "2026-05-11T13:42:19.607Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bullish but price is in premium (143.6%) and H1 CHoCH-bearish at 4708.40, M15 CHoCH-bearish at 4659.40. Price surged to 4732.70, now in extreme premium on M15 (705%). No active M15 OB or FVG within 8pts. Funding slightly positive (0.0012%/hr) but not extreme. EUR/USD weakening (-8.9%) is bullish for gold, conflicting. Real yields positive (1.96%) bearish. CPI data in 1368m minutes high impact. Confluence count low (3). Setup quality no-trade due to conflicting signals and lack of M15 POI near price.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 3,
+  "confluenceFactors": [
+    "H4 bullish structure (BOS intact)",
+    "EUR/USD weakening (dollar strengthening) - bearish gold",
+    "NY kill zone active"
+  ],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for price to retrace into discount zone or form M15 OB/FVG near H1 OTE long zone (4660-4674) or short from premium with confirmation"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields positive (1.96%) bearish gold, EUR/USD weakening (-8.9%) bullish gold, Fear & Greed neutral (48) - mixed macro.",
+  "warnings": [
+    "No M15 OB or FVG within 8 points of current price",
+    "Price in extreme premium on M15 (705%)",
+    "High-impact CPI data in ~1368 minutes",
+    "H4 bullish vs H1/M15 bearish structure conflict",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "failed",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold faces bearish pressure ahead of high-impact US CPI data amid mixed technical signals"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "volatile_tradeable",
+        "vpSignal": "in_va",
+        "vwapBias": "bullish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bearish",
+        "confluenceCount": 3,
+        "confluenceGrade": "no-trade",
+        "factors": [
+          "H4 bullish structure (BOS intact)",
+          "EUR/USD weakening (dollar strengthening) - bearish gold",
+          "NY kill zone active"
+        ],
+        "score": 3
+      }
+    },
+    "allFactors": [
+      "H4 bullish structure (BOS intact)",
+      "EUR/USD weakening (dollar strengthening) - bearish gold",
+      "NY kill zone active"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 3 total factors",
+    "warnings": [
+      "⚠️ Elevated volatility — use tight stops"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

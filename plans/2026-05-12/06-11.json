@@ -1,0 +1,147 @@
+{
+  "timestamp": "2026-05-12T06:11:47.124Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4701.10 confirmed; M15 BOS-bearish @ 4708.50 active; price in premium zone (63.6% H4, -32.4% M15); H1 bullish bias conflicts with H4/M15 bearish structure. Macro neutral but real yields positive (1.91%) = bearish for gold. EUR/USD weakening 8.94% = dollar strengthening = bearish gold. High-impact CPI data in +378m (6.3h) = execution risk. Funding +0.0013%/hr = longs crowded = contrarian bearish signal.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish structure (CHoCH confirmed)",
+    "M15 bearish structure (BOS-bearish @ 4708.50)",
+    "Price in premium zone (H4 63.6%)",
+    "EUR/USD weakening (dollar strengthening = bearish gold)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4711.6,
+      4715.4
+    ],
+    "reasoning": "M15 active bearish OB at 4711.60-4715.40 (within 8pts of current 4694); overlaps with M15 BOS-bearish structure @ 4708.50. Price currently 4694, OB midpoint 4713.50 = 19.5pts above; valid entry zone on limit short."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4694.2,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4716.68,
+    "reasoning": "Above M15 bearish OB high (4715.40) + 0.2×M15 ATR (7.22×0.2=1.44); invalidates M15 bearish structure if breached. Pips = 9.3. + 0.2 × M15 ATR buffer",
+    "pips": 22.48
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4688.37,
+      "reasoning": "H1 bullish OB low @ 4646.70 and Volume Profile POC @ 4688.37 (strong S/R); structural liquidity pool. System places TP at 2R automatically.",
+      "rr": 0.26
+    }
+  ],
+  "invalidation": {
+    "price": 4722.8,
+    "reasoning": "Break above M15 bearish OB high invalidates short bias; H4 bearish structure remains intact only if price holds below 4723.20 (H1 bearish FVG low)."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London open (07:00 UTC) or NY session (12:00 UTC); avoid execution within 6.3h of CPI release (high impact news)."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 9.3-pip stop; tight stop due to proximity to M15 OB and high-impact CPI event. Reduce size if CPI volatility expected."
+  },
+  "macroContext": "Real yields positive (1.91%) and EUR/USD weakening 8.94% (dollar strengthening) = bearish gold; neutral macro sentiment (F&G=49) but high-impact CPI data in 6.3h creates execution risk. Funding +0.0013%/hr = longs crowded = contrarian bearish signal.",
+  "warnings": [
+    "High-impact CPI data (Core CPI, CPI m/m, CPI y/y) scheduled in +378m (06:50 UTC, ~39 minutes from now). Avoid execution within 1h of release; volatility spike likely.",
+    "H1 bullish bias (BOS-bullish @ 4738.40) conflicts with H4/M15 bearish structure. Setup is Tier 2 (macro + flow + technical mixed). Confluence only 4/12 factors.",
+    "M15 OB entry zone (4711.60-4715.40) is only 19.5pts above current price (4694); tight entry window. Limit order may not fill if price drops further.",
+    "Positive funding rate (+0.0013%/hr) indicates longs are crowded; short entry aligns with contrarian signal but adds execution risk in volatile CPI window.",
+    "Price currently in H1 discount zone (42.6%) but H4 premium zone (63.6%); conflicting structural context. Wait for London kill zone (07:00 UTC) for better confirmation.",
+    "✅ Consensus: Claude + DeepSeek both short",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold holds mildly bullish above key supports but faces weekly loss amid inflation fears and upcoming high-impact US CPI data"
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4694.20 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at HVN 4688.37 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (CHoCH confirmed)",
+          "M15 bearish structure (BOS-bearish @ 4708.50)",
+          "Price in premium zone (H4 63.6%)",
+          "EUR/USD weakening (dollar strengthening = bearish gold)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4688.37 (strong S/R)",
+      "H4 bearish structure (CHoCH confirmed)",
+      "M15 bearish structure (BOS-bearish @ 4708.50)",
+      "Price in premium zone (H4 63.6%)",
+      "EUR/USD weakening (dollar strengthening = bearish gold)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: null",
+    "orderId": null,
+    "entry": 4694.2,
+    "size": null,
+    "riskAmount": 0.49,
+    "riskPct": "0.51",
+    "timestamp": "2026-05-12T06:12:22.464Z"
+  }
+}

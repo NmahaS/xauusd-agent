@@ -1,0 +1,152 @@
+{
+  "timestamp": "2026-05-13T17:45:00.884Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "M15 CHoCH-bullish @ 4686.30 with price now at 4686.10 (just below pivot); H1 also bullish (CHoCH @ 4704.30) despite H4 bearish bias. H1 bullish OB at 4646.70–4663.50 untested and within 8pts of current price. Multiple bullish FVGs on H1 (4584.40–4598.90, 4607.80–4615.60) provide structural support. EUR/USD weakening (-8.47% 24h) is mildly bearish for gold, but M15 structure is locally bullish. Price in premium zone (56.6%) but near OTE long zone (4653.38–4667.25). Macro neutral; no high-impact news within 2h. Funding +0.0013%/hr (longs paying) is mild contrarian signal but not decisive.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 bullish structure (CHoCH-bullish @ 4686.30 intact)",
+    "H1 bullish OB at 4646.70–4663.50 unmitigated and within range",
+    "Multiple H1 bullish FVGs (4584.40–4598.90, 4607.80–4615.60) provide imbalance targets",
+    "M15 active bearish OBs (4711.60–4715.40, 4714.30–4717.00) define clear resistance and stop placement"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4646.7,
+      4663.5
+    ],
+    "reasoning": "H1 bullish OB formed on recent down-close before impulsive leg; unmitigated and overlaps with H1 bullish FVG 4584.40–4598.90. Primary entry zone for long bias confirmation."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4685.95,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4645.31,
+    "reasoning": "Below H1 bullish OB low (4646.70) with M15 ATR buffer (6.78 × 0.2 = 1.36); invalidates M15 bullish structure if breached. Protects against H4 bearish bias reassertion. + 0.2 × M15 ATR buffer",
+    "pips": 40.64
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4708.2,
+      "reasoning": "H1 liquidity pool (EQL swept at 4708.20) and prior swing high; structural reference for 2R target. System places TP at 2R automatically.",
+      "rr": 0.55
+    }
+  ],
+  "invalidation": {
+    "price": 4643.8,
+    "reasoning": "Break below H1 bullish OB low invalidates M15 bullish structure; bias flips to neutral/bearish. H4 bearish bias would reassert."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00–10:00 UTC) for optimal liquidity and institutional flow confirmation. Current session is off-hours; avoid size until London opens."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 113-pip stop; tight stop due to macro uncertainty (H4 bearish, EUR/USD weakening, high-impact news in +45m). Scale in on limit fill confirmation."
+  },
+  "macroContext": "Macro neutral (COT unavailable, yields unknown); EUR/USD weakening (-8.47%) is mildly bearish for gold; real yields unknown; Fear & Greed at 42 (fear, falling 7d) is neutral. High-impact news (Fed Chair vote +45m, GBP GDP +735m, USD retail sales +1125m) within next 24h — avoid size until clarity post-news.",
+  "warnings": [
+    "H4 bias is bearish (CHoCH-bearish @ 4643.20) — this is a M15 technical signal only, not macro-aligned. Tier 3 setup.",
+    "Price in premium zone (56.6%) — typically unfavorable for longs; entry in OB mitigates but risk/reward is compressed.",
+    "High-impact economic news in +45m (Fed Chair vote) and +735m (GBP GDP, UK retail) — volatility spike likely; consider waiting for post-news consolidation.",
+    "EUR/USD weakening sharply (-8.47% 24h) — dollar strengthening is headwind for gold; contrarian to bullish bias.",
+    "Funding rate +0.0013%/hr (longs paying) — mild contrarian signal; crowded long positioning.",
+    "Volume Profile at HVN (4708.61) — strong resistance; TP1 at 4708.20 is realistic but tight from entry.",
+    "M15 RSI at 48.1 (neutral) — no divergence; momentum not yet bullish; entry confirmation critical.",
+    "Off-hours session (no kill zone active) — liquidity thin; limit order may not fill until London opens.",
+    "⚠️ Split: Claude=long DeepSeek=no-trade — manual only",
+    "FRED macro data unavailable — yields/real-rate missing"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bullish",
+    "newsHeadline": "Gold holds bullish bias above key supports amid upcoming high-impact US data and Fed Chair nomination"
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4685.95 — M15 bullish bias confirms",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bullish structure (CHoCH-bullish @ 4686.30 intact)",
+          "H1 bullish OB at 4646.70–4663.50 unmitigated and within range",
+          "Multiple H1 bullish FVGs (4584.40–4598.90, 4607.80–4615.60) provide imbalance targets",
+          "M15 active bearish OBs (4711.60–4715.40, 4714.30–4717.00) define clear resistance and stop placement"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)",
+      "M15 bullish structure (CHoCH-bullish @ 4686.30 intact)",
+      "H1 bullish OB at 4646.70–4663.50 unmitigated and within range",
+      "Multiple H1 bullish FVGs (4584.40–4598.90, 4607.80–4615.60) provide imbalance targets",
+      "M15 active bearish OBs (4711.60–4715.40, 4714.30–4717.00) define clear resistance and stop placement"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

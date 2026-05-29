@@ -1,0 +1,142 @@
+{
+  "timestamp": "2026-05-12T17:00:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "M15 CHoCH-bearish @ 4678.40 with price now at 4665.40 (below that level). H1 shows bearish trend despite bullish BOS event; price is in discount but institutional VWAP bias is bearish (below weekly VWAP 4686.44). H4 is neutral but M15 structure is clearly bearish. Macro is neutral (stable yields, EUR/USD weakening = dollar strengthening = bearish for gold). High-impact PPI data in +1170m (19.5 hours) adds execution risk.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 CHoCH-bearish confirmed @ 4678.40 (price below)",
+    "M15 active bearish OB at 4665.90-4680.40 (current price inside)",
+    "Institutional VWAP bias bearish (below weekly 4686.44)",
+    "EUR/USD weakening (dollar strengthening = bearish gold)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4665.9,
+      4680.4
+    ],
+    "reasoning": "M15 active bearish OB formed after CHoCH-bearish @ 4678.40; price currently inside this block at 4665.40. This is the primary POI for short entry confirmation."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4673.5,
+    "confirmation": "Limit sell at midpoint of M15 bearish OB; requires bearish candle close below 4670 to validate structure. Avoid entry until next M15 candle confirms downward momentum."
+  },
+  "stopLoss": {
+    "price": 4682.8,
+    "reasoning": "Above M15 bearish OB high (4680.40) + 0.2×M15 ATR (9.80×0.2=1.96≈2.4pts). Invalidates bearish structure if breached.",
+    "pips": 91
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4652.4,
+      "reasoning": "M15 bullish FVG low at 4659.30-4660.40 and recent swing low at 4635.70; structural liquidity pool for short target (system places TP at 2R automatically).",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4682.8,
+    "reasoning": "Close above M15 bearish OB high invalidates short bias; would flip to neutral/bullish if H1 BOS-bullish resumes."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY session (12-15 UTC) for higher liquidity confirmation. High-impact PPI data at +1170m (19:30 UTC approx) — avoid entry within 1 hour of release."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.75,
+    "positionSizeHint": "0.75% risk on 91-pip stop; reduce size due to transitioning regime and upcoming PPI data. Confluence is moderate (B-grade); wait for kill zone and candle confirmation before entry."
+  },
+  "macroContext": "Positive real yields (1.91%) and dollar strengthening (EUR/USD -8.69% in 24h) are bearish for gold; neutral macro backdrop but high-impact PPI data in 19.5 hours adds event risk. Funding rate is negative (shorts paying) — mild bullish contrarian signal, but structure bias overrides.",
+  "warnings": [
+    "Transitioning market regime — SMC effective but volatility may spike. Require candle confirmation before entry.",
+    "High-impact PPI data (Core PPI, PPI m/m) due in ~19.5 hours (approx 19:30 UTC). Avoid entry within 1 hour of release; consider closing position before announcement.",
+    "M15 confluence is B-grade (4 factors); not A-tier. Wait for London kill zone and bullish candle rejection at OB midpoint to increase conviction.",
+    "H1 bullish BOS @ 4738.40 is still in play; if price rallies back above 4680, short thesis invalidates and bias flips to neutral/bullish.",
+    "Institutional bias is bearish (VWAP), but price is in discount zone (43.3% on M15) — potential for mean-reversion bounce. Do not chase shorts below 4660.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bullish",
+    "newsHeadline": "Gold surges to record $4,750 on XAU/USD after Fed rate cut, XAUAUD holds near 6,500 despite bearish technicals"
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "below_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 CHoCH-bearish confirmed @ 4678.40 (price below)",
+          "M15 active bearish OB at 4665.90-4680.40 (current price inside)",
+          "Institutional VWAP bias bearish (below weekly 4686.44)",
+          "EUR/USD weakening (dollar strengthening = bearish gold)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "M15 CHoCH-bearish confirmed @ 4678.40 (price below)",
+      "M15 active bearish OB at 4665.90-4680.40 (current price inside)",
+      "Institutional VWAP bias bearish (below weekly 4686.44)",
+      "EUR/USD weakening (dollar strengthening = bearish gold)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 4 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.12 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

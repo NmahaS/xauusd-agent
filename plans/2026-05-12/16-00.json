@@ -1,0 +1,163 @@
+{
+  "timestamp": "2026-05-12T16:00:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 CHoCH-bullish @ 4723.10 intact; H1 BOS-bullish @ 4738.40 confirmed; M15 CHoCH-bullish @ 4699.00 active. Price in deep discount (15.8% of H4 range, -62.9% of M15 range). EUR/USD weakening (dollar strengthening = mild headwind, but structure is bullish). M15 bullish FVG [4659.30-4660.40] unfilled and price near it (4662.10). H1 bullish OB [4646.70-4663.50] active and price inside. Macro neutral, but institutional bias bearish (VWAP below) — requires higher confluence. M15 structure is bullish; entry zone is discount with unmitigated bullish OB.",
+  "setupQuality": "B",
+  "confluenceCount": 10,
+  "confluenceFactors": [
+    "H4+M15 bias agree (long)",
+    "H1 bias confirms direction (bullish)",
+    "M15 unfilled bullish FVG within 8pts [4659.30-4660.40]",
+    "M15 CHoCH-bullish confirms direction",
+    "H1 price in discount zone (15.8%)",
+    "H1 bullish OB within 20pts [4646.70-4663.50]",
+    "DXY proxy weakening confirms direction",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bullish)",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4659.3,
+      4663.5
+    ],
+    "reasoning": "M15 bullish FVG [4659.30-4660.40] overlaps with H1 bullish OB [4646.70-4663.50]. Price currently 4662.10, inside both structures. This is the primary entry zone — imbalance fill + OB support confluence."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4660.8,
+    "confirmation": "Limit buy at midpoint of M15 FVG; validated by H1 bullish OB overlap and M15 CHoCH-bullish structure. Requires close above 4660 on M15 to confirm bullish momentum."
+  },
+  "stopLoss": {
+    "price": 4648.2,
+    "reasoning": "Below H1 bullish OB low (4646.70) with M15 ATR buffer (11.29 × 0.2 = 2.26). Invalidates H1 bullish structure if breached.",
+    "pips": 12
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4738.4,
+      "reasoning": "H1 BOS-bullish level @ 4738.40 — prior swing high and structural liquidity pool. System will place TP at 2R automatically; this is structural reference.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4646.7,
+    "reasoning": "Break below H1 bullish OB low invalidates bullish bias; flips to neutral/bearish. H4 CHoCH would remain intact but H1 structure broken."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY session active (12-15 UTC kill zone passed); execute on limit fill within next 2 hours before London close. Monitor for Core PPI/PPI data at +1230m (high impact, gold-relevant)."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "0.75% risk on 12-pip stop; tight stop due to transitioning regime and bearish institutional bias (VWAP below). Reduce size if macro data (PPI) is imminent."
+  },
+  "macroContext": "Macro neutral (COT unavailable, yields unknown); institutional bias bearish (price below daily/weekly VWAP); EUR/USD weakening (dollar strengthening, mild headwind for gold); Fear & Greed neutral (49, rising 7d trend). High-impact PPI data in ~20.5 hours — avoid holding through it.",
+  "warnings": [
+    "Transitioning market regime — confluence is only B (4 factors). Require tighter stops and smaller size.",
+    "Institutional bias bearish (VWAP below price); this is a technical-only setup, not macro-confirmed.",
+    "EUR/USD weakening (dollar strengthening) is a mild headwind; gold typically rallies when dollar weakens, but current dollar strength is a contrarian signal.",
+    "High-impact PPI data (Core PPI, PPI m/m) due in ~20.5 hours — do not hold position through this event.",
+    "Funding rate +0.0002%/hr (longs paying) is near-zero but slightly positive; no crowding signal.",
+    "M15 RSI 39.0 is oversold but no divergence detected; entry is valid but watch for false breakout.",
+    "H1 trend is bearish (EMA20 4693.09 > price 4662.10); structure is bullish but momentum is weak. Expect resistance at EMA20 (4693.09).",
+    "✅ Consensus: Claude + DeepSeek both long",
+    "FRED macro data unavailable — yields/real-rate missing"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "long",
+    "deepseekDirection": "long",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "bullish",
+    "newsHeadline": "XAU/AUD holds bullish bias at 4661.05 ahead of high-impact US inflation data"
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "long",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "below_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bullish",
+        "confluenceCount": 10,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (long)",
+          "H1 bias confirms direction (bullish)",
+          "M15 unfilled bullish FVG within 8pts [4659.30-4660.40]",
+          "M15 CHoCH-bullish confirms direction",
+          "H1 price in discount zone (15.8%)",
+          "H1 bullish OB within 20pts [4646.70-4663.50]",
+          "DXY proxy weakening confirms direction",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bullish)",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "score": 10
+      }
+    },
+    "allFactors": [
+      "H4+M15 bias agree (long)",
+      "H1 bias confirms direction (bullish)",
+      "M15 unfilled bullish FVG within 8pts [4659.30-4660.40]",
+      "M15 CHoCH-bullish confirms direction",
+      "H1 price in discount zone (15.8%)",
+      "H1 bullish OB within 20pts [4646.70-4663.50]",
+      "DXY proxy weakening confirms direction",
+      "No imminent gold-relevant news",
+      "H1 bias agrees with H4 (bullish)",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | long | 10 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": true,
+    "reason": "Order placed: 422744916407",
+    "orderId": 422744916407,
+    "entry": 4661.4,
+    "size": 0.073,
+    "riskAmount": 0.94,
+    "riskPct": "1.01",
+    "timestamp": "2026-05-12T16:00:38.607Z"
+  }
+}

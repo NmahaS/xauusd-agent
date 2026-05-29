@@ -1,0 +1,126 @@
+{
+  "timestamp": "2026-05-12T05:04:11.158Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 structure shows bearish CHoCH at 4701.10 with price now in premium zone (79.8% of H4 range); M15 confirms bearish BOS at 4714.00 with active bearish OB at 4714.30-4717.00 untested. H1 bullish bias conflicts with H4/M15 bearish structure, creating structural ambiguity. Macro neutral (real yields positive 1.91%, EUR/USD weakening -8.94% = dollar strengthening = bearish for gold). High-impact CPI data in +446min creates execution risk. Market transitioning; confluence insufficient for high-confidence entry.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 6,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "M15 unfilled bearish FVG within 8pts [4707.00-4711.60]",
+    "M15 BOS-bearish confirms direction",
+    "H1 price in premium zone (53.5%)",
+    "No imminent gold-relevant news",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London open (07:00 UTC); defer all entries until post-CPI (11:30 UTC minimum buffer)"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — macro/structural conflict + high-impact CPI within 446min"
+  },
+  "macroContext": "Real yields positive (1.91%) and USD strengthening (EUR/USD -8.94%) are bearish for gold; neutral macro backdrop conflicts with transitioning market regime; high-impact CPI data in 446min creates unacceptable execution risk.",
+  "warnings": [
+    "H4 bearish CHoCH conflicts with H1 bullish BOS — structural ambiguity; no clear directional bias",
+    "M15 bearish OB at 4714.30-4717.00 is only 3-10pts from current price (4707) but M15 RSI=36.2 (oversold) suggests potential bounce into OB rather than clean breakdown",
+    "High-impact USD CPI data (Core CPI, CPI m/m, CPI y/y) scheduled in 446min — volatility spike likely; defer entries until post-data or use tighter stops",
+    "EUR/USD weakening -8.94% (dollar strengthening) is bearish for gold; conflicts with institutional bullish bias from VWAP",
+    "Positive real yields (1.91%) remain headwind for gold bulls",
+    "Market regime transitioning — SMC effective but volatility regime uncertain; require higher confluence (8+ factors) for entry",
+    "Funding rate +0.0013%/hr (longs paying) is mild bearish contrarian signal; crowded long positioning",
+    "No M15 POI within 8pts of current price that offers clean entry — nearest bearish OB at 4714.30 is 7.3pts above, nearest bullish FVG at 4669.30-4684.60 is 22-37pts below (out of range)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold faces bearish pressure ahead of high-impact US CPI data with technical bias confirming downside risks"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at HVN 4709.78 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 6,
+        "confluenceGrade": "no-trade",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "M15 unfilled bearish FVG within 8pts [4707.00-4711.60]",
+          "M15 BOS-bearish confirms direction",
+          "H1 price in premium zone (53.5%)",
+          "No imminent gold-relevant news",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "score": 6
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4709.78 (strong S/R)",
+      "H4+M15 bias agree (short)",
+      "M15 unfilled bearish FVG within 8pts [4707.00-4711.60]",
+      "M15 BOS-bearish confirms direction",
+      "H1 price in premium zone (53.5%)",
+      "No imminent gold-relevant news",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 7 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "date": "2026-05-28",
+  "totalPlans": 8,
+  "trades": 3,
+  "signals": 5,
+  "noTrades": 0,
+  "setups": {
+    "A+": 0,
+    "A": 2,
+    "B": 6,
+    "no-trade": 0
+  },
+  "directions": {
+    "long": 8,
+    "short": 0
+  },
+  "wins": {
+    "total": 0,
+    "losses": 0,
+    "partialWins": 0,
+    "expired": 0,
+    "open": 3,
+    "winRate": "0%",
+    "winsByQuality": {
+      "A": {
+        "wins": 0,
+        "losses": 0,
+        "total": 1,
+        "winRate": "0.0%"
+      },
+      "B": {
+        "wins": 0,
+        "losses": 0,
+        "total": 2,
+        "winRate": "0.0%"
+      }
+    },
+    "winsBySession": {
+      "ny": {
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%"
+      }
+    }
+  },
+  "plans": [
+    {
+      "hour": "14",
+      "setupQuality": "B",
+      "direction": "long",
+      "entry": 4385.65,
+      "sl": 4374,
+      "slPips": 116.5,
+      "tp1": {
+        "price": 4465,
+        "rr": 2
+      },
+      "tp2": null,
+      "tp3": null,
+      "maxRR": 2,
+      "session": "ny",
+      "bias": "bullish",
+      "confluenceCount": 6,
+      "outcome": "open",
+      "actualRR": null,
+      "tpHits": [
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "hour": "15",
+      "setupQuality": "B",
+      "direction": "long",
+      "entry": 4465.75,
+      "sl": 4429.11,
+      "slPips": 36.64,
+      "tp1": {
+        "price": 4536.1,
+        "rr": 1.92
+      },
+      "tp2": null,
+      "tp3": null,
+      "maxRR": 1.92,
+      "session": "ny",
+      "bias": "bullish",
+      "confluenceCount": 7,
+      "outcome": "open",
+      "actualRR": null,
+      "tpHits": [
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "hour": "15",
+      "setupQuality": "A",
+      "direction": "long",
+      "entry": 4472.25,
+      "sl": 4456,
+      "slPips": 16,
+      "tp1": {
+        "price": 4490,
+        "rr": 2
+      },
+      "tp2": null,
+      "tp3": null,
+      "maxRR": 2,
+      "session": "ny",
+      "bias": "bullish",
+      "confluenceCount": 6,
+      "outcome": "open",
+      "actualRR": null,
+      "tpHits": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "dailyRR": {
+    "totalPotentialRR_TP1": 5.92,
+    "totalPotentialRR_TP2": 0,
+    "totalPotentialRR_TP3": 0,
+    "totalActualRR": 0,
+    "avgRR_TP1": 1.97,
+    "avgRR_TP2": 0,
+    "avgRR_TP3": 0,
+    "avgActualRR": null,
+    "netRR": 0,
+    "bestSetup": {
+      "hour": "14",
+      "rr": 2,
+      "direction": "long",
+      "quality": "B",
+      "outcome": "open"
+    },
+    "worstSetup": null
+  }
+}

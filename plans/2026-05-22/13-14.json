@@ -1,0 +1,165 @@
+{
+  "timestamp": "2026-05-22T13:14:54.219Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish structure (BOS-bearish @ 4478.20 intact); H1 bullish OB at 4496.90-4511.20 unmitigated but price in premium zone (66.5% on M15); M15 CHoCH-bearish @ 4510.30 confirms downside bias. Weekly yields rising (bearish gold), EUR/USD weakening (bullish gold offset by yields). Macro neutral but technicals lean short. NY kill zone active.",
+  "setupQuality": "B",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "M15 CHoCH-bearish confirms direction",
+    "ny-killzone active",
+    "10Y yield rising confirms direction",
+    "No imminent gold-relevant news",
+    "Below weekly VWAP — institutional bearish",
+    "Full LLM consensus (Claude + DeepSeek agree)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bullish_order_block_liquidity_pool",
+    "zone": [
+      4496.9,
+      4511.2
+    ],
+    "reasoning": "H1 bullish OB remains unmitigated; price must pull back into this zone to trigger short entry. M15 CHoCH-bearish @ 4510.30 sits at top of OB — ideal short entry area. Liquidity pool for institutional shorts."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4521.45,
+    "confirmation": "M15 CHoCH-bearish inside POI"
+  },
+  "stopLoss": {
+    "price": 4512.6,
+    "reasoning": "Above H1 bullish OB high (4511.20) + 0.2×M15 ATR (6.56×0.2=1.31); invalidates H1 bullish structure and M15 CHoCH-bearish if breached. + 0.2 × M15 ATR buffer",
+    "pips": 8.85
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4485.6,
+      "reasoning": "H1 swing low / discount zone floor (37.1% of H1 range); first major structural liquidity pool below entry. System places TP at 2R automatically.",
+      "rr": 4.05
+    }
+  ],
+  "invalidation": {
+    "price": 4515.8,
+    "reasoning": "Close above H1 bullish OB high invalidates bearish bias; H1 structure flips bullish, M15 CHoCH-bearish negated."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone 12-15 UTC — execute now on limit fill into OB zone"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 80-pip stop; size for 80-pip SL to risk 1% of account"
+  },
+  "macroContext": "Real yields rising (2.18% — bearish gold), EUR/USD weakening (bullish gold offset), Fear & Greed at 28 (fear, risk-off neutral). Macro leans bearish; technicals confirm short bias via H4 BOS and M15 CHoCH-bearish structure.",
+  "warnings": [
+    "H1 bias is bullish (BOS-bullish @ 4536.10) — conflicts with H4/M15 bearish bias. This is a Tier 2 setup (macro + H4 + M15 align, but H1 structure is bullish). Proceed with caution; entry must be precise at OB boundary.",
+    "Price currently at 4521.80, well above entry target 4507.60. Pullback of 14 pips required before entry triggers. If price does not retrace into OB zone, do not chase.",
+    "Funding rate +0.0013%/hr (longs paying) — mild bearish contrarian signal, supports short bias.",
+    "Upcoming USD UoM Consumer Sentiment (Medium impact, +45m) — monitor for volatility; may accelerate pullback or prevent entry.",
+    "Confluence score 5/12 (B grade) — not A-tier. Proceed only if price retraces to OB and M15 structure confirms (no new bullish candles above 4521.80).",
+    "✅ Consensus: Claude + DeepSeek both short"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold holds below recent highs with bearish technical bias as markets await U.S. sentiment data"
+  },
+  "m15": {
+    "status": "CONFIRMED",
+    "reason": "CHoCH-bearish on M15 inside POI",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — H4+M15 aligned (H1 pullback)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4529.49 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "m15Bias": "bearish",
+        "confluenceCount": 7,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "M15 CHoCH-bearish confirms direction",
+          "ny-killzone active",
+          "10Y yield rising confirms direction",
+          "No imminent gold-relevant news",
+          "Below weekly VWAP — institutional bearish",
+          "Full LLM consensus (Claude + DeepSeek agree)"
+        ],
+        "h4AndM15Agree": true,
+        "h1AlignsWithH4": false,
+        "h1PullbackInH4": true,
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4529.49 (strong S/R)",
+      "H4+M15 bias agree (short)",
+      "M15 CHoCH-bearish confirms direction",
+      "ny-killzone active",
+      "10Y yield rising confirms direction",
+      "No imminent gold-relevant news",
+      "Below weekly VWAP — institutional bearish",
+      "Full LLM consensus (Claude + DeepSeek agree)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — H4+M15 aligned (H1 pullback) | short | 9 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution",
+      "H1 pullback in H4 trend — corrective move, weaker signal"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED",
+    "tier": 3,
+    "tierLabel": "TIER 3 — H4+M15 aligned (H1 pullback)",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.39 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

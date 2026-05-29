@@ -1,0 +1,150 @@
+{
+  "timestamp": "2026-05-15T00:15:00.675Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish CHoCH and H1 bearish CHoCH align; price below weekly VWAP and daily VWAP; M15 bearish BOS and active bearish OBs above; EUR/USD weakening (dollar strengthening) but EUR/USD trend is weakening which is bullish for gold, conflicting; real yields rising (bearish gold); funding slightly positive (neutral). Overall bearish structure with some macro conflict.",
+  "setupQuality": "B",
+  "confluenceCount": 6,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 BOS-bearish confirms direction",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4676.6,
+      4681.1
+    ],
+    "reasoning": "M15 bearish OB from 4676.60-4681.10; price currently at 4644.30, well below, but retracement to this zone is expected for a short entry."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4646.75,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4682.05,
+    "reasoning": "Above OB high (4681.10) + 0.2*M15 ATR (5.60) = 4682.22, rounded to 4683.10 for safety. + 0.2 × M15 ATR buffer",
+    "pips": 35.3
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4636,
+      "reasoning": "Nearest major structural level: prior swing low near 4641.20, but 4636.00 is a round number and below recent lows.",
+      "rr": 0.3
+    }
+  ],
+  "invalidation": {
+    "price": 4683.1,
+    "reasoning": "Break above OB high invalidates bearish structure; bias flips neutral/bullish."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "London kill zone 07-10 UTC for better liquidity"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 42.5-pip stop"
+  },
+  "macroContext": "Real yields rising (bearish gold), EUR/USD weakening (dollar strengthening, bearish gold), Fear & Greed at 43 (fear, neutral). Overall macro mildly bearish.",
+  "warnings": [
+    "Price currently far from POI; retracement may not occur.",
+    "EUR/USD trend weakening but gold impact bullish, conflicting with bearish structure.",
+    "Funding slightly positive but neutral.",
+    "⚠️ Split: Claude=no-trade DeepSeek=short — manual only",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "short",
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4646.75 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_lvn",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 6,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 BOS-bearish confirms direction",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 6
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 BOS-bearish confirms direction",
+      "No imminent gold-relevant news",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 7 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": true,
+    "reason": "Order placed: 426367530914",
+    "orderId": 426367530914,
+    "entry": 4652.1,
+    "size": 0.025,
+    "riskAmount": 0.88,
+    "riskPct": "1.01",
+    "timestamp": "2026-05-15T00:15:23.521Z"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "timestamp": "2026-05-14T05:00:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 structure shows bearish CHoCH @ 4643.20 with active bearish OB at 4711.60-4715.40; M15 confirms bearish BOS @ 4677.90. Price is in premium zone (112.3% of M15 range), well above weekly VWAP 4702.12 and daily VWAP 4684.62. H1 shows bullish CHoCH but sits in extreme premium (77.1%), creating a structural conflict. EUR/USD weakening (-8.47% 24h) is bearish for gold. High-impact GBP GDP events in 60min add execution risk. Macro neutral but institutional bias bearish (below weekly VWAP). M15 active bearish OB at 4711.60-4715.40 is within 8pts of current 4694.10, but price must first rally into that zone to trigger a valid short entry.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish structure (CHoCH confirmed)",
+    "M15 bearish BOS @ 4677.90 (recent structure event)",
+    "Price in premium zone (112.3% of M15 range — overbought)",
+    "EUR/USD weakening -8.47% (dollar strengthening = bearish gold)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4711.6,
+      4715.4
+    ],
+    "reasoning": "M15 active bearish OB formed on recent down-close candles; overlaps with H4 bearish OB zone. Price must rally into this zone to trigger short entry. This is the primary POI for a bearish setup."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4694.15,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4717.18,
+    "reasoning": "Above M15 bearish OB high (4715.40) + 0.2×M15 ATR (7.96 ≈ 1.6pts buffer). Invalidates bearish H4 structure if breached. + 0.2 × M15 ATR buffer",
+    "pips": 23.03
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4680,
+      "reasoning": "Prior H1 swing low and confluence of multiple bullish FVGs (4672.60-4692.80); structural support zone. System places TP at 2R automatically.",
+      "rr": 0.61
+    }
+  ],
+  "invalidation": {
+    "price": 4722.8,
+    "reasoning": "Break above M15 bearish OB high invalidates bearish bias; price would flip to bullish structure and H1 CHoCH would dominate."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London open (07:00 UTC) or NY session (12:00 UTC). Avoid entry within 60min due to GBP GDP (High impact) and USD Retail Sales (High impact) at +450min. Execute only after data passes without gap."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.8,
+    "positionSizeHint": "0.8% risk on 91-pip stop. Reduce to 0.5% if entering during news window. Position size = (account_risk_usd / 91) / PAXG_price."
+  },
+  "macroContext": "Dollar strengthening (EUR/USD -8.47%), real yields unknown, Fear & Greed at 34 (fear/risk-off) — mixed macro backdrop. Institutional bias bearish (price below weekly VWAP). High-impact GBP GDP and USD Retail Sales within 60min create execution risk.",
+  "warnings": [
+    "HIGH-IMPACT NEWS ALERT: GBP GDP m/m (High) in 60min — avoid entry until after data release.",
+    "HIGH-IMPACT NEWS ALERT: GBP Prelim GDP q/q (Medium) in 60min — avoid entry until after data release.",
+    "HIGH-IMPACT NEWS ALERT: USD Core Retail Sales m/m (High) in 450min — consider closing or reducing position before 12:30 UTC.",
+    "HIGH-IMPACT NEWS ALERT: USD Retail Sales m/m (High) in 450min — consider closing or reducing position before 12:30 UTC.",
+    "Structural conflict: H1 shows bullish CHoCH @ 4704.30 but price is in extreme premium (77.1%). Entry is valid only if M15 bearish structure holds and price rejects from OB zone.",
+    "Funding rate +0.0013%/hr (longs paying) is mildly bearish contrarian signal but not strong enough to override structure.",
+    "M15 POI (4711.60-4715.40) requires price to rally ~17-21pts from current 4694.10 to trigger entry. If price does not reach OB zone, no entry — do not chase.",
+    "Moderate range regime (2.6×ATR) — trade with caution; avoid oversizing.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "High-impact gold event in 60min: GBP GDP m/m (High)",
+    "High-impact gold event in 60min: GBP Prelim GDP q/q (Medium)",
+    "FRED macro data unavailable — yields/real-rate missing"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "No fresh shocks; gold drifts lower as markets await key US data and GBP GDP"
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4694.15 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (CHoCH confirmed)",
+          "M15 bearish BOS @ 4677.90 (recent structure event)",
+          "Price in premium zone (112.3% of M15 range — overbought)",
+          "EUR/USD weakening -8.47% (dollar strengthening = bearish gold)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)",
+      "H4 bearish structure (CHoCH confirmed)",
+      "M15 bearish BOS @ 4677.90 (recent structure event)",
+      "Price in premium zone (112.3% of M15 range — overbought)",
+      "EUR/USD weakening -8.47% (dollar strengthening = bearish gold)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.34 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

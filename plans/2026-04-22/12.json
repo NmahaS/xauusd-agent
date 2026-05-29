@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-04-22T12:50:47.069Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bearish",
+  "biasReasoning": "H4 SMC bias is bearish with a BOS-bearish event at 4740.75, and H1 SMC bias is bearish with a CHoCH-bearish event at 4773.28, indicating overall bearish market structure.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Wait for clearer POI alignment and discount zone entry"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Dollar strengthening via EUR/USD falling is bearish for gold, and positive real yields (1.88%) add bearish pressure, though Fear & Greed at 32 (fear) provides some safe-haven support.",
+  "warnings": [
+    "Price in H1 premium zone (73.2%) discourages long entries",
+    "No clear POI near current price for a short setup",
+    "High-impact news (German PMIs, USD Unemployment Claims) within 2 hours adds uncertainty"
+  ],
+  "promptVersion": "v2.0"
+}

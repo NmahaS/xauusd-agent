@@ -1,0 +1,146 @@
+{
+  "timestamp": "2026-05-12T19:00:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "M15 CHoCH-bearish @ 4678.40 with price now at 4690.80 in premium zone (80.3% of range). H4 bias is bullish (CHoCH-bullish @ 4723.10) but M15 structure has flipped bearish and price is well above H1 OTE long zone [4656.28-4666.54]. H1 bias is bullish but price is in premium (77.9%), reducing long probability. Macro is neutral (stable yields, EUR/USD weakening slightly, F&G neutral). M15 bearish OBs at 4690.50-4699.00 and 4711.60-4715.40 are active and untested; price is inside the first OB. Shorts are paying funding (-0.0009%/hr), indicating balanced-to-short positioning. High-impact US PPI data in ~17.5 hours adds event risk.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 CHoCH-bearish structure confirmed (4678.40 pivot)",
+    "Price in premium zone (80.3% of M15 range) — unfavorable for longs",
+    "M15 active bearish OB at 4690.50-4699.00 (current price inside)",
+    "Shorts paying funding (-0.0009%/hr) — contrarian bullish signal for shorts"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4690.5,
+      4699
+    ],
+    "reasoning": "M15 active bearish OB formed during recent down-close candles; price currently inside OB. This is the primary POI for short entry. Secondary bearish OB at 4711.60-4715.40 provides resistance confirmation."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4695.5,
+    "confirmation": "Limit sell at midpoint of M15 bearish OB; confirmed by M15 CHoCH-bearish structure and price in premium zone. Wait for M15 close below 4690 or a bearish engulfing candle inside OB to increase conviction."
+  },
+  "stopLoss": {
+    "price": 4704.2,
+    "reasoning": "Above M15 bearish OB high (4699.00) plus 0.2×M15 ATR (8.12×0.2=1.62, rounded to 5.2 pts). Invalidates bearish M15 structure if breached; signals potential H4 bullish continuation.",
+    "pips": 87
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4668.4,
+      "reasoning": "M15 bullish FVG at 4668.40-4671.90 and H1 OTE short zone lower bound [4680.96-4691.22]; first structural liquidity pool below entry (system places TP at 2R automatically).",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4704,
+    "reasoning": "Break above M15 bearish OB high invalidates short thesis; price would reclaim premium and likely retest H4 bullish structure (4723.10 CHoCH level). Bias flips bullish."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for next London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for higher liquidity and tighter spreads. Current session is off-hours (Asia early morning). High-impact US PPI data at +1050m (~14:00 UTC) — avoid entry within 1 hour before/after."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.8,
+    "positionSizeHint": "0.8% risk on 87-pip stop. Reduce to 0.5% if entering before US PPI data release due to event risk."
+  },
+  "macroContext": "Neutral macro: stable real yields (1.91%, mildly bearish), EUR/USD weakening (dollar strengthening, bearish for gold), F&G neutral. High-impact US PPI data in ~17.5 hours adds volatility risk. Shorts paying funding suggests balanced positioning.",
+  "warnings": [
+    "M15 structure is bearish but H4 remains bullish (CHoCH-bullish @ 4723.10) — this is a lower-timeframe short against the H4 trend. Confluence is moderate (B-grade). Requires tight risk management.",
+    "Price is in premium zone (80.3%) — historically unfavorable for new longs, but shorts are also riskier in premium. Entry must be precise inside OB.",
+    "High-impact US PPI data (Core PPI, PPI m/m) at +1050m (~14:00 UTC 2026-05-13). Avoid entry within 1 hour before/after. If already in trade, consider tightening SL or taking partial profits pre-data.",
+    "Funding rate is negative (-0.0009%/hr) but near zero — market is balanced. No strong contrarian signal.",
+    "No kill zone active now (off-hours). Liquidity may be lower. Wait for London or NY session for better execution.",
+    "H1 bias is bullish (BOS-bullish @ 4738.40) — short entry is against H1 structure. Invalidation at 4704 is tight; monitor closely.",
+    "✅ Consensus: Claude + DeepSeek both short"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "short",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold under pressure near $4700 amid US CPI assessment and inflation concerns"
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at HVN 4689.44 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 CHoCH-bearish structure confirmed (4678.40 pivot)",
+          "Price in premium zone (80.3% of M15 range) — unfavorable for longs",
+          "M15 active bearish OB at 4690.50-4699.00 (current price inside)",
+          "Shorts paying funding (-0.0009%/hr) — contrarian bullish signal for shorts"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.44 (strong S/R)",
+      "M15 CHoCH-bearish structure confirmed (4678.40 pivot)",
+      "Price in premium zone (80.3% of M15 range) — unfavorable for longs",
+      "M15 active bearish OB at 4690.50-4699.00 (current price inside)",
+      "Shorts paying funding (-0.0009%/hr) — contrarian bullish signal for shorts"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

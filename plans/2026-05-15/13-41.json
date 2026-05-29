@@ -1,0 +1,152 @@
+{
+  "timestamp": "2026-05-15T13:41:02.908Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4643.20 confirmed; H1 CHoCH-bearish @ 4663.00 intact; M15 BOS-bearish @ 4555.20 active. Price in deep discount (-6.6% of M15 range, -273% of H1 range) with multiple unfilled bearish FVGs below current price. H4 RSI=23.4 (oversold but trending down), MACD hist negative. Institutional bias bearish (price below weekly VWAP 4676.72). EUR/USD weakening (-8.35% 24h) = dollar strengthening = bearish for gold. Real yields positive (1.99%) = bearish. Funding rate -0.0017%/hr (shorts paying) = contrarian mild bullish signal, but structure dominates. NY kill zone active.",
+  "setupQuality": "B",
+  "confluenceCount": 7,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 BOS-bearish confirms direction",
+    "ny-killzone active",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_fvg",
+    "zone": [
+      4570.6,
+      4574.9
+    ],
+    "reasoning": "Nearest unfilled bearish FVG on M15 within 8pts of current price (4530.30). Imbalance target for short entry; overlaps with H1 bearish FVG [4577.70-4602.00] and multiple M15 FVGs stacked below. Strong institutional selling pressure into discount zone."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4572.5,
+    "confirmation": "Limit sell at FVG midpoint (4570.60-4574.90); validated by M15 bearish structure (BOS @ 4555.20), H4 bearish CHoCH, and dollar strength. Expect rejection into FVG on retest."
+  },
+  "stopLoss": {
+    "price": 4585.8,
+    "reasoning": "Above M15 active bearish OB [4676.60-4681.10] and H1 OTE short zone [4690.70-4698.75]; placed at M15 OB low (4676.60) minus 0.2×M15 ATR (11.25) = 4674.35, rounded to 4585.80 for structural invalidation. If breached, H4 bearish structure invalidated; bias flips neutral/bullish.",
+    "pips": 127
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4521.4,
+      "reasoning": "H4 unfilled bullish FVG [4521.40-4523.30] = first major liquidity pool / structural support. System places TP at 2R automatically; this is structural reference only.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4585.8,
+    "reasoning": "Close above M15 bearish OB high (4681.10) or H1 OTE short zone (4690.70) invalidates bearish bias. Flip to neutral/bullish if H4 CHoCH reversed."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone active (12-15 UTC) — execute now on limit fill or wait for retest into FVG zone"
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "1% risk on 127-pip stop; position size = (account_risk_usd / 127) / PAXG_price. Reduce to 0.5% if funding rate reverses sharply positive (crowded shorts)."
+  },
+  "macroContext": "Dollar strengthening (EUR/USD -8.35%), positive real yields (1.99%), fear sentiment rising but neutral — all bearish for gold. Institutional bias bearish (below weekly VWAP). Shorts paying (-0.0017%/hr funding) suggests crowded short positioning, mild contrarian risk.",
+  "warnings": [
+    "Confluence count is 4 (B-grade setup) — below ideal 6+ threshold. Proceed with reduced size or wait for additional confirmation (e.g., H1 OB test or M15 RSI divergence).",
+    "Market transitioning regime — SMC effective but volatility may spike. Tighten stops if price action becomes choppy.",
+    "Funding rate is negative (shorts paying) — contrarian signal that shorts are crowded. Risk of sudden reversal if macro sentiment shifts (e.g., Fed pivot, geopolitical risk-off).",
+    "H1 bullish divergence (RSI bull=true) conflicts with bearish structure — suggests potential bounce into FVG zone before continuation lower. Entry at FVG midpoint may be tested; be prepared for wick above SL.",
+    "No high-impact news in next 24h, but real yields and dollar strength are primary drivers. Monitor EUR/USD and 10Y yield for reversal signals.",
+    "Historical NY session WR is 40% (4W/6L) — below 50%. This trade aligns with bearish macro but execution risk is elevated in NY session.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4529.80 not at M15 POI [4570.60-4574.90] yet",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "below_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 7,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 BOS-bearish confirms direction",
+          "ny-killzone active",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 7
+      }
+    },
+    "allFactors": [
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 BOS-bearish confirms direction",
+      "ny-killzone active",
+      "No imminent gold-relevant news",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 7 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "WAITING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Risk: Spread too wide: 5.20pts > 3pts — low liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

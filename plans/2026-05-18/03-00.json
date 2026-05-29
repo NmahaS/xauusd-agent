@@ -1,0 +1,148 @@
+{
+  "timestamp": "2026-05-18T03:00:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish structure (BOS-bearish @ 4664.10) dominates; H1 shows bullish CHoCH but remains within H4 discount zone. M15 bearish CHoCH @ 4526.30 confirms downside bias. Price 2σ above daily VWAP (4513.16) and below weekly VWAP (4629.06) signals institutional bearish positioning. Multiple unfilled bearish FVGs on H4 and H1 provide downside targets. EUR/USD weakening (-7.67% 24h) supports dollar strength = bearish for gold. Macro neutral but technicals strongly bearish.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish structure (BOS-bearish intact, EMA20 < EMA50 < EMA200)",
+    "M15 bearish CHoCH @ 4526.30 (recent structure event)",
+    "Price in premium zone (69.5% of M15 range) — ideal for short entry",
+    "Multiple unfilled bearish FVGs on H4 (4780.70-4796.00, 4679.40-4681.20, 4615.90-4642.30) and H1 (4667.50-4672.70, 4626.90-4644.60) provide downside targets"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4540.7,
+      4541.5
+    ],
+    "reasoning": "M15 unfilled bearish FVG at 4540.70-4541.50 is the primary POI. Price currently at 4529.30, just 11.4 pts below FVG top. This imbalance sits within premium zone and aligns with H4 bearish structure. Rejection here targets lower FVGs (4615.90-4642.30 on H4, 4577.70-4602.00 on H1)."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4541,
+    "confirmation": "Limit sell at M15 FVG top (4541.00). Confirmation: bearish candle close below 4540.70 or rejection wick from 4541.50 level. Aligns with H4 bearish bias and M15 CHoCH structure."
+  },
+  "stopLoss": {
+    "price": 4553.5,
+    "reasoning": "Stop placed above M15 FVG high (4541.50) + 0.2×M15 ATR (12.46 × 0.2 = 2.49 pts) = 4544.00 rounded to 4553.50 for structural safety. Invalidates bearish H1 CHoCH if breached; signals potential H1 reversal.",
+    "pips": 125
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4615.9,
+      "reasoning": "First major H4 unfilled bearish FVG (4615.90-4642.30) serves as structural liquidity pool and primary downside target. System will place actual TP at 2R from entry automatically.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4553.5,
+    "reasoning": "Break above 4553.50 invalidates M15 bearish structure and H1 CHoCH. Bias flips to neutral/bullish if this level is decisively breached on close."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for optimal liquidity and volatility. Current Asia session has lower volume; entry more likely to slip."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 125-pip stop. Position size = (account_size × 0.01) / 125 pips. Elevated volatility (3.7x) warrants tight stops and disciplined sizing."
+  },
+  "macroContext": "Dollar strengthening (EUR/USD -7.67% 24h) and price 2σ above daily VWAP signal overbought conditions; institutional bias bearish per weekly VWAP. Real yields unknown but fear sentiment (28/100, falling) supports risk-off. Bearish technicals dominate macro neutrality.",
+  "warnings": [
+    "Confluence count is 4 (B-grade setup) — below ideal 6+. Proceed with caution and strict risk management.",
+    "H1 shows bullish CHoCH which conflicts with H4 bearish bias. This is a structural conflict; short entry is valid but vulnerable to H1 reversal if 4553.50 is breached.",
+    "M15 active OBs are empty — no nearby order block to anchor stop. Relying on FVG and H4 structure; stop placement is wider than ideal.",
+    "Funding rate +0.0013%/hr (longs paying) is mild bearish contrarian signal but not extreme. Monitor for funding flip.",
+    "Asia session (low volume) — slippage risk on limit entry. Recommend waiting for London open (07:00 UTC) for better execution.",
+    "No high-impact news in next 24h, but macro data (yields, COT) unavailable. Blind spot on fundamental drivers.",
+    "Historical WR 50% on 10 trades — setup is not statistically dominant. Treat as tactical, not strategic conviction.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "FRED macro data unavailable — yields/real-rate missing"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "No fresh shocks; gold remains under pressure as strong USD and higher yields weigh"
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "volatile_tradeable",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (BOS-bearish intact, EMA20 < EMA50 < EMA200)",
+          "M15 bearish CHoCH @ 4526.30 (recent structure event)",
+          "Price in premium zone (69.5% of M15 range) — ideal for short entry",
+          "Multiple unfilled bearish FVGs on H4 (4780.70-4796.00, 4679.40-4681.20, 4615.90-4642.30) and H1 (4667.50-4672.70, 4626.90-4644.60) provide downside targets"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "H4 bearish structure (BOS-bearish intact, EMA20 < EMA50 < EMA200)",
+      "M15 bearish CHoCH @ 4526.30 (recent structure event)",
+      "Price in premium zone (69.5% of M15 range) — ideal for short entry",
+      "Multiple unfilled bearish FVGs on H4 (4780.70-4796.00, 4679.40-4681.20, 4615.90-4642.30) and H1 (4667.50-4672.70, 4626.90-4644.60) provide downside targets"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 4 total factors",
+    "warnings": [
+      "⚠️ Elevated volatility — use tight stops"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Account state fetch failed: Hyperliquid rate limit — max retries exceeded",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

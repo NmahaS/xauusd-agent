@@ -1,0 +1,152 @@
+{
+  "timestamp": "2026-05-19T00:00:00.724Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "M15 BOS-bullish @ 4553.90 confirmed; H1 CHoCH-bullish @ 4551.70 supports upside structure. H4 is bearish (EMA20 below EMA50, BOS-bearish @ 4525.70), creating a structural conflict. However, M15 and H1 are aligned bullish with active unmitigated bullish OBs at 4532.70-4538.90 (M15) and 4529.70-4541.70 (H1). Price is in premium zone on H1 (98.7%) but multiple bullish FVGs remain unfilled above current price (4538.90-4544.50, 4551.70-4554.30, 4562.50-4567.90 on M15). EUR/USD weakening (-7.85% 24h) is bearish for gold, and real yields are high (2.11%), both macro headwinds. Funding is positive (+0.0013%/hr) indicating crowded longs — mild contrarian bearish signal. Setup is Tier 3 (technical-only, lower confidence due to macro conflict).",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 bullish structure (BOS-bullish @ 4553.90 intact)",
+    "H1 bullish CHoCH @ 4551.70 confirms upside bias",
+    "M15 active bullish OB at 4532.70-4538.90 within 8pts of current price",
+    "Multiple M15 bullish FVGs unfilled above (4538.90-4544.50, 4551.70-4554.30)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4532.7,
+      4538.9
+    ],
+    "reasoning": "M15 active bullish OB formed during impulsive upleg; overlaps with H1 bullish structure and CHoCH confirmation. Primary entry POI for long setup."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4535.8,
+    "confirmation": "Limit buy at midpoint of M15 bullish OB; validated by H1 CHoCH and M15 BOS structure. Wait for London kill zone (07:00 UTC) for optimal execution window."
+  },
+  "stopLoss": {
+    "price": 4527.5,
+    "reasoning": "Below M15 bullish OB low (4532.70) with ATR buffer (0.2×5.82≈1.2pts); invalidates M15 bullish structure and H1 CHoCH if breached. Protects against H4 bearish bias reassertion.",
+    "pips": 82
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4562.5,
+      "reasoning": "First M15 bullish FVG top (4562.50-4567.90) and H1 liquidity cluster; structural reference for 2R target (system places TP at 2R automatically).",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4527.5,
+    "reasoning": "Break below M15 bullish OB low invalidates M15 structure and H1 CHoCH; bias flips to neutral/bearish. H4 bearish bias would reassert dominance."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for optimal execution; currently in low-liquidity Asia session."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 82-pip stop due to macro headwinds (rising yields, weakening EUR/USD, crowded longs). Tier 3 setup warrants reduced position size."
+  },
+  "macroContext": "Real yields rising (2.11%, strongly bearish), EUR/USD weakening (dollar strengthening, bearish for gold), funding positive (crowded longs, contrarian bearish). Macro is net bearish; technical setup is bullish — conflict reduces confidence to Tier 3.",
+  "warnings": [
+    "H4 bias is bearish (EMA20 below EMA50, BOS-bearish @ 4525.70) — conflicts with M15/H1 bullish structure. This is a lower-confidence Tier 3 technical-only setup.",
+    "Macro headwinds: real yields at 2.11% (high, bearish gold), EUR/USD weakening (dollar strengthening, bearish gold).",
+    "Funding rate positive (+0.0013%/hr) indicates crowded longs — contrarian bearish signal.",
+    "Price is in H1 premium zone (98.7%) — historically lower-probability entry area for longs.",
+    "CAD CPI data in +750m (high impact, gold-relevant) — avoid holding through this event.",
+    "Setup quality is B (4 confluence factors) — not A-grade. Execute only with strict risk management and London kill zone confirmation.",
+    "If H4 BOS-bearish reasserts (price breaks below 4525.70), invalidate entire setup and flip to short bias.",
+    "✅ Consensus: Claude + DeepSeek both long",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "long",
+    "deepseekDirection": "long",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "medium",
+    "newsSentiment": "bullish",
+    "newsHeadline": "No major new shocks; gold holds firm with modest bullish bias ahead of key CPI data"
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4576.55 not at M15 POI [4532.70-4538.90] yet",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bullish structure (BOS-bullish @ 4553.90 intact)",
+          "H1 bullish CHoCH @ 4551.70 confirms upside bias",
+          "M15 active bullish OB at 4532.70-4538.90 within 8pts of current price",
+          "Multiple M15 bullish FVGs unfilled above (4538.90-4544.50, 4551.70-4554.30)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "M15 bullish structure (BOS-bullish @ 4553.90 intact)",
+      "H1 bullish CHoCH @ 4551.70 confirms upside bias",
+      "M15 active bullish OB at 4532.70-4538.90 within 8pts of current price",
+      "Multiple M15 bullish FVGs unfilled above (4538.90-4544.50, 4551.70-4554.30)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "WAITING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: null",
+    "orderId": null,
+    "entry": 4576.55,
+    "size": null,
+    "riskAmount": 0.44,
+    "riskPct": "0.48",
+    "timestamp": "2026-05-19T00:00:36.808Z"
+  }
+}

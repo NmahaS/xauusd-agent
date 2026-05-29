@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-04-27T22:03:19.762Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 bullish BOS but price is in premium on H1 and no clear POI near current price; H1 neutral with no active OBs. No confluence for a trade.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "EUR/USD rising (dollar weakening) is bullish for gold, but real yields are positive (1.87%) and F&G neutral, creating mixed signals.",
+  "warnings": [
+    "No clear POI near price",
+    "H1 in premium zone with no active OB",
+    "Current session is off-hours",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

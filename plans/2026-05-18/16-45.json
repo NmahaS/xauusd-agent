@@ -1,0 +1,144 @@
+{
+  "timestamp": "2026-05-18T16:45:00.168Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bearish bias, but M15 bullish BOS and price in discount zone with bullish OB. EUR/USD weakening (dollar strengthening) is bearish for gold, but real yields rising and fear index neutral. Conflicting layers: H4 bearish vs M15 bullish. Setup quality B due to 4 confluences.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 bullish structure (BOS intact)",
+    "Price in discount zone (21.3% of M15 range)",
+    "M15 active bullish OB within 8 points (4529-4535.3)",
+    "M15 unfilled bullish FVG within 8 points (4505.1-4508.0)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4529,
+      4535.3
+    ],
+    "reasoning": "M15 bullish OB from last down-close candle before impulsive up move; overlaps with discount zone."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4532,
+    "confirmation": "Limit buy inside OB midpoint; confirmed by M15 BOS and discount zone."
+  },
+  "stopLoss": {
+    "price": 4526,
+    "reasoning": "Below OB low (4529.0) minus 0.2*M15 ATR (10.54) = 4526.9, rounded to 4526.0 for clean level.",
+    "pips": 60
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4550,
+      "reasoning": "Nearest major structural level: prior swing low (now resistance) at ~4550. System places TP at 2R automatically.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4525,
+    "reasoning": "Below M15 OB low and recent swing low; invalidates bullish structure."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY session active, but no kill zone. Execute now on limit fill."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 60-pip stop"
+  },
+  "macroContext": "Dollar weakening via EUR/USD falling, real yields rising (bearish), Fear & Greed 28 (fear) neutral. Mixed macro, but M15 technicals favor long.",
+  "warnings": [
+    "H4 bias bearish conflicts with M15 bullish; trade is counter-trend on higher timeframe.",
+    "EUR/USD weakening (dollar strengthening) is bearish for gold.",
+    "Real yields rising (bearish for gold).",
+    "No kill zone active; lower probability execution window.",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "long",
+    "claudeQuality": "failed",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4542.17 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bullish structure (BOS intact)",
+          "Price in discount zone (21.3% of M15 range)",
+          "M15 active bullish OB within 8 points (4529-4535.3)",
+          "M15 unfilled bullish FVG within 8 points (4505.1-4508.0)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4542.17 (strong S/R)",
+      "M15 bullish structure (BOS intact)",
+      "Price in discount zone (21.3% of M15 range)",
+      "M15 active bullish OB within 8 points (4529-4535.3)",
+      "M15 unfilled bullish FVG within 8 points (4505.1-4508.0)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.78 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

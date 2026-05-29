@@ -1,0 +1,108 @@
+{
+  "timestamp": "2026-05-05T01:00:22.135Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish BOS confirmed at 4539.35; price currently in premium zone (87.7% of M15 range); H4 active bearish OB at 4675.48-4772.85 unmitigated; multiple H4 unfilled bearish FVGs above current price; H1 P/D discount zone suggests institutional selling pressure; weekly yields rising (bearish gold); EUR/USD flat but macro backdrop bearish. High-impact AUD RBA decision in 210min creates execution risk but also potential volatility catalyst.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "HOLD — RBA decision at 02:30 UTC (210min). Do not enter until post-RBA volatility settles and London kill zone opens 07:00 UTC."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — wait for RBA clarity and London session structure confirmation"
+  },
+  "macroContext": "Weekly yields rising (bearish gold); EUR/USD flat (neutral dollar); Fear & Greed 50 neutral; AUD RBA decision imminent (210min) — high-impact event creates execution risk and potential gap/slippage. Macro backdrop bearish but event risk prohibits entry until post-decision volatility absorbed.",
+  "warnings": [
+    "CRITICAL: AUD RBA Cash Rate decision in 210 minutes (02:30 UTC) — high-impact event. Do NOT enter any position within 2 hours of this announcement. Expect sharp volatility and potential gap moves.",
+    "M15 data incomplete: no ATR, no RSI, no MACD, no EMA — cannot confirm M15 entry signal or stop sizing. Insufficient M15 technical confirmation.",
+    "H1 data incomplete: no trend, no RSI, no MACD, no divergence — cannot validate H1 structural context. Bias relies on H4 only.",
+    "No M15 active OBs or FVGs within 8pts of current price (4626.30) — no immediate POI for entry. M15 structure is neutral/undefined.",
+    "Market transitioning regime — SMC effective but requires higher confluence. Current setup has 0 confluence factors.",
+    "Volume Profile unavailable — cannot confirm institutional accumulation/distribution or liquidity pools.",
+    "Price in M15 premium zone (87.7%) but no M15 bearish OB or FVG to target — entry would be counter-structural.",
+    "H4 bearish bias is valid but M15 signal is absent. This is Tier 3 (macro-only, no auto-execute). Wait for M15 structure to align.",
+    "Recommended action: Wait for RBA decision (02:30 UTC), allow 30min post-decision volatility to settle, then re-assess at London open (07:00 UTC) with fresh M15 structure and H1 confirmation.",
+    "FRED macro data unavailable — yields/real-rate missing",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (24 H1 / 24 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "No breaking news in last 2 hours; gold faces bearish pressure ahead of high-impact RBA and US data events"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "unknown",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "neutral",
+        "confluenceCount": 0,
+        "confluenceGrade": "no-trade",
+        "factors": [],
+        "score": 0
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 1 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "timestamp": "2026-05-18T18:00:01.087Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish BOS intact, price below weekly VWAP, and EUR/USD weakening (dollar strengthening) supports bearish gold bias. However, M15 shows a bullish BOS and price is near a bullish OB, creating a conflict. H1 is in premium zone, favoring shorts. Overall, bearish bias with caution due to conflicting lower timeframe signals.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 3,
+  "confluenceFactors": [
+    "H4 bearish structure (BOS intact)",
+    "Price in premium zone (88.8% of H1 range)",
+    "EUR/USD weakening (dollar strengthening)"
+  ],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields rising (1.98%) bearish for gold, EUR/USD weakening (dollar strengthening) bearish, Fear & Greed at 28 (fear) neutral.",
+  "warnings": [
+    "M15 bullish BOS conflicts with H4 bearish bias",
+    "No active M15 POI within 8 points of current price (closest bullish OB at 4529-4535.3 is 8.2 points away)",
+    "Outside kill zone session",
+    "High-impact CAD CPI data in 18.5 hours may cause volatility",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "failed",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bearish",
+    "newsHeadline": "No fresh market-moving headlines; gold in AUD remains under pressure as bearish bias persists"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4542.17 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 3,
+        "confluenceGrade": "no-trade",
+        "factors": [
+          "H4 bearish structure (BOS intact)",
+          "Price in premium zone (88.8% of H1 range)",
+          "EUR/USD weakening (dollar strengthening)"
+        ],
+        "score": 3
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4542.17 (strong S/R)",
+      "H4 bearish structure (BOS intact)",
+      "Price in premium zone (88.8% of H1 range)",
+      "EUR/USD weakening (dollar strengthening)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 4 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

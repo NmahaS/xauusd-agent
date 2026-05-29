@@ -1,0 +1,168 @@
+{
+  "timestamp": "2026-05-08T01:31:25.902Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bullish structure intact (BOS @ 4712.30); H1 and M15 both bullish bias. Price at 4702.60 is in premium zone but above weekly VWAP (4611.69) with institutional bullish bias. EUR/USD weakening (dollar weakening = bullish for gold). However, macro headwind: rising real yields (1.91%) are bearish gold. Market transitioning — require higher confluence. M15 shows recent CHoCH bullish @ 4689.00 but price now consolidating near bearish OB [4702.60-4708.30]. Multiple unfilled bullish FVGs below current price suggest pullback opportunity into discount zone before next leg up.",
+  "setupQuality": "B",
+  "confluenceCount": 8,
+  "confluenceFactors": [
+    "H4+M15 bias agree (long)",
+    "H1 bias confirms direction (bullish)",
+    "M15 unfilled bullish FVG within 8pts [4695.00-4702.30]",
+    "M15 CHoCH-bullish confirms direction",
+    "DXY proxy weakening confirms direction",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bullish)",
+    "Above weekly VWAP — institutional bullish"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4695,
+      4702.3
+    ],
+    "reasoning": "M15 bullish FVG [4695.00-4702.30] unfilled; overlaps with current price action and recent M15 structure. Price consolidating at top of this imbalance. Secondary entry into M15 bullish OB context before continuation."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4701.85,
+    "confirmation": "M15 CHoCH-bullish inside POI"
+  },
+  "stopLoss": {
+    "price": 4693.52,
+    "reasoning": "Below M15 CHoCH level (4689.00) with 0.2×ATR buffer (8.30×0.2≈1.66); invalidates recent M15 bullish structure if breached. + 0.2 × M15 ATR buffer",
+    "pips": 8.33
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4718.6,
+      "reasoning": "H1 bearish FVG top [4718.60-4733.70]; first liquidity pool resistance.",
+      "rr": 2.01
+    },
+    {
+      "level": "TP2",
+      "price": 4738,
+      "reasoning": "H4 prior swing high / H1 premium zone midpoint (61.8% fib of H1 range).",
+      "rr": 4.34
+    },
+    {
+      "level": "TP3",
+      "price": 4753.6,
+      "reasoning": "H4 equal highs liquidity / weekly high; major resistance.",
+      "rr": 6.21
+    }
+  ],
+  "invalidation": {
+    "price": 4688,
+    "reasoning": "M15 CHoCH invalidated; H1 bullish structure breaks. Bias flips neutral/bearish if this level closes below."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone 07:00-10:00 UTC for higher volume confirmation; Asia session low liquidity. Alternatively, execute on limit fill if M15 structure confirms before London open."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "0.75% risk on 103-pip stop; position size = (account_risk_usd / 103) / 100 PAXG contracts. Reduce size due to macro headwind (rising yields) and transitioning regime."
+  },
+  "macroContext": "Real yields rising (1.91%, bearish gold headwind); EUR/USD weakening (bullish gold tailwind); Fear & Greed at 38 (fear, neutral). Macro is mixed — yields are the primary bearish anchor. Proceed with caution and reduced size.",
+  "warnings": [
+    "Macro headwind: positive real yields (1.91%) are bearish gold; this is a structural headwind to upside.",
+    "Market transitioning regime — SMC effective but volatility may spike. Require tight stops.",
+    "Price in premium zone (112% of M15 range); pullback into discount [4583.90-4620.17] may be more optimal entry.",
+    "M15 bearish OB [4702.60-4708.30] active at current price — risk of immediate rejection if price touches 4708.",
+    "Funding rate +0.0007%/hr (longs paying) — mild contrarian bearish signal; not crowded yet but monitor.",
+    "No high-impact news in next 24h, but yields are the macro driver — watch 10Y yield moves.",
+    "Setup is Tier 3 (technical-only, macro not aligned). Execute only if confluence improves or size down further.",
+    "⚠️ Split: Claude=long DeepSeek=no-trade — manual only",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED",
+    "reason": "CHoCH-bullish on M15 inside POI"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "long",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_lvn",
+        "vwapBias": "bullish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bullish",
+        "confluenceCount": 8,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (long)",
+          "H1 bias confirms direction (bullish)",
+          "M15 unfilled bullish FVG within 8pts [4695.00-4702.30]",
+          "M15 CHoCH-bullish confirms direction",
+          "DXY proxy weakening confirms direction",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bullish)",
+          "Above weekly VWAP — institutional bullish"
+        ],
+        "score": 8
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4+M15 bias agree (long)",
+      "H1 bias confirms direction (bullish)",
+      "M15 unfilled bullish FVG within 8pts [4695.00-4702.30]",
+      "M15 CHoCH-bullish confirms direction",
+      "DXY proxy weakening confirms direction",
+      "No imminent gold-relevant news",
+      "H1 bias agrees with H4 (bullish)",
+      "Above weekly VWAP — institutional bullish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | long | 9 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": true,
+    "m15Status": "CONFIRMED",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "DRY_EXECUTE mode — pre-flight logged, order skipped",
+    "orderId": null,
+    "size": 0.117,
+    "riskAmount": 0.97,
+    "riskPct": "1.00"
+  }
+}

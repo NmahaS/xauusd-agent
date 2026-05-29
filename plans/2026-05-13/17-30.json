@@ -1,0 +1,152 @@
+{
+  "timestamp": "2026-05-13T17:30:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bearish CHoCH at 4643.20 is stale; current H1 structure shows bullish CHoCH at 4704.30 with price near daily VWAP (4687.52). M15 bullish OB at 4688.70–4693.10 is active and untested. EUR/USD weakening (-8.47% 24h) is a contrarian bullish signal for gold. H4 bias is technically bearish but M15 structure is bullish with confluence in discount zone. Macro is neutral (yields rising but real yields stable at 1.95%). Setup is Tier 3 (technical-only, no macro confirmation) due to conflicting H4/M15 bias and upcoming high-impact news within 2 hours.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 bullish structure (CHoCH at 4686.30 intact)",
+    "M15 active bullish OB at 4688.70–4693.10 within 8pts of current price",
+    "Price near daily VWAP (0.11% from 4687.52) — institutional support",
+    "H1 bullish CHoCH at 4704.30 confirms upside bias"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4688.7,
+      4693.1
+    ],
+    "reasoning": "M15 active bullish OB formed on recent impulsive leg; overlaps with H1 bullish FVG at 4684.40–4690.10 and daily VWAP support. Primary entry POI for limit buy."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4692.65,
+    "confirmation": "M15 CHoCH-bullish inside POI"
+  },
+  "stopLoss": {
+    "price": 4687.3,
+    "reasoning": "Below M15 OB low (4688.70) minus 0.2×M15 ATR (6.78×0.2=1.36). Invalidates M15 bullish structure and H1 CHoCH if breached. Pips: 77. + 0.2 × M15 ATR buffer",
+    "pips": 5.35
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4704.3,
+      "reasoning": "H1 bullish CHoCH level and prior swing high; first structural liquidity pool. System places TP at 2R automatically (~4708.30 at 2R from 4690.50 entry).",
+      "rr": 2.18
+    }
+  ],
+  "invalidation": {
+    "price": 4682.5,
+    "reasoning": "Break below M15 OB low with close below 4682.50 invalidates bullish M15 structure and H1 CHoCH. Bias flips to neutral/bearish."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00–10:00 UTC) on 2026-05-14 for optimal execution. Current session is off-hours; avoid execution until London open."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 77-pip stop due to Tier 3 setup (technical-only, no macro confirmation) and high-impact news within 2 hours (Fed Chair Vote +60m, GBP GDP +750m, USD Retail Sales +1140m). Reduce size and wait for news clarity or London kill zone confirmation."
+  },
+  "macroContext": "Real yields stable at 1.95% (mildly bearish), EUR/USD weakening sharply (-8.47% 24h, bullish for gold), Fear & Greed at 42 (fear, neutral). Upcoming high-impact news (Fed Chair, GBP GDP, USD Retail Sales) within 2 hours creates execution risk.",
+  "warnings": [
+    "TIER 3 SETUP: H4 bias is bearish (CHoCH at 4643.20) but M15/H1 are bullish. Macro is neutral. This is a technical-only signal with no macro confirmation — execute only if risk tolerance permits.",
+    "HIGH-IMPACT NEWS WITHIN 2 HOURS: Fed Chair Nomination Vote (+60m), GBP GDP m/m (+750m), GBP Prelim GDP q/q (+750m), USD Core Retail Sales (+1140m), USD Retail Sales (+1140m). Volatility spike likely. Recommend waiting for London kill zone (07:00–10:00 UTC) after news digestion.",
+    "Funding rate +0.0013%/hr (11% annualized) indicates longs are paying — mild contrarian bearish signal. Not a blocker but adds caution.",
+    "Price is in premium zone (72.5% of M15 range 4664.10–4703.00). Ideal entry is in discount (below 50%); current entry is marginal. Consider waiting for pullback to 4680–4685 range for higher-probability setup.",
+    "H4 structure remains bearish. If H4 CHoCH at 4643.20 is broken to the downside, entire bullish thesis invalidates. Monitor H4 closely.",
+    "No RSI divergence on M15 or H1 — momentum is neutral, not confirming upside conviction.",
+    "⚠️ Split: Claude=long DeepSeek=short — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": "short",
+    "claudeQuality": "B",
+    "deepseekQuality": "B",
+    "newsRisk": "high",
+    "newsSentiment": "bullish",
+    "newsHeadline": "Gold rallies to $5090+ on geopolitical chaos and weak dollar; Fed Chair nomination vote imminent"
+  },
+  "m15": {
+    "status": "CONFIRMED",
+    "reason": "CHoCH-bullish on M15 inside POI",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bullish structure (CHoCH at 4686.30 intact)",
+          "M15 active bullish OB at 4688.70–4693.10 within 8pts of current price",
+          "Price near daily VWAP (0.11% from 4687.52) — institutional support",
+          "H1 bullish CHoCH at 4704.30 confirms upside bias"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "Price at HVN 4689.59 (strong S/R)",
+      "M15 bullish structure (CHoCH at 4686.30 intact)",
+      "M15 active bullish OB at 4688.70–4693.10 within 8pts of current price",
+      "Price near daily VWAP (0.11% from 4687.52) — institutional support",
+      "H1 bullish CHoCH at 4704.30 confirms upside bias"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 6 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

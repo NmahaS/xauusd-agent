@@ -1,0 +1,159 @@
+{
+  "timestamp": "2026-05-07T03:18:38.776Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bullish structure intact (CHoCH @ 4637.30, EMA20 > EMA50 > EMA200); H1 confirms bullish (CHoCH @ 4576.00, EMA20 > EMA50); M15 BOS-bullish @ 4685.70 with price now at 4692.20 in discount zone (25% of M15 range). EUR/USD weakening (-8.91% 24h) is bearish for dollar = bullish for gold. However, real yields at 2.01% (strongly bearish macro headwind) and ranging market regime (SMC unreliable) limit conviction. Macro neutral-to-bearish, but technicals show bullish structure alignment across all timeframes.",
+  "setupQuality": "B",
+  "confluenceCount": 8,
+  "confluenceFactors": [
+    "H4+M15 bias agree (long)",
+    "H1 bias confirms direction (bullish)",
+    "M15 unfilled bullish FVG within 8pts [4690.60-4691.20]",
+    "M15 BOS-bullish confirms direction",
+    "DXY proxy weakening confirms direction",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bullish)",
+    "Above weekly VWAP — institutional bullish"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block_and_fvg_confluence",
+    "zone": [
+      4684.5,
+      4690.4
+    ],
+    "reasoning": "M15 bullish FVG [4677.00-4690.40] overlaps with current price action and recent M15 BOS @ 4685.70. Price currently at 4692.20, just above FVG top. Pullback into FVG midpoint (4683.70) or H1 bullish OB [4544.80-4552.80] extended to M15 context offers optimal entry. M15 ATR=6.58 suggests tight stop feasible."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4686.5,
+    "confirmation": "Limit buy at M15 FVG midpoint (4683.70 area) or on pullback into 4684.50-4690.40 zone; confirm with M15 bullish candle close above 4685.70 BOS level. Avoid market entry given ranging regime and macro headwinds."
+  },
+  "stopLoss": {
+    "price": 4677.2,
+    "reasoning": "Below M15 FVG low (4677.00) with 0.2×M15 ATR buffer (~1.3pts). Invalidates M15 bullish structure if breached; also respects H1 structural support.",
+    "pips": 91
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4703.5,
+      "reasoning": "H4 swing high from 2026-05-06T08:00 (4712.30 area); first liquidity pool above current price. RR ~1.9:1.",
+      "rr": 1.9
+    },
+    {
+      "level": "TP2",
+      "price": 4712.3,
+      "reasoning": "H4 recent high and premium zone threshold; 61.8% fib extension of recent impulsive leg. RR ~3.8:1.",
+      "rr": 3.8
+    },
+    {
+      "level": "TP3",
+      "price": 4725,
+      "reasoning": "H4 equal-highs liquidity and extended premium zone; targets 4.7:1 RR for risk-reward optimization.",
+      "rr": 4.7
+    }
+  ],
+  "invalidation": {
+    "price": 4677,
+    "reasoning": "Breach of M15 FVG low invalidates bullish M15 structure; H1 bullish bias flips neutral/bearish if price closes below 4676.00 on H1."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for higher volume confirmation; avoid Asia low-liquidity entry. If entry triggered before London, use tight limit orders only."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.8,
+    "positionSizeHint": "0.8% risk on 91-pip stop; position size = (0.8% account) / 91 pips. Reduce to 0.5% if entry occurs outside kill zone due to ranging regime and macro headwinds."
+  },
+  "macroContext": "Real yields elevated at 2.01% (bearish gold macro headwind); EUR/USD weakening (-8.91% 24h) supports dollar weakness = bullish gold; Fear & Greed neutral (47) with rising 7d trend (risk-on). Macro is mixed: yields bearish, dollar weakness bullish, sentiment neutral. Ranging market regime (20-candle range only 3.9×ATR) reduces SMC reliability. Unemployment Claims (Medium impact) due in ~9.5 hours — avoid holding through if data surprises.",
+  "warnings": [
+    "Ranging market regime detected (SMC signals unreliable); treat as lower-conviction setup.",
+    "Real yields at 2.01% represent strong macro headwind for gold; any yield spike invalidates bullish thesis.",
+    "Price currently above daily VWAP (4691.4) in premium zone; pullback into discount/FVG zone is prerequisite for entry.",
+    "Unemployment Claims (Medium impact) due 2026-05-07T12:30 UTC (~9.5h away); avoid holding through data release or reduce position size.",
+    "Funding rate +0.0008%/hr (longs paying) is mild bearish contrarian signal; suggests crowded long positioning.",
+    "H4 RSI at 70.4 (overbought); watch for divergence on next H4 candle close.",
+    "No M15 active order block within 8pts of current price; entry relies on FVG pullback, not OB confluence — reduces setup quality.",
+    "⚠️ Split: Claude=long DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bullish",
+    "newsHeadline": "Upcoming US Unemployment Claims expected at +551k, poised to support gold amid bullish technical bias"
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Blocked",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": false,
+        "regime": "ranging",
+        "vpSignal": "above_va",
+        "vwapBias": "bullish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bullish",
+        "confluenceCount": 8,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (long)",
+          "H1 bias confirms direction (bullish)",
+          "M15 unfilled bullish FVG within 8pts [4690.60-4691.20]",
+          "M15 BOS-bullish confirms direction",
+          "DXY proxy weakening confirms direction",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bullish)",
+          "Above weekly VWAP — institutional bullish"
+        ],
+        "score": 8
+      }
+    },
+    "allFactors": [],
+    "blockingFactors": [
+      "Market regime: ranging — SMC ineffective"
+    ],
+    "summary": "Tier 4: Blocked — Market regime: ranging — SMC ineffective"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": true,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Blocked",
+    "executed": false,
+    "reason": "Awaiting M15 confirmation (PENDING)",
+    "orderId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

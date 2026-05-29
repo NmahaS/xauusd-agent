@@ -1,0 +1,152 @@
+{
+  "timestamp": "2026-05-15T00:45:00.950Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4643.20 confirmed; H1 CHoCH-bearish @ 4663.00 intact; M15 BOS-bearish @ 4666.60 fresh. Price 2σ below daily VWAP (4626.3), below weekly VWAP (4694.08), institutional bias bearish. RSI14 extremely depressed (H4=33.6, H1=26.1, M15=18.6). Yields rising (1.99% real yield = bearish gold). EUR/USD weakening (-8.35% 24h) is bullish for gold, but macro headwind (rising yields) + institutional bearish flow override. Structure is clearly bearish; macro is mixed but tilted bearish.",
+  "setupQuality": "B",
+  "confluenceCount": 6,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 BOS-bearish confirms direction",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4676.6,
+      4681.1
+    ],
+    "reasoning": "M15 active bearish OB formed after BOS-bearish @ 4666.60. This is the nearest structural resistance and unmitigated supply block. Price must rally back into this zone to trigger short entry. Alternatively, M15 bearish FVG at 4671.00-4674.00 is a secondary imbalance target within the same zone."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4678.5,
+    "confirmation": "Limit sell at midpoint of M15 bearish OB (4676.60-4681.10). Confirmation: price rallies into OB zone on M15 structure (lower high or engulfing down-close inside OB). Bearish bias from H4/H1/M15 alignment + institutional bearish flow (below both daily and weekly VWAP) supports entry."
+  },
+  "stopLoss": {
+    "price": 4686.8,
+    "reasoning": "Above M15 bearish OB high (4681.10) + 0.2×M15 ATR (7.70×0.2=1.54, rounded to 5.7pts buffer). Invalidates bearish structure if breached; price would reclaim OB and signal potential bullish reversal.",
+    "pips": 81
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4641.2,
+      "reasoning": "M15 bearish FVG low at 4627.00-4641.20 is the nearest structural imbalance target below current price. System will place TP at 2R automatically; this is the structural reference level (liquidity pool / prior swing low).",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4686.8,
+    "reasoning": "Close above M15 bearish OB high + buffer invalidates bearish structure. Bias flips to neutral/bullish if price reclaims OB and closes above 4686.80 on M15."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for higher liquidity and volatility confirmation. Current session (Asia off-hours) has low volume; entry is passive (limit order waiting for rally into OB)."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "0.8% risk on 81-pip stop. Market is transitioning and oversold (RSI 18.6 M15); reduce size vs. normal 1% to account for potential whipsaw in low-volume Asia session. Increase to 1% if entry fills during London kill zone."
+  },
+  "macroContext": "Rising real yields (1.99%) and institutional bearish flow (price below daily/weekly VWAP) are headwinds for gold; EUR/USD weakness is a mild bullish offset but insufficient to override macro bearish tilt. Fear & Greed at 43 (fear) with rising 7d trend suggests risk-on sentiment may support gold, but structure is clearly bearish and oversold.",
+  "warnings": [
+    "M15 POI (4676.60-4681.10) is 63 points above current price (4613.60) — outside the 8pt proximity rule. This is a passive limit order setup; entry may not fill if price does not rally back into OB zone.",
+    "Market is in transitioning regime with SMC effective but low volume (Asia session). Whipsaw risk is elevated; wait for London kill zone confirmation before increasing size.",
+    "Extreme oversold conditions (RSI 18.6 M15, 26.1 H1, 33.6 H4) may trigger a relief bounce before continuation lower. Entry should be patient and limit-based, not market-on-confirmation.",
+    "Confluence count is 4 (B grade) — below the 6+ threshold for A-grade setups. Macro is mixed (yields bearish, dollar weakness bullish); structure is the primary driver. Only execute if London kill zone provides additional confirmation (volume, volatility, or fresh M15 structure event).",
+    "Funding rate is +0.0013%/hr (longs paying) — mild bearish contrarian signal, but not extreme. Does not override structure.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4615.85 not at M15 POI [4676.60-4681.10] yet",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_lvn",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 6,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 BOS-bearish confirms direction",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 6
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 BOS-bearish confirms direction",
+      "No imminent gold-relevant news",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 7 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "WAITING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": true,
+    "reason": "Order placed: 426403904526",
+    "orderId": 426403904526,
+    "entry": 4618.2,
+    "size": 0.013,
+    "riskAmount": 0.92,
+    "riskPct": "1.04",
+    "timestamp": "2026-05-15T00:45:32.332Z"
+  }
+}

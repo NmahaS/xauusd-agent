@@ -1,0 +1,169 @@
+{
+  "timestamp": "2026-05-18T20:30:01.006Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bearish but price in discount zone; H1 and M15 bullish CHoCH/BOS with unfilled FVGs; EUR/USD weakening supports gold; but H4 bearish structure and rising real yields create conflict. Confluence moderate, setup grade B.",
+  "setupQuality": "B",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "H4 and M15 structure bias agree (H4 bearish, M15 bullish - disagree)",
+    "H1 bias supports direction (H1 bullish)",
+    "M15 active Order Block within 8 points (bullish OB 4532.70-4538.90)",
+    "M15 unfilled FVG within 8 points (bullish FVG 4551.70-4554.30)",
+    "M15 CHoCH or BOS in the proposed direction (M15 BOS bullish @ 4553.90)",
+    "H1 P/D zone correct for direction (price in premium for long - not ideal)",
+    "H1 Order Block at or near current price (bullish OB 4529.70-4541.70 within 20 pts)",
+    "Current session is a kill zone (off hours)",
+    "Dollar proxy (EUR/USD) confirms direction (EUR/USD weakening = bullish gold)",
+    "Macro confirms (real yields rising = bearish gold - conflicts)",
+    "No high-impact gold-relevant news within 2 hours (next CAD CPI in 960m)",
+    "RSI divergence on M15 or H1 (none)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4532.7,
+      4538.9
+    ],
+    "reasoning": "M15 bullish OB from last down-close candle before impulsive move; overlaps with H1 bullish OB and unfilled FVG."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4559.75,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4531.38,
+    "reasoning": "Below OB low (4532.70) with 0.2x M15 ATR (1.6) buffer; invalidates bullish structure if broken. + 0.2 × M15 ATR buffer",
+    "pips": 28.37
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4578.4,
+      "reasoning": "Prior H1 swing high / liquidity pool; structural reference only.",
+      "rr": 0.66
+    }
+  ],
+  "invalidation": {
+    "price": 4526,
+    "reasoning": "Below H1 bullish OB and M15 OB; bias flips neutral/bearish."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY (12-15 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "1% risk on 78-pip stop"
+  },
+  "macroContext": "Real yields rising (bearish gold), EUR/USD weakening (bullish gold), Fear & Greed at 28 (fear, risk-off neutral). Mixed macro.",
+  "warnings": [
+    "H4 bearish structure conflicts with lower timeframe bullish bias.",
+    "Price in premium zone on M15 (99.3%) - not ideal for long entry.",
+    "Off-session execution; wait for kill zone.",
+    "⚡ Single LLM only — DeepSeek (Claude failed)",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "long",
+    "claudeQuality": "failed",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4559.75 — M15 bullish bias confirms",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 5,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 and M15 structure bias agree (H4 bearish, M15 bullish - disagree)",
+          "H1 bias supports direction (H1 bullish)",
+          "M15 active Order Block within 8 points (bullish OB 4532.70-4538.90)",
+          "M15 unfilled FVG within 8 points (bullish FVG 4551.70-4554.30)",
+          "M15 CHoCH or BOS in the proposed direction (M15 BOS bullish @ 4553.90)",
+          "H1 P/D zone correct for direction (price in premium for long - not ideal)",
+          "H1 Order Block at or near current price (bullish OB 4529.70-4541.70 within 20 pts)",
+          "Current session is a kill zone (off hours)",
+          "Dollar proxy (EUR/USD) confirms direction (EUR/USD weakening = bullish gold)",
+          "Macro confirms (real yields rising = bearish gold - conflicts)",
+          "No high-impact gold-relevant news within 2 hours (next CAD CPI in 960m)",
+          "RSI divergence on M15 or H1 (none)"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4 and M15 structure bias agree (H4 bearish, M15 bullish - disagree)",
+      "H1 bias supports direction (H1 bullish)",
+      "M15 active Order Block within 8 points (bullish OB 4532.70-4538.90)",
+      "M15 unfilled FVG within 8 points (bullish FVG 4551.70-4554.30)",
+      "M15 CHoCH or BOS in the proposed direction (M15 BOS bullish @ 4553.90)",
+      "H1 P/D zone correct for direction (price in premium for long - not ideal)",
+      "H1 Order Block at or near current price (bullish OB 4529.70-4541.70 within 20 pts)",
+      "Current session is a kill zone (off hours)",
+      "Dollar proxy (EUR/USD) confirms direction (EUR/USD weakening = bullish gold)",
+      "Macro confirms (real yields rising = bearish gold - conflicts)",
+      "No high-impact gold-relevant news within 2 hours (next CAD CPI in 960m)",
+      "RSI divergence on M15 or H1 (none)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 13 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: null",
+    "orderId": null,
+    "entry": 4559.75,
+    "size": null,
+    "riskAmount": 0.45,
+    "riskPct": "0.50",
+    "timestamp": "2026-05-18T20:30:30.289Z"
+  }
+}

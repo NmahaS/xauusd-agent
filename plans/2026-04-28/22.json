@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-04-28T22:08:42.481Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 SMC bias is neutral with no active structure events; H1 also neutral with no active OBs or FVGs. Price sits in H1 discount zone (20.7%) but lacks confluence of structure confirmation, active POIs, or kill-zone execution window. High-impact AUD CPI data due in +201m creates material event risk within 2 hours.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London session (07-10 UTC) after AUD CPI data release; reassess structure bias post-event"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — avoid execution within 2 hours of high-impact AUD CPI"
+  },
+  "macroContext": "Real yields positive at 1.91% (bearish for gold), EUR/USD weakening slightly (neutral), Fear & Greed at 33 (fear, neutral). AUD CPI data (High impact) due in 201 minutes — material volatility risk; defer trading until post-event clarity.",
+  "warnings": [
+    "High-impact AUD CPI (m/m, y/y, Trimmed Mean) due in +201m — avoid entry within 2 hours of event",
+    "H4 and H1 SMC bias both neutral; no active OBs or confirmed structure events to anchor trade",
+    "No unfilled FVGs on H1; H4 bullish FVG [4749.65-4759.57] is 50+ pips away from current price — insufficient proximity for immediate entry",
+    "Current session is 'off' (Asia/early London); no kill-zone execution window active",
+    "Positive real yields (1.91%) create structural headwind for gold bulls; macro backdrop is neutral-to-bearish",
+    "Insufficient confluence factors (0/10) — do not force a trade",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v3.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "neutral",
+    "newsHeadline": "No breaking news in last 2 hours; upcoming AUD CPI and BOC/Fed events dominate risk horizon"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan"
+  },
+  "execution": {
+    "autoTradeEnabled": false,
+    "dryExecute": true,
+    "m15Status": "N/A",
+    "executed": false,
+    "reason": "N/A",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

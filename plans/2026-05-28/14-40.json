@@ -1,0 +1,156 @@
+{
+  "timestamp": "2026-05-28T14:40:28.676Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 CHoCH bullish, M15 CHoCH bullish, price in discount on H4, EUR/USD weakening (bullish gold), extreme fear (safe-haven demand), but H1 bearish BOS and premium zone create conflict. Overall bullish bias with caution.",
+  "setupQuality": "B",
+  "confluenceCount": 6,
+  "confluenceFactors": [
+    "H4+M15 bias agree (long)",
+    "M15 CHoCH-bullish confirms direction",
+    "ny-killzone active",
+    "DXY proxy weakening confirms direction",
+    "10Y yield falling confirms direction",
+    "No imminent gold-relevant news"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4382.8,
+      4388.5
+    ],
+    "reasoning": "M15 bullish OB from last down-close candle before impulsive move up; overlaps with bullish FVG."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4385.65,
+    "confirmation": "Limit buy at OB midpoint; confirmed by M15 CHoCH and bullish structure."
+  },
+  "stopLoss": {
+    "price": 4374,
+    "reasoning": "Below OB low (4382.80) minus 0.2*M15 ATR (12.01) = 4380.38, rounded to 4374 for structural level.",
+    "pips": 116.5
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4465,
+      "reasoning": "Nearest major structural level: H1 bearish OB top and prior swing high.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4372,
+    "reasoning": "Below H4 low of 4372.9; invalidates bullish structure."
+  },
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "NY kill zone active now"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "1% risk on 116.5-pip stop"
+  },
+  "macroContext": "Real yields falling (bullish gold), EUR/USD weakening (bullish gold), extreme fear (safe-haven demand).",
+  "warnings": [
+    "H1 bearish BOS and premium zone conflict with H4/M15 bullish bias.",
+    "Funding rate slightly positive (0.0013%/hr) indicating mild long crowding.",
+    "⚠️ Split: Claude=no-trade DeepSeek=long — manual only",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "long",
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "WAITING",
+    "reason": "Price 4456.85 not at M15 POI [4382.80-4388.50] yet",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — H4+M15 aligned (H1 pullback)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "long",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields falling (bullish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bearish",
+        "m15Bias": "bullish",
+        "confluenceCount": 6,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (long)",
+          "M15 CHoCH-bullish confirms direction",
+          "ny-killzone active",
+          "DXY proxy weakening confirms direction",
+          "10Y yield falling confirms direction",
+          "No imminent gold-relevant news"
+        ],
+        "h4AndM15Agree": true,
+        "h1AlignsWithH4": false,
+        "h1PullbackInH4": true,
+        "score": 6
+      }
+    },
+    "allFactors": [
+      "Yields falling (bullish gold)",
+      "H4+M15 bias agree (long)",
+      "M15 CHoCH-bullish confirms direction",
+      "ny-killzone active",
+      "DXY proxy weakening confirms direction",
+      "10Y yield falling confirms direction",
+      "No imminent gold-relevant news"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — H4+M15 aligned (H1 pullback) | long | 7 total factors",
+    "warnings": [
+      "H1 pullback in H4 trend — corrective move, weaker signal"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "WAITING",
+    "tier": 3,
+    "tierLabel": "TIER 3 — H4+M15 aligned (H1 pullback)",
+    "executed": true,
+    "reason": "Order placed: 446402254763",
+    "orderId": 446402254763,
+    "entry": 4460,
+    "size": 0.012,
+    "riskAmount": 0.99,
+    "riskPct": "0.97",
+    "timestamp": "2026-05-28T14:41:10.372Z"
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "timestamp": "2026-05-13T22:15:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "M15 CHoCH-bullish @ 4686.30 with price near daily VWAP (4686.74); H1 also bullish (CHoCH @ 4704.30) and in discount zone (49.9%). H4 is bearish (CHoCH @ 4643.20) but M15/H1 alignment overrides for short-term entry. EUR/USD weakening (-8.47% 24h) is bearish for gold, but real yields rising (1.99%) is the dominant macro headwind. Setup is technical-only (Tier 3) — macro does not support longs.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 bullish structure (CHoCH @ 4686.30 intact)",
+    "H1 bullish OB at 4646.70-4663.50 unmitigated; price above it",
+    "Price in H1 discount zone (49.9% of range)",
+    "M15 active bullish FVG at 4659.30-4660.40 (unfilled, below current price)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4646.7,
+      4663.5
+    ],
+    "reasoning": "H1 bullish OB formed on recent impulsive leg; price has retested above it. M15 CHoCH-bullish @ 4686.30 confirms structure. Entry zone targets the OB midpoint with M15 FVG confluence below."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4684.05,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4646.14,
+    "reasoning": "Below H1 OB low (4646.70) and at H4 CHoCH level (4643.20); invalidates bullish structure if breached. ATR14 M15 = 3.90; stop is ~12 pips below entry. + 0.2 × M15 ATR buffer",
+    "pips": 37.91
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4704.3,
+      "reasoning": "H1 CHoCH-bullish level and prior swing high; first structural liquidity pool (system places TP at 2R automatically)",
+      "rr": 0.53
+    }
+  ],
+  "invalidation": {
+    "price": 4643.2,
+    "reasoning": "H4 CHoCH level; breach flips bias to bearish and invalidates H1 bullish structure"
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for higher liquidity and volatility confirmation"
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 12-pip stop; tight stop warrants reduced size. Macro headwinds (rising real yields, EUR/USD weakness) argue for conservative position sizing."
+  },
+  "macroContext": "Real yields rising (1.99%) and EUR/USD weakening (-8.47% 24h) are bearish for gold; Fear & Greed at 42 (fear) is neutral. Upcoming UK GDP and US retail sales (high impact) within 8-14 hours add event risk. Setup is technical-only (M15/H1 bullish) against macro headwinds.",
+  "warnings": [
+    "H4 bias is bearish (CHoCH @ 4643.20); this is a Tier 3 technical-only setup with no macro support. Risk/reward is unfavorable.",
+    "Real yields rising (1.99%) and EUR/USD weakening are both bearish for gold — macro headwinds conflict with bullish technicals.",
+    "High-impact economic calendar: GBP GDP m/m and USD Retail Sales within 8-14 hours. Volatility spike risk; consider waiting for post-event consolidation.",
+    "Funding rate +0.0013%/hr (longs paying) suggests mild crowding; contrarian signal against longs.",
+    "Price is in M15 premium zone (57.6% of range); entry at discount (H1 OB) is better, but M15 premium context adds friction.",
+    "No kill zone active (off-session); liquidity may be lower. Limit order may not fill quickly.",
+    "⚠️ Split: Claude=long DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4684.05 — M15 bullish bias confirms",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bullish structure (CHoCH @ 4686.30 intact)",
+          "H1 bullish OB at 4646.70-4663.50 unmitigated; price above it",
+          "Price in H1 discount zone (49.9% of range)",
+          "M15 active bullish FVG at 4659.30-4660.40 (unfilled, below current price)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)",
+      "M15 bullish structure (CHoCH @ 4686.30 intact)",
+      "H1 bullish OB at 4646.70-4663.50 unmitigated; price above it",
+      "Price in H1 discount zone (49.9% of range)",
+      "M15 active bullish FVG at 4659.30-4660.40 (unfilled, below current price)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

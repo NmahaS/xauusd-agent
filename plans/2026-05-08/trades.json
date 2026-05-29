@@ -1,0 +1,32 @@
+[
+  {
+    "timestamp": "2026-05-08T01:24:41.362Z",
+    "orderId": 415809225859,
+    "direction": "long",
+    "size": 0.092,
+    "entry": 4703.8,
+    "sl": 4693.33,
+    "tp1": 4720,
+    "tp2": 4738.5,
+    "tp3": 4753.6,
+    "riskAmount": 0.98,
+    "riskPct": "1.00",
+    "plan": {
+      "symbol": "PAXG/USDC",
+      "timestamp": "2026-05-08T01:24:15.555Z",
+      "setupQuality": "B",
+      "confluenceCount": 8,
+      "consensus": {
+        "agreement": "split",
+        "confidence": "medium",
+        "claudeDirection": "long",
+        "deepseekDirection": "short",
+        "claudeQuality": "B",
+        "deepseekQuality": "B",
+        "newsRisk": "high",
+        "newsSentiment": "neutral",
+        "newsHeadline": "Gold hesitates around $4700 amid upcoming high-impact US jobs data and central bank speeches"
+      }
+    }
+  }
+]

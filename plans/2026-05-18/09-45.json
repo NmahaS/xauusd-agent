@@ -1,0 +1,116 @@
+{
+  "timestamp": "2026-05-18T09:45:00.300Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish BOS intact, price below weekly VWAP, real yields rising. M15 recently made a BOS-bullish but is now retracing into premium zone. H1 bearish CHoCH at 4525.70. Overall macro and flow bearish, but M15 structure shows a short-term bullish retracement. Confluence score low due to conflicting M15 bias and lack of M15 OB/FVG near price. No trade warranted.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 2,
+  "confluenceFactors": [
+    "H4 bearish structure (BOS intact)",
+    "London kill zone active"
+  ],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "Wait for M15 OB/FVG within 8pts and alignment with H4 bias"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Real yields rising (1.98%) bearish for gold, EUR/USD weakening (-7.67%) bullish for gold, Fear & Greed at 28 (fear) neutral. Mixed macro.",
+  "warnings": [
+    "No M15 active OB or FVG within 8 points of current price",
+    "M15 bias bullish conflicts with H4 bearish bias",
+    "Price in H1 premium zone (81.5%) but no short POI available",
+    "Funding near zero, no contrarian signal",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "failed",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "volatile_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4542.17 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 2,
+        "confluenceGrade": "no-trade",
+        "factors": [
+          "H4 bearish structure (BOS intact)",
+          "London kill zone active"
+        ],
+        "score": 2
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4542.17 (strong S/R)",
+      "H4 bearish structure (BOS intact)",
+      "London kill zone active"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 3 total factors",
+    "warnings": [
+      "⚠️ Elevated volatility — use tight stops"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

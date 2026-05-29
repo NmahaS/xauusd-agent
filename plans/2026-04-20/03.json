@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-04-20T03:47:39.397Z",
+  "symbol": "XAU/USD",
+  "timeframe": "1h",
+  "bias": "bullish",
+  "biasReasoning": "H4 SMC bias is bullish with last CHoCH at 4838.06, H4 trend bullish (EMA20=4818.90 > EMA50=4798.56 > EMA200=4662.02), and H1 SMC bias bullish with last BOS at 4834.21, aligning with higher timeframe structure.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for better liquidity and confirmation"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "Positive real yields (1.96%) are bearish for gold, but EUR/USD rising suggests USD weakening, providing some bullish support; Fear & Greed at 29 (fear) is neutral, and upcoming high-impact CAD CPI news in 522 minutes adds volatility risk.",
+  "warnings": [
+    "Current session is asia with no kill zone, reducing liquidity and execution quality",
+    "High-impact CAD CPI news in 522 minutes (High, GOLD-RELEVANT) creates significant volatility risk",
+    "Price is in a discount zone but lacks clear POI near current level for high-probability entry",
+    "H1 OTE long zone [4830.87, 4832.27] is above current price, requiring a rally for entry, which may not align with immediate structure",
+    "Spot/chart gap 0.81% — data sources may be desynced"
+  ],
+  "promptVersion": "v2.0"
+}

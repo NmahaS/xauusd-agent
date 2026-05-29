@@ -1,0 +1,153 @@
+{
+  "timestamp": "2026-05-19T00:45:00.069Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bearish structure (BOS-bearish @ 4525.70) conflicts with H1 bullish CHoCH @ 4551.70 and M15 bullish BOS @ 4559.70. M15 is in bullish structure with active OBs at 4532.70-4538.90 and 4529.00-4535.30, both untested and within 8pts of current price (4565.00). H1 shows bullish CHoCH confirmation. However, H4 remains bearish (EMA20 below EMA50, price in discount zone 37.6%), creating a structural conflict. M15 bullish bias is supported by recent impulsive leg (4533.30→4583.20 high), but macro headwinds (rising real yields 2.11%, institutional bearish bias via VWAP below weekly) and H4 bearish structure limit conviction. This is a M15 technical signal within a H4 bearish regime — Tier 3 setup.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 bullish structure (BOS-bullish @ 4559.70)",
+    "M15 active bullish OB within 8pts (4532.70-4538.90, 4529.00-4535.30)",
+    "H1 bullish CHoCH @ 4551.70 confirms M15 direction",
+    "EUR/USD weakening (dollar strengthening) — bearish gold contrarian signal"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4532.7,
+      4538.9
+    ],
+    "reasoning": "Primary M15 bullish OB formed during impulsive leg; overlaps with second OB (4529.00-4535.30). Both untested and within 8pts of current price. H1 bullish CHoCH @ 4551.70 provides structural confirmation. M15 FVG bullish[4538.90-4544.50] sits just above OB, creating confluence zone for entry."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4564.95,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4531.49,
+    "reasoning": "Below M15 OB low (4529.00) minus 0.2×M15 ATR (6.79×0.2=1.36). Invalidates M15 bullish structure and H1 CHoCH if breached. Provides 8.6pts risk. + 0.2 × M15 ATR buffer",
+    "pips": 33.46
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4583.3,
+      "reasoning": "Prior H1 swing high and recent impulsive peak; first major liquidity pool. System places TP at 2R automatically (~4552.00 based on 8.6pt stop).",
+      "rr": 0.55
+    }
+  ],
+  "invalidation": {
+    "price": 4527,
+    "reasoning": "H1 bullish CHoCH invalidated; M15 structure breaks below OB low. Bias flips to bearish H4 confirmation (BOS-bearish @ 4525.70 retested)."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for higher conviction entry. Current session (Asia) has low volatility; entry now is acceptable but lower probability."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 8.6-pip stop due to Tier 3 setup (M15 signal within H4 bearish regime). Reduce size vs. A-grade setups. Macro headwinds (rising real yields, institutional bearish bias) warrant caution."
+  },
+  "macroContext": "Real yields rising (2.11%, strongly bearish gold), institutional bias bearish (VWAP below weekly), EUR/USD weakening (dollar strengthening, bearish gold), F&G at 25 (fear, neutral). Macro is net bearish; M15 bullish signal is technical-only and conflicts with H4 bearish structure and macro backdrop.",
+  "warnings": [
+    "TIER 3 SETUP: M15 bullish signal conflicts with H4 bearish structure (BOS-bearish @ 4525.70 still active). Macro is bearish (rising real yields, institutional shorts). This is a technical entry only — not recommended for aggressive sizing.",
+    "High real yields (2.11%) and institutional bearish bias (VWAP below weekly) create headwind. Probability of sustained upside is lower than typical A-grade setups.",
+    "CAD CPI data in +705m (11:45 UTC) — high-impact gold-relevant event. Consider closing or reducing position before release.",
+    "Funding rate +0.0013%/hr (longs paying) — mild bearish contrarian signal. Crowded long positioning.",
+    "H4 remains in discount zone (37.6%) with bearish EMA structure (EMA20 4557.63 < EMA50 4594.80 < EMA200 4666.57). Pullback into OB is more likely than sustained breakout.",
+    "M15 RSI at 51.1 (neutral, no divergence). Entry lacks RSI confirmation.",
+    "No kill zone active (Asia session). Wait for London 07:00 UTC for higher-probability execution.",
+    "⚠️ Split: Claude=long DeepSeek=no-trade — manual only",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4564.95 — M15 bullish bias confirms",
+    "structureBias": "bullish",
+    "lastEvent": "BOS-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "in_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bullish structure (BOS-bullish @ 4559.70)",
+          "M15 active bullish OB within 8pts (4532.70-4538.90, 4529.00-4535.30)",
+          "H1 bullish CHoCH @ 4551.70 confirms M15 direction",
+          "EUR/USD weakening (dollar strengthening) — bearish gold contrarian signal"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "M15 bullish structure (BOS-bullish @ 4559.70)",
+      "M15 active bullish OB within 8pts (4532.70-4538.90, 4529.00-4535.30)",
+      "H1 bullish CHoCH @ 4551.70 confirms M15 direction",
+      "EUR/USD weakening (dollar strengthening) — bearish gold contrarian signal"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: null",
+    "orderId": null,
+    "entry": 4564.95,
+    "size": null,
+    "riskAmount": 0.47,
+    "riskPct": "0.52",
+    "timestamp": "2026-05-19T00:45:24.983Z"
+  }
+}

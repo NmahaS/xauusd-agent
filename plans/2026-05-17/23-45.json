@@ -1,0 +1,171 @@
+{
+  "timestamp": "2026-05-17T23:45:00.793Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 bearish but price at discount zone near support; H1 CHoCH bullish; M15 CHoCH bullish with active bullish OB and FVG; EUR/USD weakening (dollar strengthening) is bearish for gold but price action suggests short-term bounce. Confluence score 5: Tier 2 (flow neutral, macro neutral, technical bullish).",
+  "setupQuality": "B",
+  "confluenceCount": 5,
+  "confluenceFactors": [
+    "H4 and M15 structure bias agree (H4 bearish, M15 bullish - conflicting, not counted)",
+    "H1 bias supports direction (H1 CHoCH bullish)",
+    "M15 active Order Block within 8 points (bullish OB 4529.90-4535.40)",
+    "M15 unfilled FVG within 8 points (bullish FVG 4519.70-4522.90, 4523.90-4524.50)",
+    "M15 CHoCH or BOS in proposed direction (M15 CHoCH bullish at 4536.60)",
+    "H1 P/D zone correct for direction (price in discount on H1? H1 range 4525.70-4541.10, current 4536.90 is 72.7% premium - not discount)",
+    "H1 Order Block at or near current price (none)",
+    "Current session is a kill zone (off session)",
+    "Dollar proxy confirms direction (EUR/USD weakening = dollar strengthening = bearish gold - conflicting)",
+    "Macro confirms (real yields rising = bearish gold - conflicting)",
+    "No high-impact gold-relevant news within 2 hours (true)",
+    "RSI divergence on M15 or H1 (none)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4529.9,
+      4535.4
+    ],
+    "reasoning": "M15 bullish OB from last down-close candle before impulsive move up; overlaps with M15 bullish FVG 4523.90-4524.50 and 4519.70-4522.90."
+  },
+  "entry": {
+    "trigger": "limit",
+    "price": 4532.65,
+    "confirmation": "Limit buy at midpoint of M15 bullish OB (4529.90-4535.40); price currently at 4536.90, waiting for retrace into OB."
+  },
+  "stopLoss": {
+    "price": 4527.8,
+    "reasoning": "Below OB low (4529.90) minus 0.2*M15 ATR (5.44) = 4529.90 - 1.09 = 4528.81, rounded to 4527.80 for buffer.",
+    "pips": 48.5
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4551.7,
+      "reasoning": "Nearest major structural level: M15 swing high at 4551.70 (from 22:00 candle). System places TP at 2R automatically.",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4526.3,
+    "reasoning": "Below M15 bullish OB and below recent low 4526.30; invalidates bullish M15 structure."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone 07-10 UTC for better execution."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 48.5-pip stop"
+  },
+  "macroContext": "Dollar strengthening via EUR/USD falling (-7.67% 24h), real yields rising (1.98%), Fear & Greed at 27 (fear) - neutral for gold. Weekly macro neutral.",
+  "warnings": [
+    "H4 bias bearish conflicts with M15 bullish - potential counter-trend trade.",
+    "Price in H1 premium zone (72.7%) - not ideal for long entry.",
+    "Off-session execution - lower liquidity.",
+    "EUR/USD weakening (dollar strengthening) is bearish for gold - conflicting signal.",
+    "⚡ Single LLM only — DeepSeek (Claude failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": null,
+    "deepseekDirection": "long",
+    "claudeQuality": "failed",
+    "deepseekQuality": "B",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4533.10 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 5,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 and M15 structure bias agree (H4 bearish, M15 bullish - conflicting, not counted)",
+          "H1 bias supports direction (H1 CHoCH bullish)",
+          "M15 active Order Block within 8 points (bullish OB 4529.90-4535.40)",
+          "M15 unfilled FVG within 8 points (bullish FVG 4519.70-4522.90, 4523.90-4524.50)",
+          "M15 CHoCH or BOS in proposed direction (M15 CHoCH bullish at 4536.60)",
+          "H1 P/D zone correct for direction (price in discount on H1? H1 range 4525.70-4541.10, current 4536.90 is 72.7% premium - not discount)",
+          "H1 Order Block at or near current price (none)",
+          "Current session is a kill zone (off session)",
+          "Dollar proxy confirms direction (EUR/USD weakening = dollar strengthening = bearish gold - conflicting)",
+          "Macro confirms (real yields rising = bearish gold - conflicting)",
+          "No high-impact gold-relevant news within 2 hours (true)",
+          "RSI divergence on M15 or H1 (none)"
+        ],
+        "score": 5
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4533.10 (strong S/R)",
+      "H4 and M15 structure bias agree (H4 bearish, M15 bullish - conflicting, not counted)",
+      "H1 bias supports direction (H1 CHoCH bullish)",
+      "M15 active Order Block within 8 points (bullish OB 4529.90-4535.40)",
+      "M15 unfilled FVG within 8 points (bullish FVG 4519.70-4522.90, 4523.90-4524.50)",
+      "M15 CHoCH or BOS in proposed direction (M15 CHoCH bullish at 4536.60)",
+      "H1 P/D zone correct for direction (price in discount on H1? H1 range 4525.70-4541.10, current 4536.90 is 72.7% premium - not discount)",
+      "H1 Order Block at or near current price (none)",
+      "Current session is a kill zone (off session)",
+      "Dollar proxy confirms direction (EUR/USD weakening = dollar strengthening = bearish gold - conflicting)",
+      "Macro confirms (real yields rising = bearish gold - conflicting)",
+      "No high-impact gold-relevant news within 2 hours (true)",
+      "RSI divergence on M15 or H1 (none)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 13 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Position held: Position losing $-0.34 — no average down",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

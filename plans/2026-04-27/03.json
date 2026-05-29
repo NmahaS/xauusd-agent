@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-04-27T03:55:14.474Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "H4 and H1 structure are unclear; price is in premium zone but no clear POI near current levels. Unfilled FVGs exist but are far from price. No active OBs. Cross-asset and macro are mixed.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "No trade"
+  },
+  "macroContext": "US 10Y yield rising (4.34%), real yields positive (1.92%), EUR/USD flat, Fear & Greed neutral (47) — mixed backdrop for gold.",
+  "warnings": [
+    "No clear POI within 20 points of current price",
+    "H4 and H1 structure neutral, no bias",
+    "Price in premium zone but no short setup due to lack of bearish OB or FVG near price",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

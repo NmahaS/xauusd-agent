@@ -1,0 +1,148 @@
+{
+  "timestamp": "2026-05-12T06:22:40.584Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4701.10 confirmed; M15 BOS-bearish @ 4708.50 active; price in premium zone (60.6% H4, -45.4% M15 discount anomaly suggests consolidation). H1 bullish bias conflicts with H4/M15 bearish structure — transitioning regime requires higher confluence. EUR/USD weakening (dollar strengthening) is bearish for gold. Real yields positive (1.91%) add headwind. CPI data in +6h is high-impact risk.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bearish structure (CHoCH confirmed)",
+    "M15 bearish BOS @ 4708.50 (recent structure event)",
+    "M15 active bearish OBs within 8pts (4711.60-4715.40, 4714.30-4717.00)",
+    "EUR/USD weakening (dollar strengthening = bearish gold)"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4711.6,
+      4715.4
+    ],
+    "reasoning": "M15 active bearish OB formed after BOS-bearish @ 4708.50; price currently 4691.60 (below OB). Retest of OB zone on recovery is primary entry POI. Overlaps with M15 bearish FVG [4703.20-4703.50] and structural resistance."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4690.85,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4716.68,
+    "reasoning": "Above M15 bearish OB high (4715.40) + 0.2×M15 ATR (7.04×0.2=1.41); invalidates M15 bearish bias if breached. Aligns with H1 bullish OB low (4646.70) context. + 0.2 × M15 ATR buffer",
+    "pips": 25.83
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4670,
+      "reasoning": "H1 bullish FVG low [4670.00-4693.30] and H1 OTE long zone floor; structural liquidity pool and prior support. System places TP at 2R automatically.",
+      "rr": 0.81
+    }
+  ],
+  "invalidation": {
+    "price": 4721.8,
+    "reasoning": "Break above M15 bearish OB + buffer invalidates short bias; H1 bullish structure would reassert, flipping bias to neutral/bullish."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC) for higher liquidity and confirmation; CPI data at +6h (12:22 UTC) is high-impact — consider waiting post-data or scaling down size."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.75% risk on 81-pip stop; reduce to 0.5% if holding through CPI release. Transitioning regime + conflicting H1 bullish bias warrants conservative sizing."
+  },
+  "macroContext": "Real yields positive (1.91%), EUR/USD weakening (dollar strengthening), F&G neutral (49) — macro headwind for gold. CPI data in +6h is high-impact catalyst; avoid large exposure pre-release.",
+  "warnings": [
+    "H1 bullish bias (BOS-bullish @ 4738.40) conflicts with H4/M15 bearish structure — regime is transitioning; confluence is moderate (B-grade), not high conviction.",
+    "CPI m/m, Core CPI m/m, CPI y/y all due in +6h (12:22 UTC approx) — high-impact gold-relevant data. Consider reducing position size or waiting for post-data confirmation.",
+    "Funding rate +0.0013%/hr (longs paying) is mild bearish signal but not extreme; no crowded short squeeze risk.",
+    "Volume Profile at HVN (4711.18) suggests strong S/R; price may consolidate rather than trend decisively lower.",
+    "M15 RSI=28.1 is oversold but no bullish divergence detected; entry is structural, not momentum-based.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "⚠️ Tier 4 — macro/flow layers conflict with technicals",
+    "⚠️ Executing at reduced 0.5% risk due to layer conflict",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4690.85 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at HVN 4688.37 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4 bearish structure (CHoCH confirmed)",
+          "M15 bearish BOS @ 4708.50 (recent structure event)",
+          "M15 active bearish OBs within 8pts (4711.60-4715.40, 4714.30-4717.00)",
+          "EUR/USD weakening (dollar strengthening = bearish gold)"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4688.37 (strong S/R)",
+      "H4 bearish structure (CHoCH confirmed)",
+      "M15 bearish BOS @ 4708.50 (recent structure event)",
+      "M15 active bearish OBs within 8pts (4711.60-4715.40, 4714.30-4717.00)",
+      "EUR/USD weakening (dollar strengthening = bearish gold)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": true,
+    "reason": "Order placed: null",
+    "orderId": null,
+    "entry": 4690.85,
+    "size": null,
+    "riskAmount": 0.49,
+    "riskPct": "0.50",
+    "timestamp": "2026-05-12T06:23:08.824Z"
+  }
+}

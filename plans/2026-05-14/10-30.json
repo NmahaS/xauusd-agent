@@ -1,0 +1,166 @@
+{
+  "timestamp": "2026-05-14T10:30:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4643.20 intact; H1 CHoCH-bearish @ 4664.10 confirmed; M15 CHoCH-bearish @ 4684.60 active. Price near H1 premium zone (68.3%), below weekly VWAP 4700.27 (institutional bearish bias). EUR/USD weakening (-8.47% 24h) = dollar strengthening = bearish gold. Real yields rising at 1.99% = bearish. High-impact US retail data in 120min adds execution risk but aligns with bearish macro setup.",
+  "setupQuality": "B",
+  "confluenceCount": 8,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 CHoCH-bearish confirms direction",
+    "H1 price in premium zone (68.3%)",
+    "10Y yield rising confirms direction",
+    "RSI bearish divergence (M15/H1)",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4707.8,
+      4711.1
+    ],
+    "reasoning": "M15 unfilled bearish FVG at 4707.80-4711.10 is the primary imbalance target. Price currently 4690.30, FVG is 17.5pts above — within 8pt tolerance for M15 signal. This FVG formed after the M15 CHoCH-bearish and represents institutional sell-side liquidity to be swept before continuation lower."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4690.25,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4712.57,
+    "reasoning": "Stop placed above M15 active bullish OB high (4669.70) and H1 bullish OB high (4663.50). Using 4717.2 = FVG top (4711.1) + 1.2×M15 ATR (6.85×0.9 ≈ 6.1pts). Invalidates bearish structure if breached; signals H1 structure failure. + 0.2 × M15 ATR buffer",
+    "pips": 22.32
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4663,
+      "reasoning": "H1 bullish OB low (4646.70-4663.50) and H1 liquidity EQL at 4663.00 — major structural support and institutional buy-side liquidity pool. System will place TP at 2R automatically; this is structural reference for risk/reward validation.",
+      "rr": 1.22
+    }
+  ],
+  "invalidation": {
+    "price": 4717.2,
+    "reasoning": "Close above 4717.2 invalidates M15 bearish structure and H1 premium setup. Signals potential H1 BOS to upside; bias flips to neutral/bullish."
+  },
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "Avoid entry until after 12:00 UTC (120min from now) — high-impact US retail sales data at 12:30 UTC. Post-data volatility may offer better FVG fill or force re-evaluation. If entering before data, use tighter stops and reduce size."
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "0.5% risk on 77-pip stop due to imminent high-impact news (Core Retail Sales, Retail Sales m/m). Reduce size by 50% vs normal 1% allocation. Consider waiting for data release and post-print consolidation before entry."
+  },
+  "macroContext": "Real yields rising (1.99%), dollar strengthening (EUR/USD -8.47%), fear sentiment falling (F&G 34) — all bearish for gold. High-impact US retail data in 120min creates execution risk; macro backdrop supports shorts but timing is constrained.",
+  "warnings": [
+    "HIGH-IMPACT NEWS ALERT: USD Core Retail Sales m/m (High) in 120min — avoid entry 60min before/after release",
+    "HIGH-IMPACT NEWS ALERT: USD Retail Sales m/m (High) in 120min — avoid entry 60min before/after release",
+    "HIGH-IMPACT NEWS ALERT: USD Unemployment Claims (Medium) in 120min — avoid entry 60min before/after release",
+    "M15 FVG zone (4707.8-4711.1) is only 17.5pts above current price (4690.30) — tight entry window; may require patience for price to reach zone",
+    "Funding rate +0.0013%/hr (longs paying) is low but positive — mild bearish contrarian signal, not strong",
+    "H1 MACD histogram positive (1.186) despite bearish structure — watch for potential bullish divergence if price stalls",
+    "Setup is Tier 2 (macro + structure aligned, but news risk reduces confidence). Execute post-data only or use micro-size pre-data.",
+    "⚠️ Split: Claude=short DeepSeek=no-trade — manual only",
+    "High-impact gold event in 120min: USD Core Retail Sales m/m (High)",
+    "High-impact gold event in 120min: USD Retail Sales m/m (High)",
+    "High-impact gold event in 120min: USD Unemployment Claims (Medium)",
+    "⚠️ Split consensus — Claude and DeepSeek disagree"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "Gold holds mildly bearish below key averages amid pre-US data caution"
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4690.25 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "CHoCH-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 8,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 CHoCH-bearish confirms direction",
+          "H1 price in premium zone (68.3%)",
+          "10Y yield rising confirms direction",
+          "RSI bearish divergence (M15/H1)",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 8
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)",
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 CHoCH-bearish confirms direction",
+      "H1 price in premium zone (68.3%)",
+      "10Y yield rising confirms direction",
+      "RSI bearish divergence (M15/H1)",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 9 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": true,
+    "reason": "Order placed: 425379667497",
+    "orderId": 425379667497,
+    "entry": 4689.4,
+    "size": 0.038,
+    "riskAmount": 0.85,
+    "riskPct": "1.01",
+    "timestamp": "2026-05-14T10:30:36.071Z"
+  }
+}

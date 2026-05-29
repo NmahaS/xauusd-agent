@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-05-04T16:00:01Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 bearish BOS @ 4539.35 intact; price currently in H4 discount zone (47.1%) but M15 shows bearish BOS @ 4630.50 with price now trading below that level. H1 structure undefined but M15 active bearish bias. EUR/USD weakening (-0.22% 24h) supports dollar strength, which is bearish for gold. Macro neutral but transitioning regime requires higher confluence. No M15 active OBs or FVGs within 8pts of current price (4638.05) — critical gap.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "ny",
+    "recommendedExecutionWindow": "Await M15 POI formation or H1 structure clarity; RBA decision in ~12.5h may create volatility — consider waiting for post-decision consolidation"
+  },
+  "risk": {
+    "suggestedRiskPct": 1,
+    "positionSizeHint": "No trade — insufficient M15 confluence"
+  },
+  "macroContext": "EUR/USD weakening (dollar strengthening) is bearish for gold; real yields unknown; Fear & Greed at 40 (fear) with rising 7d trend suggests risk-on sentiment. RBA rate decision imminent (+12.5h) with AUD cash rate forecast at 4.35% vs 4.10% prev — high volatility risk. Macro backdrop neutral but event risk elevated.",
+  "warnings": [
+    "CRITICAL: No M15 active Order Blocks within 8pts of current price (4638.05). No M15 unfilled FVGs within 8pts. Cannot establish primary entry POI per schema.",
+    "H1 structure undefined — no H1 OBs, FVGs, or P/D zone available. Structural context missing.",
+    "Market transitioning regime — SMC effective but requires higher confluence threshold (recommend 6+ factors minimum).",
+    "RBA rate decision in ~12.5h (AUD Cash Rate, RBA Monetary Policy Statement, RBA Press Conference). High-impact event for AUD/gold cross. Recommend waiting for post-decision consolidation or explicit M15 POI formation.",
+    "EUR/USD weakening (-0.22% 24h) signals dollar strength, which is bearish for gold — but macro yields/COT unknown, limiting conviction.",
+    "M15 last close (4638.05) is in discount zone (35.3% of 4625.38-4661.25 range), but no active M15 OB or FVG to anchor entry. Price action alone insufficient.",
+    "H4 bearish OB [4675.48-4772.85] is 37-135 pips above current price — too far for immediate M15 entry confluence.",
+    "No kill zone active (NY session but not 12-15 UTC window). Execution window suboptimal.",
+    "FRED macro data unavailable — yields/real-rate missing",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": null,
+    "deepseekDirection": null,
+    "claudeQuality": "no-trade",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "high",
+    "newsSentiment": "bearish",
+    "newsHeadline": "RBA rate decision and USD data loom as gold holds mild bullish bias amid weekly loss"
+  },
+  "m15": {
+    "status": "N/A",
+    "reason": "no directional plan"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "unknown",
+        "vwapBias": "unknown",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "neutral",
+        "confluenceCount": 0,
+        "confluenceGrade": "no-trade",
+        "factors": [],
+        "score": 0
+      }
+    },
+    "allFactors": [],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 0 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "N/A",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "N/A",
+    "dealId": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "timestamp": "2026-05-13T23:00:00Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H1 CHoCH-bullish @ 4704.30 confirms upside structure; M15 SMC bias bullish with recent CHoCH @ 4686.30. Price near daily VWAP (4687.19) with multiple unmitigated bullish M15 FVGs below current level. H4 bearish bias is offset by strong H1/M15 bullish alignment and institutional positioning near VWAP. EUR/USD weakening (-8.47%) is mildly bearish for gold, but H1 bullish OB at 4646.70-4663.50 and M15 structure support upside probe. Macro neutral (real yields +1.99% bearish, but F&G at 42 = fear = safe-haven bid). Ranging regime with SMC effective.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H1 bullish structure (CHoCH-bullish @ 4704.30 intact)",
+    "M15 bullish SMC bias (CHoCH-bullish @ 4686.30)",
+    "M15 unmitigated bullish FVGs within 8pts (4683.80-4684.00, 4685.80-4688.60, 4688.60-4691.20)",
+    "Price near daily VWAP (0.11% from 4687.19) — institutional anchor"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_fvg_cluster",
+    "zone": [
+      4685.8,
+      4691.2
+    ],
+    "reasoning": "Cluster of three unmitigated M15 bullish FVGs (4685.80-4688.60 and 4688.60-4691.20) overlapping with current price action and daily VWAP. These imbalances are primary liquidity targets for institutional long accumulation in ranging regime."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4692.45,
+    "confirmation": "M15 CHoCH-bullish inside POI"
+  },
+  "stopLoss": {
+    "price": 4685.29,
+    "reasoning": "Below M15 active bearish OB low (4711.60-4715.40 is above; using lower structural support). Stop placed 0.2×M15 ATR (3.76) below nearest M15 bullish FVG low (4683.80). Invalidates H1 bullish structure if breached. + 0.2 × M15 ATR buffer",
+    "pips": 7.16
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4704.3,
+      "reasoning": "H1 CHoCH-bullish level and prior H1 swing high; first structural liquidity pool. System will place TP at 2R automatically.",
+      "rr": 1.66
+    }
+  ],
+  "invalidation": {
+    "price": 4681,
+    "reasoning": "Break below M15 FVG cluster low invalidates bullish H1 structure; bias flips neutral/bearish if H1 CHoCH-bullish is broken."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC) or NY kill zone (12-15 UTC) for optimal execution. Current session is off-hours; liquidity lower. Limit order can rest, but monitor for news (GBP GDP, USD Retail Sales in +420m and +810m)."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.75,
+    "positionSizeHint": "0.75% risk on 73-pip stop. Reduce to 0.5% if high-impact news (GBP GDP, USD Retail Sales) triggers volatility spike before entry fill."
+  },
+  "macroContext": "Real yields rising (+1.99%) and EUR/USD weakening (-8.47%) are bearish for gold, but fear sentiment (F&G=42, falling) provides safe-haven bid. Neutral macro backdrop with upcoming high-impact UK/US data (GDP, Retail Sales) in next 8-14 hours — trade with caution and monitor news risk.",
+  "warnings": [
+    "H4 bias is bearish (CHoCH-bearish @ 4643.20) — this is a Tier 3 (technical-only) setup. Macro and H4 do not support; only H1/M15 structure aligns. Risk/reward favors entry, but position sizing should reflect lower conviction.",
+    "Price is in premium zone (73% of H1 range, 353% of M15 range) — typical rejection zone. Entry at VWAP is contrarian; expect volatility.",
+    "High-impact news within 8-14 hours (GBP GDP m/m, USD Retail Sales m/m, Unemployment Claims). Do not hold through these events; take profit early or exit on news risk.",
+    "Funding rate +0.0013%/hr (11% annualized) indicates longs paying — mild contrarian signal. Crowded long positioning; watch for liquidation cascades if price breaks below 4681.",
+    "EUR/USD weakening sharply (-8.47% in 24h) — dollar strengthening is headwind for gold. Bias may flip if EUR/USD continues lower.",
+    "Ranging regime (3.4×ATR) — expect choppy fills and potential whipsaws. Use limit orders and tight stops.",
+    "⚠️ Split: Claude=long DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": "medium",
+    "newsSentiment": "bullish",
+    "newsHeadline": "No major new shocks; gold holds bullish tone ahead of key US and UK data"
+  },
+  "m15": {
+    "status": "CONFIRMED",
+    "reason": "CHoCH-bullish on M15 inside POI",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "H1 bullish structure (CHoCH-bullish @ 4704.30 intact)",
+          "M15 bullish SMC bias (CHoCH-bullish @ 4686.30)",
+          "M15 unmitigated bullish FVGs within 8pts (4683.80-4684.00, 4685.80-4688.60, 4688.60-4691.20)",
+          "Price near daily VWAP (0.11% from 4687.19) — institutional anchor"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)",
+      "H1 bullish structure (CHoCH-bullish @ 4704.30 intact)",
+      "M15 bullish SMC bias (CHoCH-bullish @ 4686.30)",
+      "M15 unmitigated bullish FVGs within 8pts (4683.80-4684.00, 4685.80-4688.60, 4688.60-4691.20)",
+      "Price near daily VWAP (0.11% from 4687.19) — institutional anchor"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "timestamp": "2026-05-14T23:45:00.461Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bearish",
+  "biasReasoning": "H4 CHoCH-bearish @ 4643.20 confirmed; H1 CHoCH-bearish @ 4663.00 intact; M15 BOS-bearish @ 4666.60 active. Price in discount zone but structure is decisively bearish across all timeframes. Weekly macro neutral but yields rising (bearish gold). EUR/USD weakening (bullish gold) provides mild counter-signal. Institutional bias bearish (below weekly VWAP 4694.48). Current price 4653.00 is below H1 EMA20 (4670.43) and H4 EMA20 (4683.32), confirming downtrend.",
+  "setupQuality": "B",
+  "confluenceCount": 6,
+  "confluenceFactors": [
+    "H4+M15 bias agree (short)",
+    "H1 bias confirms direction (bearish)",
+    "M15 BOS-bearish confirms direction",
+    "No imminent gold-relevant news",
+    "H1 bias agrees with H4 (bearish)",
+    "Below weekly VWAP — institutional bearish"
+  ],
+  "direction": "short",
+  "poi": {
+    "type": "bearish_order_block",
+    "zone": [
+      4676.6,
+      4681.1
+    ],
+    "reasoning": "M15 active bearish OB; price currently 4653.00 is 23.6 pips below this zone. OB represents recent supply cluster from bearish structure. FVG at 4671.00-4674.00 (M15 unfilled) overlaps; targeting retest of OB before continuation lower."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4653.25,
+    "confirmation": "M15 extended-zone inside POI"
+  },
+  "stopLoss": {
+    "price": 4681.97,
+    "reasoning": "Above M15 bearish OB high (4681.10) + 0.2×M15 ATR (5.24×0.2=1.05); invalidates M15 bearish structure if breached. Pips: 6.3 + 0.2 × M15 ATR buffer",
+    "pips": 28.72
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4642.3,
+      "reasoning": "Prior M15 swing low and H1 liquidity pool (swept); structural reference — system places TP at 2R automatically",
+      "rr": 0.38
+    }
+  ],
+  "invalidation": {
+    "price": 4685,
+    "reasoning": "Break above M15 bearish OB high invalidates short bias; would signal potential H1 structure recovery and flip bias to neutral/bullish."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone 07-10 UTC (2026-05-15T07:00:00Z) for optimal execution; market currently in off-hours (Asia pre-open). Limit order can be placed now and held."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.4,
+    "positionSizeHint": "0.8% risk on 6.3-pip stop; tight stop due to proximity to OB. Reduce size if uncomfortable with tight SL. Confluence is moderate (B-grade) — do not over-leverage."
+  },
+  "macroContext": "Yields rising (1.99% real yield, bearish gold) but EUR/USD weakening (bullish gold proxy). Institutional bias bearish (below weekly VWAP). Fear & Greed at 34 (fear, risk-off). Macro is mixed; technical bearish structure is the primary driver. No high-impact events in next 24h.",
+  "warnings": [
+    "Confluence count is 4 (B-grade setup) — below A-threshold. Tight stop (6.3 pips) required; position size accordingly.",
+    "Price is in discount zone (-24.7% H4 range) — typically attracts buyers. Retracement into OB may be shallow; be prepared for quick invalidation.",
+    "EUR/USD weakening (dollar weakness) is a mild bullish-gold counter-signal. If EUR/USD reverses sharply higher, bias may flip.",
+    "Funding rate +0.0013%/hr (longs paying) is near-neutral; no extreme crowding signal.",
+    "Market transitioning (regime change) — SMC effective but volatility may spike. Use tight stops and avoid over-sizing.",
+    "Current session is off-hours (Asia pre-open). Liquidity lower; slippage risk on market orders. Use limit orders.",
+    "H1 bullish OB at 4646.70-4663.50 is active below current price — if price drops and retests this zone, it may act as support and reverse the short.",
+    "⚡ Single LLM only — Claude (DeepSeek failed)"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "single",
+    "confidence": "medium",
+    "claudeDirection": "short",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "failed",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED_EXTENDED",
+    "reason": "Extended zone market entry at 4653.25 — M15 bearish bias confirms",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "autoExecute": false,
+    "riskMultiplier": 0,
+    "direction": "short",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields rising (bearish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "below_va",
+        "vwapBias": "bearish",
+        "factors": [],
+        "score": 0
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bearish",
+        "confluenceCount": 6,
+        "confluenceGrade": "B",
+        "factors": [
+          "H4+M15 bias agree (short)",
+          "H1 bias confirms direction (bearish)",
+          "M15 BOS-bearish confirms direction",
+          "No imminent gold-relevant news",
+          "H1 bias agrees with H4 (bearish)",
+          "Below weekly VWAP — institutional bearish"
+        ],
+        "score": 6
+      }
+    },
+    "allFactors": [
+      "Yields rising (bearish gold)",
+      "H4+M15 bias agree (short)",
+      "H1 bias confirms direction (bearish)",
+      "M15 BOS-bearish confirms direction",
+      "No imminent gold-relevant news",
+      "H1 bias agrees with H4 (bearish)",
+      "Below weekly VWAP — institutional bearish"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 3 — Technical only (signal only) | short | 7 total factors"
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED_EXTENDED",
+    "tier": 3,
+    "tierLabel": "TIER 3 — Technical only (signal only)",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

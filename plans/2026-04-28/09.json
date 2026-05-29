@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-04-28T09:31:40.618Z",
+  "symbol": "XAU/AUD",
+  "timeframe": "1h",
+  "bias": "neutral",
+  "biasReasoning": "LLM analysis failed; fallback no-trade plan returned.",
+  "setupQuality": "no-trade",
+  "confluenceCount": 0,
+  "confluenceFactors": [],
+  "direction": null,
+  "poi": null,
+  "entry": null,
+  "stopLoss": null,
+  "takeProfits": null,
+  "invalidation": null,
+  "session": {
+    "current": "london",
+    "recommendedExecutionWindow": "NOW (kill zone active)"
+  },
+  "risk": {
+    "suggestedRiskPct": 0,
+    "positionSizeHint": "n/a (no-trade)"
+  },
+  "macroContext": "DXY (EUR/USD proxy) weakening (bullish-for-gold); 10Y real yield 1.87% → bearish (positive real yields); F&G 33 (fear, neutral for gold).",
+  "warnings": [
+    "LLM failure: takeProfits.0.rr: Invalid input; takeProfits.1.rr: Invalid input",
+    "Wide IG spread (0.80) — confirm before market orders",
+    "Limited history (20 H1 / 20 H4 candles) — SMC and indicators degraded"
+  ],
+  "promptVersion": "v2.0"
+}

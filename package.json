@@ -1,0 +1,50 @@
+{
+  "name": "xauusd-agent",
+  "version": "1.0.0",
+  "description": "Autonomous hourly XAUUSD analysis agent with SMC + DeepSeek LLM",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "server": "node src/server.js",
+    "cron": "node src/cron.js",
+    "analyze": "node src/run.js",
+    "analyze:force": "node src/run.js --force",
+    "dry-run": "DRY_RUN=true node src/run.js",
+    "report": "node src/plan/generateMonthlyReport.js",
+    "report:month": "node src/plan/generateMonthlyReport.js --month",
+    "backtest": "node src/backtest/run.js",
+    "backtest:fetch": "node src/backtest/run.js --fetch",
+    "backtest:report": "node src/backtest/run.js --report-only",
+    "bot": "node src/telegram/bot.js",
+    "bot:dev": "DRY_RUN=true node src/telegram/bot.js",
+    "setup-webhook": "node scripts/setup-railway-webhook.js",
+    "import-history": "node scripts/importHistoricalTrades.js",
+    "test:transfer": "node scripts/testTransfer.js",
+    "push": "bash scripts/safe-push.sh",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "test:order": "node scripts/test-order.js",
+    "fix:sltp": "node scripts/fix-sl-tp.mjs"
+  },
+  "dependencies": {
+    "@msgpack/msgpack": "^3.1.3",
+    "better-sqlite3": "^12.10.0",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.16.0",
+    "express": "^4.22.1",
+    "node-cron": "^3.0.3",
+    "technicalindicators": "^3.1.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "transform": {},
+    "testEnvironment": "node"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

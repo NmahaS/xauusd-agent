@@ -1,0 +1,149 @@
+{
+  "timestamp": "2026-05-13T22:45:00.551Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "M15 CHoCH-bullish @ 4686.30 with price now at 4691.60 (above pivot); H1 also bullish (CHoCH @ 4704.30). H4 is bearish (CHoCH @ 4643.20) but price is in premium zone (67.7%), creating a structural conflict. M15 structure is bullish and price is near multiple unfilled bullish FVGs (4683.80-4684.00, 4685.80-4688.60). EUR/USD weakening (-8.47% 24h) is bearish for gold, but M15 local structure is bullish. Macro is neutral (real yields rising at 1.99%, fear at 42). High-impact news in +435m (GBP GDP) and +825m (USD retail sales) adds execution risk.",
+  "setupQuality": "B",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "M15 bullish structure (CHoCH intact @ 4686.30)",
+    "H1 bullish context (CHoCH @ 4704.30, OB at 4646.70-4663.50)",
+    "M15 unfilled bullish FVGs within 8pts (4683.80-4684.00, 4685.80-4688.60)",
+    "Price near M15 EMA20 (4685.04) — structural support"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4685.8,
+      4688.6
+    ],
+    "reasoning": "M15 unfilled bullish FVG (imbalance) at 4685.80-4688.60; price currently at 4691.60 has already swept above this zone. Secondary POI is H1 bullish OB at 4646.70-4663.50 if price retraces. Primary entry is on any pullback into the 4685.80-4688.60 zone or continuation above 4691.60 on M15 bullish confirmation."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4691.65,
+    "confirmation": "M15 CHoCH-bullish inside POI"
+  },
+  "stopLoss": {
+    "price": 4685.29,
+    "reasoning": "Below M15 bullish FVG low (4685.80) minus 0.2×M15 ATR (3.92×0.2=0.78); invalidates M15 bullish structure if breached. Protects against H4 bearish bias reassertion. + 0.2 × M15 ATR buffer",
+    "pips": 6.36
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4704.3,
+      "reasoning": "H1 CHoCH level (4704.30) and prior swing high; first structural liquidity pool. System will place TP at 2R automatically.",
+      "rr": 1.99
+    }
+  ],
+  "invalidation": {
+    "price": 4682,
+    "reasoning": "Break below M15 bullish FVG low invalidates M15 bullish structure; bias flips to neutral/bearish. H4 bearish bias (CHoCH @ 4643.20) reasserts if price closes below 4682."
+  },
+  "session": {
+    "current": "off",
+    "recommendedExecutionWindow": "Wait for London kill zone (07-10 UTC, ~8.25 hours). High-impact GBP GDP at +435m and USD retail sales at +825m create execution risk; defer entry until post-news confirmation or wait for next London session."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.75,
+    "positionSizeHint": "0.75% risk on 51-pip stop; reduced from 1% due to H4 bearish bias conflict and upcoming high-impact news (GBP GDP, USD retail sales). Wait for London kill zone or post-news consolidation."
+  },
+  "macroContext": "Real yields rising (1.99%), EUR/USD weakening (-8.47% 24h, bearish for gold), fear at 42 (neutral). Positive funding rate (0.0013%/hr) suggests mild longs crowding. High-impact news (GBP GDP, USD retail sales) in next 24h adds volatility risk.",
+  "warnings": [
+    "H4 structure is bearish (CHoCH @ 4643.20); M15 bullish setup conflicts with higher timeframe bias. This is a Tier 3 (technical-only) signal — execute only with tight risk management.",
+    "Price is in premium zone (70.7% on H1, 303% on M15 P/D) — statistically lower-probability entry. Prefer entry on pullback into 4685.80-4688.60 FVG rather than continuation above 4691.60.",
+    "High-impact news (GBP GDP m/m at +435m, USD retail sales at +825m) within 24h. Defer entry until post-news confirmation or wait for London kill zone (07-10 UTC) after news passes.",
+    "Funding rate positive (0.0013%/hr) — longs are paying; mild contrarian bearish signal. Do not add to longs on strength.",
+    "EUR/USD weakening sharply (-8.47% 24h) is bearish for gold; conflicts with bullish M15 setup. Monitor dollar strength for invalidation.",
+    "Volume Profile at HVN (4689.59) — strong resistance. Price may struggle above 4695 without fresh bullish catalyst.",
+    "⚠️ Split: Claude=long DeepSeek=no-trade — manual only"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "split",
+    "confidence": "medium",
+    "claudeDirection": "long",
+    "deepseekDirection": null,
+    "claudeQuality": "B",
+    "deepseekQuality": "no-trade",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "CONFIRMED",
+    "reason": "CHoCH-bullish on M15 inside POI",
+    "structureBias": "bullish",
+    "lastEvent": "CHoCH-bullish"
+  },
+  "threeLayer": {
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "autoExecute": false,
+    "riskMultiplier": 1,
+    "direction": null,
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "ranging_tradeable",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bearish",
+        "factors": [
+          "Price at HVN 4689.59 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bearish",
+        "h1Bias": "bullish",
+        "confluenceCount": 4,
+        "confluenceGrade": "B",
+        "factors": [
+          "M15 bullish structure (CHoCH intact @ 4686.30)",
+          "H1 bullish context (CHoCH @ 4704.30, OB at 4646.70-4663.50)",
+          "M15 unfilled bullish FVGs within 8pts (4683.80-4684.00, 4685.80-4688.60)",
+          "Price near M15 EMA20 (4685.04) — structural support"
+        ],
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Price at HVN 4689.59 (strong S/R)",
+      "M15 bullish structure (CHoCH intact @ 4686.30)",
+      "H1 bullish context (CHoCH @ 4704.30, OB at 4646.70-4663.50)",
+      "M15 unfilled bullish FVGs within 8pts (4683.80-4684.00, 4685.80-4688.60)",
+      "Price near M15 EMA20 (4685.04) — structural support"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 4 — Insufficient confluence | no-trade | 5 total factors",
+    "warnings": [
+      "⚠️ Moderate ranging market — trade with caution"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "CONFIRMED",
+    "tier": 4,
+    "tierLabel": "TIER 4 — Insufficient confluence",
+    "executed": false,
+    "reason": "Risk: Off-session (17:00-00:00 UTC) — no liquidity",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

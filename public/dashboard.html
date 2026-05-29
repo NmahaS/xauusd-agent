@@ -752,15 +752,16 @@ const fNum  = (n, d = 2) => (typeof n === 'number' && !isNaN(n)) ? n.toFixed(d) 
 const plCls = n => n > 0.005 ? 'c-green' : n < -0.005 ? 'c-red' : 'c-sec';
 
 /* ── Session label ──────────────────────────────────────────── */
+const DEAD_ZONE_TITLE = 'Trades allowed in dead zone only if: ATR≥8, Confluence≥7, No open position, Tier 1-3';
 function sessionInfo() {
   const now = new Date();
   const t   = now.getUTCHours() * 60 + now.getUTCMinutes();
-  if (t <  420) return { lbl: 'DEAD ZONE — MONITOR ONLY', cls: 'bg-amber' };
-  if (t <  540) return { lbl: 'LONDON KILL ZONE',         cls: 'bg-green' };
-  if (t <  720) return { lbl: 'LONDON SESSION',           cls: 'bg-green' };
-  if (t <  840) return { lbl: 'NY KILL ZONE',             cls: 'bg-green' };
-  if (t < 1260) return { lbl: 'NY SESSION',               cls: 'bg-green' };
-  return           { lbl: 'DEAD ZONE — MONITOR ONLY', cls: 'bg-amber' };
+  if (t <  420) return { lbl: 'DEAD ZONE — STRICT RULES ACTIVE', cls: 'bg-amber', title: DEAD_ZONE_TITLE };
+  if (t <  540) return { lbl: 'LONDON KILL ZONE',                cls: 'bg-green', title: '' };
+  if (t <  720) return { lbl: 'LONDON SESSION',                  cls: 'bg-green', title: '' };
+  if (t <  840) return { lbl: 'NY KILL ZONE',                    cls: 'bg-green', title: '' };
+  if (t < 1260) return { lbl: 'NY SESSION',                      cls: 'bg-green', title: '' };
+  return           { lbl: 'DEAD ZONE — STRICT RULES ACTIVE',     cls: 'bg-amber', title: DEAD_ZONE_TITLE };
 }
 
 /* ── Clock tick (every second) ──────────────────────────────── */
@@ -772,7 +773,7 @@ function tickClock() {
   $('clock').textContent = `${hh}:${mm}:${ss}`;
 
   const si = sessionInfo();
-  $('session-badge').innerHTML = `<span class="badge ${si.cls}">${si.lbl}</span>`;
+  $('session-badge').innerHTML = `<span class="badge ${si.cls}" title="${si.title}">${si.lbl}</span>`;
 }
 setInterval(tickClock, 1000);
 tickClock();

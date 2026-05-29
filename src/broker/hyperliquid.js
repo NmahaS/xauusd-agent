@@ -478,6 +478,23 @@ export async function placeHLOrder({ coin, direction, size, markPrice, plan, ord
   return { orderId, fillPrice, fillSize, direction, slPlaced, tpPlaced, tpPrice: tpPricePlaced, coin, status: 'placed' };
 }
 
+export async function getHLPrice(coin = 'PAXG') {
+  const res = await fetchWithRetry(`${HL_BASE}/info`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'metaAndAssetCtxs' }),
+  });
+  if (!res.ok) throw new Error(`Hyperliquid price HTTP ${res.status}`);
+  const [meta, ctxs] = await res.json();
+  const idx = meta.universe.findIndex(a => a.name === coin);
+  if (idx === -1) throw new Error(`${coin} not found on Hyperliquid`);
+  return {
+    markPrice:   parseFloat(ctxs[idx].markPx),
+    oraclePrice: parseFloat(ctxs[idx].oraclePx),
+    funding:     parseFloat(ctxs[idx].funding),
+  };
+}
+
 export async function getHLBalance() {
   const now = Date.now();
   if (balanceCache && (now - balanceCacheTime) < 60000) {

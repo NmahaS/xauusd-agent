@@ -121,52 +121,67 @@ app.get('/api/dashboard', async (_req, res) => {
                 (f.closedPnl || 0) < -0.01 ? 'LOSS' : 'BE',
       }));
 
-    /* ── Signal (3-tier fallback) ───────────────────────────── */
+    /* ── Signal (file-cache → filesystem → fallback) ───────── */
     let signal   = null;
     let planMeta = null;
 
-    const planAge = globalThis._lastAgentPlanTime
-      ? (Date.now() - globalThis._lastAgentPlanTime) / 60000
-      : 999;
-    console.log('[dashboard] plan age:', planAge.toFixed(1), 'min');
-
-    // Tier 1: live in-memory plan from last pipeline run (< 20 min old)
-    const livePlan = globalThis._lastAgentPlan;
-    if (livePlan && planAge < 20) {
-      const p = livePlan;
-      signal = {
-        bias:          p.direction === 'long'  ? 'BULLISH' :
-                       p.direction === 'short' ? 'BEARISH' :
-                       p.bias === 'bearish'    ? 'BEARISH' :
-                       p.bias === 'bullish'    ? 'BULLISH' : 'NEUTRAL',
-        tier:          p.threeLayer?.tier       || p.tier || 3,
-        confluence:    p.confluenceCount        || 0,
-        direction:     p.direction              || null,
-        factors:       p.confluenceFactors      || [],
-        tfAlignment:   (p.tfAlignment?.score    || 0) + '/3',
-        session:       p._session || (typeof p.session === 'object' ? p.session?.current : p.session) || 'unknown',
-        regime:        p._regime  || p.threeLayer?.layers?.flow?.regime || p.regime || 'unknown',
-        quality:       p.setupQuality           || 'unknown',
-        biasReasoning: p.biasReasoning          || '',
-        blockedReason: p.execution?.reason      || p.blockedReason || null,
-        executed:      p.execution?.executed    || false,
-        entry:         p.entry?.price           || null,
-        sl:            p.stopLoss?.price        || null,
-        tp:            p.takeProfits?.[0]?.price || p.takeProfit?.price || null,
-        warnings:      p.warnings               || [],
-        age:           Math.round(planAge) + 'min ago',
-        source:        'live',
+    /* helper: build signal + planMeta from a raw plan object */
+    function planToSignal(p, source) {
+      const ageMin = p._cachedAt
+        ? (Date.now() - new Date(p._cachedAt).getTime()) / 60000
+        : null;
+      return {
+        signal: {
+          bias:          p.direction === 'long'  ? 'BULLISH' :
+                         p.direction === 'short' ? 'BEARISH' :
+                         p.bias === 'bearish'    ? 'BEARISH' :
+                         p.bias === 'bullish'    ? 'BULLISH' : 'NEUTRAL',
+          tier:          p.threeLayer?.tier       || p.tier || 3,
+          confluence:    p.confluenceCount        || 0,
+          direction:     p.direction              || null,
+          factors:       p.confluenceFactors      || [],
+          tfAlignment:   (p.tfAlignment?.score    || 0) + '/3',
+          session:       p._session || (typeof p.session === 'object' ? p.session?.current : p.session) || 'unknown',
+          regime:        p._regime  || p.threeLayer?.layers?.flow?.regime || p.regime || p.marketRegime || 'unknown',
+          quality:       p.setupQuality           || 'unknown',
+          biasReasoning: p.biasReasoning          || '',
+          blockedReason: p.execution?.reason      || p.blockedReason || null,
+          executed:      p.execution?.executed    || false,
+          entry:         p.entry?.price           || null,
+          sl:            p.stopLoss?.price        || null,
+          tp:            p.takeProfits?.[0]?.price || p.takeProfit?.price || null,
+          warnings:      (p.warnings || []).slice(0, 3),
+          age:           ageMin !== null ? Math.round(ageMin) + 'min ago' : null,
+          source,
+        },
+        planMeta: {
+          sl:  p.stopLoss?.price            || 0,
+          tp1: p.takeProfits?.[0]?.price    || 0,
+          tp2: p.takeProfits?.[1]?.price    || 0,
+        },
       };
-      planMeta = {
-        sl:  p.stopLoss?.price            || 0,
-        tp1: p.takeProfits?.[0]?.price    || 0,
-        tp2: p.takeProfits?.[1]?.price    || 0,
-      };
-      console.log('[dashboard] signal from live plan:', signal.bias,
-                  signal.direction, 'C:' + signal.confluence);
     }
 
-    // Tier 2: plans filesystem (Railway resets this on deploy, but works locally)
+    // Tier 1: file cache written by pipeline after each run — works across processes
+    try {
+      const cacheFile = path.join(process.cwd(), 'data', 'last-plan.json');
+      if (fs.existsSync(cacheFile)) {
+        const p      = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
+        const ageMin = p._cachedAt
+          ? (Date.now() - new Date(p._cachedAt).getTime()) / 60000
+          : 999;
+        console.log('[dashboard] last-plan.json age:', ageMin.toFixed(1), 'min',
+                    '| bias:', p.bias, 'direction:', p.direction,
+                    'confluence:', p.confluenceCount);
+        const built  = planToSignal(p, 'file-cache');
+        signal   = built.signal;
+        planMeta = built.planMeta;
+      }
+    } catch (e) {
+      console.log('[dashboard] cache read error:', e.message);
+    }
+
+    // Tier 2: plans filesystem (works locally / Railway if volume persists)
     if (!signal) {
       try {
         const plansDir = path.join(process.cwd(), 'plans');
@@ -180,34 +195,10 @@ app.get('/api/dashboard', async (_req, res) => {
               .filter(f => f.endsWith('.json') && f !== 'daily-summary.json')
               .sort().slice(-1);
             if (files[0]) {
-              const p = JSON.parse(fs.readFileSync(path.join(dayDir, files[0]), 'utf8'));
-              signal = {
-                bias:          p.direction === 'long'  ? 'BULLISH' :
-                               p.direction === 'short' ? 'BEARISH' :
-                               p.bias === 'bearish'    ? 'BEARISH' :
-                               p.bias === 'bullish'    ? 'BULLISH' : 'NEUTRAL',
-                tier:          p.threeLayer?.tier       || p.tier || 3,
-                confluence:    p.confluenceCount        || 0,
-                direction:     p.direction              || null,
-                factors:       p.confluenceFactors      || [],
-                tfAlignment:   (p.tfAlignment?.score    || 0) + '/3',
-                session:       typeof p.session === 'object' ? (p.session?.current || 'unknown') : (p.session || 'unknown'),
-                regime:        p.threeLayer?.layers?.flow?.regime || p.regime || p.marketRegime || 'unknown',
-                quality:       p.setupQuality           || 'unknown',
-                biasReasoning: p.biasReasoning          || '',
-                blockedReason: p.execution?.reason      || p.blockedReason || null,
-                executed:      p.execution?.executed    || false,
-                entry:         p.entry?.price           || null,
-                sl:            p.stopLoss?.price        || null,
-                tp:            p.takeProfits?.[0]?.price || p.takeProfit?.price || null,
-                warnings:      p.warnings               || [],
-                source:        'filesystem',
-              };
-              planMeta = {
-                sl:  p.stopLoss?.price            || 0,
-                tp1: p.takeProfits?.[0]?.price    || 0,
-                tp2: p.takeProfits?.[1]?.price    || 0,
-              };
+              const p     = JSON.parse(fs.readFileSync(path.join(dayDir, files[0]), 'utf8'));
+              const built = planToSignal(p, 'filesystem');
+              signal   = built.signal;
+              planMeta = built.planMeta;
             }
           }
         }
@@ -216,7 +207,7 @@ app.get('/api/dashboard', async (_req, res) => {
       }
     }
 
-    // Tier 3: minimal live signal — agent running, no analysis yet
+    // Tier 3: minimal fallback — agent running, no analysis produced yet
     if (!signal) {
       signal = {
         bias:          'NEUTRAL',

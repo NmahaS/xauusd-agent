@@ -35,10 +35,6 @@ import { detectRegime } from './flow/regimeDetector.js';
 // Three-layer consensus
 import { computeThreeLayerConsensus } from './analysis/threeLayerConsensus.js';
 
-// Global plan cache — lets the dashboard read the latest plan without filesystem
-globalThis._lastAgentPlan = null;
-globalThis._lastAgentPlanTime = null;
-
 function time() {
   return Date.now();
 }
@@ -355,18 +351,24 @@ async function runFullPipeline() {
     reason: mergedPlan.execution.reason,
   }, null, 2));
 
-  // Cache for dashboard — survives between requests, resets on deploy
-  globalThis._lastAgentPlan = {
-    ...mergedPlan,
-    _cachedAt:     new Date().toISOString(),
-    _atr:          m15Indicators?.atr      || 0,
-    _currentPrice: currentPrice            || 0,
-    _session:      session?.current        || 'unknown',
-    _regime:       typeof regime === 'string' ? regime : (regime?.regime || 'unknown'),
-  };
-  globalThis._lastAgentPlanTime = Date.now();
-  console.log('[pipeline] plan cached for dashboard ✅ bias:', mergedPlan.bias,
-              'direction:', mergedPlan.direction);
+  // Write plan to file so dashboard can read it across processes
+  try {
+    const fsMod   = await import('fs');
+    const pathMod = await import('path');
+    const cacheFile = pathMod.default.join(process.cwd(), 'data', 'last-plan.json');
+    fsMod.default.writeFileSync(cacheFile, JSON.stringify({
+      ...mergedPlan,
+      _cachedAt:     new Date().toISOString(),
+      _atr:          m15Indicators?.atr                                        || 0,
+      _currentPrice: currentPrice                                               || 0,
+      _session:      session?.current                                           || 'unknown',
+      _regime:       typeof regime === 'string' ? regime : (regime?.regime     || 'unknown'),
+    }));
+    console.log('[pipeline] plan saved to data/last-plan.json ✅ bias:',
+                mergedPlan.bias, 'direction:', mergedPlan.direction);
+  } catch (e) {
+    console.warn('[pipeline] plan cache write failed:', e.message);
+  }
 
   // RAG: persist ALL directional signals — executed or blocked (additive, non-blocking)
   if (mergedPlan.direction) {
@@ -455,12 +457,7 @@ async function runFullPipeline() {
   console.log(`[pipeline] notify phase done in ${time() - tNotify}ms`);
 
   console.log(`=== run complete in ${time() - tTotal}ms ===\n`);
-  globalThis._lastPlan = mergedPlan;
   return { plan: mergedPlan, telegramText };
-}
-
-export function getLatestPlan() {
-  return globalThis._lastPlan || null;
 }
 
 let pipelineRunning = false;

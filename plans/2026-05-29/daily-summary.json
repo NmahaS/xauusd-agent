@@ -1,18 +1,18 @@
 {
   "date": "2026-05-29",
-  "totalPlans": 1,
+  "totalPlans": 4,
   "trades": 0,
-  "signals": 1,
-  "noTrades": 0,
+  "signals": 3,
+  "noTrades": 1,
   "setups": {
     "A+": 0,
     "A": 0,
-    "B": 1,
-    "no-trade": 0
+    "B": 3,
+    "no-trade": 1
   },
   "directions": {
     "long": 0,
-    "short": 1
+    "short": 3
   },
   "wins": {
     "total": 0,

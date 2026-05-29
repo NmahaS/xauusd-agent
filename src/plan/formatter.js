@@ -233,7 +233,25 @@ export function formatPlanForTelegram(plan, extras = {}) {
   if ((m15?.status && m15.status !== 'N/A') || exec) lines.push('');
 
   lines.push(`<b>Session:</b> ${esc(plan.session.current)} — ${esc(plan.session.recommendedExecutionWindow)}`);
-  lines.push(`<b>Risk:</b> ${fmt(plan.risk.suggestedRiskPct, 2)}% — ${esc(plan.risk.positionSizeHint)}`);
+  {
+    const riskPct = plan.risk?.suggestedRiskPct ?? 1;
+    const entryP  = plan.entry?.price;
+    const slP     = plan.stopLoss?.price;
+    const execRisk = plan.execution?.riskAmount;
+    const execSize = plan.execution?.size;
+    if (entryP && slP) {
+      const slDist  = Math.abs(entryP - slP).toFixed(1);
+      const riskStr = execRisk != null ? ` = $${Number(execRisk).toFixed(2)}` : '';
+      const posSize = execSize != null
+        ? Number(execSize).toFixed(4)
+        : execRisk != null
+          ? (Number(execRisk) / Math.abs(entryP - slP)).toFixed(4)
+          : '?';
+      lines.push(`<b>Risk:</b> ${riskPct}%${riskStr} | SL: ${slDist}pts | Size: ${posSize} PAXG`);
+    } else {
+      lines.push(`<b>Risk:</b> ${fmt(riskPct, 1)}%`);
+    }
+  }
 
   const upcoming = (calendar?.events || []).slice(0, 3);
   if (upcoming.length) {

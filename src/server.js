@@ -121,98 +121,102 @@ app.get('/api/dashboard', async (_req, res) => {
                 (f.closedPnl || 0) < -0.01 ? 'LOSS' : 'BE',
       }));
 
-    /* ── Last trading plan (3-tier fallback) ────────────────── */
-    let lastPlan = null;
+    /* ── Signal (3-tier fallback) ───────────────────────────── */
     let signal   = null;
     let planMeta = null;
 
-    // Tier 1: plans filesystem
-    try {
-      const plansDir = path.join(process.cwd(), 'plans');
-      if (fs.existsSync(plansDir)) {
-        const dates = fs.readdirSync(plansDir)
-          .filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d))
-          .sort().slice(-1);
-        if (dates[0]) {
-          const dayDir = path.join(plansDir, dates[0]);
-          const files  = fs.readdirSync(dayDir)
-            .filter(f => f.endsWith('.json') && f !== 'daily-summary.json')
-            .sort().slice(-1);
-          if (files[0]) {
-            lastPlan = JSON.parse(fs.readFileSync(path.join(dayDir, files[0]), 'utf8'));
-          }
-        }
-      }
-    } catch (e) {
-      console.log('[dashboard] plans folder error:', e.message);
-    }
+    const planAge = globalThis._lastAgentPlanTime
+      ? (Date.now() - globalThis._lastAgentPlanTime) / 60000
+      : 999;
+    console.log('[dashboard] plan age:', planAge.toFixed(1), 'min');
 
-    // Tier 2: in-memory plan from last pipeline run (persists between requests, resets on deploy)
-    if (!lastPlan && globalThis._lastPlan) {
-      lastPlan = globalThis._lastPlan;
-      console.log('[dashboard] using in-memory plan fallback');
-    }
-
-    // Build signal from plan (tiers 1 & 2)
-    if (lastPlan) {
+    // Tier 1: live in-memory plan from last pipeline run (< 20 min old)
+    const livePlan = globalThis._lastAgentPlan;
+    if (livePlan && planAge < 20) {
+      const p = livePlan;
       signal = {
-        bias:          lastPlan.direction === 'long'  ? 'BULLISH' :
-                       lastPlan.direction === 'short' ? 'BEARISH' : 'NEUTRAL',
-        tier:          lastPlan.threeLayer?.tier       || 3,
-        confluence:    lastPlan.confluenceCount        || 0,
-        direction:     lastPlan.direction              || null,
-        factors:       lastPlan.confluenceFactors      || [],
-        tfAlignment:   (lastPlan.tfAlignment?.score    || 0) + '/3',
-        session:       lastPlan.session                || 'Unknown',
-        regime:        lastPlan.threeLayer?.layers?.flow?.regime ||
-                       lastPlan.marketRegime           || 'unknown',
-        quality:       lastPlan.setupQuality           || 'no-trade',
-        biasReasoning: lastPlan.biasReasoning          || '',
-        executed:      lastPlan.execution?.executed    || false,
-        blockedReason: lastPlan.execution?.reason      ||
-                       lastPlan.blockedReason          || null,
-        source:        'plan',
+        bias:          p.direction === 'long'  ? 'BULLISH' :
+                       p.direction === 'short' ? 'BEARISH' :
+                       p.bias === 'bearish'    ? 'BEARISH' :
+                       p.bias === 'bullish'    ? 'BULLISH' : 'NEUTRAL',
+        tier:          p.threeLayer?.tier       || p.tier || 3,
+        confluence:    p.confluenceCount        || 0,
+        direction:     p.direction              || null,
+        factors:       p.confluenceFactors      || [],
+        tfAlignment:   (p.tfAlignment?.score    || 0) + '/3',
+        session:       p._session || (typeof p.session === 'object' ? p.session?.current : p.session) || 'unknown',
+        regime:        p._regime  || p.threeLayer?.layers?.flow?.regime || p.regime || 'unknown',
+        quality:       p.setupQuality           || 'unknown',
+        biasReasoning: p.biasReasoning          || '',
+        blockedReason: p.execution?.reason      || p.blockedReason || null,
+        executed:      p.execution?.executed    || false,
+        entry:         p.entry?.price           || null,
+        sl:            p.stopLoss?.price        || null,
+        tp:            p.takeProfits?.[0]?.price || p.takeProfit?.price || null,
+        warnings:      p.warnings               || [],
+        age:           Math.round(planAge) + 'min ago',
+        source:        'live',
       };
       planMeta = {
-        sl:  lastPlan.stopLoss?.price         || 0,
-        tp1: lastPlan.takeProfits?.[0]?.price || 0,
-        tp2: lastPlan.takeProfits?.[1]?.price || 0,
+        sl:  p.stopLoss?.price            || 0,
+        tp1: p.takeProfits?.[0]?.price    || 0,
+        tp2: p.takeProfits?.[1]?.price    || 0,
       };
+      console.log('[dashboard] signal from live plan:', signal.bias,
+                  signal.direction, 'C:' + signal.confluence);
     }
 
-    // Tier 3: RAG database — most recent recorded signal
+    // Tier 2: plans filesystem (Railway resets this on deploy, but works locally)
     if (!signal) {
       try {
-        const { getDB } = await import('./memory/tradeDB.js');
-        const last = getDB().prepare(
-          'SELECT * FROM trades ORDER BY openTime DESC LIMIT 1'
-        ).get();
-        if (last) {
-          console.log('[dashboard] using RAG fallback, trade:', last.orderId);
-          signal = {
-            bias:          last.direction === 'long'  ? 'BULLISH' :
-                           last.direction === 'short' ? 'BEARISH' : 'NEUTRAL',
-            tier:          last.tier        || 3,
-            confluence:    last.confluence  || 0,
-            direction:     last.direction   || null,
-            factors:       [],
-            tfAlignment:   '—',
-            session:       last.session     || 'Unknown',
-            regime:        'unknown',
-            quality:       last.outcome === 'OPEN'    ? 'active'  :
-                           last.outcome === 'BLOCKED' ? 'blocked' : 'no-trade',
-            biasReasoning: 'Last recorded signal from trade database (plan file unavailable).',
-            blockedReason: last.blockReason || null,
-            executed:      last.isExecuted === 1,
-            source:        'RAG',
-          };
+        const plansDir = path.join(process.cwd(), 'plans');
+        if (fs.existsSync(plansDir)) {
+          const dates = fs.readdirSync(plansDir)
+            .filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d))
+            .sort().slice(-1);
+          if (dates[0]) {
+            const dayDir = path.join(plansDir, dates[0]);
+            const files  = fs.readdirSync(dayDir)
+              .filter(f => f.endsWith('.json') && f !== 'daily-summary.json')
+              .sort().slice(-1);
+            if (files[0]) {
+              const p = JSON.parse(fs.readFileSync(path.join(dayDir, files[0]), 'utf8'));
+              signal = {
+                bias:          p.direction === 'long'  ? 'BULLISH' :
+                               p.direction === 'short' ? 'BEARISH' :
+                               p.bias === 'bearish'    ? 'BEARISH' :
+                               p.bias === 'bullish'    ? 'BULLISH' : 'NEUTRAL',
+                tier:          p.threeLayer?.tier       || p.tier || 3,
+                confluence:    p.confluenceCount        || 0,
+                direction:     p.direction              || null,
+                factors:       p.confluenceFactors      || [],
+                tfAlignment:   (p.tfAlignment?.score    || 0) + '/3',
+                session:       typeof p.session === 'object' ? (p.session?.current || 'unknown') : (p.session || 'unknown'),
+                regime:        p.threeLayer?.layers?.flow?.regime || p.regime || p.marketRegime || 'unknown',
+                quality:       p.setupQuality           || 'unknown',
+                biasReasoning: p.biasReasoning          || '',
+                blockedReason: p.execution?.reason      || p.blockedReason || null,
+                executed:      p.execution?.executed    || false,
+                entry:         p.entry?.price           || null,
+                sl:            p.stopLoss?.price        || null,
+                tp:            p.takeProfits?.[0]?.price || p.takeProfit?.price || null,
+                warnings:      p.warnings               || [],
+                source:        'filesystem',
+              };
+              planMeta = {
+                sl:  p.stopLoss?.price            || 0,
+                tp1: p.takeProfits?.[0]?.price    || 0,
+                tp2: p.takeProfits?.[1]?.price    || 0,
+              };
+            }
+          }
         }
       } catch (e) {
-        console.log('[dashboard] RAG fallback error:', e.message);
+        console.log('[dashboard] filesystem error:', e.message);
       }
     }
 
-    // Tier 4: minimal live signal — agent running, no analysis yet
+    // Tier 3: minimal live signal — agent running, no analysis yet
     if (!signal) {
       signal = {
         bias:          'NEUTRAL',
@@ -221,13 +225,13 @@ app.get('/api/dashboard', async (_req, res) => {
         direction:     null,
         factors:       [],
         tfAlignment:   '—',
-        session:       'Unknown',
+        session:       'unknown',
         regime:        'unknown',
         quality:       'waiting',
         biasReasoning: 'Agent is running — next analysis in ~15 minutes.',
         blockedReason: null,
         executed:      false,
-        source:        'live fallback',
+        source:        'fallback',
       };
     }
 

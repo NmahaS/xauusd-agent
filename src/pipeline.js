@@ -35,6 +35,10 @@ import { detectRegime } from './flow/regimeDetector.js';
 // Three-layer consensus
 import { computeThreeLayerConsensus } from './analysis/threeLayerConsensus.js';
 
+// Global plan cache — lets the dashboard read the latest plan without filesystem
+globalThis._lastAgentPlan = null;
+globalThis._lastAgentPlanTime = null;
+
 function time() {
   return Date.now();
 }
@@ -350,6 +354,19 @@ async function runFullPipeline() {
     fillSize: mergedPlan.execution.size,
     reason: mergedPlan.execution.reason,
   }, null, 2));
+
+  // Cache for dashboard — survives between requests, resets on deploy
+  globalThis._lastAgentPlan = {
+    ...mergedPlan,
+    _cachedAt:     new Date().toISOString(),
+    _atr:          m15Indicators?.atr      || 0,
+    _currentPrice: currentPrice            || 0,
+    _session:      session?.current        || 'unknown',
+    _regime:       typeof regime === 'string' ? regime : (regime?.regime || 'unknown'),
+  };
+  globalThis._lastAgentPlanTime = Date.now();
+  console.log('[pipeline] plan cached for dashboard ✅ bias:', mergedPlan.bias,
+              'direction:', mergedPlan.direction);
 
   // RAG: persist ALL directional signals — executed or blocked (additive, non-blocking)
   if (mergedPlan.direction) {

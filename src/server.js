@@ -160,10 +160,13 @@ app.get('/api/dashboard', async (_req, res) => {
         factors:       lastPlan.confluenceFactors      || [],
         tfAlignment:   (lastPlan.tfAlignment?.score    || 0) + '/3',
         session:       lastPlan.session                || 'Unknown',
-        regime:        lastPlan.threeLayer?.layers?.flow?.regime || 'unknown',
+        regime:        lastPlan.threeLayer?.layers?.flow?.regime ||
+                       lastPlan.marketRegime           || 'unknown',
         quality:       lastPlan.setupQuality           || 'no-trade',
+        biasReasoning: lastPlan.biasReasoning          || '',
         executed:      lastPlan.execution?.executed    || false,
-        blockedReason: lastPlan.execution?.reason      || null,
+        blockedReason: lastPlan.execution?.reason      ||
+                       lastPlan.blockedReason          || null,
       };
       planMeta = {
         sl:  lastPlan.stopLoss?.price    || 0,

@@ -1167,10 +1167,11 @@ function renderSignal(d) {
   const sig  = d.signal;
   const body = $('sig-body');
 
+  /* Only show empty state when API returned no signal object at all */
   if (!sig) {
     body.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-                  height:120px;color:var(--muted);gap:8px">
+                  height:140px;color:var(--muted);gap:8px">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="1" opacity="0.5">
           <path d="M2 12h3m14 0h3M12 2v3m0 14v3
@@ -1183,65 +1184,117 @@ function renderSignal(d) {
     return;
   }
 
-  const TIER_LABELS = { 1:'⚡ TIER 1', 2:'✅ TIER 2', 3:'🔵 TIER 3', 4:'🟡 TIER 4' };
-  const TIER_CLS    = { 1:'bg-amber', 2:'bg-green', 3:'bg-blue', 4:'bg-amber' };
+  /* ── Derived values ─────────────────────────────────────── */
+  const conf       = sig.confluence || 0;
+  const tier       = sig.tier || 3;
+  const biasColor  = sig.bias === 'BULLISH' ? '#00D4A0'
+                   : sig.bias === 'BEARISH' ? '#FF4D6A' : '#9AA0C0';
+  const dirColor   = sig.direction === 'long'  ? '#00D4A0'
+                   : sig.direction === 'short' ? '#FF4D6A' : '#FF8C42';
+  const confColor  = conf >= 8 ? '#00D4A0' : conf >= 6 ? '#FF8C42' : '#FF4D6A';
 
-  const tier    = sig.tier || 3;
-  const conf    = sig.confluence || 0;
-  const confPct = Math.round(conf / 12 * 100);
-  const sColor  = confPct >= 67 ? 's-green' : confPct >= 42 ? 's-amber' : 's-red';
-  const sClass  = confPct >= 67 ? 'c-green'  : confPct >= 42 ? 'c-amber'  : 'c-red';
+  const qualityMap = { 'A+':'★★★ A+', 'A':'★★ Grade A', 'B':'★ Grade B',
+                       'no-trade':'⏸ No Trade', 'blocked':'⛔ Blocked' };
+  const qualityLbl = qualityMap[sig.quality] || sig.quality || '—';
 
-  const segs = Array.from({ length: 12 }, (_, i) =>
-    `<div class="cseg ${i < conf ? sColor : ''}"></div>`
-  ).join('');
-
-  const biasMap = { BULLISH:['bg-green','▲'], BEARISH:['bg-red','▼'], NEUTRAL:['bg-muted','—'] };
-  const [bc, bi] = biasMap[sig.bias] || biasMap.NEUTRAL;
+  const dirLbl = sig.direction ? sig.direction.toUpperCase() : qualityLbl;
 
   const session = typeof sig.session === 'object'
-    ? (sig.session.current || 'unknown')
-    : String(sig.session || 'unknown');
+    ? (sig.session.current || '—').toUpperCase()
+    : String(sig.session || '—').toUpperCase();
 
+  /* ── Confluence bar (12 segments) ───────────────────────── */
+  const cfBar = Array.from({ length: 12 }, (_, i) =>
+    `<div style="flex:1;height:6px;border-radius:2px;background:${
+      i < conf ? confColor : '#1E2235'
+    }"></div>`
+  ).join('');
+
+  /* ── Factors / bias reasoning ───────────────────────────── */
   const factors = sig.factors || [];
   const facHTML = factors.length
-    ? factors.map(f => `<div class="factor-row"><div class="f-dot"></div><span>${f}</span></div>`).join('')
-    : '<div class="factor-row"><span class="c-muted">No confluence factors — no-trade</span></div>';
+    ? factors.slice(0, 6).map(f => `
+        <div style="display:flex;align-items:flex-start;gap:6px;
+                    font-size:11px;color:#9AA0C0;line-height:1.4">
+          <div style="width:5px;height:5px;border-radius:50%;background:#00D4A0;
+                      flex-shrink:0;margin-top:4px"></div>
+          <span>${f}</span>
+        </div>`).join('')
+    : `<div style="font-size:11px;color:#5A6080;line-height:1.5">${
+        sig.biasReasoning
+          ? sig.biasReasoning.slice(0, 160) + (sig.biasReasoning.length > 160 ? '…' : '')
+          : 'No confluence factors — waiting for alignment'
+      }</div>`;
 
-  const dirCls = sig.direction === 'long' ? 'c-green' : sig.direction === 'short' ? 'c-red' : 'c-muted';
-  const dirLbl = sig.direction ? sig.direction.toUpperCase() : 'WAIT';
+  /* ── TF alignment color ─────────────────────────────────── */
+  const tfaColor = sig.tfAlignment === '3/3' ? '#00D4A0'
+                 : sig.tfAlignment === '2/3' ? '#FF8C42' : '#FF4D6A';
 
+  /* ── Blocked / no-trade notice ──────────────────────────── */
+  let noticeHTML = '';
+  if (sig.blockedReason && sig.blockedReason !== 'N/A') {
+    noticeHTML = `
+      <div style="margin-top:8px;padding:6px 10px;background:rgba(255,77,106,0.08);
+                  border-radius:4px;font-size:10px;color:#FF4D6A">
+        ⛔ ${sig.blockedReason}
+      </div>`;
+  } else if (sig.quality === 'no-trade') {
+    const waitMsg = typeof sig.session === 'object'
+      ? (sig.session.recommendedExecutionWindow || 'Wait for better setup')
+      : 'Wait for better confluence';
+    noticeHTML = `
+      <div style="margin-top:8px;padding:6px 10px;background:rgba(255,140,66,0.08);
+                  border-radius:4px;font-size:10px;color:#FF8C42">
+        ⏸ ${waitMsg}
+      </div>`;
+  }
+
+  /* ── Render ─────────────────────────────────────────────── */
   body.innerHTML = `
-    <div class="sig-top">
-      <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px">ANALYSIS RESULT</div>
-      <div class="sig-badges">
-        <span class="badge ${bc}">${bi} ${sig.bias}</span>
-        <span class="badge ${TIER_CLS[tier] || 'bg-muted'}">${TIER_LABELS[tier] || 'TIER ?'}</span>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="display:flex;gap:6px;align-items:center">
+        <span style="font-size:13px;font-weight:600;color:${biasColor}">${sig.bias}</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:3px;
+                     background:#1E2235;color:#9AA0C0">T${tier}</span>
+      </div>
+      <span style="font-size:11px;font-weight:600;color:${dirColor}">${dirLbl}</span>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:10px;
+                  color:var(--muted);margin-bottom:4px">
+        <span>CONFLUENCE</span>
+        <span style="color:${confColor}">${conf}/12</span>
+      </div>
+      <div style="display:flex;gap:2px">${cfBar}</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;
+                max-height:108px;overflow-y:auto">
+      ${facHTML}
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:4px">
+      <div style="background:#0A0C14;border-radius:3px;padding:6px 8px">
+        <div style="font-size:9px;color:var(--muted);margin-bottom:2px;
+                    text-transform:uppercase;letter-spacing:.6px">TF Align</div>
+        <div style="font-size:12px;font-weight:600;color:${tfaColor}">${sig.tfAlignment || '0/3'}</div>
+      </div>
+      <div style="background:#0A0C14;border-radius:3px;padding:6px 8px">
+        <div style="font-size:9px;color:var(--muted);margin-bottom:2px;
+                    text-transform:uppercase;letter-spacing:.6px">Session</div>
+        <div style="font-size:12px;font-weight:600;color:#9AA0C0">${session}</div>
+      </div>
+      <div style="background:#0A0C14;border-radius:3px;padding:6px 8px">
+        <div style="font-size:9px;color:var(--muted);margin-bottom:2px;
+                    text-transform:uppercase;letter-spacing:.6px">Regime</div>
+        <div style="font-size:12px;font-weight:600;color:#9AA0C0">
+          ${(sig.regime || '—').slice(0, 6).toUpperCase()}
+        </div>
       </div>
     </div>
 
-    <div class="conf-hdr">
-      <span class="conf-lbl">Confluence Score</span>
-      <span class="conf-score ${sClass}">${conf}<span class="conf-denom">/12</span></span>
-    </div>
-    <div class="conf-segs">${segs}</div>
-
-    <div class="factors-box">${facHTML}</div>
-
-    <div class="sig-mini-grid">
-      <div class="sig-mini">
-        <div class="sm-lbl">TF Align</div>
-        <div class="sm-val c-sec">${sig.tfAlignment || '0/3'}</div>
-      </div>
-      <div class="sig-mini">
-        <div class="sm-lbl">Session</div>
-        <div class="sm-val c-sec">${session.toUpperCase()}</div>
-      </div>
-      <div class="sig-mini">
-        <div class="sm-lbl">Direction</div>
-        <div class="sm-val ${dirCls}">${dirLbl}</div>
-      </div>
-    </div>
+    ${noticeHTML}
   `;
 }
 

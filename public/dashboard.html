@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>PAXG/USDC — Trading Terminal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -626,12 +626,99 @@ body {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
+
+/* ── Mobile nav ──────────────────────────────────────────── */
+.mobile-nav         { display: none; }
+.mobile-nav-spacer  { display: none; }
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE  ≤ 768px
+══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Wrap padding + bottom clearance for nav */
+  .wrap { padding: 10px 10px 80px !important; }
+
+  /* ── Header: stack left/right vertically ── */
+  .header-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    padding: 10px 12px !important;
+  }
+  .hdr-right {
+    width: 100%;
+    justify-content: space-between !important;
+  }
+  .price-main { font-size: 24px !important; }
+  .vdiv { display: none; }
+
+  /* ── Stats: 2-col grid, balance full-width ── */
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+  .stats-grid > .card:first-child { grid-column: 1 / -1; }
+  .stat-val { font-size: 20px !important; }
+
+  /* ── Price chart: shorter ── */
+  #price-chart-section > div:nth-child(2) { height: 180px !important; }
+  #price-chart-section canvas { max-height: 180px; }
+
+  /* ── Key levels: 2-col ── */
+  #key-levels {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+
+  /* ── Position + signal: single column ── */
+  .position-signal-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── P&L chart ── */
+  .ch-canvas-wrap { height: 180px !important; }
+
+  /* ── Risk rules: 1 column on small screens ── */
+  .risk-rules-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Trade table: hide exit + size ── */
+  .trade-exit-col { display: none !important; }
+  .trade-size-col { display: none !important; }
+  .trade-tbl      { font-size: 11px !important; }
+
+  /* ── Tab / toggle buttons ── */
+  .tab-btn  { font-size: 10px !important; padding: 4px 8px !important; min-height: 32px; }
+  .ch-btn   { font-size: 10px !important; padding: 4px 8px !important; }
+
+  /* ── Card body ── */
+  .card-body { padding: 10px !important; }
+
+  /* ── Bigger tap targets ── */
+  button { min-height: 36px; }
+
+  /* ── Mobile nav visible ── */
+  .mobile-nav        { display: flex !important; }
+  .mobile-nav-spacer { display: block !important; }
+}
+
+/* Remove hover effects on touch devices */
+@media (max-width: 768px) and (hover: none) {
+  .ch-btn:not(.on):hover,
+  .tab-btn:not(.active):hover {
+    background: transparent !important;
+    color: var(--muted) !important;
+  }
+}
 </style>
 </head>
 <body>
 
 <!-- ══ 1 · HEADER ════════════════════════════════════════════ -->
-<div id="hdr">
+<div id="hdr" class="header-row">
   <div class="hdr-left">
     <div class="pulse-dot" id="dot"></div>
 
@@ -665,7 +752,7 @@ body {
 <div class="wrap">
 
   <!-- ══ 2 · STATS ROW ══════════════════════════════════════ -->
-  <div class="stats-row">
+  <div class="stats-row stats-grid">
 
     <div class="card stat-card fade-in">
       <div class="stat-lbl">Balance</div>
@@ -730,7 +817,7 @@ body {
   </div>
 
   <!-- ══ 3 · MAIN GRID ══════════════════════════════════════ -->
-  <div class="main-grid">
+  <div class="main-grid position-signal-grid">
 
     <!-- Open Position -->
     <div class="card">
@@ -760,7 +847,7 @@ body {
   <div class="bot-grid">
 
     <!-- P&L Chart -->
-    <div class="card">
+    <div class="card" id="pl-section">
       <div class="card-hdr">
         <span class="card-lbl">P&amp;L History</span>
         <div class="ch-toggles">
@@ -797,20 +884,20 @@ body {
   </div>
 
   <!-- ══ 5 · TRADE TABLE ════════════════════════════════════ -->
-  <div class="card">
+  <div class="card" id="trade-section">
     <div class="card-hdr">
       <span class="card-lbl">Trade History</span>
       <span class="c-muted" style="font-size:10px" id="tbl-count"></span>
     </div>
     <div class="tbl-wrap">
-      <table class="trade-tbl">
+      <table class="trade-tbl" id="trade-table">
         <thead>
           <tr>
             <th>Time (UTC)</th>
             <th>Dir</th>
             <th>Entry</th>
-            <th>Exit</th>
-            <th>Size</th>
+            <th class="trade-exit-col">Exit</th>
+            <th class="trade-size-col">Size</th>
             <th>P&amp;L</th>
             <th>Status</th>
           </tr>
@@ -1332,7 +1419,7 @@ function renderRisk(d) {
     : '<span class="badge bg-red">BLOCKED</span>';
 
   $('risk-list').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;padding:6px 10px">
+    <div class="risk-rules-grid" style="display:grid;grid-template-columns:1fr 1fr;padding:6px 10px">
       ${checks.map(c => `
         <div style="display:flex;align-items:center;gap:7px;padding:5px 4px;
                     font-size:11px;color:var(--sec)">
@@ -1375,8 +1462,8 @@ function renderTrades(d) {
         <td class="c-muted">${t.time || '—'}</td>
         <td><span class="badge ${dCls}">${t.dir || '—'}</span></td>
         <td>$${parseFloat(t.entry || 0).toFixed(2)}</td>
-        <td>${exit}</td>
-        <td>${parseFloat(t.size || 0).toFixed(4)}</td>
+        <td class="trade-exit-col">${exit}</td>
+        <td class="trade-size-col">${parseFloat(t.size || 0).toFixed(4)}</td>
         <td class="${pCls}">${fUSD(pnl)}</td>
         <td><span class="badge ${stCls}">${t.status || '—'}</span></td>
       </tr>`;
@@ -1603,5 +1690,30 @@ fetchAndRender().then(startCountdown);
 renderPriceChart('15m');
 setInterval(() => renderPriceChart(currentTF), 15 * 60 * 1000);
 </script>
+
+<nav class="mobile-nav" style="
+  position:fixed;bottom:0;left:0;right:0;
+  background:#0F1220;border-top:1px solid #1E2235;
+  justify-content:space-around;padding:8px 0 14px;z-index:200;
+">
+  <button onclick="scrollTo({top:0,behavior:'smooth'})" style="background:none;border:none;color:#9AA0C0;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-family:'IBM Plex Mono',monospace;min-height:auto">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    OVERVIEW
+  </button>
+  <button onclick="document.getElementById('price-chart-section').scrollIntoView({behavior:'smooth'})" style="background:none;border:none;color:#9AA0C0;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-family:'IBM Plex Mono',monospace;min-height:auto">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    CHART
+  </button>
+  <button onclick="document.getElementById('pl-section').scrollIntoView({behavior:'smooth'})" style="background:none;border:none;color:#9AA0C0;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-family:'IBM Plex Mono',monospace;min-height:auto">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    P&amp;L
+  </button>
+  <button onclick="document.getElementById('trade-section').scrollIntoView({behavior:'smooth'})" style="background:none;border:none;color:#9AA0C0;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-family:'IBM Plex Mono',monospace;min-height:auto">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    TRADES
+  </button>
+</nav>
+
+<div class="mobile-nav-spacer"></div>
 </body>
 </html>

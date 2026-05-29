@@ -9,6 +9,10 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 
 const PORT = process.env.PORT || 3000;
 
+app.get('/', (_req, res) => {
+  res.redirect('/dashboard');
+});
+
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',

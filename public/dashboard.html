@@ -1063,20 +1063,29 @@ function switchChart(mode) {
 }
 
 function renderChart(d) {
-  const hist = chartMode === 'week' ? d.weeklyHistory : d.monthlyHistory;
-  if (Array.isArray(hist) && hist.length) {
-    buildChart(hist.map(h => h.label), hist.map(h => h.pl));
+  const hist = chartMode === 'week'
+    ? (d.weeklyHistory  || [])
+    : (d.monthlyHistory || []);
+
+  if (!hist.length) {
+    console.warn('[chart] no history data for mode:', chartMode);
+    /* fallback: show current week with today's P&L */
+    const today  = new Date().getUTCDay();
+    const labels = [];
+    const vals   = [];
+    for (let i = 6; i >= 0; i--) {
+      labels.push(DAY_NAMES[(today - i + 7) % 7]);
+      vals.push(i === 0 ? (d.dailyPL || 0) : 0);
+    }
+    buildChart(labels, vals);
     return;
   }
-  /* fallback: show current week with today's P&L */
-  const today   = new Date().getUTCDay();
-  const labels  = [];
-  const vals    = [];
-  for (let i = 6; i >= 0; i--) {
-    labels.push(DAY_NAMES[(today - i + 7) % 7]);
-    vals.push(i === 0 ? (d.dailyPL || 0) : 0);
-  }
-  buildChart(labels, vals);
+
+  /* monthlyHistory uses .pnl, weeklyHistory uses .pl — handle both */
+  buildChart(
+    hist.map(h => h.label),
+    hist.map(h => h.pnl ?? h.pl ?? 0)
+  );
 }
 
 /* ── Header ─────────────────────────────────────────────────── */

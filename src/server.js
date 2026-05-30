@@ -106,6 +106,26 @@ app.get('/api/dashboard', async (_req, res) => {
       weeklyHistory.push({ label: DAY[dayStart.getUTCDay()], pl: parseFloat(pl.toFixed(2)) });
     }
 
+    /* ── Monthly history (last 4 weeks grouped by week) ─────── */
+    const monthlyHistory = [];
+    for (let w = 3; w >= 0; w--) {
+      const weekEnd = new Date();
+      weekEnd.setUTCDate(weekEnd.getUTCDate() - (w * 7));
+      weekEnd.setUTCHours(23, 59, 59, 999);
+      const weekStart = new Date(weekEnd);
+      weekStart.setUTCDate(weekEnd.getUTCDate() - 6);
+      weekStart.setUTCHours(0, 0, 0, 0);
+
+      const wFills = fills.filter(f => {
+        const t = new Date(f.time);
+        return t >= weekStart && t <= weekEnd;
+      });
+      const weekPL = wFills.filter(f => f.isClose).reduce((s, f) => s + (f.closedPnl || 0), 0)
+                   - wFills.reduce((s, f) => s + (f.fee || 0), 0);
+      const weekLabel = 'W' + (4 - w) + ' ' + weekStart.toISOString().slice(5, 10);
+      monthlyHistory.push({ label: weekLabel, pnl: parseFloat(weekPL.toFixed(2)) });
+    }
+
     /* ── Recent closed trades ───────────────────────────────── */
     const recentTrades = [...fills]
       .filter(f => f.isClose)
@@ -254,6 +274,7 @@ app.get('/api/dashboard', async (_req, res) => {
       signal,
       trades:         recentTrades,
       weeklyHistory,
+      monthlyHistory,
       weeklyGoal:     5.00,
     });
   } catch (err) {

@@ -317,6 +317,19 @@ async function runFullPipeline() {
   };
   mergedPlan.threeLayer = threeLayer ?? null;
 
+  // Safety sweep: attach SL/TP to any open position left naked by a GTC entry that
+  // filled between runs (the resting-taker model can fill outside a pipeline cycle, and
+  // a "hold"/no-signal run would otherwise never protect it). Live mode only.
+  if (process.env.AUTO_TRADE === 'true' && process.env.DRY_EXECUTE !== 'true' && process.env.DRY_RUN !== 'true') {
+    try {
+      const { protectNakedPositions } = await import('./broker/executor.js');
+      const prot = await protectNakedPositions(ctx);
+      if (prot.protected > 0) console.log(`[pipeline] protected ${prot.protected} naked position(s) ✅`);
+    } catch (err) {
+      console.warn('[pipeline] naked-position sweep failed (non-fatal):', err.message);
+    }
+  }
+
   // Step B: Auto-execution — execute immediately at market price, no POI waiting
   let execution = { executed: false, reason: 'N/A' };
   if (mergedPlan.direction) {

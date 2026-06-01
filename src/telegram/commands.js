@@ -506,7 +506,8 @@ async function handleRisk() {
   msg += `Counter-H4 trades: blocked ⛔\n`;
   msg += `Min confluence: ${RISK_RULES.requiredConfluence}/12\n`;
   msg += `Blocked tiers: ${RISK_RULES.blockedTiers?.join(', ') || 'none'}\n`;
-  msg += `TF alignment: required\n\n`;
+  msg += `TF alignment: required\n`;
+  msg += `Entry style: GTC limit (cancel on direction change)\n\n`;
 
   msg += '<b>Hard blocks:</b>\n';
   msg += `Friday after 15:00 UTC ⛔\n`;

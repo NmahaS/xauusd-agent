@@ -241,6 +241,41 @@ export async function executeIfApproved(plan, context) {
     return out;
   }
 
+  // 0. Cancel-on-new-signal: manage any resting (unfilled) GTC entry order from a prior run.
+  //    Same direction → keep waiting for fill. Direction flip → cancel, then place fresh below.
+  try {
+    const { getOpenOrders, cancelOrder } = await import('./hyperliquid.js');
+
+    const openOrders = await getOpenOrders();
+    const pendingEntry = openOrders.find(o =>
+      o.coin === coin &&
+      !o.reduceOnly &&
+      o.orderType !== 'Stop Market'
+    );
+
+    if (pendingEntry) {
+      console.log('[executor] found pending entry order:', pendingEntry.oid, '@', pendingEntry.limitPx);
+
+      const pendingDir = pendingEntry.side === 'B' ? 'long' : 'short';
+
+      if (pendingDir === plan.direction) {
+        // Same direction — keep the order, don't place a new one.
+        console.log('[executor] same direction — keeping pending order', pendingEntry.oid);
+        out.reason = 'Pending entry order kept — waiting for fill @ $' + pendingEntry.limitPx;
+        out.pendingOrderId = pendingEntry.oid;
+        return out;
+      } else {
+        // Direction changed — cancel old order, then place new one below.
+        console.log('[executor] direction changed — cancelling pending order', pendingEntry.oid);
+        await cancelOrder(coin, pendingEntry.oid);
+        await new Promise(r => setTimeout(r, 1000));
+        console.log('[executor] cancelled — placing new', plan.direction, 'order');
+      }
+    }
+  } catch (err) {
+    console.warn('[executor] pending-order check failed (non-fatal):', err.message);
+  }
+
   // 1. Account state from Hyperliquid
   let account = await getAccountState();
   if (!account.ok) {
@@ -405,11 +440,11 @@ export async function executeIfApproved(plan, context) {
   const useMaker = distanceToEntry <= 8 && !!plan.entry?.price;
 
   console.log('[executor] entry distance:', distanceToEntry.toFixed(2) + 'pts');
-  console.log('[executor] order mode:', useMaker ? 'MAKER (GTC)' : 'TAKER (IOC)');
+  console.log('[executor] order mode:', useMaker ? 'MAKER (GTC)' : 'TAKER (GTC)');
 
   // 5. PRE-FLIGHT — always logged before any POST
   console.log(
-    `[executor] PRE-FLIGHT: ${useMaker ? 'MAKER (GTC)' : 'TAKER (IOC)'} ${plan.direction.toUpperCase()} ${sizing.size} PAXG` +
+    `[executor] PRE-FLIGHT: ${useMaker ? 'MAKER (GTC)' : 'TAKER (GTC)'} ${plan.direction.toUpperCase()} ${sizing.size} PAXG` +
     ` markPrice=${markPrice}` +
     ` SL=${finalSL.toFixed(2)} TP=${finalTP.toFixed(2)} (${dynamicLevels.tpRR}R)` +
     ` risk=${riskPct}% = $${sizing.actualRisk}`
@@ -436,7 +471,7 @@ export async function executeIfApproved(plan, context) {
     return out;
   }
 
-  // 7. Real order (market IOC) + partial TP limit orders + SL trigger
+  // 7. Real order (GTC limit) — SL/TP attach after fill via reconcileUnifiedSL
   let placed;
   try {
     placed = await placeHLOrder({
@@ -500,10 +535,13 @@ export async function executeIfApproved(plan, context) {
     },
   };
 
-  // Bug 5 fix: exit early if IOC didn't fill — no position, no SL/TP to place
+  // Exit early if the GTC entry is still resting — no position yet, so no SL/TP to place.
+  // The resting order waits on the book; the next pipeline run re-checks it (keep or cancel).
   if (placed.status === 'unfilled' || !placed.fillSize) {
-    out.reason = 'IOC order did not fill — no position opened, no SL/TP placed';
-    console.warn('[executor] IOC order did not fill — skipping trade log and SL/TP');
+    const pendPx = placed.fillPrice ?? markPrice;
+    out.reason = 'Limit order pending — waiting for fill @ $' + Number(pendPx).toFixed(2);
+    out.pendingOrderId = placed.orderId ?? null;
+    console.warn('[executor] entry order resting (GTC) — no fill yet, SL/TP deferred to next run');
     return out;
   }
 
@@ -640,18 +678,19 @@ async function reconcileUnifiedSL(coin, direction, context, fallbackSize, fallba
   console.log('[executor] waiting 4s for cancellations to confirm...');
   await new Promise(r => setTimeout(r, 4000));
 
-  // Final verification — count remaining SL orders before placing new ones
+  // Final verification — count remaining SL orders before placing new ones.
+  // frontendOpenOrders: plain openOrders omits orderType/isTrigger so this matched nothing.
   const ordersCheck = await fetch('https://api.hyperliquid.xyz/info', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'openOrders', user: process.env.HL_WALLET_ADDRESS }),
+    body: JSON.stringify({ type: 'frontendOpenOrders', user: process.env.HL_WALLET_ADDRESS }),
   }).then(r => r.json());
 
   const remainingSLs = Array.isArray(ordersCheck) &&
     ordersCheck.filter(o =>
       o.coin === coin &&
       o.reduceOnly &&
-      (o.orderType === 'Stop Market' || o.triggerCondition)
+      (o.orderType === 'Stop Market' || o.orderType === 'Stop Limit' || o.isTrigger === true)
     );
 
   if (remainingSLs && remainingSLs.length > 0) {
@@ -674,14 +713,14 @@ async function reconcileUnifiedSL(coin, direction, context, fallbackSize, fallba
     const finalOrders = await fetch('https://api.hyperliquid.xyz/info', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'openOrders', user: process.env.HL_WALLET_ADDRESS }),
+      body: JSON.stringify({ type: 'frontendOpenOrders', user: process.env.HL_WALLET_ADDRESS }),
     }).then(r => r.json());
 
     const finalSLs = Array.isArray(finalOrders) &&
       finalOrders.filter(o =>
         o.coin === coin &&
         o.reduceOnly &&
-        (o.orderType === 'Stop Market' || o.triggerCondition)
+        (o.orderType === 'Stop Market' || o.orderType === 'Stop Limit' || o.isTrigger === true)
       );
 
     if (finalSLs && finalSLs.length > 1) {
@@ -734,6 +773,100 @@ export async function updateUnifiedSLTP(coin, direction, totalSize, newSLPrice, 
   await placeTP({ coin, direction, size: totalSize, tpPrice: newTPPrice });
 
   console.log(`[executor] unified SL/TP updated ✅`);
+}
+
+// Safety net for the resting-GTC entry model: a limit entry can fill BETWEEN pipeline
+// runs, leaving a live position with no stop-loss (the next run may decide "hold" and
+// return early, or produce no signal at all so the executor never runs). This sweep runs
+// every cycle and attaches SL/TP to any open position lacking a stop-loss. No-op when the
+// position is already protected — detection uses frontendOpenOrders (the plain openOrders
+// endpoint omits the isTrigger/orderType fields needed to recognise a stop).
+export async function protectNakedPositions(context) {
+  const coin = process.env.HL_COIN || 'PAXG';
+  const { getHLPositions, getOpenOrdersDetailed, cancelOrder, placeSL, placeTP } =
+    await import('./hyperliquid.js');
+
+  let positions;
+  try {
+    positions = await getHLPositions();
+  } catch (err) {
+    console.warn('[protect] could not fetch positions — skipping sweep:', err.message);
+    return { checked: 0, protected: 0 };
+  }
+  const open = positions.filter(p => p.coin === coin && p.size > 0);
+  if (open.length === 0) return { checked: 0, protected: 0 };
+
+  let orders;
+  try {
+    orders = await getOpenOrdersDetailed();
+  } catch (err) {
+    // Fail safe: if we can't read orders we cannot tell protected from naked — do NOT
+    // place blind SL/TP (risk of duplicates). Skip and retry next cycle.
+    console.warn('[protect] could not fetch orders — skipping sweep (fail-safe):', err.message);
+    return { checked: open.length, protected: 0 };
+  }
+
+  let protectedCount = 0;
+  for (const pos of open) {
+    const reduceOrders = orders.filter(o => o.coin === coin && o.reduceOnly);
+    const hasSL = reduceOrders.some(o =>
+      o.isTrigger === true || o.orderType === 'Stop Market' || o.orderType === 'Stop Limit'
+    );
+    if (hasSL) {
+      console.log(`[protect] ${coin} ${pos.direction} ${pos.size} — stop-loss present ✅`);
+      continue;
+    }
+
+    console.warn(`[protect] ⚠️ NAKED POSITION: ${pos.direction} ${pos.size} ${coin} @ $${pos.entryPrice} — no stop-loss, attaching SL/TP`);
+
+    const entry = pos.entryPrice;
+    if (!entry || isNaN(entry) || entry <= 0) {
+      console.error(`[protect] invalid entry price (${entry}) — cannot size SL/TP, alerting only`);
+      if (process.env.DRY_RUN !== 'true') {
+        const { sendTelegramMessage } = await import('../telegram/notify.js');
+        await sendTelegramMessage(
+          `⚠️ <b>Naked position — manual SL needed</b>\n` +
+          `${pos.direction.toUpperCase()} ${pos.size} ${coin} has no stop-loss and an invalid entry price.\n` +
+          `Set SL/TP manually on Hyperliquid now!`
+        ).catch(() => {});
+      }
+      continue;
+    }
+
+    // Cancel any stray reduce-only orders (e.g. an orphan TP) so we don't double up.
+    for (const o of reduceOrders) {
+      try {
+        await cancelOrder(coin, o.oid);
+        await new Promise(r => setTimeout(r, 300));
+      } catch (err) {
+        console.warn('[protect] stray reduce-only cancel failed:', err.message);
+      }
+    }
+
+    const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 8;
+    const { slPrice, tpPrice, tpRR, label } = getDynamicSLTP(pos.direction, entry, atr);
+
+    let slOk = false, tpOk = false;
+    try { slOk = await placeSL({ coin, direction: pos.direction, size: pos.size, slPrice }); }
+    catch (err) { console.error('[protect] SL placement error:', err.message); }
+    try { tpOk = await placeTP({ coin, direction: pos.direction, size: pos.size, tpPrice }); }
+    catch (err) { console.error('[protect] TP placement error:', err.message); }
+
+    if (slOk) protectedCount++;
+
+    if (process.env.DRY_RUN !== 'true') {
+      const { sendTelegramMessage } = await import('../telegram/notify.js');
+      await sendTelegramMessage(
+        `🛡 <b>Protected naked position</b>\n` +
+        `${pos.direction.toUpperCase()} ${pos.size} ${coin} @ $${entry.toFixed(2)} had no stop-loss\n` +
+        `(GTC entry likely filled between runs)\n` +
+        `🛑 SL: $${slPrice.toFixed(2)}  🎯 TP: $${tpPrice.toFixed(2)} (${tpRR}R, ${label})\n` +
+        (slOk && tpOk ? `Placed ✅` : `⚠️ SL ${slOk} / TP ${tpOk} — verify manually on Hyperliquid!`)
+      ).catch(() => {});
+    }
+  }
+
+  return { checked: open.length, protected: protectedCount };
 }
 
 // Close an open Hyperliquid position (used by /close command).

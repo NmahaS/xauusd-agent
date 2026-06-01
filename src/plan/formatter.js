@@ -166,7 +166,7 @@ export function formatPlanForTelegram(plan, extras = {}) {
     lines.push(`<b>Direction:</b> ${esc(plan.direction.toUpperCase())}`);
     lines.push(`<b>POI:</b> ${esc(plan.poi.type)} @ [${cp(plan.poi.zone[0])} – ${cp(plan.poi.zone[1])}]`);
     lines.push(`  <i>${esc(plan.poi.reasoning)}</i>`);
-    const entryLabel = plan.entry.trigger === 'limit' ? 'market order (IOC)' : 'market';
+    const entryLabel = plan.entry.trigger === 'limit' ? 'GTC limit' : 'market';
     lines.push(`<b>Entry:</b> ${entryLabel} @ ~${cp(plan.entry.price)}`);
     lines.push(`  <i>${esc(plan.entry.confirmation)}</i>`);
     const slDist = Math.abs(plan.entry.price - plan.stopLoss.price);
@@ -225,6 +225,15 @@ export function formatPlanForTelegram(plan, extras = {}) {
           `<b>❌ ORDER FAILED — API wallet not authorized</b>\n` +
           `Go to app.hyperliquid.xyz → Settings → API Wallets → Authorize`
         );
+      } else if (reason.includes('Pending entry order kept') || reason.includes('Limit order pending')) {
+        const priceMatch = reason.match(/\$\s*([\d.]+)/);
+        const pendPrice = priceMatch ? priceMatch[1]
+          : plan.entry?.price != null ? fmt(plan.entry.price) : '?';
+        const dir = (plan.direction || '').toUpperCase() || 'n/a';
+        lines.push(`⏳ <b>Limit order pending</b>`);
+        lines.push(`Waiting for fill @ $${pendPrice}`);
+        lines.push(`Direction: ${dir}`);
+        lines.push(`Will cancel if direction changes next signal`);
       } else {
         lines.push(`<b>⏸ Auto-trade blocked:</b> ${esc(reason)}`);
       }

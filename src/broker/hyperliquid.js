@@ -209,7 +209,7 @@ export async function placeHLOrder({ coin, direction, size, markPrice, plan, ord
 
   const isBuy = direction === 'long';
 
-  // Step 1: Entry order — maker (GTC at plan entry) or taker (IOC 0.5% through market)
+  // Step 1: Entry order — maker (GTC at plan entry) or taker (GTC at current price)
   let orderPrice, tif;
   if (orderMode === 'maker') {
     const rawEntry = plan.entry?.price || markPrice;
@@ -217,13 +217,11 @@ export async function placeHLOrder({ coin, direction, size, markPrice, plan, ord
     tif = 'Gtc';
     console.log(`[hl-exec] MAKER order @ $${orderPrice} (0.010% fee)`);
   } else {
-    const slippage = 0.005;
-    orderPrice = roundToTickSize(
-      isBuy ? markPrice * (1 + slippage) : markPrice * (1 - slippage),
-      tickSize
-    );
-    tif = 'Ioc';
-    console.log(`[hl-exec] TAKER order @ $${orderPrice} (0.035% fee)`);
+    // GTC limit at the current price — rests on the book and waits for fill.
+    // The next pipeline run keeps it (same direction) or cancels it (direction flip).
+    orderPrice = roundToTickSize(markPrice, tickSize);
+    tif = 'Gtc';
+    console.log(`[hl-exec] TAKER order (GTC @ current price $${orderPrice}) — resting, waits for fill`);
   }
 
   console.log(`[hl] tick size: ${tickSize} szDecimals: ${szDecimals}`);
@@ -351,7 +349,7 @@ export async function placeHLOrder({ coin, direction, size, markPrice, plan, ord
     fillSize = filledData?.totalSz ? parseFloat(filledData.totalSz) : size;
 
     if (!filledData) {
-      console.warn(`[hl-exec] entry IOC did not fill — skipping SL/TP placement`);
+      console.warn(`[hl-exec] entry GTC order resting (not filled yet) — SL/TP deferred until fill`);
       return { orderId, fillPrice, fillSize: 0, direction, slPlaced: false, tpCount: 0, coin, status: 'unfilled' };
     }
   }
@@ -703,10 +701,12 @@ export async function transferSpotToPerp(amountUSD) {
 
 export async function cancelExistingSL(coin) {
   try {
+    // frontendOpenOrders — plain openOrders omits orderType/isTrigger, so its SL filter
+    // matched nothing and let duplicate stops accumulate.
     const res = await fetch(`${HL_BASE}/info`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'openOrders', user: process.env.HL_WALLET_ADDRESS }),
+      body: JSON.stringify({ type: 'frontendOpenOrders', user: process.env.HL_WALLET_ADDRESS }),
     });
     const orders = await res.json();
     if (!Array.isArray(orders)) return;
@@ -714,7 +714,7 @@ export async function cancelExistingSL(coin) {
     const slOrders = orders.filter(o =>
       o.coin === coin &&
       o.reduceOnly === true &&
-      (o.orderType === 'Stop Market' || o.orderType === 'Stop Limit' || o.triggerCondition)
+      (o.orderType === 'Stop Market' || o.orderType === 'Stop Limit' || o.isTrigger === true)
     );
     console.log(`[hl-exec] found ${slOrders.length} existing SL orders to cancel`);
 
@@ -763,10 +763,11 @@ export async function cancelExistingSL(coin) {
 
 export async function cancelExistingTP(coin) {
   try {
+    // frontendOpenOrders — plain openOrders omits orderType, so this filter matched nothing.
     const res = await fetch(`${HL_BASE}/info`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'openOrders', user: process.env.HL_WALLET_ADDRESS }),
+      body: JSON.stringify({ type: 'frontendOpenOrders', user: process.env.HL_WALLET_ADDRESS }),
     });
     const orders = await res.json();
     if (!Array.isArray(orders)) return;
@@ -774,7 +775,8 @@ export async function cancelExistingTP(coin) {
     const tpOrders = orders.filter(o =>
       o.coin === coin &&
       o.reduceOnly === true &&
-      o.orderType === 'Limit'
+      o.orderType === 'Limit' &&
+      o.isTrigger !== true
     );
     console.log(`[hl-exec] found ${tpOrders.length} existing TP orders to cancel`);
 
@@ -794,6 +796,74 @@ export async function cancelExistingTP(coin) {
   } catch (err) {
     console.warn('[hl-exec] cancelExistingTP failed:', err.message);
   }
+}
+
+// Returns all open (resting) orders for the main wallet, normalized.
+export async function getOpenOrders() {
+  const res = await fetchWithRetry(`${HL_BASE}/info`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type: 'openOrders',
+      user: process.env.HL_WALLET_ADDRESS,
+    }),
+  });
+  const orders = await res.json();
+  return Array.isArray(orders) ? orders.map(o => ({
+    oid: o.oid,
+    coin: o.coin,
+    side: o.side,
+    limitPx: parseFloat(o.limitPx),
+    sz: parseFloat(o.sz),
+    reduceOnly: o.reduceOnly,
+    orderType: o.orderType,
+  })) : [];
+}
+
+// Rich open-order info via frontendOpenOrders — the plain `openOrders` endpoint omits
+// orderType/isTrigger/triggerCondition, so only this endpoint can distinguish SL vs TP.
+export async function getOpenOrdersDetailed() {
+  const res = await fetchWithRetry(`${HL_BASE}/info`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type: 'frontendOpenOrders',
+      user: process.env.HL_WALLET_ADDRESS,
+    }),
+  });
+  const orders = await res.json();
+  return Array.isArray(orders) ? orders.map(o => ({
+    oid: o.oid,
+    coin: o.coin,
+    side: o.side,
+    limitPx: parseFloat(o.limitPx),
+    sz: parseFloat(o.sz),
+    reduceOnly: o.reduceOnly,
+    orderType: o.orderType,
+    isTrigger: o.isTrigger,
+    triggerPx: o.triggerPx != null ? parseFloat(o.triggerPx) : null,
+  })) : [];
+}
+
+// Cancels a single resting order by oid.
+export async function cancelOrder(coin, oid) {
+  const { idx: assetIdx } = await getAssetIndex(coin);
+  const wallet = getWallet();
+  const cancelAction = {
+    type: 'cancel',
+    cancels: [{ a: assetIdx, o: oid }],
+  };
+  const nonce = Date.now();
+  const sig = await signHLAction(wallet, cancelAction, nonce);
+  const res = await fetchWithRetry(`${HL_BASE}/exchange`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: cancelAction, nonce, signature: sig }),
+  });
+  const data = await res.json();
+  console.log('[hl] cancelled order', oid, ':',
+    JSON.stringify(data?.response?.data?.statuses?.[0]));
+  return data;
 }
 
 export async function placeSL({ coin, direction, size, slPrice }) {
@@ -891,6 +961,8 @@ export async function closeHLPosition(coin, direction, size) {
   const rawClose = isBuy ? markPrice * 1.005 : markPrice * 0.995;
   const closePrice = roundToTickSize(rawClose, tickSize);
 
+  // GTC limit priced 0.5% through the market — crosses and fills immediately as a
+  // reduce-only taker close; any tiny remainder rests reduce-only rather than being killed.
   const closeAction = {
     type: 'order',
     orders: [{
@@ -899,7 +971,7 @@ export async function closeHLPosition(coin, direction, size) {
       p: formatPrice(closePrice),
       s: formatSize(size, szDecimals),
       r: true,
-      t: { limit: { tif: 'Ioc' } },
+      t: { limit: { tif: 'Gtc' } },
     }],
     grouping: 'na',
   };

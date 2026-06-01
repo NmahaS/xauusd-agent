@@ -145,11 +145,42 @@ app.get('/api/dashboard', async (_req, res) => {
     let signal   = null;
     let planMeta = null;
 
+    /* Resolve TF alignment to an "X/3" string. Handles a persisted tfAlignment in
+       any shape (string | number | {score} | {h4,h1,m15} booleans), and otherwise
+       DERIVES it from threeLayer.layers.technical biases vs the trade direction —
+       which is what last-plan.json actually contains (tfAlignment is not persisted). */
+    function resolveTfAlignment(p) {
+      const tfa = p.tfAlignment;
+      if (typeof tfa === 'string') return tfa;
+      if (typeof tfa === 'number') return tfa + '/3';
+      if (tfa && typeof tfa.score === 'number') return tfa.score + '/3';
+      if (tfa && (tfa.h4 !== undefined || tfa.h1 !== undefined || tfa.m15 !== undefined)) {
+        return ((tfa.h4 ? 1 : 0) + (tfa.h1 ? 1 : 0) + (tfa.m15 ? 1 : 0)) + '/3';
+      }
+      const tech = p.threeLayer?.layers?.technical;
+      const target =
+        p.direction === 'long'     ? 'bullish' :
+        p.direction === 'short'    ? 'bearish' :
+        tech?.h4Bias === 'bullish' ? 'bullish' :
+        tech?.h4Bias === 'bearish' ? 'bearish' : null;
+      if (tech && target) {
+        return ((tech.h4Bias  === target ? 1 : 0)
+              + (tech.h1Bias  === target ? 1 : 0)
+              + (tech.m15Bias === target ? 1 : 0)) + '/3';
+      }
+      return '0/3';
+    }
+
     /* helper: build signal + planMeta from a raw plan object */
     function planToSignal(p, source) {
       const ageMin = p._cachedAt
         ? (Date.now() - new Date(p._cachedAt).getTime()) / 60000
         : null;
+      const tfaResolved = resolveTfAlignment(p);
+      const _tech = p.threeLayer?.layers?.technical;
+      console.log('[dashboard] tfAlignment raw:', JSON.stringify(p.tfAlignment),
+        '| technical:', _tech ? `h4=${_tech.h4Bias} h1=${_tech.h1Bias} m15=${_tech.m15Bias} dir=${p.direction}` : 'none',
+        '→ resolved:', tfaResolved);
       return {
         signal: {
           bias:          p.direction === 'long'  ? 'BULLISH' :
@@ -160,7 +191,7 @@ app.get('/api/dashboard', async (_req, res) => {
           confluence:    p.confluenceCount        || 0,
           direction:     p.direction              || null,
           factors:       p.confluenceFactors      || [],
-          tfAlignment:   (p.tfAlignment?.score    || 0) + '/3',
+          tfAlignment:   tfaResolved,
           session:       p._session || (typeof p.session === 'object' ? p.session?.current : p.session) || 'unknown',
           regime:        p._regime  || p.threeLayer?.layers?.flow?.regime || p.regime || p.marketRegime || 'unknown',
           quality:       p.setupQuality           || 'unknown',

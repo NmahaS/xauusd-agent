@@ -93,20 +93,16 @@ export async function computeThreeLayerConsensus(ctx) {
   };
 
   // ─── DIRECTION ────────────────────────────────────────────────────────────
-  // H4 sets direction; M15 confirms execution; H1 pullback does NOT block direction.
-  // If no M15 data, fall back to requiring H4+H1 alignment.
+  // H4 sets the trend direction. A trade needs at least one lower TF to confirm:
+  // H1 aligned (trend confirmed — preferred) OR M15 aligned (execution confirmed).
+  // If only H4 points and BOTH H1 and M15 disagree, there is no confirmation → no trade.
+  // An opposite M15 while H1 confirms is a normal pullback, NOT a conflict (see tiers).
   const macroBullish = macroScore.bullish;
   const macroBearish = macroScore.bearish;
 
-  let techCandidateDir = null;
-  if (h4Direction) {
-    if (m15Direction != null) {
-      techCandidateDir = h4AndM15Agree ? h4Direction : null;
-    } else {
-      // No M15 data — require H4+H1 alignment as fallback
-      techCandidateDir = h1AlignsWithH4 ? h4Direction : null;
-    }
-  }
+  const techCandidateDir = (h4Direction && (h1AlignsWithH4 || h4AndM15Agree))
+    ? h4Direction
+    : null;
 
   if (techCandidateDir === 'long' && (macroBullish || macroBias === 'neutral')) result.direction = 'long';
   else if (techCandidateDir === 'short' && (macroBearish || macroBias === 'neutral')) result.direction = 'short';
@@ -131,12 +127,10 @@ export async function computeThreeLayerConsensus(ctx) {
     console.log('[3layer] volatile_tradeable — warning added, trade allowed');
   }
 
-  // 2. M15 conflicts with H4 — execution TF misaligned, hard block
-  if (h4Direction && m15Direction && !h4AndM15Agree) {
-    result.blockingFactors.push(
-      `M15 ${m15Direction} conflicts with H4 ${h4Direction} trend — execution TF misaligned`
-    );
-  }
+  // 2. M15 vs H4 is NO LONGER a hard block. When H1 confirms H4 (trend intact),
+  // an opposite M15 is a corrective pullback → handled as Tier 2 below. When NO
+  // lower TF confirms H4, direction is already null above → falls through to
+  // Tier 4 (no-trade). Either way, M15 opposition alone never forces a block.
 
   // 3. Macro AND flow both oppose technical direction — structural headwind
   if (result.direction === 'long' && macroBearish && flowScore.score >= 1) {
@@ -157,45 +151,62 @@ export async function computeThreeLayerConsensus(ctx) {
   }
 
   // ─── TIER CLASSIFICATION ──────────────────────────────────────────────────
+  // H4 = trend, H1 = confirmation, M15 = entry timing.
+  //   • H4+H1+M15 all aligned      → Tier 1 (macro strong) / Tier 2
+  //   • H4+H1 aligned, M15 opposite → Tier 2 (pullback entry — M15 is corrective)
+  //   • H4+M15 aligned, H1 opposite → Tier 3 (H1 pullback — weaker, signal only)
+  //   • anything else with a dir    → Tier 3; no confirmation → Tier 4 (no-trade)
   const allFactors = [...macroScore.factors, ...flowFactors, ...techConfluence.factors];
   result.allFactors = allFactors;
 
+  const dirWord = result.direction === 'long' ? 'bullish' : 'bearish';
   const macroFlowAgree = (macroBullish && result.direction === 'long') ||
                           (macroBearish && result.direction === 'short');
-  // Full TF alignment: H4+M15+H1 all same direction
-  const allTFsAligned = h4AndM15Agree && h1AlignsWithH4;
-  // Pullback trade: H4+M15 agree but H1 is corrective (opposite)
-  const isPullbackTrade = h4AndM15Agree && h1PullbackInH4;
+  const allTFsAligned = h4AndM15Agree && h1AlignsWithH4;   // H4+H1+M15 same direction
+  const m15Pullback   = h1AlignsWithH4 && !h4AndM15Agree;  // H4+H1 agree, M15 corrective
+  const h1Pullback    = h4AndM15Agree && !h1AlignsWithH4;  // H4+M15 agree, H1 corrective
 
-  const allLayersAligned = macroFlowAgree && flowScore.score >= 1 && techConfluence.count >= 5;
-
-  if (result.direction && allLayersAligned && allTFsAligned && macroScore.strong) {
+  if (result.direction && allTFsAligned && macroFlowAgree && macroScore.strong && techConfluence.count >= 5) {
     result.tier = 1;
     result.tierLabel = 'TIER 1 — All layers strongly aligned';
     result.autoExecute = true;
     result.riskMultiplier = 1.5;
-  } else if (result.direction && allLayersAligned && allTFsAligned) {
+    console.log('[3layer] TIER 1 — H4+H1+M15 aligned, macro strong');
+  } else if (result.direction && allTFsAligned) {
     result.tier = 2;
-    result.tierLabel = 'TIER 2 — All layers aligned';
+    result.tierLabel = 'TIER 2 — All TFs aligned';
     result.autoExecute = true;
     result.riskMultiplier = 1.0;
-  } else if (result.direction && techConfluence.count >= 5) {
+    console.log('[3layer] TIER 2 — H4+H1+M15 all aligned');
+  } else if (result.direction && m15Pullback) {
+    // H4+H1 confirm the trend; M15 opposite = corrective pullback = classic entry.
+    result.tier = 2;
+    result.tierLabel = `TIER 2 — H4+H1 ${dirWord}, M15 pullback entry`;
+    result.autoExecute = true;
+    result.riskMultiplier = 1.0;
+    result.warnings = result.warnings || [];
+    result.warnings.push(`M15 pullback against H4+H1 ${dirWord} trend — corrective entry`);
+    console.log(`[3layer] TIER 2 — H4+H1 ${dirWord}, M15 pullback entry`);
+  } else if (result.direction && h1Pullback) {
     result.tier = 3;
-    if (isPullbackTrade) {
-      result.tierLabel = 'TIER 3 — H4+M15 aligned (H1 pullback)';
-      result.warnings = result.warnings || [];
-      result.warnings.push('H1 pullback in H4 trend — corrective move, weaker signal');
-      console.log('[3layer] H1 pullback in H4 trend — Tier 3 (not blocked)');
-    } else {
-      result.tierLabel = 'TIER 3 — Technical only (signal only)';
-    }
+    result.tierLabel = 'TIER 3 — H4+M15 aligned (H1 pullback)';
     result.autoExecute = false;
     result.riskMultiplier = 0;
+    result.warnings = result.warnings || [];
+    result.warnings.push('H1 pullback in H4 trend — corrective move, weaker signal');
+    console.log('[3layer] TIER 3 — H4+M15 aligned, H1 pullback');
+  } else if (result.direction) {
+    result.tier = 3;
+    result.tierLabel = 'TIER 3 — Technical only (signal only)';
+    result.autoExecute = false;
+    result.riskMultiplier = 0;
+    console.log('[3layer] TIER 3 — technical only');
   } else {
     result.tier = 4;
-    result.tierLabel = 'TIER 4 — Insufficient confluence';
+    result.tierLabel = 'TIER 4 — No TF confirmation';
     result.autoExecute = false;
     result.direction = null;
+    console.log('[3layer] TIER 4 — no clean TF confirmation (no-trade)');
   }
 
   result.summary = `${result.tierLabel} | ${result.direction || 'no-trade'} | ${allFactors.length} total factors`;

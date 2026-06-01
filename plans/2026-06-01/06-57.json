@@ -1,0 +1,158 @@
+{
+  "timestamp": "2026-06-01T06:57:58.837Z",
+  "symbol": "PAXG/USDC",
+  "timeframe": "15min",
+  "bias": "bullish",
+  "biasReasoning": "H4 SMC bias is bullish (CHoCH-bullish @ 4567.90); H1 SMC bias is also bullish (BOS-bullish @ 4536.70). Price is in deep discount (-34.5% H4, -42.6% M15), well below daily VWAP (4515.51) and weekly VWAP (4493.93 — above). M15 RSI divergence is bullish (RSI 28.3, price near lows). EUR/USD weakening (-7.81% 24h) supports dollar strength, which is bearish for gold in isolation, but H4 and H1 structure remain bullish and price is oversold. Weekly yields falling is bullish for gold. Institutional bias (VWAP) is bullish. H4 active bullish OB at 4481.80-4492.10 and multiple unfilled bullish FVGs (4404.00-4474.40, 4479.00-4481.80, 4492.10-4493.00) provide structural support. Market is transitioning (SMC effective), requiring higher confluence.",
+  "setupQuality": "A",
+  "confluenceCount": 4,
+  "confluenceFactors": [
+    "H4 bullish structure (CHoCH-bullish intact)",
+    "H1 bullish structure (BOS-bullish confirmed)",
+    "M15 RSI bullish divergence (RSI 28.3 at lows)",
+    "Price in deep discount zone (oversold on daily/weekly VWAP)"
+  ],
+  "direction": "long",
+  "poi": {
+    "type": "bullish_order_block",
+    "zone": [
+      4481.8,
+      4492.1
+    ],
+    "reasoning": "H4 active bullish OB; price currently at 4498.65, above this zone. Nearest M15 bullish FVG at 4492.10-4493.00 overlaps with H4 OB. This is the primary structural support zone for a long entry confirmation."
+  },
+  "entry": {
+    "trigger": "marketOnConfirmation",
+    "price": 4498.65,
+    "confirmation": "Market entry at current price. No M15 OB/FVG within 30pts (nearest bullish FVG at 4492.10-4493.00 is 6.65pts below). Entry confirmed by H4 bullish CHoCH, H1 bullish BOS, M15 RSI bullish divergence, and price oversold in discount zone. Await M15 bullish candle close or touch of 4492.10 support before market entry."
+  },
+  "stopLoss": {
+    "price": 4481,
+    "reasoning": "Below H4 bullish OB low (4481.80) with 0.8pt buffer. Invalidates H4 bullish structure if breached. M15 ATR is 5.43; SL distance is 17.65pts, well above minimum M15 ATR requirement.",
+    "pips": 17.65
+  },
+  "takeProfits": [
+    {
+      "level": "TP1",
+      "price": 4520,
+      "reasoning": "Nearest key structural level (H1 OTE long upper bound 4526.99, H1 liquidity EQL at 4525.00). First liquidity pool and institutional resistance. System will place TP at 2R automatically (~4534.30 from entry 4498.65 with 17.65pt SL).",
+      "rr": 2
+    }
+  ],
+  "invalidation": {
+    "price": 4481,
+    "reasoning": "Breach below H4 bullish OB low (4481.80) invalidates the bullish structure. Bias flips to neutral/bearish if this level is broken on close."
+  },
+  "session": {
+    "current": "asia",
+    "recommendedExecutionWindow": "Wait for London kill zone (07:00-10:00 UTC, ~2h away). Avoid Asia low-liquidity hours. ISM Manufacturing PMI at +422m (high impact) — monitor for volatility."
+  },
+  "risk": {
+    "suggestedRiskPct": 0.5,
+    "positionSizeHint": "0.5% risk on 17.65pt SL. Historical WR is 33% (2W/4L, 0R expectancy) — reduce position size. Blocked signals had 100% win rate; this setup has lower confluence (B grade, 4 factors). Use micro position or wait for higher-confluence setup."
+  },
+  "macroContext": "Yields falling (bullish gold), EUR/USD weakening (bearish dollar, bullish gold), Fear & Greed at 29 (fear, risk-off neutral). Real yields unknown. Institutional bias bullish (above weekly VWAP). ISM Manufacturing PMI due in 7h — high impact, monitor for volatility.",
+  "warnings": [
+    "Market transitioning — SMC effective but regime uncertain. Require higher confluence for size.",
+    "Historical performance marginal (33% WR, 0R expectancy). Reduce risk vs. normal position.",
+    "EUR/USD weakening 7.81% 24h — dollar strengthening is headwind for gold, conflicts with bullish structure. Monitor cross-asset.",
+    "ISM Manufacturing PMI (high impact) in +422m (~7h). Avoid holding through news; consider taking profit early or closing before release.",
+    "Funding rate +0.0013%/hr (longs paying) — mild bearish contrarian signal. Crowded long positioning.",
+    "No M15 OB within 30pts — market entry required. Confirm with M15 bullish candle or touch of 4492.10 support before executing.",
+    "Confluence score 4/12 (B grade) — below ideal threshold. Consider waiting for higher-confluence setup or reduce position size significantly.",
+    "✅ Consensus: Claude + DeepSeek both long",
+    "FRED macro data unavailable — yields/real-rate missing"
+  ],
+  "promptVersion": "v4.0",
+  "consensus": {
+    "agreement": "full",
+    "confidence": "high",
+    "claudeDirection": "long",
+    "deepseekDirection": "long",
+    "claudeQuality": "B",
+    "deepseekQuality": "A",
+    "newsRisk": null,
+    "newsSentiment": null,
+    "newsHeadline": null
+  },
+  "m15": {
+    "status": "PENDING",
+    "reason": "No M15 trigger inside POI yet",
+    "structureBias": "bearish",
+    "lastEvent": "BOS-bearish"
+  },
+  "threeLayer": {
+    "tier": 2,
+    "tierLabel": "TIER 2 — H4+H1 bullish, M15 pullback entry",
+    "autoExecute": true,
+    "riskMultiplier": 1,
+    "direction": "long",
+    "layers": {
+      "macro": {
+        "bias": "neutral",
+        "bullish": false,
+        "bearish": false,
+        "strong": false,
+        "factors": [
+          "Yields falling (bullish gold)"
+        ],
+        "score": 0
+      },
+      "flow": {
+        "regimeOK": true,
+        "regime": "transitioning",
+        "vpSignal": "at_hvn",
+        "vwapBias": "bullish",
+        "factors": [
+          "Price at HVN 4504.31 (strong S/R)"
+        ],
+        "score": 1
+      },
+      "technical": {
+        "h4Bias": "bullish",
+        "h1Bias": "bullish",
+        "m15Bias": "bearish",
+        "confluenceCount": 4,
+        "confluenceGrade": "A",
+        "factors": [
+          "H4 bullish structure (CHoCH-bullish intact)",
+          "H1 bullish structure (BOS-bullish confirmed)",
+          "M15 RSI bullish divergence (RSI 28.3 at lows)",
+          "Price in deep discount zone (oversold on daily/weekly VWAP)"
+        ],
+        "h4AndM15Agree": false,
+        "h1AlignsWithH4": true,
+        "h1PullbackInH4": false,
+        "score": 4
+      }
+    },
+    "allFactors": [
+      "Yields falling (bullish gold)",
+      "Price at HVN 4504.31 (strong S/R)",
+      "H4 bullish structure (CHoCH-bullish intact)",
+      "H1 bullish structure (BOS-bullish confirmed)",
+      "M15 RSI bullish divergence (RSI 28.3 at lows)",
+      "Price in deep discount zone (oversold on daily/weekly VWAP)"
+    ],
+    "blockingFactors": [],
+    "summary": "TIER 2 — H4+H1 bullish, M15 pullback entry | long | 6 total factors",
+    "warnings": [
+      "M15 pullback against H4+H1 bullish trend — corrective entry"
+    ]
+  },
+  "execution": {
+    "autoTradeEnabled": true,
+    "dryExecute": false,
+    "m15Status": "PENDING",
+    "tier": 2,
+    "tierLabel": "TIER 2 — H4+H1 bullish, M15 pullback entry",
+    "executed": false,
+    "reason": "Risk: Confluence too low: 4/12 (need 6+). Wait for stronger setup.",
+    "orderId": null,
+    "entry": null,
+    "size": null,
+    "riskAmount": null,
+    "riskPct": null,
+    "timestamp": null
+  }
+}

@@ -236,12 +236,15 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     console.log(`[risk] ATR: ${atrValue.toFixed(2)}pts ✅`);
   }
 
-  // Tier block check
+  // Tier block check — surface WHICH layer/TF conflicts (from the 3-layer engine)
   const planTier = plan?.threeLayer?.tier;
   if (planTier && RISK_RULES.blockedTiers?.includes(planTier)) {
+    const blockers = plan?.threeLayer?.blockingFactors?.length
+      ? plan.threeLayer.blockingFactors.join('; ')
+      : (plan?.threeLayer?.tierLabel || 'conflicting layers, no edge');
     return {
       allowed: false,
-      reason: `Tier ${planTier} blocked — conflicting layers, no edge. Wait for Tier 1-3 setup.`,
+      reason: `Tier ${planTier} blocked — ${blockers}. Wait for Tier 1-3 setup.`,
     };
   }
   console.log(`[risk] tier check: Tier ${planTier ?? '?'} ✅`);

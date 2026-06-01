@@ -20,6 +20,46 @@ function estimateCost(usage) {
   return inCost + outCost;
 }
 
+// Single Claude API request with a 60s timeout, retried once on failure.
+async function fetchClaudeMessages(apiKey, body) {
+  let res;
+  let lastError;
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+      console.error('[claude] TIMEOUT after 60s');
+    }, 60000);
+
+    try {
+      res = await fetch(API_URL, {
+        method: 'POST',
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify(body),
+      });
+      clearTimeout(timeout);
+      lastError = null;
+      break; // success — exit retry loop
+    } catch (err) {
+      clearTimeout(timeout);
+      lastError = err.name === 'AbortError'
+        ? new Error('Claude request timed out after 60s')
+        : err;
+      if (attempt < 2) {
+        console.warn('[claude] attempt', attempt, 'failed:', lastError.message, '— retrying...');
+        await new Promise(r => setTimeout(r, 2000)); // wait 2s before retry
+      }
+    }
+  }
+  if (lastError) throw lastError;
+  return res;
+}
+
 export async function askClaude(systemPrompt, userPrompt) {
   const apiKey = config.ANTHROPIC_API_KEY;
   console.log('[claude] starting call...');
@@ -27,36 +67,13 @@ export async function askClaude(systemPrompt, userPrompt) {
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
 
   const t0 = Date.now();
-  const controller = new AbortController();
-  const timeout = setTimeout(() => {
-    controller.abort();
-    console.error('[claude] TIMEOUT after 30s');
-  }, 30000);
-
-  let res;
-  try {
-    res = await fetch(API_URL, {
-      method: 'POST',
-      signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 2500,
-        temperature: 0.2,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: userPrompt }],
-      }),
-    });
-  } catch (err) {
-    clearTimeout(timeout);
-    if (err.name === 'AbortError') throw new Error('Claude request timed out after 30s');
-    throw err;
-  }
-  clearTimeout(timeout);
+  const res = await fetchClaudeMessages(apiKey, {
+    model: MODEL,
+    max_tokens: 2500,
+    temperature: 0.2,
+    system: systemPrompt,
+    messages: [{ role: 'user', content: userPrompt }],
+  });
 
   console.log(`[claude] HTTP status: ${res.status}`);
   if (!res.ok) {
@@ -86,24 +103,16 @@ export async function askClaude(systemPrompt, userPrompt) {
     parsed = JSON.parse(cleaned);
   } catch (parseErr) {
     console.warn(`[claude] JSON parse failed (${parseErr.message}) — retrying with correction nudge`);
-    const retryRes = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 2500,
-        temperature: 0.2,
-        system: systemPrompt,
-        messages: [
-          { role: 'user', content: userPrompt },
-          { role: 'assistant', content: text },
-          { role: 'user', content: 'Your JSON was truncated. Produce ONLY a complete, valid JSON object — no other text.' },
-        ],
-      }),
+    const retryRes = await fetchClaudeMessages(apiKey, {
+      model: MODEL,
+      max_tokens: 2500,
+      temperature: 0.2,
+      system: systemPrompt,
+      messages: [
+        { role: 'user', content: userPrompt },
+        { role: 'assistant', content: text },
+        { role: 'user', content: 'Your JSON was truncated. Produce ONLY a complete, valid JSON object — no other text.' },
+      ],
     });
     if (!retryRes.ok) throw new Error(`Claude retry HTTP ${retryRes.status}`);
     const retryData = await retryRes.json();

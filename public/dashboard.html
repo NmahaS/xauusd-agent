@@ -744,6 +744,7 @@ body {
     <div class="hdr-meta">
       <div id="session-badge"></div>
       <div class="refresh-row">REFRESH IN <span id="cd">15</span>S</div>
+      <div id="api-source" style="color:#3A4060;font-size:9px"></div>
     </div>
   </div>
 </div>
@@ -1658,12 +1659,18 @@ async function renderPriceChart(interval) {
 async function fetchAndRender() {
   const dot = $('dot');
   try {
-    const res = await fetch('/api/dashboard');
+    const res = await fetch('/api/dashboard?t=' + Date.now(), {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache' },
+    });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const d = await res.json();
     if (d.error) throw new Error(d.error);
 
     lastData = d;
+    const srcEl = $('api-source');
+    if (srcEl) srcEl.textContent =
+      'src: ' + (d.signal?.source || 'unknown') + ' · age: ' + (d.signal?.age || '?');
     renderHeader(d);
     renderStats(d);
     renderPosition(d);

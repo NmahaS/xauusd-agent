@@ -20,47 +20,36 @@ function estimateCost(usage) {
   return inCost + outCost;
 }
 
-// Single Claude API request with a 60s timeout, retried once on failure.
+// One Claude API request with a 60s timeout. Throws on timeout/network error.
+// Retries are owned by the askClaude() wrapper (so they also cover HTTP 5xx/529
+// overload and JSON-parse failures, not just the network layer).
 async function fetchClaudeMessages(apiKey, body) {
-  let res;
-  let lastError;
-  for (let attempt = 1; attempt <= 2; attempt++) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-      console.error('[claude] TIMEOUT after 60s');
-    }, 60000);
-
-    try {
-      res = await fetch(API_URL, {
-        method: 'POST',
-        signal: controller.signal,
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-        },
-        body: JSON.stringify(body),
-      });
-      clearTimeout(timeout);
-      lastError = null;
-      break; // success — exit retry loop
-    } catch (err) {
-      clearTimeout(timeout);
-      lastError = err.name === 'AbortError'
-        ? new Error('Claude request timed out after 60s')
-        : err;
-      if (attempt < 2) {
-        console.warn('[claude] attempt', attempt, 'failed:', lastError.message, '— retrying...');
-        await new Promise(r => setTimeout(r, 2000)); // wait 2s before retry
-      }
-    }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+    console.error('[claude] TIMEOUT after 60s');
+  }, 60000);
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify(body),
+    });
+    clearTimeout(timeout);
+    return res;
+  } catch (err) {
+    clearTimeout(timeout);
+    if (err.name === 'AbortError') throw new Error('Claude request timed out after 60s');
+    throw err;
   }
-  if (lastError) throw lastError;
-  return res;
 }
 
-export async function askClaude(systemPrompt, userPrompt) {
+async function askClaudeOnce(systemPrompt, userPrompt) {
   const apiKey = config.ANTHROPIC_API_KEY;
   console.log('[claude] starting call...');
   console.log(`[claude] API key present: ${!!apiKey} prefix: ${apiKey?.slice(0, 15)}`);
@@ -131,4 +120,30 @@ export async function askClaude(systemPrompt, userPrompt) {
     enumerable: false,
   });
   return parsed;
+}
+
+const MAX_RETRIES = 2;
+
+// Public entry. Retries the entire call on ANY failure — network, timeout,
+// HTTP 5xx/529 overload, or JSON parse — with linear backoff (3s, then 6s...).
+export async function askClaude(systemPrompt, userPrompt) {
+  let lastError;
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      console.log('[claude] attempt', attempt, 'of', MAX_RETRIES);
+      const result = await askClaudeOnce(systemPrompt, userPrompt);
+      if (attempt > 1) console.log('[claude] succeeded on attempt', attempt);
+      return result;
+    } catch (err) {
+      lastError = err;
+      console.warn('[claude] attempt', attempt, 'failed:', err.message);
+      if (attempt < MAX_RETRIES) {
+        const delay = attempt * 3000; // 3s, 6s, ...
+        console.log('[claude] waiting', delay / 1000, 's before retry...');
+        await new Promise(r => setTimeout(r, delay));
+      }
+    }
+  }
+  console.error('[claude] all', MAX_RETRIES, 'attempts failed');
+  throw lastError;
 }

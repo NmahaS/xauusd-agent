@@ -258,7 +258,46 @@ app.get('/api/dashboard', async (_req, res) => {
       }
     }
 
-    // Tier 3: minimal fallback — agent running, no analysis produced yet
+    // Tier 3: RAG DB — persistent across deploys; surfaces the most recent real
+    // signal (executed OR blocked) when both the file cache and plans/ are empty
+    // (e.g. right after a Railway deploy, before the next 15-min pipeline run).
+    if (!signal) {
+      try {
+        const { getLatestSignal } = await import('./memory/tradeDB.js');
+        const row = getLatestSignal();
+        if (row) {
+          const p = {
+            direction: row.direction,
+            bias: row.direction === 'long' ? 'bullish'
+                : row.direction === 'short' ? 'bearish' : 'neutral',
+            threeLayer: {
+              tier: row.tier,
+              layers: { technical: { h4Bias: row.h4Bias, h1Bias: row.h1Bias, m15Bias: row.m15Bias } },
+            },
+            confluenceCount: row.confluence,
+            confluenceFactors: [],
+            setupQuality: row.quality,
+            biasReasoning: row.isExecuted
+              ? `Executed ${row.direction || ''} (${row.outcome || 'OPEN'}) — from trade memory`
+              : `Latest signal${row.blockReason ? ' — ' + row.blockReason : ''} (from trade memory)`,
+            blockedReason: row.blockReason || null,
+            execution: { executed: row.isExecuted === 1, reason: row.blockReason || null },
+            entry: { price: row.entryPrice || null },
+            _cachedAt: row.openTime,
+            _session: row.session || null,
+          };
+          const built = planToSignal(p, 'rag-db');
+          signal   = built.signal;
+          planMeta = built.planMeta;
+          console.log('[dashboard] RAG DB fallback:', row.openTime, row.direction,
+                      'T' + row.tier, 'C' + row.confluence);
+        }
+      } catch (e) {
+        console.log('[dashboard] RAG DB fallback error:', e.message);
+      }
+    }
+
+    // Tier 4: minimal fallback — agent running, no analysis produced yet
     if (!signal) {
       signal = {
         bias:          'NEUTRAL',

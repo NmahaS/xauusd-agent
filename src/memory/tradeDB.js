@@ -170,6 +170,18 @@ export function getRecentTrades(limit = 100) {
   `).all(limit);
 }
 
+// Most recent signal of ANY kind — executed, open, or blocked. Used as the
+// dashboard's persistent fallback when the file cache and plans/ folder are empty
+// (e.g. right after a Railway deploy, before the next 15-min pipeline run).
+export function getLatestSignal() {
+  const db = getDB();
+  return db.prepare(`
+    SELECT * FROM trades
+    ORDER BY openTime DESC
+    LIMIT 1
+  `).get();
+}
+
 export function getSimilarTrades(conditions, limit = 10) {
   const db = getDB();
   const {

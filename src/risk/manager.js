@@ -2,6 +2,7 @@
 // getAccountState uses Hyperliquid — no IG session required.
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { resolveStaleH4Bias } from '../smc/structure.js';
 
 export const RISK_RULES = {
   maxRiskPerTrade: 2.0,         // % of equity
@@ -177,13 +178,24 @@ export function getTimeframeAlignment(context, direction) {
   console.log('[tf-debug] h4 structure:', JSON.stringify(context?.h4?.structure)?.slice(0, 100));
   console.log('[tf-debug] h4 bias raw:', context?.h4?.structure?.bias);
 
-  const h4Bias =
+  const h4BiasRaw =
     context?.h4?.structure?.bias ??
     context?.smcH4?.structure?.bias ??
     context?.smcH4?.bias ??
     context?.h4?.bias ??
     context?.h4Bias ??
     null;
+  // Same staleness override as the 3-layer engine: an H4 structure event >24h old that recent
+  // candles oppose is treated as stale, and the live direction is used instead.
+  const _h4Eval = resolveStaleH4Bias(
+    context?.h4?.structure ?? context?.smcH4?.structure,
+    context?.h4Candles ?? context?.h4?.candles
+  );
+  const h4Bias = _h4Eval.stale ? _h4Eval.bias : h4BiasRaw;
+  if (_h4Eval.stale) {
+    console.log('[risk] H4 STALE override:', _h4Eval.originalBias, '→', _h4Eval.bias,
+      '(' + _h4Eval.ageHours.toFixed(1) + 'h old)');
+  }
   const h1Bias =
     context?.h1?.structure?.bias ??
     context?.smcH1?.structure?.bias ??
@@ -478,7 +490,17 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   //   (1) Tier 1 + confluence ≥ 8  — major reversal signal, or
   //   (2) H1 structure already opposes H4 (BOS in the trade's direction) + confluence ≥ 7
   //       — the H1 trend has turned ahead of H4; counter-H4 entry is the early reversal.
-  const h4Bias = context?.h4?.structure?.bias ?? context?.smcH4?.structure?.bias;
+  const _ctH4Eval = resolveStaleH4Bias(
+    context?.h4?.structure ?? context?.smcH4?.structure,
+    context?.h4Candles ?? context?.h4?.candles
+  );
+  const h4Bias = _ctH4Eval.stale
+    ? _ctH4Eval.bias
+    : (context?.h4?.structure?.bias ?? context?.smcH4?.structure?.bias);
+  if (_ctH4Eval.stale) {
+    console.log('[risk] counter-H4 gate using stale-corrected H4 bias:',
+      _ctH4Eval.originalBias, '→', _ctH4Eval.bias);
+  }
   const h1Bias =
     context?.h1?.structure?.bias ??
     context?.smcH1?.structure?.bias ??

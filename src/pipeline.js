@@ -223,6 +223,7 @@ async function runFullPipeline() {
     currentPrice,
     h4: {
       structure: smcH4.structure,
+      candles: h4Candles,
       indicators: h4Indicators,
       pd: smcH4.pd,
       bias: smcH4.structure?.bias,

@@ -8,6 +8,8 @@
 // Tier 3: Technical only → signal only, no auto-execute
 // Tier 4: Blocked (regime, conflict, low confluence) → no trade
 
+import { resolveStaleH4Bias } from '../smc/structure.js';
+
 export async function computeThreeLayerConsensus(ctx) {
   const { weeklyMacro, volumeProfile, vwap, regime, plan } = ctx;
 
@@ -61,7 +63,16 @@ export async function computeThreeLayerConsensus(ctx) {
   // ─── LAYER 3: TECHNICAL ───────────────────────────────────────────────────
   // H4 = trend TF (sets direction), H1 = middle TF (pullback allowed),
   // M15 = execution TF (must agree with H4 — non-negotiable)
-  const h4Bias = ctx.h4?.structure?.bias || 'neutral';
+  // H4 structure bias is derived from confirmed swing pivots, so it lags when the forming H4
+  // candle has clearly moved the other way. Apply a staleness override: if the last H4 CHoCH/BOS
+  // is >24h old AND recent candles oppose it, use the live direction instead.
+  const h4Struct = ctx.h4?.structure;
+  const h4Eval = resolveStaleH4Bias(h4Struct, ctx.h4?.candles);
+  console.log('[3layer] H4 structure age:', h4Eval.ageHours.toFixed(1) + 'h');
+  if (h4Eval.stale) {
+    console.log('[3layer] H4 STALE:', h4Eval.originalBias, 'but recent candles', h4Eval.bias);
+  }
+  const h4Bias = h4Eval.bias;
   const h1Bias = ctx.h1?.structure?.bias || 'neutral';
   const m15Bias = ctx.m15?.structure?.bias || 'neutral';
 
@@ -81,6 +92,7 @@ export async function computeThreeLayerConsensus(ctx) {
   };
   result.layers.technical = {
     h4Bias,
+    h4Stale: h4Eval.stale,
     h1Bias,
     m15Bias,
     confluenceCount: techConfluence.count,

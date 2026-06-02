@@ -1214,7 +1214,7 @@ function renderPosition(d) {
   const riskPct     = parseFloat(p.riskPct || 0);
   const totalRisk   = parseFloat(p.totalRisk != null ? p.totalRisk : size * Math.abs(entry - sl)).toFixed(2);
   const posNotional = p.notional != null ? Number(p.notional).toFixed(2) : notional;
-  const riskColor   = riskPct > 2 ? 'var(--red)' : riskPct > 1.5 ? '#FF8C42' : 'var(--green)';
+  const riskColor   = riskPct > 3 ? 'var(--red)' : riskPct > 2 ? '#FF8C42' : 'var(--green)';
   const compoundBadge = cc > 1
     ? `<span class="badge" style="background:rgba(255,140,66,0.13);color:#FF8C42;border:1px solid rgba(255,140,66,0.3);font-size:9px;padding:2px 8px">${cc - 1} COMPOUND${cc > 2 ? 'S' : ''}</span>`
     : '';
@@ -1299,14 +1299,14 @@ function renderPosition(d) {
     </div>
   `;
 
-  /* Risk warning when total position risk exceeds 2% */
-  if (riskPct > 2) {
+  /* Risk warning when total position risk exceeds 3% */
+  if (riskPct > 3) {
     body.innerHTML += `
       <div style="margin-top:10px;padding:8px 12px;background:rgba(255,77,106,0.1);
                   border:1px solid rgba(255,77,106,0.3);border-radius:6px;font-size:11px;
                   color:var(--red);display:flex;align-items:center;gap:8px">
         <span style="font-size:14px">⚠</span>
-        <span>Position risk ${riskPct.toFixed(1)}% exceeds 2% max — consider closing partial</span>
+        <span>Position risk ${riskPct.toFixed(1)}% exceeds 3% max — consider closing partial</span>
       </div>`;
   }
 }

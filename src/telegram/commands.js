@@ -494,6 +494,7 @@ async function handleRisk() {
   msg += `Max daily loss: ${RISK_RULES.maxDailyLoss}%\n`;
   msg += `Max weekly DD: ${RISK_RULES.maxWeeklyDrawdown}%\n`;
   msg += `Max positions: ${RISK_RULES.maxOpenPositions}\n`;
+  msg += `Max position size: 0.25 PAXG (incl. compounds)\n`;
   msg += `Max daily trades: ${RISK_RULES.maxDailyTrades}\n`;
   msg += `SL range: 3-${RISK_RULES.maxSLDistance}pts\n\n`;
 

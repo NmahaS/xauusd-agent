@@ -423,7 +423,7 @@ export async function executeIfApproved(plan, context) {
 
   const rawSize = riskAmount / slDistance;
   let size = Math.max(0.001, Math.round(rawSize * 1000) / 1000); // 3dp matches PAXG szDecimals
-  const MAX_POSITION_SIZE = 0.15;  // covers 1% risk at 8pt SL
+  const MAX_POSITION_SIZE = 0.25;  // ~2% risk at 8pt SL (was 0.15)
   if (size > MAX_POSITION_SIZE) {
     console.warn(`[sizing] HARD CAP: ${size} → ${MAX_POSITION_SIZE} PAXG`);
     console.warn(`[sizing] reason: max position size protection`);
@@ -458,7 +458,7 @@ export async function executeIfApproved(plan, context) {
   // Compound total size cap
   if (positionDecision?.action === 'compound' && existingPos) {
     const totalAfterCompound = existingPos.size + sizing.size;
-    const MAX_TOTAL_POSITION = 0.15;  // same cap as single entry
+    const MAX_TOTAL_POSITION = 0.25;  // same cap as single entry (was 0.15)
     if (totalAfterCompound > MAX_TOTAL_POSITION) {
       console.warn(`[executor] compound blocked: total would be ${totalAfterCompound} PAXG (max ${MAX_TOTAL_POSITION})`);
       out.reason = 'Compound blocked: total ' + totalAfterCompound.toFixed(3) +

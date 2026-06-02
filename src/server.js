@@ -106,24 +106,43 @@ app.get('/api/dashboard', async (_req, res) => {
       weeklyHistory.push({ label: DAY[dayStart.getUTCDay()], pl: parseFloat(pl.toFixed(2)) });
     }
 
-    /* ── Monthly history (last 4 weeks grouped by week) ─────── */
+    /* ── Monthly history (CURRENT calendar month, grouped by week) ───
+       Always starts at the 1st of this month and builds W1, W2, … up to the
+       current week. Resets automatically on a new month; weeks with no trades
+       still show ($0). W1 = 1st–7th, W2 = 8th–14th, etc. */
     const monthlyHistory = [];
-    for (let w = 3; w >= 0; w--) {
-      const weekEnd = new Date();
-      weekEnd.setUTCDate(weekEnd.getUTCDate() - (w * 7));
-      weekEnd.setUTCHours(23, 59, 59, 999);
-      const weekStart = new Date(weekEnd);
-      weekStart.setUTCDate(weekEnd.getUTCDate() - 6);
-      weekStart.setUTCHours(0, 0, 0, 0);
+    {
+      const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+      monthStart.setUTCHours(0, 0, 0, 0);
 
-      const wFills = fills.filter(f => {
-        const t = new Date(f.time);
-        return t >= weekStart && t <= weekEnd;
-      });
-      const weekPL = wFills.filter(f => f.isClose).reduce((s, f) => s + (f.closedPnl || 0), 0)
-                   - wFills.reduce((s, f) => s + (f.fee || 0), 0);
-      const weekLabel = 'W' + (4 - w) + ' ' + weekStart.toISOString().slice(5, 10);
-      monthlyHistory.push({ label: weekLabel, pnl: parseFloat(weekPL.toFixed(2)) });
+      let weekNumber = 1;
+      let wkStart = new Date(monthStart);
+      while (wkStart <= now) {
+        const wkEnd = new Date(wkStart);
+        wkEnd.setUTCDate(wkStart.getUTCDate() + 6);
+        wkEnd.setUTCHours(23, 59, 59, 999);
+
+        const wFills = fills.filter(f => {
+          const t = new Date(f.time);
+          return t >= wkStart && t <= wkEnd;
+        });
+        const weekPL = wFills.filter(f => f.isClose).reduce((s, f) => s + (f.closedPnl || 0), 0)
+                     - wFills.reduce((s, f) => s + (f.fee || 0), 0);
+
+        monthlyHistory.push({
+          label: 'W' + weekNumber + ' ' + wkStart.toISOString().slice(5, 10),
+          pnl: parseFloat(weekPL.toFixed(2)),
+        });
+
+        // advance to the next week (day after this week's end)
+        wkStart = new Date(wkEnd);
+        wkStart.setUTCDate(wkStart.getUTCDate() + 1);
+        wkStart.setUTCHours(0, 0, 0, 0);
+        weekNumber++;
+      }
+
+      console.log('[dashboard] month:', monthStart.toISOString().slice(0, 7),
+        '| weeks built:', monthlyHistory.length);
     }
 
     /* ── Recent closed trades ───────────────────────────────── */

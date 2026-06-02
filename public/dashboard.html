@@ -857,6 +857,7 @@ body {
         </div>
       </div>
       <div class="ch-canvas-wrap">
+        <div id="month-label" style="font-size:10px;color:#5A6080;margin-bottom:6px;display:none">June 2026</div>
         <canvas id="pl-chart" height="240"></canvas>
       </div>
     </div>
@@ -1064,6 +1065,17 @@ function switchChart(mode) {
 }
 
 function renderChart(d) {
+  /* Show the current month name above the chart only in 'month' mode */
+  const monthLabelEl = $('month-label');
+  if (monthLabelEl) {
+    if (chartMode === 'month') {
+      monthLabelEl.textContent = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
+      monthLabelEl.style.display = 'block';
+    } else {
+      monthLabelEl.style.display = 'none';
+    }
+  }
+
   const hist = chartMode === 'week'
     ? (d.weeklyHistory  || [])
     : (d.monthlyHistory || []);

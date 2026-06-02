@@ -66,14 +66,9 @@ async function handleExistingPosition(existingPosition, plan) {
     const unrealizedPnl = existingPosition.unrealizedPnl || 0;
     if (unrealizedPnl >= 0) {
       console.log(`[executor] same direction ${existingPosition.direction} +$${unrealizedPnl.toFixed(2)} — COMPOUNDING`);
-      const compoundHour = new Date().getUTCHours();
-      if (compoundHour >= 0 && compoundHour < 6) {
-        console.log('[executor] compound blocked: dead zone ' + compoundHour + ':xx UTC');
-        return {
-          action: 'hold',
-          reason: `Compound blocked: dead zone ${compoundHour}:00 UTC — no compounding 00:00-06:00 UTC`,
-        };
-      }
+      // Dead-zone compounds are now governed by the dead-zone gate at the top of
+      // executeIfApproved (strict confluence ≥ 7 + ATR ≥ 8). If we reached here in the dead
+      // zone, the gate already approved it — so no separate dead-zone block here.
       return { action: 'compound', reason: `Compounding ${existingPosition.direction} at half risk` };
     } else {
       console.log(`[executor] same direction ${existingPosition.direction} -$${Math.abs(unrealizedPnl).toFixed(2)} — holding, no average down`);
@@ -199,37 +194,67 @@ export async function executeIfApproved(plan, context) {
 
     const { getHLPositions } = await import('../broker/hyperliquid.js');
     const positions = await getHLPositions();
-    const hasOpenPosition = positions.some(p => p.coin === coin);
+    const existing = positions.find(p => p.coin === coin);
 
     console.log('[executor] dead zone check:',
       'tier='+tier, 'confluence='+confluence,
-      'atr='+atr?.toFixed(2), 'positions='+positions.length);
+      'atr='+atr?.toFixed(2),
+      'existing='+(existing ? existing.direction : 'none'));
 
-    if (hasOpenPosition) {
-      return {
-        executed: false,
-        reason: 'Dead zone: position already open — no new trades 00:00-06:00 UTC',
-      };
+    if (existing) {
+      // Position open — allow same-direction compound only; never flip in the dead zone.
+      if (plan.direction && existing.direction !== plan.direction) {
+        return {
+          executed: false,
+          reason: 'Dead zone: ' + existing.direction.toUpperCase() +
+                  ' position open, ' + String(plan.direction).toUpperCase() +
+                  ' signal — no flip in dead zone',
+        };
+      }
+
+      // Same direction — allow compound only under strict dead-zone rules.
+      if (confluence < 7) {
+        return {
+          executed: false,
+          reason: 'Dead zone compound: confluence ' + confluence +
+                  '/12 too low (need 7+ in dead zone)',
+        };
+      }
+      if (atr < 8) {
+        return {
+          executed: false,
+          reason: 'Dead zone compound: ATR ' + atr?.toFixed(2) +
+                  'pts too low (need 8pts in dead zone)',
+        };
+      }
+
+      console.log('[executor] dead zone COMPOUND allowed:',
+        'same direction ' + plan.direction +
+        ', T' + tier + ' C' + confluence + ' ATR' + atr?.toFixed(1));
+      // Continue — compound is decided by handleExistingPosition below.
+    } else {
+      // No position — strict new-entry rules.
+      if (atr < 8) {
+        return {
+          executed: false,
+          reason: 'Dead zone: ATR ' + atr?.toFixed(2) + 'pts too low (need 8pts)',
+        };
+      }
+      if (confluence < 7) {
+        return {
+          executed: false,
+          reason: 'Dead zone: confluence ' + confluence + '/12 too low (need 7+)',
+        };
+      }
+      if (tier === 4) {
+        return {
+          executed: false,
+          reason: 'Dead zone: Tier 4 blocked',
+        };
+      }
+      console.log('[executor] dead zone NEW ENTRY allowed:',
+        'T' + tier + ' C' + confluence + ' ATR' + atr?.toFixed(1));
     }
-    if (atr < 8) {
-      return {
-        executed: false,
-        reason: 'Dead zone: ATR ' + atr?.toFixed(2) + 'pts too low (need 8pts in dead zone)',
-      };
-    }
-    if (confluence < 7) {
-      return {
-        executed: false,
-        reason: 'Dead zone: confluence ' + confluence + '/12 too low (need 7+ in dead zone)',
-      };
-    }
-    if (tier === 4) {
-      return {
-        executed: false,
-        reason: 'Dead zone: Tier 4 blocked',
-      };
-    }
-    console.log('[executor] dead zone ALLOWED: T'+tier+' C'+confluence+' ATR'+atr?.toFixed(1));
   }
 
   const out = {

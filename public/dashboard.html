@@ -1193,10 +1193,10 @@ function renderPosition(d) {
 
   hdrB.innerHTML = `<span class="badge ${sCls}">${side}</span>`;
 
-  /* SL/TP: use plan values if available, else fallback estimates */
+  /* SL/TP: prefer live order prices from API, else plan values, else fallback estimates */
   const plan  = d.plan || {};
-  const sl    = parseFloat(plan.sl)  || (side === 'LONG' ? entry * 0.994  : entry * 1.006);
-  const tp    = parseFloat(plan.tp1) || (side === 'LONG' ? entry * 1.012  : entry * 0.988);
+  const sl    = parseFloat(p.sl)  || parseFloat(plan.sl)  || (side === 'LONG' ? entry * 0.994  : entry * 1.006);
+  const tp    = parseFloat(p.tp)  || parseFloat(plan.tp1) || (side === 'LONG' ? entry * 1.012  : entry * 0.988);
 
   const range    = Math.abs(tp - sl) || 1;
   const slRatio  = Math.abs(entry - sl) / range;
@@ -1204,32 +1204,73 @@ function renderPosition(d) {
   const slPts    = Math.abs(entry - sl).toFixed(1);
   const tpPts    = Math.abs(tp - entry).toFixed(1);
   const rr       = slPts > 0 ? (Math.abs(tp - entry) / Math.abs(entry - sl)).toFixed(1) : '—';
-  const riskAmt  = (size * Math.abs(entry - sl)).toFixed(2);
   const rewAmt   = (size * Math.abs(tp - entry)).toFixed(2);
 
   const liqDist  = liqPx ? Math.abs(mark - liqPx).toFixed(2) : '—';
   const liqCls   = liqPx && parseFloat(liqDist) < 50 ? 'c-red' : 'c-sec';
 
+  /* Compound trade details */
+  const cc          = p.compoundCount || 0;
+  const riskPct     = parseFloat(p.riskPct || 0);
+  const totalRisk   = parseFloat(p.totalRisk != null ? p.totalRisk : size * Math.abs(entry - sl)).toFixed(2);
+  const posNotional = p.notional != null ? Number(p.notional).toFixed(2) : notional;
+  const riskColor   = riskPct > 2 ? 'var(--red)' : riskPct > 1.5 ? '#FF8C42' : 'var(--green)';
+  const compoundBadge = cc > 1
+    ? `<span class="badge" style="background:rgba(255,140,66,0.13);color:#FF8C42;border:1px solid rgba(255,140,66,0.3);font-size:9px;padding:2px 8px">${cc - 1} COMPOUND${cc > 2 ? 'S' : ''}</span>`
+    : '';
+
+  const compoundHTML = (p.compoundTrades || []).map((t, i) => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;
+                background:${i === 0 ? 'var(--card)' : 'var(--bg)'};border:1px solid var(--border);
+                border-radius:6px;font-size:10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:9px;padding:2px 6px;border-radius:3px;min-width:54px;text-align:center;
+                     background:${i === 0 ? 'rgba(55,138,221,0.13)' : 'rgba(255,140,66,0.13)'};
+                     color:${i === 0 ? '#378ADD' : '#FF8C42'}">${t.type}</span>
+        <span class="c-muted">${t.time}</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span class="c-sec">${t.size.toFixed(4)} XAU</span>
+        <span class="c-text">@$${t.price.toFixed(2)}</span>
+        <span class="c-muted" style="min-width:64px;text-align:right">$${t.notional.toFixed(2)}</span>
+      </div>
+    </div>`).join('');
+
   body.innerHTML = `
-    <div class="pos-dir-row">
-      <span class="badge ${sCls}" style="font-size:12px;padding:4px 14px">${side}</span>
-      <span class="c-muted" style="font-size:10px">${lev.toFixed(0)}× leverage &nbsp;·&nbsp; ${size.toFixed(4)} XAU</span>
+    <div class="pos-dir-row" style="justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="badge ${sCls}" style="font-size:12px;padding:4px 14px">${side}</span>
+        <span class="c-muted" style="font-size:10px">${lev.toFixed(0)}× &nbsp;·&nbsp; ${size.toFixed(4)} XAU</span>
+        ${compoundBadge}
+      </div>
+      <div style="text-align:right">
+        <div class="psi-val ${plCls(upnl)}" style="font-size:17px">${fUSD(upnl)}</div>
+        <div class="c-muted" style="font-size:9px">unrealized P&L</div>
+      </div>
     </div>
 
     <div class="pos-sub-grid">
       <div class="pos-sub-item">
-        <div class="psi-lbl">Entry Price</div>
+        <div class="psi-lbl">${cc > 1 ? 'Avg Entry' : 'Entry Price'}</div>
         <div class="psi-val c-sec">$${entry.toFixed(2)}</div>
       </div>
       <div class="pos-sub-item">
-        <div class="psi-lbl">Unrealized P&L</div>
-        <div class="psi-val ${plCls(upnl)}">${fUSD(upnl)}</div>
+        <div class="psi-lbl">Total Notional</div>
+        <div class="psi-val c-sec">$${posNotional}</div>
       </div>
       <div class="pos-sub-item">
-        <div class="psi-lbl">Notional</div>
-        <div class="psi-val c-sec">$${notional}</div>
+        <div class="psi-lbl">Total Risk</div>
+        <div class="psi-val" style="color:${riskColor}">${riskPct.toFixed(2)}% <span class="c-muted" style="font-size:10px">($${totalRisk})</span></div>
       </div>
     </div>
+
+    ${cc > 1 ? `
+    <div style="margin:2px 0 12px">
+      <div class="c-muted" style="font-size:9px;letter-spacing:0.08em;margin-bottom:6px">
+        POSITION BREAKDOWN (${cc} ENTRIES · $${posNotional} notional)
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">${compoundHTML}</div>
+    </div>` : ''}
 
     <div class="sltp-section">
       <div class="sltp-labels-top">
@@ -1250,13 +1291,24 @@ function renderPosition(d) {
     </div>
 
     <div class="sltp-risk-line">
-      1% risk &nbsp;·&nbsp;
-      lose <span class="c-red">$${riskAmt}</span> → stop hit
+      ${riskPct.toFixed(2)}% risk &nbsp;·&nbsp;
+      lose <span class="c-red">$${totalRisk}</span> → stop hit
       &nbsp;|&nbsp;
       win <span class="c-green">$${rewAmt}</span> → TP hit
       ${liqPx ? `&nbsp;|&nbsp; liq <span class="${liqCls}">$${liqDist} away</span>` : ''}
     </div>
   `;
+
+  /* Risk warning when total position risk exceeds 2% */
+  if (riskPct > 2) {
+    body.innerHTML += `
+      <div style="margin-top:10px;padding:8px 12px;background:rgba(255,77,106,0.1);
+                  border:1px solid rgba(255,77,106,0.3);border-radius:6px;font-size:11px;
+                  color:var(--red);display:flex;align-items:center;gap:8px">
+        <span style="font-size:14px">⚠</span>
+        <span>Position risk ${riskPct.toFixed(1)}% exceeds 2% max — consider closing partial</span>
+      </div>`;
+  }
 }
 
 /* ── Signal card ────────────────────────────────────────────── */

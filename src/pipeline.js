@@ -214,6 +214,10 @@ async function runFullPipeline() {
   let { plan, ok: llmOk } = await generatePlan(ctx);
   console.log(`[pipeline] LLM phase done in ${time() - tLlm}ms (ok=${llmOk})`);
 
+  // Daily candle open (24h rolling, matches the data module's open24h) for the daily-candle
+  // confluence factor applied to the final plan below.
+  const dailyOpen = h1Candles.slice(-24)[0]?.open ?? currentPrice;
+
   // Canonical context passed to both confluence and 3-layer consensus
   const threeLayerCtx = {
     currentPrice,
@@ -263,6 +267,22 @@ async function runFullPipeline() {
     plan.confluenceFactors = detConf.factors;
   } else {
     console.log(`[confluence] llm=${plan.confluenceCount} >= deterministic=${detConf.count} — keeping llm`);
+  }
+
+  // Daily candle direction confirms trade direction (red for short, green for long).
+  // Applied here on the final plan (not inside computeConfluence, which early-returns when
+  // H4≠M15) so it also lifts counter-H4 setups toward the H1-opposition override threshold.
+  if (plan.direction && dailyOpen != null) {
+    const dailyDir = currentPrice > dailyOpen ? 'bullish' : 'bearish';
+    const dailyMatches =
+      (plan.direction === 'long' && dailyDir === 'bullish') ||
+      (plan.direction === 'short' && dailyDir === 'bearish');
+    const factor = `Daily candle ${dailyDir} confirms ${plan.direction}`;
+    if (dailyMatches && !(plan.confluenceFactors || []).includes(factor)) {
+      plan.confluenceFactors = [...(plan.confluenceFactors || []), factor];
+      plan.confluenceCount = (plan.confluenceCount || 0) + 1;
+      console.log(`[confluence] +1 daily candle ${dailyDir} confirms ${plan.direction} → ${plan.confluenceCount}`);
+    }
   }
 
   // Three-layer consensus (post-LLM)

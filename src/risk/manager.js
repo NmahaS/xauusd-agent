@@ -474,8 +474,17 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     }
   }
 
-  // Block trades against H4 trend (exception: Tier 1 + confluence ≥ 8 for major reversals)
+  // Block trades against H4 trend. Exceptions (trend transition / major reversal):
+  //   (1) Tier 1 + confluence ≥ 8  — major reversal signal, or
+  //   (2) H1 structure already opposes H4 (BOS in the trade's direction) + confluence ≥ 7
+  //       — the H1 trend has turned ahead of H4; counter-H4 entry is the early reversal.
   const h4Bias = context?.h4?.structure?.bias ?? context?.smcH4?.structure?.bias;
+  const h1Bias =
+    context?.h1?.structure?.bias ??
+    context?.smcH1?.structure?.bias ??
+    context?.smcH1?.bias ??
+    context?.h1?.bias ??
+    null;
   const tradeDirection = plan?.direction;
 
   if (h4Bias && tradeDirection) {
@@ -486,12 +495,21 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     if (isCounterTrend) {
       const tier = plan?.threeLayer?.tier;
       const confluence = plan?.confluenceCount || 0;
+
+      // H1 strongly opposes H4 in the trade's direction (BOS / structure flip).
+      const h1Opposes =
+        !!h1Bias && h1Bias !== h4Bias &&
+        ((tradeDirection === 'long' && h1Bias === 'bullish') ||
+         (tradeDirection === 'short' && h1Bias === 'bearish'));
+
       if (tier === 1 && confluence >= 8) {
         log(`counter-trend allowed: Tier 1 + confluence ${confluence} (major reversal)`);
+      } else if (h1Opposes && confluence >= 7) {
+        log(`counter-trend allowed: H1 ${h1Bias} opposes H4 ${h4Bias} + confluence ${confluence} (trend transition)`);
       } else {
         const reason = tradeDirection === 'long'
-          ? `Counter-trend blocked: LONG against H4 bearish. Need Tier 1 + 8+ confluence for reversal.`
-          : `Counter-trend blocked: SHORT against H4 bullish. Need Tier 1 + 8+ confluence for reversal.`;
+          ? `Counter-trend blocked: LONG against H4 bearish. Need Tier 1 + 8+ confluence, or H1 bullish + 7+ confluence.`
+          : `Counter-trend blocked: SHORT against H4 bullish. Need Tier 1 + 8+ confluence, or H1 bearish + 7+ confluence.`;
         log(`REJECT h4Trend: ${reason}`);
         return { allowed: false, reason };
       }

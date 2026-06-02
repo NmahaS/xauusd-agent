@@ -117,11 +117,20 @@ async function handleExistingPosition(existingPosition, plan) {
   };
 }
 
-export function calculateSingleTP(entryPrice, slPrice, direction, targetRR) {
+export function calculateSingleTP(entryPrice, slPrice, direction, targetRR = 2.0) {
   const slDistance = Math.abs(entryPrice - slPrice);
   const tpDistance = slDistance * targetRR;
-  const tp = direction === 'long' ? entryPrice + tpDistance : entryPrice - tpDistance;
-  return parseFloat(tp.toFixed(0));
+  const tp = direction === 'long'
+    ? entryPrice + tpDistance
+    : entryPrice - tpDistance;
+
+  console.log('[tp] entry:', entryPrice.toFixed(2),
+    'SL:', slPrice.toFixed(2),
+    'dist:', slDistance.toFixed(2) + 'pts',
+    'RR:', targetRR + 'R',
+    'TP:', tp.toFixed(2));
+
+  return parseFloat(tp.toFixed(1));
 }
 
 function getDynamicSLTP(direction, entryPrice, atr) {
@@ -647,31 +656,40 @@ async function reconcileUnifiedSL(coin, direction, context, fallbackSize, fallba
     return;
   }
 
-  const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 8;
-  let slPrice, tpPrice, tpRR;
+  const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 9;
+  const regimeLabel = atr >= 15 ? 'trending' : atr >= 8 ? 'normal' : 'quiet';
+  let slPrice;
 
   if (planSLPrice && planSLPrice > 0) {
     slPrice = planSLPrice;
-    const slDist = Math.abs(entryPrice - slPrice);
-    tpRR = atr >= 15 ? 3.0 : 2.0;
-    tpPrice = direction === 'long'
-      ? entryPrice + slDist * tpRR
-      : entryPrice - slDist * tpRR;
-    console.log('[executor] using PLAN SL:', slPrice.toFixed(2),
-      'dist:', slDist.toFixed(2) + 'pts',
-      'TP:', tpPrice.toFixed(2), '(' + tpRR + 'R)');
+    console.log('[executor] using PLAN SL:', slPrice.toFixed(2), 'ATR:', atr.toFixed(2));
   } else {
     const dynamicLevels = getDynamicSLTP(direction, entryPrice, atr);
     slPrice = dynamicLevels.slPrice;
-    tpPrice = dynamicLevels.tpPrice;
-    tpRR = dynamicLevels.tpRR;
-    console.log('[executor] using ATR SL:', slPrice.toFixed(2),
-      'dist:', Math.abs(entryPrice - slPrice).toFixed(2) + 'pts',
-      'ATR:', atr.toFixed(2));
+    console.log('[executor] using ATR SL:', slPrice.toFixed(2), 'ATR:', atr.toFixed(2));
   }
 
+  // ALWAYS calculate TP from the ACTUAL SL distance × targetRR — never an LLM/structural price.
+  const slDistance = Math.abs(entryPrice - slPrice);
+  const isTrending = atr >= 15;
+  const targetRR = isTrending ? 3.0 : 2.0;
+  const tpDistance = slDistance * targetRR;
+  const tpPrice = direction === 'long'
+    ? entryPrice + tpDistance
+    : entryPrice - tpDistance;
+
+  console.log('[executor] TP calculation:');
+  console.log('  entry:', entryPrice.toFixed(2));
+  console.log('  SL:', slPrice.toFixed(2));
+  console.log('  SL distance:', slDistance.toFixed(2) + 'pts');
+  console.log('  target RR:', targetRR + 'R');
+  console.log('  TP distance:', tpDistance.toFixed(2) + 'pts');
+  console.log('  TP price:', tpPrice.toFixed(2));
+  const actualRR = tpDistance / slDistance;
+  console.log('  actual RR:', actualRR.toFixed(2) + 'R ← must be', targetRR + 'R');
+
   console.log(`[executor] reconciling SL/TP for ${totalSize} ${coin}`);
-  console.log(`[executor] entry: $${entryPrice.toFixed(2)} | SL: $${slPrice.toFixed(2)} | TP: $${tpPrice.toFixed(2)} (${tpRR}R)`);
+  console.log(`[executor] entry: $${entryPrice.toFixed(2)} | SL: $${slPrice.toFixed(2)} | TP: $${tpPrice.toFixed(2)} (${targetRR}R)`);
 
   await cancelExistingSL(coin);
   await cancelExistingTP(coin);
@@ -748,8 +766,8 @@ async function reconcileUnifiedSL(coin, direction, context, fallbackSize, fallba
     `🔄 <b>SL/TP unified</b>\n` +
     `${direction.toUpperCase()} ${totalSize} ${coin}\n` +
     `🛑 SL: $${slPrice.toFixed(2)} (covers full position)\n` +
-    `🎯 TP: $${tpPrice.toFixed(2)} (${tpRR}R)\n` +
-    `ATR regime: ${dynamicLevels.label}`
+    `🎯 TP: $${tpPrice.toFixed(2)} (${targetRR}R)\n` +
+    `ATR regime: ${regimeLabel}`
   ).catch(err => console.warn(`[executor] reconcile Telegram failed: ${err.message}`));
   } finally {
     isReconciling = false;

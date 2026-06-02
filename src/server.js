@@ -319,17 +319,75 @@ app.get('/api/dashboard', async (_req, res) => {
     console.log('[dashboard] signal source:', signal.source,
                 '| bias:', signal.bias, '| confluence:', signal.confluence);
 
-    /* ── Position with correct field names ──────────────────── */
+    /* ── Position with compound history + weighted entry + total risk ── */
     const pos = positions[0];
-    const posOut = pos ? {
-      direction:        pos.direction,
-      size:             pos.size,
-      entryPrice:       pos.entryPrice,
-      unrealizedPnl:    parseFloat((pos.unrealizedPnl || 0).toFixed(2)),
-      leverage:         pos.leverage,
-      liquidationPrice: pos.liquidationPrice,
-      notional:         parseFloat((pos.size * pos.entryPrice).toFixed(2)),
-    } : null;
+    let posOut = null;
+    if (pos) {
+      // HL positions carry no openTime — everything filled after the last CLOSE of this
+      // coin belongs to the current position. Cap the lookback at 24h as a safety net.
+      const fallbackOpen = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const lastClose = [...fills]
+        .filter(f => f.coin === pos.coin && f.isClose)
+        .sort((a, b) => new Date(b.time) - new Date(a.time))[0];
+      const positionOpenTime = lastClose ? new Date(lastClose.time) : fallbackOpen;
+
+      const positionFills = fills
+        .filter(f => f.coin === pos.coin && !f.isClose && new Date(f.time) >= positionOpenTime)
+        .sort((a, b) => new Date(a.time) - new Date(b.time));
+
+      const compoundTrades = positionFills.map((f, i) => ({
+        time:     new Date(f.time).toISOString().slice(11, 16) + ' UTC',
+        type:     i === 0 ? 'ENTRY' : 'COMPOUND ' + i,
+        size:     parseFloat(f.size),
+        price:    parseFloat(f.price),
+        notional: parseFloat((parseFloat(f.size) * parseFloat(f.price)).toFixed(2)),
+        fee:      parseFloat(f.fee) || 0,
+      }));
+
+      // Weighted-average entry across all opens; fall back to HL's entryPrice if no fills found.
+      const totalSize = compoundTrades.reduce((s, t) => s + t.size, 0);
+      const weightedEntry = totalSize > 0
+        ? compoundTrades.reduce((s, t) => s + t.size * t.price, 0) / totalSize
+        : pos.entryPrice;
+
+      // Live SL/TP from resting reduce-only orders (the HL position itself has no SL field).
+      let slPrice = null, tpPrice = null;
+      try {
+        const { getOpenOrdersDetailed } = await import('./broker/hyperliquid.js');
+        const coinOrders = (await getOpenOrdersDetailed())
+          .filter(o => o.coin === pos.coin && o.reduceOnly);
+        const slOrder = coinOrders.find(o =>
+          o.isTrigger === true || o.orderType === 'Stop Market' || o.orderType === 'Stop Limit');
+        const tpOrder = coinOrders.find(o => o.orderType === 'Limit' && o.isTrigger !== true);
+        slPrice = slOrder ? (slOrder.triggerPx || slOrder.limitPx) : null;
+        tpPrice = tpOrder ? tpOrder.limitPx : null;
+      } catch (e) {
+        console.log('[dashboard] live SL/TP fetch error:', e.message);
+      }
+
+      const effSize   = pos.size || totalSize;
+      const slDist    = slPrice ? Math.abs(weightedEntry - slPrice) : 0;
+      const totalRisk = effSize * slDist;
+      const bal       = balance.balance || 100;
+      const riskPct   = bal > 0 ? (totalRisk / bal) * 100 : 0;
+
+      posOut = {
+        direction:        pos.direction,
+        size:             pos.size,
+        entryPrice:       parseFloat(weightedEntry.toFixed(2)),   // weighted avg = displayed entry
+        weightedEntry:    parseFloat(weightedEntry.toFixed(2)),
+        unrealizedPnl:    parseFloat((pos.unrealizedPnl || 0).toFixed(2)),
+        leverage:         pos.leverage,
+        liquidationPrice: pos.liquidationPrice,
+        notional:         parseFloat((pos.size * weightedEntry).toFixed(2)),
+        sl:               slPrice != null ? parseFloat(slPrice.toFixed(2)) : null,
+        tp:               tpPrice != null ? parseFloat(tpPrice.toFixed(2)) : null,
+        compoundTrades,
+        compoundCount:    compoundTrades.length,
+        totalRisk:        parseFloat(totalRisk.toFixed(2)),
+        riskPct:          parseFloat(riskPct.toFixed(2)),
+      };
+    }
 
     res.json({
       price:          priceData?.markPrice  || 0,

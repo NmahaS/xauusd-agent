@@ -3,10 +3,12 @@
 // Layer 2: Flow (volume profile + VWAP + regime)
 // Layer 3: Technical (SMC structure + LLM confluence)
 //
-// Tier 1: All layers strongly aligned → auto-execute, 1.5% risk
-// Tier 2: All layers aligned → auto-execute, 1% risk
-// Tier 3: Technical only → signal only, no auto-execute
-// Tier 4: Blocked (regime, conflict, low confluence) → no trade
+// Tier is driven by how the H4/H1/M15 timeframes line up with the trade direction.
+// A NEUTRAL timeframe is not a conflict — only a directly OPPOSING one is.
+// Tier 1: H4+H1+M15 all agree → auto-execute, 1.5x risk
+// Tier 2: H4+M15 agree (H1 neutral/agree) OR H4+H1 trend with M15 pullback → auto-execute, 1x
+// Tier 3: H4 agrees, lower TFs unconfirmed (not opposing) → signal only
+// Tier 4: H4 doesn't confirm, or lower TFs actively oppose, or regime/data unusable → no trade
 
 import { resolveStaleH4Bias } from '../smc/structure.js';
 
@@ -105,12 +107,8 @@ export async function computeThreeLayerConsensus(ctx) {
   };
 
   // ─── DIRECTION ────────────────────────────────────────────────────────────
-  // Candidate direction from the TF stack (mirrors getTimeframeAlignment's 2/3 view):
-  //   • H4 trend + at least one lower TF (H1 or M15) confirms → trend trade
-  //   • H4 neutral but H1 and M15 agree with each other        → lower-TF consensus (2/3)
-  // The second case previously fell through to null → "no TF confirmation", even though
-  // two of three TFs clearly pointed the same way. That mismatch (engine saw "no
-  // confirmation" while the displayed TF alignment showed 2/3) was the bug.
+  // Tiering is driven by how the timeframes line up with the direction we'd actually
+  // trade: the plan's (LLM consensus) direction, falling back to the H4-led TF candidate.
   const macroBullish = macroScore.bullish;
   const macroBearish = macroScore.bearish;
 
@@ -120,16 +118,22 @@ export async function computeThreeLayerConsensus(ctx) {
     : lowerTFsAgree                                     ? h1Direction
     : null;
 
-  // Macro is a context layer, not a TF. Proceed when macro agrees or is neutral/mixed.
-  // A directional macro that OPPOSES the TF consensus is a layer *conflict* — flagged here so
-  // tier classification labels it correctly, NOT as "no TF confirmation" (which means no TFs
-  // aligned at all). Only macro+flow BOTH opposing hard-blocks (see blocking conditions above).
-  const macroAlignsOrNeutral =
-    macroBias === 'neutral' ||
-    (techCandidateDir === 'long'  && macroBullish) ||
-    (techCandidateDir === 'short' && macroBearish);
-  const macroConflict = techCandidateDir != null && !macroAlignsOrNeutral;
-  result.direction = (techCandidateDir && macroAlignsOrNeutral) ? techCandidateDir : null;
+  const dir = plan?.direction || techCandidateDir || null;
+
+  // A bias AGREES when it points the same way as `dir`. NEUTRAL never agrees — but,
+  // crucially, it never OPPOSES either. Only a directly opposite bias is a conflict.
+  const agrees  = (bias) => dir === 'long' ? bias === 'bullish' : dir === 'short' ? bias === 'bearish' : false;
+  const opposes = (bias) => dir === 'long' ? bias === 'bearish' : dir === 'short' ? bias === 'bullish' : false;
+
+  const h4Agrees  = agrees(h4Bias);
+  const h1Agrees  = agrees(h1Bias);
+  const m15Agrees = agrees(m15Bias);
+  const h1Opposes = opposes(h1Bias);
+
+  console.log('[3layer] h4:', h4Bias, h4Agrees ? '✅' : '❌');
+  console.log('[3layer] h1:', h1Bias, h1Agrees ? '✅' : h1Opposes ? '❌' : '⊘ neutral');
+  console.log('[3layer] m15:', m15Bias, m15Agrees ? '✅' : '❌');
+  console.log('[3layer] dir:', dir);
 
   // ─── BLOCKING CONDITIONS ──────────────────────────────────────────────────
   // 1. Extreme regime (smc_effective=false). Tradeable variants get warnings only.
@@ -150,17 +154,14 @@ export async function computeThreeLayerConsensus(ctx) {
     console.log('[3layer] volatile_tradeable — warning added, trade allowed');
   }
 
-  // 2. M15 vs H4 is NO LONGER a hard block. When H1 confirms H4 (trend intact),
-  // an opposite M15 is a corrective pullback → handled as Tier 2 below. When NO
-  // lower TF confirms H4, direction is already null above → falls through to
-  // Tier 4 (no-trade). Either way, M15 opposition alone never forces a block.
-
-  // 3. Macro AND flow both oppose technical direction — structural headwind
-  if (result.direction === 'long' && macroBearish && flowScore.score >= 1) {
-    result.blockingFactors.push('Macro+flow bearish headwind against long — structural conflict');
-  }
-  if (result.direction === 'short' && macroBullish && flowScore.score >= 1) {
-    result.blockingFactors.push('Macro+flow bullish headwind against short — structural conflict');
+  // 2. Macro/flow are CONTEXT, not timeframes. When a directional macro + flow both lean
+  // against the TF-aligned direction it is a headwind WARNING, not a hard block — the TF
+  // stack decides the tier (per design: a layer conflict adds a warning, it does not block).
+  if (dir && macroScore.score >= 2 && flowScore.score >= 1 &&
+      ((dir === 'long' && macroBearish) || (dir === 'short' && macroBullish))) {
+    result.warnings = result.warnings || [];
+    result.warnings.push(`⚠️ Macro+flow ${macroBias} headwind against ${dir} — context conflict`);
+    console.log(`[3layer] macro+flow ${macroBias} headwind against ${dir} — warning only`);
   }
 
   if (result.blockingFactors.length > 0) {
@@ -174,81 +175,68 @@ export async function computeThreeLayerConsensus(ctx) {
   }
 
   // ─── TIER CLASSIFICATION ──────────────────────────────────────────────────
-  // H4 = trend, H1 = confirmation, M15 = entry timing.
-  //   • H4+H1+M15 all aligned      → Tier 1 (macro strong) / Tier 2
-  //   • H4+H1 aligned, M15 opposite → Tier 2 (pullback entry — M15 is corrective)
-  //   • H4+M15 aligned, H1 opposite → Tier 3 (H1 pullback — weaker, signal only)
-  //   • anything else with a dir    → Tier 3; no confirmation → Tier 4 (no-trade)
+  // Tier is set by how H4/H1/M15 line up with `dir`. A NEUTRAL H1 is NOT a conflict —
+  // only a directly OPPOSING H1 is. (H4 bearish + H1 neutral + M15 bearish = Tier 2.)
+  //   • !h4Agrees                       → Tier 4 (no higher-TF trend behind the trade)
+  //   • h4+h1+m15 all agree             → Tier 1
+  //   • h4+m15 agree, h1 not opposing   → Tier 2  ← today's signal
+  //   • h4+h1 agree, m15 pullback       → Tier 2
+  //   • h4 agrees, h1 not opposing      → Tier 3
+  //   • else (h1/m15 actively oppose)   → Tier 4
   const allFactors = [...macroScore.factors, ...flowFactors, ...techConfluence.factors];
   result.allFactors = allFactors;
+  const dirWord = dir === 'long' ? 'bullish' : 'bearish';
 
-  const dirWord = result.direction === 'long' ? 'bullish' : 'bearish';
-  const macroFlowAgree = (macroBullish && result.direction === 'long') ||
-                          (macroBearish && result.direction === 'short');
-  const allTFsAligned = h4AndM15Agree && h1AlignsWithH4;   // H4+H1+M15 same direction
-  const m15Pullback   = h1AlignsWithH4 && !h4AndM15Agree;  // H4+H1 agree, M15 corrective
-  const h1Pullback    = h4AndM15Agree && !h1AlignsWithH4;  // H4+M15 agree, H1 corrective
-
-  if (result.direction && allTFsAligned && macroFlowAgree && macroScore.strong && techConfluence.count >= 5) {
+  if (!h4Agrees) {
+    result.tier = 4;
+    result.tierLabel = `TIER 4 — H4 (${h4Bias}) does not confirm ${dir || 'no-trade'}`;
+    result.autoExecute = false;
+    result.direction = null;
+    console.log(`[3layer] TIER 4 — H4 (${h4Bias}) does not agree with ${dir}`);
+  } else if (h4Agrees && h1Agrees && m15Agrees) {
     result.tier = 1;
-    result.tierLabel = 'TIER 1 — All layers strongly aligned';
+    result.tierLabel = 'TIER 1 — All 3 TFs aligned';
     result.autoExecute = true;
     result.riskMultiplier = 1.5;
-    console.log('[3layer] TIER 1 — H4+H1+M15 aligned, macro strong');
-  } else if (result.direction && allTFsAligned) {
+    result.direction = dir;
+    console.log('[3layer] TIER 1 — all 3 TFs aligned');
+  } else if (h4Agrees && (h1Agrees || !h1Opposes) && m15Agrees) {
+    // H4 + M15 agree, H1 neutral or agreeing (today's signal). Neutral H1 ≠ conflict.
     result.tier = 2;
-    result.tierLabel = 'TIER 2 — All TFs aligned';
+    result.tierLabel = `TIER 2 — H4+M15 ${dirWord}, H1 ${h1Bias}`;
     result.autoExecute = true;
     result.riskMultiplier = 1.0;
-    console.log('[3layer] TIER 2 — H4+H1+M15 all aligned');
-  } else if (result.direction && m15Pullback) {
-    // H4+H1 confirm the trend; M15 opposite = corrective pullback = classic entry.
+    result.direction = dir;
+    if (!h1Agrees) {
+      result.warnings = result.warnings || [];
+      result.warnings.push(`H1 neutral — H4+M15 carry the ${dirWord} signal`);
+    }
+    console.log(`[3layer] TIER 2 — H4+M15 agree, H1 ${h1Bias}`);
+  } else if (h4Agrees && h1Agrees && !m15Agrees) {
+    // H4+H1 trend intact; M15 opposite = corrective pullback = classic entry.
     result.tier = 2;
     result.tierLabel = `TIER 2 — H4+H1 ${dirWord}, M15 pullback entry`;
     result.autoExecute = true;
     result.riskMultiplier = 1.0;
+    result.direction = dir;
     result.warnings = result.warnings || [];
     result.warnings.push(`M15 pullback against H4+H1 ${dirWord} trend — corrective entry`);
-    console.log(`[3layer] TIER 2 — H4+H1 ${dirWord}, M15 pullback entry`);
-  } else if (result.direction && h1Pullback) {
+    console.log('[3layer] TIER 2 — H4+H1 trend, M15 pullback entry');
+  } else if (h4Agrees && !h1Opposes) {
+    // H4 confirms; H1 not opposing (neutral) but M15 unconfirmed → weaker, signal only.
     result.tier = 3;
-    result.tierLabel = 'TIER 3 — H4+M15 aligned (H1 pullback)';
+    result.tierLabel = `TIER 3 — H4 ${dirWord}, lower TFs unconfirmed`;
     result.autoExecute = false;
     result.riskMultiplier = 0;
-    result.warnings = result.warnings || [];
-    result.warnings.push('H1 pullback in H4 trend — corrective move, weaker signal');
-    console.log('[3layer] TIER 3 — H4+M15 aligned, H1 pullback');
-  } else if (result.direction && lowerTFsAgree) {
-    // H4 neutral (no higher-TF trend) but H1 and M15 agree → lower-TF momentum signal.
-    result.tier = 3;
-    result.tierLabel = `TIER 3 — H1+M15 ${dirWord} (H4 neutral)`;
-    result.autoExecute = false;
-    result.riskMultiplier = 0;
-    result.warnings = result.warnings || [];
-    result.warnings.push('H4 neutral — H1+M15 lower-TF consensus only, no higher-TF trend');
-    console.log(`[3layer] TIER 3 — H1+M15 ${dirWord}, H4 neutral`);
-  } else if (result.direction) {
-    result.tier = 3;
-    result.tierLabel = 'TIER 3 — Technical only (signal only)';
-    result.autoExecute = false;
-    result.riskMultiplier = 0;
-    console.log('[3layer] TIER 3 — technical only');
-  } else if (macroConflict) {
-    // TFs confirmed a direction but a directional macro opposes it — a real layer conflict,
-    // NOT an absence of TF confirmation. Label and surface it accurately.
-    const tfWord = techCandidateDir === 'long' ? 'bullish' : 'bearish';
-    result.tier = 4;
-    result.tierLabel = `TIER 4 — Macro ${macroBias} conflicts with ${tfWord} TFs`;
-    result.autoExecute = false;
-    result.direction = null;
-    result.blockingFactors.push(`Macro (${macroBias}) opposes TF-confirmed ${techCandidateDir} setup`);
-    console.log(`[3layer] TIER 4 — macro conflict (TFs say ${techCandidateDir}, macro ${macroBias})`);
+    result.direction = dir;
+    console.log('[3layer] TIER 3 — H4 agrees, lower TFs unconfirmed');
   } else {
+    // H4 agrees but H1 (and/or M15) actively oppose → mixed signal, no edge.
     result.tier = 4;
-    result.tierLabel = 'TIER 4 — No TF confirmation';
+    result.tierLabel = `TIER 4 — H1 ${h1Bias} opposes ${dir} (mixed TFs)`;
     result.autoExecute = false;
     result.direction = null;
-    console.log('[3layer] TIER 4 — no clean TF confirmation (no-trade)');
+    console.log('[3layer] TIER 4 — only H4 agrees, lower TFs oppose');
   }
 
   result.summary = `${result.tierLabel} | ${result.direction || 'no-trade'} | ${allFactors.length} total factors`;

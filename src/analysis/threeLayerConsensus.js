@@ -105,20 +105,31 @@ export async function computeThreeLayerConsensus(ctx) {
   };
 
   // ─── DIRECTION ────────────────────────────────────────────────────────────
-  // H4 sets the trend direction. A trade needs at least one lower TF to confirm:
-  // H1 aligned (trend confirmed — preferred) OR M15 aligned (execution confirmed).
-  // If only H4 points and BOTH H1 and M15 disagree, there is no confirmation → no trade.
-  // An opposite M15 while H1 confirms is a normal pullback, NOT a conflict (see tiers).
+  // Candidate direction from the TF stack (mirrors getTimeframeAlignment's 2/3 view):
+  //   • H4 trend + at least one lower TF (H1 or M15) confirms → trend trade
+  //   • H4 neutral but H1 and M15 agree with each other        → lower-TF consensus (2/3)
+  // The second case previously fell through to null → "no TF confirmation", even though
+  // two of three TFs clearly pointed the same way. That mismatch (engine saw "no
+  // confirmation" while the displayed TF alignment showed 2/3) was the bug.
   const macroBullish = macroScore.bullish;
   const macroBearish = macroScore.bearish;
 
-  const techCandidateDir = (h4Direction && (h1AlignsWithH4 || h4AndM15Agree))
-    ? h4Direction
+  const lowerTFsAgree = !h4Direction && h1Direction != null && h1Direction === m15Direction;
+  const techCandidateDir =
+    (h4Direction && (h1AlignsWithH4 || h4AndM15Agree)) ? h4Direction
+    : lowerTFsAgree                                     ? h1Direction
     : null;
 
-  if (techCandidateDir === 'long' && (macroBullish || macroBias === 'neutral')) result.direction = 'long';
-  else if (techCandidateDir === 'short' && (macroBearish || macroBias === 'neutral')) result.direction = 'short';
-  else result.direction = null;
+  // Macro is a context layer, not a TF. Proceed when macro agrees or is neutral/mixed.
+  // A directional macro that OPPOSES the TF consensus is a layer *conflict* — flagged here so
+  // tier classification labels it correctly, NOT as "no TF confirmation" (which means no TFs
+  // aligned at all). Only macro+flow BOTH opposing hard-blocks (see blocking conditions above).
+  const macroAlignsOrNeutral =
+    macroBias === 'neutral' ||
+    (techCandidateDir === 'long'  && macroBullish) ||
+    (techCandidateDir === 'short' && macroBearish);
+  const macroConflict = techCandidateDir != null && !macroAlignsOrNeutral;
+  result.direction = (techCandidateDir && macroAlignsOrNeutral) ? techCandidateDir : null;
 
   // ─── BLOCKING CONDITIONS ──────────────────────────────────────────────────
   // 1. Extreme regime (smc_effective=false). Tradeable variants get warnings only.
@@ -207,12 +218,31 @@ export async function computeThreeLayerConsensus(ctx) {
     result.warnings = result.warnings || [];
     result.warnings.push('H1 pullback in H4 trend — corrective move, weaker signal');
     console.log('[3layer] TIER 3 — H4+M15 aligned, H1 pullback');
+  } else if (result.direction && lowerTFsAgree) {
+    // H4 neutral (no higher-TF trend) but H1 and M15 agree → lower-TF momentum signal.
+    result.tier = 3;
+    result.tierLabel = `TIER 3 — H1+M15 ${dirWord} (H4 neutral)`;
+    result.autoExecute = false;
+    result.riskMultiplier = 0;
+    result.warnings = result.warnings || [];
+    result.warnings.push('H4 neutral — H1+M15 lower-TF consensus only, no higher-TF trend');
+    console.log(`[3layer] TIER 3 — H1+M15 ${dirWord}, H4 neutral`);
   } else if (result.direction) {
     result.tier = 3;
     result.tierLabel = 'TIER 3 — Technical only (signal only)';
     result.autoExecute = false;
     result.riskMultiplier = 0;
     console.log('[3layer] TIER 3 — technical only');
+  } else if (macroConflict) {
+    // TFs confirmed a direction but a directional macro opposes it — a real layer conflict,
+    // NOT an absence of TF confirmation. Label and surface it accurately.
+    const tfWord = techCandidateDir === 'long' ? 'bullish' : 'bearish';
+    result.tier = 4;
+    result.tierLabel = `TIER 4 — Macro ${macroBias} conflicts with ${tfWord} TFs`;
+    result.autoExecute = false;
+    result.direction = null;
+    result.blockingFactors.push(`Macro (${macroBias}) opposes TF-confirmed ${techCandidateDir} setup`);
+    console.log(`[3layer] TIER 4 — macro conflict (TFs say ${techCandidateDir}, macro ${macroBias})`);
   } else {
     result.tier = 4;
     result.tierLabel = 'TIER 4 — No TF confirmation';

@@ -225,15 +225,15 @@ export function formatPlanForTelegram(plan, extras = {}) {
           `<b>❌ ORDER FAILED — API wallet not authorized</b>\n` +
           `Go to app.hyperliquid.xyz → Settings → API Wallets → Authorize`
         );
-      } else if (reason.includes('Pending entry order kept') || reason.includes('Limit order pending')) {
+      } else if (reason.includes('Pending entry order kept') || reason.includes('Limit order pending') || reason.includes('Limit order placed')) {
         const priceMatch = reason.match(/\$\s*([\d.]+)/);
         const pendPrice = priceMatch ? priceMatch[1]
           : plan.entry?.price != null ? fmt(plan.entry.price) : '?';
         const dir = (plan.direction || '').toUpperCase() || 'n/a';
-        lines.push(`⏳ <b>Limit order pending</b>`);
-        lines.push(`Waiting for fill @ $${pendPrice}`);
+        lines.push(`⏳ <b>Limit order placed @ $${pendPrice}</b>`);
         lines.push(`Direction: ${dir}`);
-        lines.push(`Will cancel if direction changes next signal`);
+        lines.push(`Will refresh on next 15-min signal`);
+        lines.push(`(cancel + reassess every cycle)`);
       } else {
         lines.push(`<b>⏸ Auto-trade blocked:</b> ${esc(reason)}`);
       }

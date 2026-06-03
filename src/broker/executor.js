@@ -275,36 +275,34 @@ export async function executeIfApproved(plan, context) {
     return out;
   }
 
-  // 0. Cancel-on-new-signal: manage any resting (unfilled) GTC entry order from a prior run.
-  //    Same direction → keep waiting for fill. Direction flip → cancel, then place fresh below.
+  // 0. Cancel-on-new-signal: every 15-min cycle cancels all resting entry orders and places a
+  //    fresh one based on the current signal and price. This keeps entries up-to-date each cycle.
   try {
-    const { getOpenOrders, cancelOrder } = await import('./hyperliquid.js');
+    const { getOpenOrdersDetailed, cancelOrder } = await import('./hyperliquid.js');
 
-    const openOrders = await getOpenOrders();
-    const pendingEntry = openOrders.find(o =>
+    const openOrders = await getOpenOrdersDetailed();
+    const pendingEntries = openOrders.filter(o =>
       o.coin === coin &&
       !o.reduceOnly &&
-      o.orderType !== 'Stop Market'
+      o.orderType !== 'Stop Market' &&
+      !o.isTrigger
     );
 
-    if (pendingEntry) {
-      console.log('[executor] found pending entry order:', pendingEntry.oid, '@', pendingEntry.limitPx);
+    if (pendingEntries.length > 0) {
+      console.log('[executor] cancelling', pendingEntries.length, 'pending entry order(s) for new signal cycle');
 
-      const pendingDir = pendingEntry.side === 'B' ? 'long' : 'short';
-
-      if (pendingDir === plan.direction) {
-        // Same direction — keep the order, don't place a new one.
-        console.log('[executor] same direction — keeping pending order', pendingEntry.oid);
-        out.reason = 'Pending entry order kept — waiting for fill @ $' + pendingEntry.limitPx;
-        out.pendingOrderId = pendingEntry.oid;
-        return out;
-      } else {
-        // Direction changed — cancel old order, then place new one below.
-        console.log('[executor] direction changed — cancelling pending order', pendingEntry.oid);
-        await cancelOrder(coin, pendingEntry.oid);
-        await new Promise(r => setTimeout(r, 1000));
-        console.log('[executor] cancelled — placing new', plan.direction, 'order');
+      for (const order of pendingEntries) {
+        try {
+          await cancelOrder(coin, order.oid);
+          console.log('[executor] cancelled pending order', order.oid,
+            '(', order.side === 'B' ? 'long' : 'short', 'limit @ $' + order.limitPx + ')');
+        } catch (err) {
+          console.error('[executor] cancel failed:', err.message);
+        }
       }
+
+      // Wait for cancellations to settle before placing fresh order
+      await new Promise(r => setTimeout(r, 2000));
     }
   } catch (err) {
     console.warn('[executor] pending-order check failed (non-fatal):', err.message);

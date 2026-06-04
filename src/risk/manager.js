@@ -221,8 +221,9 @@ export function getTimeframeAlignment(context, direction) {
   };
   const score = Object.values(aligned).filter(Boolean).length;
 
+  // H1 = primary, M15 = execution, H4 = context only (⚠️ when it doesn't align, not ❌).
   console.log(
-    `[risk] TF alignment: H4=${aligned.h4 ? '✅' : '❌'} H1=${aligned.h1 ? '✅' : '❌'} M15=${aligned.m15 ? '✅' : '❌'} (${score}/3)`
+    `[risk] TF alignment: H1=${aligned.h1 ? '✅' : '❌'} M15=${aligned.m15 ? '✅' : '❌'} H4=${aligned.h4 ? '✅' : '⚠️'} (${score}/3)`
   );
   return { aligned, score, h4Bias, h1Bias, m15Bias };
 }
@@ -486,10 +487,9 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     }
   }
 
-  // Block trades against H4 trend. Exceptions (trend transition / major reversal):
-  //   (1) Tier 1 + confluence ≥ 8  — major reversal signal, or
-  //   (2) H1 structure already opposes H4 (BOS in the trade's direction) + confluence ≥ 7
-  //       — the H1 trend has turned ahead of H4; counter-H4 entry is the early reversal.
+  // Block trades against the H1 trend. H1 is now the PRIMARY directional filter (was H4).
+  // A directly OPPOSING H1 is a hard block. H4 is CONTEXT ONLY — when it opposes, it adds a
+  // warning, never a block (it lags ~4h and was causing valid H1+M15 reversals to be rejected).
   const _ctH4Eval = resolveStaleH4Bias(
     context?.h4?.structure ?? context?.smcH4?.structure,
     context?.h4Candles ?? context?.h4?.candles
@@ -497,10 +497,6 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   const h4Bias = _ctH4Eval.stale
     ? _ctH4Eval.bias
     : (context?.h4?.structure?.bias ?? context?.smcH4?.structure?.bias);
-  if (_ctH4Eval.stale) {
-    console.log('[risk] counter-H4 gate using stale-corrected H4 bias:',
-      _ctH4Eval.originalBias, '→', _ctH4Eval.bias);
-  }
   const h1Bias =
     context?.h1?.structure?.bias ??
     context?.smcH1?.structure?.bias ??
@@ -509,34 +505,29 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     null;
   const tradeDirection = plan?.direction;
 
+  if (h1Bias && tradeDirection) {
+    const counterH1 =
+      (tradeDirection === 'long' && h1Bias === 'bearish') ||
+      (tradeDirection === 'short' && h1Bias === 'bullish');
+    if (counterH1) {
+      const reason = `Counter-H1 blocked: H1 ${h1Bias} conflicts with ${tradeDirection} direction`;
+      log(`REJECT h1Trend: ${reason}`);
+      return { allowed: false, reason };
+    }
+    log(`H1 trend: ${h1Bias} | direction: ${tradeDirection} | aligned ✅`);
+  }
+
+  // H4 as context only — warning, never a block.
   if (h4Bias && tradeDirection) {
-    const isCounterTrend =
+    const h4Opposes =
       (tradeDirection === 'long' && h4Bias === 'bearish') ||
       (tradeDirection === 'short' && h4Bias === 'bullish');
-
-    if (isCounterTrend) {
-      const tier = plan?.threeLayer?.tier;
-      const confluence = plan?.confluenceCount || 0;
-
-      // H1 strongly opposes H4 in the trade's direction (BOS / structure flip).
-      const h1Opposes =
-        !!h1Bias && h1Bias !== h4Bias &&
-        ((tradeDirection === 'long' && h1Bias === 'bullish') ||
-         (tradeDirection === 'short' && h1Bias === 'bearish'));
-
-      if (tier === 1 && confluence >= 8) {
-        log(`counter-trend allowed: Tier 1 + confluence ${confluence} (major reversal)`);
-      } else if (h1Opposes && confluence >= 7) {
-        log(`counter-trend allowed: H1 ${h1Bias} opposes H4 ${h4Bias} + confluence ${confluence} (trend transition)`);
-      } else {
-        const reason = tradeDirection === 'long'
-          ? `Counter-trend blocked: LONG against H4 bearish. Need Tier 1 + 8+ confluence, or H1 bullish + 7+ confluence.`
-          : `Counter-trend blocked: SHORT against H4 bullish. Need Tier 1 + 8+ confluence, or H1 bearish + 7+ confluence.`;
-        log(`REJECT h4Trend: ${reason}`);
-        return { allowed: false, reason };
-      }
+    if (h4Opposes) {
+      plan.warnings = [...(plan.warnings || []),
+        `⚠️ H4 ${h4Bias} opposes ${tradeDirection} — context only, not blocking`];
+      log(`WARN h4Context: H4 ${h4Bias} opposes ${tradeDirection} (warning only)`);
     } else {
-      log(`H4 trend: ${h4Bias} | direction: ${tradeDirection} | aligned ✅`);
+      log(`H4 context: ${h4Bias} | direction: ${tradeDirection} | aligned ✅`);
     }
   }
 

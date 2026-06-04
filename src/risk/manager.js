@@ -12,7 +12,7 @@ export const RISK_RULES = {
   maxDailyTrades: 10,           // max trades per calendar day
   maxSLDistance: 50,             // reject if SL > 50pts from entry
   blockedTiers: [4],             // tier 4 = conflicting layers — no edge
-  requiredConfluence: 6,
+  requiredConfluence: 5,
   requiredQuality: ['A+', 'A', 'B'],
   requiredConsensus: ['full', 'split'],
   fridayBlock: 15,              // no new trades after 15:00 UTC Friday

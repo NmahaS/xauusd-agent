@@ -213,11 +213,11 @@ export async function executeIfApproved(plan, context) {
       }
 
       // Same direction — allow compound only under strict dead-zone rules.
-      if (confluence < 7) {
+      if (confluence < 5) {
         return {
           executed: false,
           reason: 'Dead zone compound: confluence ' + confluence +
-                  '/12 too low (need 7+ in dead zone)',
+                  '/12 too low (need 5+)',
         };
       }
       if (atr < 7) {
@@ -240,10 +240,10 @@ export async function executeIfApproved(plan, context) {
           reason: 'Dead zone: ATR ' + atr?.toFixed(2) + 'pts too low (need 7pts)',
         };
       }
-      if (confluence < 7) {
+      if (confluence < 5) {
         return {
           executed: false,
-          reason: 'Dead zone: confluence ' + confluence + '/12 too low (need 7+)',
+          reason: 'Dead zone: confluence ' + confluence + '/12 too low (need 5+)',
         };
       }
       if (tier === 4) {

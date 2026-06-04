@@ -940,7 +940,7 @@ const fNum  = (n, d = 2) => (typeof n === 'number' && !isNaN(n)) ? n.toFixed(d) 
 const plCls = n => n > 0.005 ? 'c-green' : n < -0.005 ? 'c-red' : 'c-sec';
 
 /* ── Session label ──────────────────────────────────────────── */
-const DEAD_ZONE_TITLE = 'Trades allowed in dead zone only if: ATR≥8, Confluence≥7, No open position, Tier 1-3';
+const DEAD_ZONE_TITLE = 'Trades allowed in dead zone only if: ATR≥7, Confluence≥5, No open position, Tier 1-3';
 function sessionInfo() {
   const now = new Date();
   const t   = now.getUTCHours() * 60 + now.getUTCMinutes();
@@ -1476,8 +1476,8 @@ function renderRisk(d) {
   const atr  = d.atr || 0;
 
   const isDeadZone = utcH < 6 || utcH >= 21;
-  const atrMin     = isDeadZone ? 8 : 3;
-  const confMin    = isDeadZone ? 7 : 6;
+  const atrMin     = isDeadZone ? 7 : 3;
+  const confMin    = 5;  // uniform across all sessions (normal + dead zone)
   const checks = [
     { lbl: 'Friday after 15:00 UTC blocked',                          pass: !(utcD === 5 && utcH >= 15) },
     { lbl: 'High-impact news guard (30 min)',                         pass: true },
@@ -1488,9 +1488,9 @@ function renderRisk(d) {
     { lbl: `Min confluence: ${confMin}/12  (now: ${conf})`,           pass: conf >= confMin || conf === 0 },
     { lbl: `Min ATR: ${atrMin}pts  (now: ${fNum(atr)})`,             pass: atr >= atrMin  || atr === 0 },
     { lbl: 'Max spread: 3 pts',                                       pass: true },
-    { lbl: 'Counter-H4 blocked (T1 + C≥8 exception)',                 pass: true },
+    { lbl: 'Counter-H1 blocked (H1 = primary; H4 context only)',      pass: true },
     { lbl: 'Tier 4 blocked',                                          pass: true },
-    { lbl: 'Dead zone: strict rules (ATR≥8, C≥7, no position)',       pass: true },
+    { lbl: 'Dead zone: strict rules (ATR≥7, C≥5, no position)',       pass: true },
     { lbl: 'Max daily trades: 10',                                    pass: true },
     { lbl: 'SL range: 3–50 pts',                                      pass: true },
   ];

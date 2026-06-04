@@ -499,12 +499,12 @@ async function handleRisk() {
   msg += `SL range: 3-${RISK_RULES.maxSLDistance}pts\n\n`;
 
   msg += '<b>Session rules:</b>\n';
-  msg += `Dead zone (00:00-06:00): T1-3 allowed if ATR≥8, confluence≥7, no open position\n`;
+  msg += `Dead zone (00:00-06:00): T1-3 allowed if ATR≥7, confluence≥5, no open position\n`;
   msg += `Min ATR: ${RISK_RULES.minATR}pts\n`;
   msg += `Max spread: ${RISK_RULES.maxSpread}pts\n\n`;
 
   msg += '<b>Strategy rules:</b>\n';
-  msg += `Counter-H4 trades: blocked ⛔\n`;
+  msg += `Counter-H1 trades: blocked ⛔ (H1 = primary; H4 context only)\n`;
   msg += `Min confluence: ${RISK_RULES.requiredConfluence}/12\n`;
   msg += `Blocked tiers: ${RISK_RULES.blockedTiers?.join(', ') || 'none'}\n`;
   msg += `TF alignment: required\n`;

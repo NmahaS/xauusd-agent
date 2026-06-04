@@ -1,11 +1,10 @@
 // Combines Claude + DeepSeek plans + Perplexity news into a final decision.
 //
 // Rules in priority order:
-//   1. NEWS OVERRIDE       — news.shouldBlockTrading=true → force no-trade
-//   2. SINGLE-LLM          — only one of the two succeeded → use it (medium confidence)
-//   3. FULL AGREEMENT      — both have same direction → use Claude's, take higher quality
-//   4. BOTH NO-TRADE       — both null → use Claude's
-//   5. DISAGREEMENT (split)— one trades, one doesn't, or opposite → force B quality
+//   1. SINGLE-LLM          — only one of the two succeeded → use it (medium confidence)
+//   2. FULL AGREEMENT      — both have same direction → use Claude's, take higher quality
+//   3. BOTH NO-TRADE       — both null → use Claude's
+//   4. DISAGREEMENT (split)— one trades, one doesn't, or opposite → force B quality
 
 const QUALITY_RANK = { 'A+': 4, 'A': 3, 'B': 2, 'no-trade': 1 };
 
@@ -27,34 +26,11 @@ function consensusMeta(agreement, confidence, claudePlan, deepseekPlan, news) {
   };
 }
 
-function applyNewsOverride(base, claudePlan, deepseekPlan, news) {
-  return {
-    ...base,
-    direction: null,
-    setupQuality: 'no-trade',
-    poi: null,
-    entry: null,
-    stopLoss: null,
-    takeProfits: null,
-    invalidation: null,
-    warnings: [
-      ...(base.warnings || []),
-      `🔴 BREAKING: ${news.headline} — trading blocked`,
-    ],
-    consensus: consensusMeta('news_override', 'none', claudePlan, deepseekPlan, news),
-  };
-}
-
 export function buildConsensus(claudePlan, deepseekPlan, newsResult) {
   const base = claudePlan || deepseekPlan;
   if (!base) return null; // caller (askLLM) handles all-failed via fallback
 
-  // Rule 1: news override fires regardless of single/multi state
-  if (newsResult?.shouldBlockTrading === true) {
-    return applyNewsOverride(base, claudePlan, deepseekPlan, newsResult);
-  }
-
-  // Rule 2: single LLM only
+  // Rule 1: single LLM only
   if (claudePlan && !deepseekPlan) {
     return {
       ...claudePlan,

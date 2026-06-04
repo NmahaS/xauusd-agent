@@ -220,11 +220,11 @@ export async function executeIfApproved(plan, context) {
                   '/12 too low (need 7+ in dead zone)',
         };
       }
-      if (atr < 8) {
+      if (atr < 7) {
         return {
           executed: false,
           reason: 'Dead zone compound: ATR ' + atr?.toFixed(2) +
-                  'pts too low (need 8pts in dead zone)',
+                  'pts too low (need 7pts in dead zone)',
         };
       }
 
@@ -234,10 +234,10 @@ export async function executeIfApproved(plan, context) {
       // Continue — compound is decided by handleExistingPosition below.
     } else {
       // No position — strict new-entry rules.
-      if (atr < 8) {
+      if (atr < 7) {
         return {
           executed: false,
-          reason: 'Dead zone: ATR ' + atr?.toFixed(2) + 'pts too low (need 8pts)',
+          reason: 'Dead zone: ATR ' + atr?.toFixed(2) + 'pts too low (need 7pts)',
         };
       }
       if (confluence < 7) {

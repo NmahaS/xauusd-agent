@@ -235,6 +235,59 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   const utcHour = new Date().getUTCHours();
   console.log(`[risk] hour: ${utcHour}:xx UTC (dead zone gating handled by executor)`);
 
+  // ─── DRAWDOWN & LOSS-STREAK GUARDS (fills-based) ───────────────────────────
+  // Two protections that both need recent fills, fetched once here:
+  //   • STEP 3: daily loss circuit breaker — hard stop at -3% realized P&L today
+  //   • STEP 2: same-direction loss streak — 3+ recent losses in plan.direction
+  // Fail-open: if the fills API is unavailable we warn and continue (never crash the run).
+  const coin = process.env.HL_COIN || 'PAXG';
+  let recentFills = [];
+  try {
+    const { getHLFillsHistory } = await import('../broker/hyperliquid.js');
+    recentFills = await getHLFillsHistory(coin, 7);
+  } catch (err) {
+    console.warn('[risk] fills fetch failed — skipping circuit breaker + loss-streak:', err.message);
+  }
+
+  if (recentFills.length > 0) {
+    const bal = accountState?.balance ?? 0;
+    const todayStr = new Date().toISOString().slice(0, 10);
+
+    // STEP 3: daily loss circuit breaker
+    const todayClosed = recentFills.filter(f =>
+      f.isClose && new Date(f.time).toISOString().slice(0, 10) === todayStr
+    );
+    const todayNetPL = todayClosed.reduce((s, f) => s + f.closedPnl - f.fee, 0);
+    const dailyLossPct = bal > 0 ? (todayNetPL / bal) * 100 : 0;
+
+    if (dailyLossPct < -3) {
+      const reason = `Daily circuit breaker: ${dailyLossPct.toFixed(2)}% realized loss today — trading stopped`;
+      log(`REJECT circuitBreaker: ${reason}`);
+      return { allowed: false, reason };
+    }
+    if (dailyLossPct < -2) {
+      console.warn(`[risk] daily loss ${dailyLossPct.toFixed(2)}% — approaching -3% circuit breaker`);
+    }
+    console.log(`[risk] daily realized P&L: ${dailyLossPct.toFixed(2)}% ✅`);
+
+    // STEP 2: same-direction loss-streak protection
+    if (plan.direction) {
+      const last5Closes = recentFills
+        .filter(f => f.isClose)
+        .sort((a, b) => new Date(b.time) - new Date(a.time))
+        .slice(0, 5);
+      const recentLossesSameDir = last5Closes.filter(f =>
+        f.direction === plan.direction && f.closedPnl < -0.01
+      ).length;
+      if (recentLossesSameDir >= 3) {
+        const reason = `Loss streak protection: ${recentLossesSameDir} recent ${plan.direction} losses — wait for clear setup`;
+        log(`REJECT lossStreak: ${reason}`);
+        return { allowed: false, reason };
+      }
+      console.log(`[risk] loss streak: ${recentLossesSameDir} recent ${plan.direction} losses ✅`);
+    }
+  }
+
   // ATR minimum — block ranging/dead markets early
   const atrValue = context?.m15?.indicators?.atr
     ?? context?.m15Indicators?.atr
@@ -247,6 +300,81 @@ export async function checkRiskRules(plan, accountState, context = {}) {
       };
     }
     console.log(`[risk] ATR: ${atrValue.toFixed(2)}pts ✅`);
+  }
+
+  // ─── PRICE-BASED TREND CONFIRMATION ────────────────────────────────────────
+  // SMC structure (CHoCH/BOS) can lag actual price action. These filters use REAL
+  // price vs H1 EMA20/50 and H1 swing highs/lows to hard-block counter-trend entries
+  // (e.g. shorting while price rips above both H1 EMAs). Second filter, defence-in-depth.
+  {
+    const h1Candles = context?.h1Candles || context?.h1?.candles || [];
+    const m15Candles = context?.m15Candles || context?.m15?.candles || [];
+    const dir = plan.direction;
+    const px = context?.currentPrice;
+
+    if (dir && px && h1Candles.length >= 50 && m15Candles.length >= 20) {
+      // Prefer already-computed EMAs; fall back to a local EMA over recent closes.
+      const ema = (arr, period) => {
+        const mult = 2 / (period + 1);
+        let r = arr[0];
+        for (let i = 1; i < arr.length; i++) r = (arr[i] - r) * mult + r;
+        return r;
+      };
+      const h1Closes = h1Candles.slice(-50).map(c => c.close);
+      const m15Closes = m15Candles.slice(-20).map(c => c.close);
+      const h1Ema20 = context?.h1Indicators?.ema20 ?? ema(h1Closes, 20);
+      const h1Ema50 = context?.h1Indicators?.ema50 ?? ema(h1Closes, 50);
+      const m15Ema20 = context?.m15Indicators?.ema20 ?? ema(m15Closes, 20);
+
+      const priceAboveH1Emas = px > h1Ema20 && px > h1Ema50;
+      const priceBelowH1Emas = px < h1Ema20 && px < h1Ema50;
+
+      console.log('[trend] price:', px.toFixed(2),
+        '| H1 EMA20:', h1Ema20.toFixed(2),
+        '| H1 EMA50:', h1Ema50.toFixed(2),
+        '| M15 EMA20:', m15Ema20.toFixed(2),
+        '| dir:', dir);
+
+      // STEP 1: hard block — don't short above both H1 EMAs / don't long below both
+      if (dir === 'short' && priceAboveH1Emas) {
+        const reason = `Trend filter: price above H1 EMA20+EMA50 — no shorts ($${px.toFixed(2)} > $${h1Ema20.toFixed(2)})`;
+        log(`REJECT trendFilter: ${reason}`);
+        return { allowed: false, reason };
+      }
+      if (dir === 'long' && priceBelowH1Emas) {
+        const reason = `Trend filter: price below H1 EMA20+EMA50 — no longs ($${px.toFixed(2)} < $${h1Ema20.toFixed(2)})`;
+        log(`REJECT trendFilter: ${reason}`);
+        return { allowed: false, reason };
+      }
+      console.log('[trend] OK to', dir, '— price',
+        priceAboveH1Emas ? 'above' : priceBelowH1Emas ? 'below' : 'between', 'H1 EMAs');
+
+      // STEP 4: higher-high / lower-low momentum (last 10 H1 candles)
+      if (h1Candles.length >= 10) {
+        const h1Highs = h1Candles.slice(-10).map(c => c.high);
+        const h1Lows = h1Candles.slice(-10).map(c => c.low);
+        const recentHigh = Math.max(...h1Highs);
+        const recentLow = Math.min(...h1Lows);
+        const olderHigh = Math.max(...h1Highs.slice(0, 5));
+        const olderLow = Math.min(...h1Lows.slice(0, 5));
+        const makingHigherHighs = recentHigh > olderHigh;
+        const makingLowerLows = recentLow < olderLow;
+
+        if (dir === 'short' && makingHigherHighs && !makingLowerLows) {
+          const reason = `H1 making higher highs ($${olderHigh.toFixed(2)} → $${recentHigh.toFixed(2)}) — no shorts`;
+          log(`REJECT trendFilter(HH): ${reason}`);
+          return { allowed: false, reason };
+        }
+        if (dir === 'long' && makingLowerLows && !makingHigherHighs) {
+          const reason = `H1 making lower lows ($${olderLow.toFixed(2)} → $${recentLow.toFixed(2)}) — no longs`;
+          log(`REJECT trendFilter(LL): ${reason}`);
+          return { allowed: false, reason };
+        }
+        console.log('[trend] HH/LL ok — higherHighs:', makingHigherHighs, 'lowerLows:', makingLowerLows);
+      }
+    } else if (dir) {
+      console.log(`[trend] skipped — insufficient data (h1:${h1Candles.length} m15:${m15Candles.length} px:${px ?? 'n/a'})`);
+    }
   }
 
   // Tier block check — surface WHICH layer/TF conflicts (from the 3-layer engine)

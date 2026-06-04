@@ -125,8 +125,10 @@ export function formatPlanForTelegram(plan, extras = {}) {
   }
   if (plan.direction && tfAlignment) {
     const tfScore = tfAlignment?.score ?? 0;
-    const tfEmoji = tfScore === 3 ? '✅' : tfScore === 2 ? '⚠️' : '❌';
-    lines.push(`${tfEmoji} TF alignment: ${tfScore}/3`);
+    const tfTotal = tfAlignment?.total ?? 2;
+    const tfEmoji = tfScore === 2 ? '✅' : tfScore === 1 ? '⚠️' : '❌';
+    const h4Status = tfAlignment?.h4Status ?? 'unknown';
+    lines.push(`${tfEmoji} TF alignment: ${tfScore}/${tfTotal} (H4 info: ${h4Status})`);
   }
   lines.push('');
 

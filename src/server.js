@@ -164,30 +164,41 @@ app.get('/api/dashboard', async (_req, res) => {
     let signal   = null;
     let planMeta = null;
 
-    /* Resolve TF alignment to an "X/3" string. Handles a persisted tfAlignment in
-       any shape (string | number | {score} | {h4,h1,m15} booleans), and otherwise
-       DERIVES it from threeLayer.layers.technical biases vs the trade direction —
-       which is what last-plan.json actually contains (tfAlignment is not persisted). */
+    /* Resolve TF alignment to an "X/2" string — H1 + M15 only (H4 is context, not scored).
+       Handles a persisted tfAlignment in any shape (string | number | {score,total} |
+       {h1,m15} booleans), and otherwise DERIVES it from threeLayer.layers.technical biases
+       vs the trade direction — which is what last-plan.json actually contains. */
     function resolveTfAlignment(p) {
       const tfa = p.tfAlignment;
       if (typeof tfa === 'string') return tfa;
-      if (typeof tfa === 'number') return tfa + '/3';
-      if (tfa && typeof tfa.score === 'number') return tfa.score + '/3';
-      if (tfa && (tfa.h4 !== undefined || tfa.h1 !== undefined || tfa.m15 !== undefined)) {
-        return ((tfa.h4 ? 1 : 0) + (tfa.h1 ? 1 : 0) + (tfa.m15 ? 1 : 0)) + '/3';
+      if (typeof tfa === 'number') return tfa + '/2';
+      if (tfa && typeof tfa.score === 'number') return tfa.score + '/' + (tfa.total ?? 2);
+      if (tfa && (tfa.h1 !== undefined || tfa.m15 !== undefined)) {
+        return ((tfa.h1 ? 1 : 0) + (tfa.m15 ? 1 : 0)) + '/2';
       }
       const tech = p.threeLayer?.layers?.technical;
       const target =
         p.direction === 'long'     ? 'bullish' :
         p.direction === 'short'    ? 'bearish' :
-        tech?.h4Bias === 'bullish' ? 'bullish' :
-        tech?.h4Bias === 'bearish' ? 'bearish' : null;
+        tech?.h1Bias === 'bullish' ? 'bullish' :
+        tech?.h1Bias === 'bearish' ? 'bearish' : null;
       if (tech && target) {
-        return ((tech.h4Bias  === target ? 1 : 0)
-              + (tech.h1Bias  === target ? 1 : 0)
-              + (tech.m15Bias === target ? 1 : 0)) + '/3';
+        return ((tech.h1Bias  === target ? 1 : 0)
+              + (tech.m15Bias === target ? 1 : 0)) + '/2';
       }
-      return '0/3';
+      return '0/2';
+    }
+
+    /* H4 status — context only, shown as a separate badge (agrees | disagrees | unknown). */
+    function resolveH4Status(p) {
+      const tfa = p.tfAlignment;
+      if (tfa && typeof tfa.h4Status === 'string') return tfa.h4Status;
+      const tech = p.threeLayer?.layers?.technical;
+      const target =
+        p.direction === 'long'  ? 'bullish' :
+        p.direction === 'short' ? 'bearish' : null;
+      if (!tech || !target || tech.h4Bias == null) return 'unknown';
+      return tech.h4Bias === target ? 'agrees' : 'disagrees';
     }
 
     /* helper: build signal + planMeta from a raw plan object */
@@ -211,6 +222,7 @@ app.get('/api/dashboard', async (_req, res) => {
           direction:     p.direction              || null,
           factors:       p.confluenceFactors      || [],
           tfAlignment:   tfaResolved,
+          h4Status:      resolveH4Status(p),
           session:       p._session || (typeof p.session === 'object' ? p.session?.current : p.session) || 'unknown',
           regime:        p._regime  || p.threeLayer?.layers?.flow?.regime || p.regime || p.marketRegime || 'unknown',
           quality:       p.setupQuality           || 'unknown',
@@ -325,6 +337,7 @@ app.get('/api/dashboard', async (_req, res) => {
         direction:     null,
         factors:       [],
         tfAlignment:   '—',
+        h4Status:      'unknown',
         session:       'unknown',
         regime:        'unknown',
         quality:       'waiting',

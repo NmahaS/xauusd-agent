@@ -1387,9 +1387,13 @@ function renderSignal(d) {
           : 'No confluence factors — waiting for alignment'
       }</div>`;
 
-  /* ── TF alignment color ─────────────────────────────────── */
-  const tfaColor = sig.tfAlignment === '3/3' ? '#00D4A0'
-                 : sig.tfAlignment === '2/3' ? '#FF8C42' : '#FF4D6A';
+  /* ── TF alignment color (H1+M15 only, out of /2) ────────── */
+  const tfaColor = sig.tfAlignment === '2/2' ? '#00D4A0'
+                 : sig.tfAlignment === '1/2' ? '#FF8C42' : '#FF4D6A';
+  /* H4 is context only — small separate badge */
+  const h4St = sig.h4Status || 'unknown';
+  const h4Color = h4St === 'agrees' ? '#00D4A0'
+                : h4St === 'disagrees' ? '#FF8C42' : '#9AA0C0';
 
   /* ── Blocked / no-trade notice ──────────────────────────── */
   let noticeHTML = '';
@@ -1439,7 +1443,11 @@ function renderSignal(d) {
       <div style="background:#0A0C14;border-radius:3px;padding:6px 8px">
         <div style="font-size:9px;color:var(--muted);margin-bottom:2px;
                     text-transform:uppercase;letter-spacing:.6px">TF Align</div>
-        <div style="font-size:12px;font-weight:600;color:${tfaColor}">${sig.tfAlignment || '0/3'}</div>
+        <div style="display:flex;align-items:baseline;gap:5px">
+          <span style="font-size:12px;font-weight:600;color:${tfaColor}">${sig.tfAlignment || '0/2'}</span>
+          <span style="font-size:8px;font-weight:600;padding:1px 4px;border-radius:3px;
+                       background:#1E2235;color:${h4Color}">H4 ${h4St}</span>
+        </div>
       </div>
       <div style="background:#0A0C14;border-radius:3px;padding:6px 8px">
         <div style="font-size:9px;color:var(--muted);margin-bottom:2px;

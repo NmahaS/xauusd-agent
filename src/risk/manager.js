@@ -173,29 +173,8 @@ export async function writeRiskState(state) {
 }
 
 export function getTimeframeAlignment(context, direction) {
-  console.log('[tf-debug] context keys:', Object.keys(context || {}));
-  console.log('[tf-debug] h4 keys:', Object.keys(context?.h4 || {}));
-  console.log('[tf-debug] h4 structure:', JSON.stringify(context?.h4?.structure)?.slice(0, 100));
-  console.log('[tf-debug] h4 bias raw:', context?.h4?.structure?.bias);
-
-  const h4BiasRaw =
-    context?.h4?.structure?.bias ??
-    context?.smcH4?.structure?.bias ??
-    context?.smcH4?.bias ??
-    context?.h4?.bias ??
-    context?.h4Bias ??
-    null;
-  // Same staleness override as the 3-layer engine: an H4 structure event >24h old that recent
-  // candles oppose is treated as stale, and the live direction is used instead.
-  const _h4Eval = resolveStaleH4Bias(
-    context?.h4?.structure ?? context?.smcH4?.structure,
-    context?.h4Candles ?? context?.h4?.candles
-  );
-  const h4Bias = _h4Eval.stale ? _h4Eval.bias : h4BiasRaw;
-  if (_h4Eval.stale) {
-    console.log('[risk] H4 STALE override:', _h4Eval.originalBias, '→', _h4Eval.bias,
-      '(' + _h4Eval.ageHours.toFixed(1) + 'h old)');
-  }
+  // H1 = PRIMARY filter, M15 = execution. Score is H1+M15 only (out of 2).
+  // H4 is CONTEXT ONLY — resolved and displayed separately, never part of the score.
   const h1Bias =
     context?.h1?.structure?.bias ??
     context?.smcH1?.structure?.bias ??
@@ -211,21 +190,41 @@ export function getTimeframeAlignment(context, direction) {
     context?.m15Bias ??
     null;
 
-  console.log('[tf] resolved → h4:', h4Bias, 'h1:', h1Bias, 'm15:', m15Bias);
+  // Same staleness override as the 3-layer engine so the H4 info matches the rest of the system.
+  const h4BiasRaw =
+    context?.h4?.structure?.bias ??
+    context?.smcH4?.structure?.bias ??
+    context?.smcH4?.bias ??
+    context?.h4?.bias ??
+    context?.h4Bias ??
+    null;
+  const _h4Eval = resolveStaleH4Bias(
+    context?.h4?.structure ?? context?.smcH4?.structure,
+    context?.h4Candles ?? context?.h4?.candles
+  );
+  const h4Bias = _h4Eval.stale ? _h4Eval.bias : h4BiasRaw;
+
+  console.log('[tf] H1:', h1Bias, '| M15:', m15Bias, '| H4(info):', h4Bias, '| dir:', direction);
 
   const target = direction === 'long' ? 'bullish' : 'bearish';
   const aligned = {
-    h4: h4Bias === target,
     h1: h1Bias === target,
     m15: m15Bias === target,
   };
   const score = Object.values(aligned).filter(Boolean).length;
+  const total = 2; // H1 + M15 only — H4 is context, not scored
 
-  // H1 = primary, M15 = execution, H4 = context only (⚠️ when it doesn't align, not ❌).
-  console.log(
-    `[risk] TF alignment: H1=${aligned.h1 ? '✅' : '❌'} M15=${aligned.m15 ? '✅' : '❌'} H4=${aligned.h4 ? '✅' : '⚠️'} (${score}/3)`
-  );
-  return { aligned, score, h4Bias, h1Bias, m15Bias };
+  // H4 status is info only (not in score).
+  const h4Status = h4Bias === target ? 'agrees'
+                 : h4Bias == null    ? 'unknown'
+                 : 'disagrees';
+
+  console.log('[tf] alignment H1=' + (aligned.h1 ? '✅' : '❌') +
+    ' M15=' + (aligned.m15 ? '✅' : '❌') +
+    ' = ' + score + '/' + total +
+    ' (H4 ' + h4Status + ' — context only)');
+
+  return { aligned, score, total, h1Bias, m15Bias, h4Bias, h4Status };
 }
 
 export async function checkRiskRules(plan, accountState, context = {}) {
@@ -403,22 +402,22 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   }
   const tfAlign = _tfDir
     ? getTimeframeAlignment(context, _tfDir)
-    : { score: 3, aligned: {} };
+    : { score: 2, total: 2, aligned: {} };
   if (_tfDir && tfAlign.score === 0) {
-    const reason = `No timeframe alignment: H4, H1, M15 all disagree with ${plan.direction} direction.`;
+    const reason = `No timeframe alignment: H1 and M15 both disagree with ${plan.direction} direction.`;
     log(`REJECT tfAlignment: ${reason}`);
     return { allowed: false, reason };
   }
   if (tfAlign.score === 1) {
     if ((plan.threeLayer?.tier ?? 4) > 3) {
-      const reason = `Single TF alignment only — not enough confluence for this tier.`;
+      const reason = `Single TF alignment only (H1 or M15) — not enough confluence for this tier.`;
       log(`REJECT tfAlignment: ${reason}`);
       return { allowed: false, reason };
     }
     log('single TF alignment — allowing at reduced confidence');
   }
-  if (tfAlign.score === 3) {
-    log('FULL TF alignment ✅ — highest quality setup');
+  if (tfAlign.score === 2) {
+    log('FULL TF alignment ✅ — H1+M15 aligned (highest quality setup)');
   }
 
   // Pullback check — block chasing entries far from any key level (Principle 7)

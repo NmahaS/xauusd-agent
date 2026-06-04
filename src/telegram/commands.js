@@ -732,10 +732,8 @@ async function handleSettings() {
     `DeepSeek ${process.env.DEEPSEEK_API_KEY ? '✅' : '❌'} | ` +
     `Perplexity ${process.env.PERPLEXITY_API_KEY ? '✅' : '❌'}\n\n` +
     `<b>Execution Matrix:</b>\n` +
-    `All grades Tier 1: 2.0% ✅\n` +
-    `All grades Tier 2: 1.5% ✅\n` +
-    `All grades Tier 3: 1.0% ✅\n` +
-    `All grades Tier 4: 0.5% ✅ (conflicted — caution)`
+    `Flat 1% risk on every trade ✅\n` +
+    `(all grades, all tiers — Tier 1-4)`
   );
 }
 

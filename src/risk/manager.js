@@ -26,10 +26,11 @@ export const RISK_RULES = {
   autoExecuteQualities: ['A+', 'A', 'B'],
   autoExecuteConsensus: ['full', 'split'],
 
+  // Flat 1% risk on every trade, regardless of quality or tier.
   executionMatrix: {
-    'A+': { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0.5 },
-    'A':  { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0.5 },
-    'B':  { tier1: 2.0, tier2: 1.5, tier3: 1.0, tier4: 0.5 },
+    'A+': { tier1: 1.0, tier2: 1.0, tier3: 1.0, tier4: 1.0 },
+    'A':  { tier1: 1.0, tier2: 1.0, tier3: 1.0, tier4: 1.0 },
+    'B':  { tier1: 1.0, tier2: 1.0, tier3: 1.0, tier4: 1.0 },
   },
 };
 
@@ -530,22 +531,22 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     }
   }
 
-  // Apply tier-based risk override
+  // Flat 1% risk on every trade — all tiers map to 1.0%.
   const tierRisk = {
-    1: matrix.tier1 || 2.0,
-    2: matrix.tier2 || 1.5,
+    1: matrix.tier1 || 1.0,
+    2: matrix.tier2 || 1.0,
     3: matrix.tier3 || 1.0,
-    4: 0.5,
-  }[tier] ?? 0.5;
+    4: 1.0,
+  }[tier] ?? 1.0;
 
   plan.risk.suggestedRiskPct = tierRisk;
 
   if (tier === 4) {
     plan.warnings = [...(plan.warnings || []),
       '⚠️ Tier 4 — macro/flow layers conflict with technicals',
-      '⚠️ Executing at reduced 0.5% risk due to layer conflict',
+      '⚠️ Flat 1% risk (layer conflict — caution)',
     ];
-    log(`WARN tier4: executing at 0.5% (reduced)`);
+    log(`WARN tier4: executing at 1% (flat)`);
   }
 
   if (plan.consensus?.agreement === 'split') {

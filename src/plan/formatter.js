@@ -172,13 +172,15 @@ export function formatPlanForTelegram(plan, extras = {}) {
     lines.push(`<b>Entry:</b> ${entryLabel} @ ~${cp(plan.entry.price)}`);
     lines.push(`  <i>${esc(plan.entry.confirmation)}</i>`);
     const slDist = Math.abs(plan.entry.price - plan.stopLoss.price);
-    lines.push(`<b>Stop Loss:</b> ${cp(plan.stopLoss.price)} (${slDist.toFixed(0)}pts)`);
+    const slCorrected = plan.stopLoss.autoCorrected ? ' — auto-corrected from invalid' : '';
+    lines.push(`<b>Stop Loss:</b> ${cp(plan.stopLoss.price)} (${slDist.toFixed(0)}pts)${slCorrected}`);
     lines.push(`  <i>${esc(plan.stopLoss.reasoning)}</i>`);
     const targetRR = parseFloat(process.env.TARGET_RR || '2.0');
     const autoTP = plan.direction === 'long'
       ? Math.round(plan.entry.price + slDist * targetRR)
       : Math.round(plan.entry.price - slDist * targetRR);
-    lines.push(`<b>TP:</b> ${cp(autoTP)} (${targetRR}R automatic)`);
+    const tpCorrected = plan.takeProfits?.[0]?.autoCorrected ? ` — auto-corrected to ${targetRR}R` : '';
+    lines.push(`<b>TP:</b> ${cp(autoTP)} (${targetRR}R automatic)${tpCorrected}`);
     const tp1 = plan.takeProfits?.[0];
     if (tp1?.price) {
       lines.push(`  <i>Structural ref: ${cp(tp1.price)} — ${esc(tp1.reasoning ?? '')}</i>`);

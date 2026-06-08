@@ -17,6 +17,7 @@ import { getTimeframeAlignment } from './risk/manager.js';
 
 import { generatePlan } from './llm/client.js';
 import { computeConfluence } from './plan/confluence.js';
+import { validateAndCorrectPlanSLTP } from './plan/validator.js';
 import { savePlan, updateReadmeLatestPlan } from './plan/writer.js';
 import { resolveOpenTrades } from './plan/outcomeTracker.js';
 import { updateDailySummary } from './plan/tracker.js';
@@ -337,6 +338,18 @@ async function runFullPipeline() {
     warnings: [...new Set([...(plan.warnings || []), ...extraWarnings])],
   };
   mergedPlan.threeLayer = threeLayer ?? null;
+
+  // Validate + correct SL/TP if the LLM put them on the wrong side of entry. Runs on the
+  // final (post-M15-refinement) plan so Telegram, the saved plan, RAG, and the executor all
+  // use the same corrected levels. The executor keeps its own guard as a backstop.
+  const sltpValidation = validateAndCorrectPlanSLTP(mergedPlan, ctx);
+  if (sltpValidation.corrected) {
+    console.warn('[pipeline] plan SL/TP auto-corrected:', sltpValidation.reason);
+    mergedPlan.warnings = [
+      '⚠️ LLM produced invalid SL/TP — auto-corrected by system',
+      ...(mergedPlan.warnings || []),
+    ];
+  }
 
   // Safety sweep: attach SL/TP to any open position left naked by a GTC entry that
   // filled between runs (the resting-taker model can fill outside a pipeline cycle, and

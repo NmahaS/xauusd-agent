@@ -324,6 +324,7 @@ export async function executeIfApproved(plan, context) {
   // 1.5: Smart position handling — hold or flip on existing position
   const existingPos = account.openPositions?.find(p => p.coin === coin);
   let positionDecision = null;
+  let existingSLPrice = null;  // compounds keep the original stop and size the add against it
   if (existingPos) {
     positionDecision = await handleExistingPosition(existingPos, plan);
     console.log(`[executor] position decision: ${positionDecision.action} — ${positionDecision.reason}`);
@@ -339,8 +340,19 @@ export async function executeIfApproved(plan, context) {
     }
 
     if (positionDecision.action === 'compound') {
+      // Keep the existing stop on a winner; size the add against IT (0.5% risk to the real stop).
+      try {
+        const { getOpenOrdersDetailed } = await import('./hyperliquid.js');
+        const sl = (await getOpenOrdersDetailed()).find(o =>
+          o.coin === coin && o.reduceOnly &&
+          (o.isTrigger === true || o.orderType === 'Stop Market' || o.orderType === 'Stop Limit')
+        );
+        if (sl) existingSLPrice = sl.triggerPx ?? sl.limitPx;
+      } catch (err) {
+        console.warn('[executor] compound: existing SL fetch failed:', err.message);
+      }
       const compoundRiskPct = Math.min(config.DEFAULT_RISK_PCT, RISK_RULES.maxRiskPerTrade) * 0.5;
-      console.log(`[executor] compound — adding at half risk (${compoundRiskPct}%)`);
+      console.log(`[executor] compound — adding at half risk (${compoundRiskPct}%), existing SL ${existingSLPrice != null ? existingSLPrice.toFixed(2) : 'n/a'}`);
       await sendPositionDecisionMsg('compound', {
         existingDirection: existingPos.direction,
         reason: positionDecision.reason,
@@ -399,24 +411,31 @@ export async function executeIfApproved(plan, context) {
   const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 8;
   const dynamicLevels = getDynamicSLTP(plan.direction, entryPrice, atr);
 
-  // SL side/distance guard. The plan SL is an LLM-generated absolute price from analysis
-  // time; by execution the market has moved, so it is frequently on the wrong side of — or
-  // within a tick of — the live entry. Placing it verbatim makes the stop-trigger fire on
-  // placement and flattens the position seconds after entry (open→instant-close churn).
-  // Only trust the plan SL when it sits the correct side of entry with a sane buffer;
-  // otherwise fall back to the ATR-based dynamic SL (always correct side, sized off entry).
-  const planSL = plan.stopLoss?.price ?? null;
-  const minSLDistance = Math.max(dynamicLevels.slDistance * 0.5, atr * 0.5);
-  const planSLValid = planSL != null && (
-    plan.direction === 'long'
-      ? planSL <= entryPrice - minSLDistance
-      : planSL >= entryPrice + minSLDistance
-  );
-  if (planSL != null && !planSLValid) {
-    console.warn(`[executor] plan SL ${planSL} invalid for ${plan.direction} @ entry ${entryPrice} ` +
-      `(needs ${minSLDistance.toFixed(2)}pts buffer on correct side) — using ATR SL ${dynamicLevels.slPrice.toFixed(2)}`);
+  // SL selection. For a COMPOUND, keep the existing stop (never move a winner's stop) and size
+  // the add against it — so the unified stop stays put and the add risks 0.5% to the real stop.
+  // For a NEW entry, the plan SL is an LLM-generated absolute price from analysis time; by
+  // execution the market has often moved so it sits on the wrong side of — or within a tick of —
+  // the live entry, which makes the stop-trigger fire on placement (open→instant-close churn).
+  // Only trust the plan SL when it sits the correct side of entry with a sane buffer; otherwise
+  // fall back to the ATR-based dynamic SL (always correct side, sized off entry).
+  let finalSL;
+  if (positionDecision?.action === 'compound' && existingSLPrice != null && existingSLPrice > 0) {
+    finalSL = existingSLPrice;
+    console.log(`[executor] compound — keeping existing SL ${finalSL.toFixed(2)} and sizing add against it`);
+  } else {
+    const planSL = plan.stopLoss?.price ?? null;
+    const minSLDistance = Math.max(dynamicLevels.slDistance * 0.5, atr * 0.5);
+    const planSLValid = planSL != null && (
+      plan.direction === 'long'
+        ? planSL <= entryPrice - minSLDistance
+        : planSL >= entryPrice + minSLDistance
+    );
+    if (planSL != null && !planSLValid) {
+      console.warn(`[executor] plan SL ${planSL} invalid for ${plan.direction} @ entry ${entryPrice} ` +
+        `(needs ${minSLDistance.toFixed(2)}pts buffer on correct side) — using ATR SL ${dynamicLevels.slPrice.toFixed(2)}`);
+    }
+    finalSL = planSLValid ? planSL : dynamicLevels.slPrice;
   }
-  const finalSL = planSLValid ? planSL : dynamicLevels.slPrice;
   const finalTP = dynamicLevels.tpPrice;
   const tpDistance = Math.abs(finalTP - entryPrice);
 
@@ -836,12 +855,14 @@ export async function updateUnifiedSLTP(coin, direction, totalSize, newSLPrice, 
   console.log(`[executor] unified SL/TP updated ✅`);
 }
 
-// Safety net for the resting-GTC entry model: a limit entry can fill BETWEEN pipeline
-// runs, leaving a live position with no stop-loss (the next run may decide "hold" and
-// return early, or produce no signal at all so the executor never runs). This sweep runs
-// every cycle and attaches SL/TP to any open position lacking a stop-loss. No-op when the
-// position is already protected — detection uses frontendOpenOrders (the plain openOrders
-// endpoint omits the isTrigger/orderType fields needed to recognise a stop).
+// Safety net + reconcile sweep for the resting-GTC entry model. A limit entry (or a COMPOUND
+// add) can fill BETWEEN pipeline runs, so inline reconcileUnifiedSL never runs for it. This
+// sweep runs every cycle and enforces the invariant: every open position has exactly one SL and
+// one TP, each covering the FULL size, with TP at exactly TARGET_RR from the weighted-average
+// entry. It keeps an existing stop (never moves a winner's stop) and only derives one from ATR
+// when the position is naked. No-op when already in sync — so a compound (size grows, avg entry
+// shifts) is re-bracketed to full size at 2R, while a steady position is left untouched.
+// Detection uses frontendOpenOrders (plain openOrders omits isTrigger/orderType/sz).
 export async function protectNakedPositions(context) {
   const coin = process.env.HL_COIN || 'PAXG';
   const { getHLPositions, getOpenOrdersDetailed, cancelOrder, placeSL, placeTP } =
@@ -867,45 +888,61 @@ export async function protectNakedPositions(context) {
     return { checked: open.length, protected: 0 };
   }
 
+  const targetRR = parseFloat(process.env.TARGET_RR || '2.0');
   let protectedCount = 0;
   for (const pos of open) {
-    const reduceOrders = orders.filter(o => o.coin === coin && o.reduceOnly);
-    const hasSL = reduceOrders.some(o =>
-      o.isTrigger === true || o.orderType === 'Stop Market' || o.orderType === 'Stop Limit'
-    );
-    if (hasSL) {
-      console.log(`[protect] ${coin} ${pos.direction} ${pos.size} — stop-loss present ✅`);
-      continue;
-    }
-
-    console.warn(`[protect] ⚠️ NAKED POSITION: ${pos.direction} ${pos.size} ${coin} @ $${pos.entryPrice} — no stop-loss, attaching SL/TP`);
-
-    const entry = pos.entryPrice;
+    const entry = pos.entryPrice;  // Hyperliquid weighted-average entry (shifts on compound)
     if (!entry || isNaN(entry) || entry <= 0) {
       console.error(`[protect] invalid entry price (${entry}) — cannot size SL/TP, alerting only`);
       if (process.env.DRY_RUN !== 'true') {
         const { sendTelegramMessage } = await import('../telegram/notify.js');
         await sendTelegramMessage(
-          `⚠️ <b>Naked position — manual SL needed</b>\n` +
-          `${pos.direction.toUpperCase()} ${pos.size} ${coin} has no stop-loss and an invalid entry price.\n` +
+          `⚠️ <b>Position — manual SL needed</b>\n` +
+          `${pos.direction.toUpperCase()} ${pos.size} ${coin} has an invalid entry price.\n` +
           `Set SL/TP manually on Hyperliquid now!`
         ).catch(() => {});
       }
       continue;
     }
 
-    // Cancel any stray reduce-only orders (e.g. an orphan TP) so we don't double up.
-    for (const o of reduceOrders) {
-      try {
-        await cancelOrder(coin, o.oid);
-        await new Promise(r => setTimeout(r, 300));
-      } catch (err) {
-        console.warn('[protect] stray reduce-only cancel failed:', err.message);
-      }
+    const reduceOrders = orders.filter(o => o.coin === coin && o.reduceOnly);
+    const isStop = (o) => o.isTrigger === true || o.orderType === 'Stop Market' || o.orderType === 'Stop Limit';
+    const slOrders = reduceOrders.filter(isStop);
+    const tpOrders = reduceOrders.filter(o => !isStop(o));
+    const slCovered = slOrders.reduce((s, o) => s + (o.sz || 0), 0);
+    const tpCovered = tpOrders.reduce((s, o) => s + (o.sz || 0), 0);
+
+    // Keep an existing stop (never move a winner's stop); derive from ATR only if naked.
+    const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 8;
+    let slPrice = slOrders.length > 0 ? (slOrders[0].triggerPx ?? slOrders[0].limitPx) : null;
+    if (!slPrice || slPrice <= 0) slPrice = getDynamicSLTP(pos.direction, entry, atr).slPrice;
+    const slDist = Math.abs(entry - slPrice);
+    const tpPrice = pos.direction === 'long' ? entry + slDist * targetRR : entry - slDist * targetRR;
+
+    // Invariant: one SL + one TP, each covering the FULL position, TP at targetRR from the avg
+    // entry. A compound fill (size grows + avg entry shifts) breaks coverage and the TP level.
+    // No-op when already in sync, so steady positions are never churned.
+    const sizeTol = Math.max(0.0015, pos.size * 0.02);
+    const tpTol = Math.max(0.5, slDist * 0.1);
+    const slInSync = slOrders.length === 1 && Math.abs(slCovered - pos.size) <= sizeTol;
+    const tpInSync = tpOrders.length === 1 && Math.abs(tpCovered - pos.size) <= sizeTol
+      && Math.abs((tpOrders[0].limitPx ?? 0) - tpPrice) <= tpTol;
+    if (slInSync && tpInSync) {
+      console.log(`[protect] ${coin} ${pos.direction} ${pos.size} — SL/TP in sync ✅ (SL $${slPrice.toFixed(2)}, TP $${tpPrice.toFixed(2)})`);
+      continue;
     }
 
-    const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 8;
-    const { slPrice, tpPrice, tpRR, label } = getDynamicSLTP(pos.direction, entry, atr);
+    const wasNaked = slOrders.length === 0;
+    console.warn(`[protect] ${wasNaked ? '⚠️ NAKED' : '🔁 OUT-OF-SYNC'} ${pos.direction} ${pos.size} ${coin} @ avg $${entry.toFixed(2)} ` +
+      `— SL ${slOrders.length}x cover ${slCovered.toFixed(4)}, TP ${tpOrders.length}x cover ${tpCovered.toFixed(4)} ` +
+      `→ reconciling full size @ ${targetRR}R (SL $${slPrice.toFixed(2)}, TP $${tpPrice.toFixed(2)})`);
+
+    // Cancel all reduce-only orders, then place ONE SL + ONE TP covering the full position.
+    for (const o of reduceOrders) {
+      try { await cancelOrder(coin, o.oid); await new Promise(r => setTimeout(r, 300)); }
+      catch (err) { console.warn('[protect] reduce-only cancel failed:', err.message); }
+    }
+    await new Promise(r => setTimeout(r, 1500));
 
     let slOk = false, tpOk = false;
     try { slOk = await placeSL({ coin, direction: pos.direction, size: pos.size, slPrice }); }
@@ -918,11 +955,10 @@ export async function protectNakedPositions(context) {
     if (process.env.DRY_RUN !== 'true') {
       const { sendTelegramMessage } = await import('../telegram/notify.js');
       await sendTelegramMessage(
-        `🛡 <b>Protected naked position</b>\n` +
-        `${pos.direction.toUpperCase()} ${pos.size} ${coin} @ $${entry.toFixed(2)} had no stop-loss\n` +
-        `(GTC entry likely filled between runs)\n` +
-        `🛑 SL: $${slPrice.toFixed(2)}  🎯 TP: $${tpPrice.toFixed(2)} (${tpRR}R, ${label})\n` +
-        (slOk && tpOk ? `Placed ✅` : `⚠️ SL ${slOk} / TP ${tpOk} — verify manually on Hyperliquid!`)
+        `🛡 <b>${wasNaked ? 'Protected naked position' : 'Re-synced SL/TP (compound)'}</b>\n` +
+        `${pos.direction.toUpperCase()} ${pos.size} ${coin} @ avg $${entry.toFixed(2)}\n` +
+        `🛑 SL: $${slPrice.toFixed(2)} (${slDist.toFixed(1)}pts)  🎯 TP: $${tpPrice.toFixed(2)} (${targetRR}R)\n` +
+        (slOk && tpOk ? `Covers full size ✅` : `⚠️ SL ${slOk} / TP ${tpOk} — verify manually on Hyperliquid!`)
       ).catch(() => {});
     }
   }

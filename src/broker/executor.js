@@ -396,7 +396,25 @@ export async function executeIfApproved(plan, context) {
 
   const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 8;
   const dynamicLevels = getDynamicSLTP(plan.direction, entryPrice, atr);
-  const finalSL = plan.stopLoss?.price ?? dynamicLevels.slPrice;
+
+  // SL side/distance guard. The plan SL is an LLM-generated absolute price from analysis
+  // time; by execution the market has moved, so it is frequently on the wrong side of — or
+  // within a tick of — the live entry. Placing it verbatim makes the stop-trigger fire on
+  // placement and flattens the position seconds after entry (open→instant-close churn).
+  // Only trust the plan SL when it sits the correct side of entry with a sane buffer;
+  // otherwise fall back to the ATR-based dynamic SL (always correct side, sized off entry).
+  const planSL = plan.stopLoss?.price ?? null;
+  const minSLDistance = Math.max(dynamicLevels.slDistance * 0.5, atr * 0.5);
+  const planSLValid = planSL != null && (
+    plan.direction === 'long'
+      ? planSL <= entryPrice - minSLDistance
+      : planSL >= entryPrice + minSLDistance
+  );
+  if (planSL != null && !planSLValid) {
+    console.warn(`[executor] plan SL ${planSL} invalid for ${plan.direction} @ entry ${entryPrice} ` +
+      `(needs ${minSLDistance.toFixed(2)}pts buffer on correct side) — using ATR SL ${dynamicLevels.slPrice.toFixed(2)}`);
+  }
+  const finalSL = planSLValid ? planSL : dynamicLevels.slPrice;
   const finalTP = dynamicLevels.tpPrice;
   const tpDistance = Math.abs(finalTP - entryPrice);
 

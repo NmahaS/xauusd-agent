@@ -140,6 +140,46 @@ function buildPlan(direction, smcH1, smcH4, currentPrice, atr) {
   };
 }
 
+// Price-based trend filter — mirrors the live checkRiskRules() guards (manager.js):
+//   • EMA filter: no shorts when price > H1 EMA20 & EMA50; no longs when price < both
+//   • HH/LL: no shorts on H1 higher highs (and not lower lows); inverse for longs
+// Uses the H1 EMAs already computed for the window + last-10-bar swing highs/lows.
+// Returns { block: bool, reason: string }.
+function applyTrendFilter(direction, price, h1Indicators, h1Window) {
+  const ema20 = h1Indicators?.ema20;
+  const ema50 = h1Indicators?.ema50;
+  if (price == null || ema20 == null || ema50 == null) return { block: false, reason: '' };
+
+  const aboveBoth = price > ema20 && price > ema50;
+  const belowBoth = price < ema20 && price < ema50;
+
+  if (direction === 'short' && aboveBoth) {
+    return { block: true, reason: `EMA: price ${price.toFixed(2)} > H1 EMA20/50 — no shorts` };
+  }
+  if (direction === 'long' && belowBoth) {
+    return { block: true, reason: `EMA: price ${price.toFixed(2)} < H1 EMA20/50 — no longs` };
+  }
+
+  if (h1Window.length >= 10) {
+    const highs = h1Window.slice(-10).map(c => c.high);
+    const lows = h1Window.slice(-10).map(c => c.low);
+    const recentHigh = Math.max(...highs);
+    const recentLow = Math.min(...lows);
+    const olderHigh = Math.max(...highs.slice(0, 5));
+    const olderLow = Math.min(...lows.slice(0, 5));
+    const higherHighs = recentHigh > olderHigh;
+    const lowerLows = recentLow < olderLow;
+
+    if (direction === 'short' && higherHighs && !lowerLows) {
+      return { block: true, reason: `HH: H1 higher highs ${olderHigh.toFixed(2)}→${recentHigh.toFixed(2)} — no shorts` };
+    }
+    if (direction === 'long' && lowerLows && !higherHighs) {
+      return { block: true, reason: `LL: H1 lower lows ${olderLow.toFixed(2)}→${recentLow.toFixed(2)} — no longs` };
+    }
+  }
+  return { block: false, reason: '' };
+}
+
 // Simulate outcome over the next 24 H1 candles.
 // SL-first ordering: a same-candle SL+TP collision counts as LOSS (matches outcomeTracker.js).
 function simulateOutcome(plan, direction, futureCandles) {
@@ -274,12 +314,18 @@ export async function runBacktest(h1Candles, h4Candles) {
     const future = h1Candles.slice(i + 1, i + 1 + FUTURE_BARS);
     const result = simulateOutcome(plan, conf.direction, future);
 
+    // NEW SYSTEM: price-based trend filter verdict (still simulate so we can measure
+    // what the blocked trades WOULD have done — proving the filter avoids losers).
+    const trend = applyTrendFilter(conf.direction, h1Indicators.lastClose, h1Indicators, h1Window);
+
     signals.push({
       timestamp: candle.time,
       direction: conf.direction,
       quality: conf.grade,
       confluenceCount: conf.count,
       confluenceFactors: conf.factors,
+      trendBlock: trend.block,
+      trendReason: trend.reason,
       session: session.current,
       dayOfWeek: dayOfWeekUtc(candle.time),
       entry: round(plan.entry),

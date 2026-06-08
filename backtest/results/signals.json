@@ -2253,6 +2253,8 @@
       "M15 CHoCH-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4110.20→4111.80 — no shorts",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4108.05,
@@ -2279,6 +2281,8 @@
       "M15 CHoCH-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4108.05,
@@ -4402,6 +4406,8 @@
       "M15 CHoCH-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 3943.45,
@@ -4428,6 +4434,8 @@
       "M15 CHoCH-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 3943.45,
@@ -4994,6 +5002,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Monday",
     "entry": 3943.45,
@@ -5244,6 +5254,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 3986.70 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Tuesday",
     "entry": 3943.45,
@@ -5272,6 +5284,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 3983.60 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Tuesday",
     "entry": 3943.45,
@@ -5592,6 +5606,8 @@
       "H1 price in premium zone (57.5%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 3967.30→3976.40 — no shorts",
     "session": "london",
     "dayOfWeek": "Wednesday",
     "entry": 4016.25,
@@ -5620,6 +5636,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 3967.30→3976.40 — no shorts",
     "session": "ny",
     "dayOfWeek": "Wednesday",
     "entry": 4016.25,
@@ -5814,6 +5832,8 @@
       "H1 price in premium zone (70.9%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 3983.40→3985.40 — no shorts",
     "session": "asia",
     "dayOfWeek": "Thursday",
     "entry": 4016.25,
@@ -7432,6 +7452,8 @@
       "H1 price in discount zone (42.5%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Tuesday",
     "entry": 4104.95,
@@ -7459,6 +7481,8 @@
       "H1 price in discount zone (38.6%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Tuesday",
     "entry": 4104.95,
@@ -7486,6 +7510,8 @@
       "H1 price in discount zone (42.8%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Tuesday",
     "entry": 4104.95,
@@ -7526,6 +7552,8 @@
       "M15 CHoCH-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4114.25,
@@ -7582,6 +7610,8 @@
       "H1 price in discount zone (34.1%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4104.95,
@@ -8233,6 +8263,8 @@
       "H1 bearish OB within 20pts [4182.80-4198.90]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4197.00 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Friday",
     "entry": 4190.85,
@@ -8261,6 +8293,8 @@
       "H1 bearish OB within 20pts [4182.80-4198.90]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4194.30 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Friday",
     "entry": 4190.85,
@@ -8865,6 +8899,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4097.00→4100.00 — no shorts",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4190.85,
@@ -9838,6 +9874,8 @@
       "RSI bearish divergence (M15/H1)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4086.70 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4190.85,
@@ -9866,6 +9904,8 @@
       "RSI bearish divergence (M15/H1)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4088.00 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4190.85,
@@ -10050,6 +10090,8 @@
       "H1 price in premium zone (81.8%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Wednesday",
     "entry": 4190.85,
@@ -11626,6 +11668,8 @@
       "H1 bearish OB within 20pts [4071.10-4098.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4090.00 > H1 EMA20/50 — no shorts",
     "session": "ny",
     "dayOfWeek": "Monday",
     "entry": 4084.7,
@@ -11670,6 +11714,8 @@
       "H1 bearish OB within 20pts [4071.10-4098.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4091.20 > H1 EMA20/50 — no shorts",
     "session": "off",
     "dayOfWeek": "Monday",
     "entry": 4084.7,
@@ -11727,6 +11773,8 @@
       "H1 price in premium zone (294.9%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4131.60 > H1 EMA20/50 — no shorts",
     "session": "off",
     "dayOfWeek": "Monday",
     "entry": 4190.85,
@@ -13394,6 +13442,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -13420,6 +13470,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -13460,6 +13512,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -13644,6 +13698,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4119.1,
@@ -13719,6 +13775,8 @@
       "H1 bullish OB within 20pts [4238.50-4248.80]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4243.65,
@@ -13749,6 +13807,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4243.65,
@@ -13777,6 +13837,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4241.70→4237.70 — no longs",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4119.1,
@@ -13820,6 +13882,8 @@
       "H1 price in discount zone (4.4%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4242.60→4237.70 — no longs",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4119.1,
@@ -14380,6 +14444,8 @@
       "H1 price in discount zone (-159.2%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4189.90 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Tuesday",
     "entry": 4119.1,
@@ -14455,6 +14521,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4220.30 < H1 EMA20/50 — no longs",
     "session": "ny",
     "dayOfWeek": "Tuesday",
     "entry": 4119.1,
@@ -14677,6 +14745,8 @@
       "H1 price in premium zone (70.4%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4221.50→4229.20 — no shorts",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4216.5,
@@ -14721,6 +14791,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Wednesday",
     "entry": 4216.5,
@@ -14779,6 +14851,8 @@
       "H1 price in premium zone (74.1%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Wednesday",
     "entry": 4216.5,
@@ -15647,6 +15721,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4210.00 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -15675,6 +15751,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4211.80 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -15702,6 +15780,8 @@
       "H1 price in discount zone (21.6%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -15729,6 +15809,8 @@
       "H1 price in discount zone (19.3%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4211.70 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -15757,6 +15839,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4210.10 < H1 EMA20/50 — no longs",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -15785,6 +15869,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4212.10 < H1 EMA20/50 — no longs",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -15813,6 +15899,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4209.60 < H1 EMA20/50 — no longs",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -15925,6 +16013,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -15951,6 +16041,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4119.1,
@@ -16051,6 +16143,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4119.1,
@@ -16164,6 +16258,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4211.3,
@@ -16629,6 +16725,8 @@
       "H1 price in discount zone (-22.9%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4196.20 < H1 EMA20/50 — no longs",
     "session": "off",
     "dayOfWeek": "Monday",
     "entry": 4195.45,
@@ -16656,6 +16754,8 @@
       "H1 price in discount zone (-16.6%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4197.80 < H1 EMA20/50 — no longs",
     "session": "off",
     "dayOfWeek": "Monday",
     "entry": 4195.45,
@@ -16683,6 +16783,8 @@
       "H1 price in discount zone (-1.2%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4201.70 < H1 EMA20/50 — no longs",
     "session": "off",
     "dayOfWeek": "Monday",
     "entry": 4195.45,
@@ -16710,6 +16812,8 @@
       "H1 price in discount zone (-18.6%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4197.30 < H1 EMA20/50 — no longs",
     "session": "asia",
     "dayOfWeek": "Tuesday",
     "entry": 4195.45,
@@ -16737,6 +16841,8 @@
       "H1 price in discount zone (0.0%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4202.00 < H1 EMA20/50 — no longs",
     "session": "asia",
     "dayOfWeek": "Tuesday",
     "entry": 4195.45,
@@ -16963,6 +17069,8 @@
       "M15 CHoCH-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Tuesday",
     "entry": 4189.05,
@@ -17440,6 +17548,8 @@
       "H1 price in premium zone (96.7%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4220.30 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Thursday",
     "entry": 4223.05,
@@ -18159,6 +18269,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4200.25,
@@ -18185,6 +18297,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4200.25,
@@ -18211,6 +18325,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4200.25,
@@ -18237,6 +18353,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4200.25,
@@ -18263,6 +18381,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4200.25,
@@ -18289,6 +18409,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4200.25,
@@ -18315,6 +18437,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4200.25,
@@ -18341,6 +18465,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4200.25,
@@ -18367,6 +18493,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4200.25,
@@ -18393,6 +18521,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18419,6 +18549,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18445,6 +18577,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18471,6 +18605,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4314.20→4311.40 — no longs",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18498,6 +18634,8 @@
       "H1 price in discount zone (46.2%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18524,6 +18662,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18550,6 +18690,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18577,6 +18719,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18604,6 +18748,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18631,6 +18777,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18657,6 +18805,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18683,6 +18833,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18725,6 +18877,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18752,6 +18906,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18778,6 +18934,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4317.40→4314.90 — no longs",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18818,6 +18976,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18844,6 +19004,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -18913,6 +19075,8 @@
       "H1 price in discount zone (13.0%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4200.25,
@@ -19923,6 +20087,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4332.30 < H1 EMA20/50 — no longs",
     "session": "ny",
     "dayOfWeek": "Thursday",
     "entry": 4330.15,
@@ -20133,6 +20299,8 @@
       "H1 bullish OB within 20pts [4323.20-4337.10]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4335.30 < H1 EMA20/50 — no longs",
     "session": "asia",
     "dayOfWeek": "Friday",
     "entry": 4330.15,
@@ -20161,6 +20329,8 @@
       "H1 bullish OB within 20pts [4323.20-4337.10]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4327.80 < H1 EMA20/50 — no longs",
     "session": "asia",
     "dayOfWeek": "Friday",
     "entry": 4330.15,
@@ -20189,6 +20359,8 @@
       "H1 bullish OB within 20pts [4323.20-4337.10]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4329.80 < H1 EMA20/50 — no longs",
     "session": "asia",
     "dayOfWeek": "Friday",
     "entry": 4330.15,
@@ -20288,6 +20460,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4335.50 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 4330.15,
@@ -20333,6 +20507,8 @@
       "H1 bullish OB within 20pts [4323.20-4337.10]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4336.60 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 4330.15,
@@ -20361,6 +20537,8 @@
       "H1 bullish OB within 20pts [4323.20-4337.10]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4335.40 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 4330.15,
@@ -20390,6 +20568,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4335.20 < H1 EMA20/50 — no longs",
     "session": "ny",
     "dayOfWeek": "Friday",
     "entry": 4330.15,
@@ -20419,6 +20599,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Friday",
     "entry": 4330.15,
@@ -20524,6 +20706,8 @@
       "RSI bullish divergence (M15/H1)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Friday",
     "entry": 4330.15,
@@ -20674,6 +20858,8 @@
       "H1 price in discount zone (46.6%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4330.15,
@@ -20701,6 +20887,8 @@
       "H1 price in discount zone (49.2%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4330.15,
@@ -20727,6 +20915,8 @@
       "M15 CHoCH-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4330.15,
@@ -20755,6 +20945,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4330.15,
@@ -21144,6 +21336,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21172,6 +21366,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21199,6 +21395,8 @@
       "H1 bullish OB within 20pts [4348.60-4349.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21227,6 +21425,8 @@
       "H1 bullish OB within 20pts [4348.60-4349.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21255,6 +21455,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21283,6 +21485,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21311,6 +21515,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21338,6 +21544,8 @@
       "H1 bullish OB within 20pts [4348.60-4349.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21365,6 +21573,8 @@
       "H1 bullish OB within 20pts [4348.60-4349.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21392,6 +21602,8 @@
       "H1 bullish OB within 20pts [4348.60-4349.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21419,6 +21631,8 @@
       "H1 bullish OB within 20pts [4348.60-4349.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21446,6 +21660,8 @@
       "H1 bullish OB within 20pts [4348.60-4349.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21473,6 +21689,8 @@
       "H1 bullish OB within 20pts [4348.60-4349.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21500,6 +21718,8 @@
       "H1 bullish OB within 20pts [4348.60-4349.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -21527,6 +21747,8 @@
       "H1 bullish OB within 20pts [4348.60-4349.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4349.25,
@@ -22107,6 +22329,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Tuesday",
     "entry": 4495,
@@ -22136,6 +22360,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4485.50→4453.90 — no longs",
     "session": "ny",
     "dayOfWeek": "Tuesday",
     "entry": 4465.1,
@@ -22164,6 +22390,8 @@
       "H1 bullish OB within 20pts [4462.30-4467.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4485.50→4427.20 — no longs",
     "session": "ny",
     "dayOfWeek": "Tuesday",
     "entry": 4465.1,
@@ -22501,6 +22729,8 @@
       "H1 bullish OB within 20pts [4462.30-4467.90]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4471.60 < H1 EMA20/50 — no longs",
     "session": "ny",
     "dayOfWeek": "Wednesday",
     "entry": 4465.1,
@@ -23006,6 +23236,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 4465.1,
@@ -23032,6 +23264,8 @@
       "M15 CHoCH-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 4465.1,
@@ -23145,6 +23379,8 @@
       "M15 CHoCH-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Friday",
     "entry": 4465.1,
@@ -23354,6 +23590,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -23381,6 +23619,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -23408,6 +23648,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -23434,6 +23676,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -23460,6 +23704,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -23487,6 +23733,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -23514,6 +23762,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -23541,6 +23791,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -23567,6 +23819,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -23635,6 +23889,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -23661,6 +23917,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4465.1,
@@ -24777,6 +25035,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4467.65,
@@ -25372,6 +25632,8 @@
       "H1 price in premium zone (58.0%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Thursday",
     "entry": 4467.65,
@@ -25399,6 +25661,8 @@
       "H1 price in premium zone (54.5%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Thursday",
     "entry": 4467.65,
@@ -25777,6 +26041,8 @@
       "M15 CHoCH-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4403.25,
@@ -25803,6 +26069,8 @@
       "M15 CHoCH-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4403.25,
@@ -25829,6 +26097,8 @@
       "M15 CHoCH-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4403.25,
@@ -25855,6 +26125,8 @@
       "M15 CHoCH-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4343.00→4343.90 — no shorts",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4403.25,
@@ -25896,6 +26168,8 @@
       "H1 price in premium zone (75.5%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4403.25,
@@ -25923,6 +26197,8 @@
       "H1 price in premium zone (70.3%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4403.25,
@@ -25951,6 +26227,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4343.90→4355.00 — no shorts",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4403.25,
@@ -26320,6 +26598,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4403.25,
@@ -26347,6 +26627,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4403.25,
@@ -26403,6 +26685,8 @@
       "H1 price in premium zone (50.3%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4362.20 > H1 EMA20/50 — no shorts",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4403.25,
@@ -26444,6 +26728,8 @@
       "H1 price in premium zone (62.5%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4366.50 > H1 EMA20/50 — no shorts",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4403.25,
@@ -26471,6 +26757,8 @@
       "H1 price in premium zone (65.2%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4367.20 > H1 EMA20/50 — no shorts",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4403.25,
@@ -26560,6 +26848,8 @@
       "H1 bearish OB within 20pts [4395.90-4410.60]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4404.20 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Monday",
     "entry": 4403.25,
@@ -26588,6 +26878,8 @@
       "H1 bearish OB within 20pts [4395.90-4410.60]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4408.40 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Monday",
     "entry": 4403.25,
@@ -26707,6 +26999,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4443.30 > H1 EMA20/50 — no shorts",
     "session": "london",
     "dayOfWeek": "Monday",
     "entry": 4467.65,
@@ -28066,6 +28360,8 @@
       "M15 CHoCH-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Friday",
     "entry": 4424.55,
@@ -28253,6 +28549,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28279,6 +28577,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28305,6 +28605,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28332,6 +28634,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28359,6 +28663,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28386,6 +28692,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28412,6 +28720,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28438,6 +28748,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28465,6 +28777,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28492,6 +28806,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28519,6 +28835,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28545,6 +28863,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28571,6 +28891,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28597,6 +28919,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28623,6 +28947,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28649,6 +28975,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28676,6 +29004,8 @@
       "H1 price in discount zone (48.1%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4515.80→4512.00 — no longs",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28702,6 +29032,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4514.40→4512.00 — no longs",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28728,6 +29060,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28754,6 +29088,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4478.95,
@@ -28780,6 +29116,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -28806,6 +29144,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -28832,6 +29172,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -28858,6 +29200,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -28884,6 +29228,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -28910,6 +29256,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -28936,6 +29284,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -28963,6 +29313,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -28990,6 +29342,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -29017,6 +29371,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -29044,6 +29400,8 @@
       "RSI bullish divergence (M15/H1)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4519.30→4517.40 — no longs",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -29071,6 +29429,8 @@
       "RSI bullish divergence (M15/H1)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -29099,6 +29459,8 @@
       "RSI bullish divergence (M15/H1)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -29128,6 +29490,8 @@
       "RSI bullish divergence (M15/H1)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4517.40→4514.10 — no longs",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -29157,6 +29521,8 @@
       "RSI bullish divergence (M15/H1)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4517.40→4506.30 — no longs",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -29200,6 +29566,8 @@
       "H1 price in discount zone (-90.6%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4518.50→4506.30 — no longs",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -29227,6 +29595,8 @@
       "H1 price in discount zone (-95.3%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4518.50→4506.30 — no longs",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -29254,6 +29624,8 @@
       "H1 price in discount zone (-93.7%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4514.10→4506.30 — no longs",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4478.95,
@@ -29948,6 +30320,8 @@
       "H1 bullish OB within 20pts [4594.60-4599.50]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Tuesday",
     "entry": 4597.05,
@@ -31647,6 +32021,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Monday",
     "entry": 4630.9,
@@ -32949,6 +33325,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Friday",
     "entry": 4929.2,
@@ -33129,6 +33507,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4952.9,
@@ -34076,6 +34456,8 @@
       "H1 bullish OB within 20pts [4998.60-5005.00]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 5006.60 < H1 EMA20/50 — no longs",
     "session": "off",
     "dayOfWeek": "Monday",
     "entry": 5001.8,
@@ -35410,6 +35792,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4957.90→4970.90 — no shorts",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 5457.35,
@@ -35859,6 +36243,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 5457.35,
@@ -37533,6 +37919,8 @@
       "H1 price in premium zone (115.0%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4943.00 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 5064.6,
@@ -38026,6 +38414,8 @@
       "H1 bullish OB within 20pts [4995.00-5007.10]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 5001.05,
@@ -38052,6 +38442,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 5001.05,
@@ -38078,6 +38470,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 5001.05,
@@ -39532,6 +39926,8 @@
       "H1 price in premium zone (61.0%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 5067,
@@ -40061,6 +40457,8 @@
       "H1 price in premium zone (98.2%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 5030.90 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 5067,
@@ -40104,6 +40502,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 5033.70 > H1 EMA20/50 — no shorts",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 5067,
@@ -40210,6 +40610,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 5042.00→5044.70 — no shorts",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 5067,
@@ -40687,6 +41089,8 @@
       "M15 CHoCH-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Tuesday",
     "entry": 5067,
@@ -41074,6 +41478,8 @@
       "H1 bearish OB within 20pts [4934.30-4948.80]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4907.40→4941.80 — no shorts",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4941.55,
@@ -41102,6 +41508,8 @@
       "H1 bearish OB within 20pts [4934.30-4948.80]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4894.60→4941.80 — no shorts",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4941.55,
@@ -41130,6 +41538,8 @@
       "H1 bearish OB within 20pts [4934.30-4948.80]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4894.60→4941.80 — no shorts",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4941.55,
@@ -41159,6 +41569,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4908.20→4943.60 — no shorts",
     "session": "london",
     "dayOfWeek": "Wednesday",
     "entry": 4941.55,
@@ -41204,6 +41616,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4941.80→4943.60 — no shorts",
     "session": "london",
     "dayOfWeek": "Wednesday",
     "entry": 4941.55,
@@ -41263,6 +41677,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4945.60 > H1 EMA20/50 — no shorts",
     "session": "ny",
     "dayOfWeek": "Wednesday",
     "entry": 4941.55,
@@ -42326,6 +42742,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4915.65,
@@ -42413,6 +42831,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4915.65,
@@ -43129,6 +43549,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 5130.10 < H1 EMA20/50 — no longs",
     "session": "ny",
     "dayOfWeek": "Tuesday",
     "entry": 5129.65,
@@ -43218,6 +43640,8 @@
       "H1 price in discount zone (17.6%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 5177.10 < H1 EMA20/50 — no longs",
     "session": "off",
     "dayOfWeek": "Tuesday",
     "entry": 5129.65,
@@ -46081,6 +46505,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 5416.25,
@@ -46138,6 +46564,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 5416.25,
@@ -48777,6 +49205,8 @@
       "H1 bearish OB within 20pts [5021.70-5052.40]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -48863,6 +49293,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -48890,6 +49322,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -48917,6 +49351,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -48958,6 +49394,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -48984,6 +49422,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -49011,6 +49451,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -49038,6 +49480,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -49079,6 +49523,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -49119,6 +49565,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -49145,6 +49593,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -49171,6 +49621,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -49197,6 +49649,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 5037.05,
@@ -50616,6 +51070,8 @@
       "H1 price in premium zone (71.5%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 5037.05,
@@ -50884,6 +51340,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4526.90→4527.00 — no shorts",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4589.25,
@@ -50941,6 +51399,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4589.25,
@@ -50968,6 +51428,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4589.25,
@@ -51371,6 +51833,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4589.25,
@@ -51473,6 +51937,8 @@
       "H1 bearish OB within 20pts [4505.00-4509.20]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4507.1,
@@ -52278,6 +52744,8 @@
       "H1 bearish OB within 20pts [4561.00-4617.50]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4592.30 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4589.25,
@@ -52336,6 +52804,8 @@
       "H1 price in premium zone (243.6%)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4567.80 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Wednesday",
     "entry": 4589.25,
@@ -57012,6 +57482,8 @@
       "M15 CHoCH-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Thursday",
     "entry": 4504.15,
@@ -58160,6 +58632,8 @@
       "RSI bearish divergence (M15/H1)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "ny",
     "dayOfWeek": "Monday",
     "entry": 4703.6,
@@ -59510,6 +59984,8 @@
       "H1 price in discount zone (-1.2%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4814.80→4814.10 — no longs",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4772.35,
@@ -59537,6 +60013,8 @@
       "H1 price in discount zone (-3.5%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4814.80→4809.70 — no longs",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4772.35,
@@ -59564,6 +60042,8 @@
       "H1 price in discount zone (-1.4%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4814.90→4809.70 — no longs",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4772.35,
@@ -59592,6 +60072,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4814.90→4809.70 — no longs",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4772.35,
@@ -60159,6 +60641,8 @@
       "H1 price in discount zone (21.5%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4773.20 < H1 EMA20/50 — no longs",
     "session": "asia",
     "dayOfWeek": "Monday",
     "entry": 4766.2,
@@ -60292,6 +60776,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4802.20 > H1 EMA20/50 — no shorts",
     "session": "ny",
     "dayOfWeek": "Monday",
     "entry": 4813.7,
@@ -60736,6 +61222,8 @@
       "H1 price in discount zone (-18.5%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4707.70 < H1 EMA20/50 — no longs",
     "session": "off",
     "dayOfWeek": "Tuesday",
     "entry": 4704.35,
@@ -61093,6 +61581,8 @@
       "M15 CHoCH-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Wednesday",
     "entry": 4813.7,
@@ -61189,6 +61679,8 @@
       "M15 CHoCH-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Thursday",
     "entry": 4813.7,
@@ -61260,6 +61752,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Thursday",
     "entry": 4813.7,
@@ -61286,6 +61780,8 @@
       "M15 CHoCH-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Thursday",
     "entry": 4813.7,
@@ -61444,6 +61940,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Thursday",
     "entry": 4813.7,
@@ -61658,6 +62156,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 4813.7,
@@ -62095,6 +62595,8 @@
       "H1 bearish OB within 20pts [4697.30-4699.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4698.3,
@@ -62123,6 +62625,8 @@
       "H1 bearish OB within 20pts [4697.30-4699.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4698.3,
@@ -62150,6 +62654,8 @@
       "H1 bearish OB within 20pts [4697.30-4699.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Saturday",
     "entry": 4698.3,
@@ -62177,6 +62683,8 @@
       "H1 bearish OB within 20pts [4697.30-4699.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4698.3,
@@ -62205,6 +62713,8 @@
       "H1 bearish OB within 20pts [4697.30-4699.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4698.3,
@@ -62233,6 +62743,8 @@
       "H1 bearish OB within 20pts [4697.30-4699.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4698.3,
@@ -62261,6 +62773,8 @@
       "H1 bearish OB within 20pts [4697.30-4699.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4698.3,
@@ -62289,6 +62803,8 @@
       "H1 bearish OB within 20pts [4697.30-4699.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4698.3,
@@ -62317,6 +62833,8 @@
       "H1 bearish OB within 20pts [4692.60-4694.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4693.45,
@@ -62345,6 +62863,8 @@
       "H1 bearish OB within 20pts [4692.60-4694.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4693.45,
@@ -62374,6 +62894,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4693.45,
@@ -62403,6 +62925,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4693.45,
@@ -62432,6 +62956,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4692.30→4693.00 — no shorts",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4693.45,
@@ -62460,6 +62986,8 @@
       "H1 bearish OB within 20pts [4692.60-4694.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4692.30→4693.00 — no shorts",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4693.45,
@@ -62488,6 +63016,8 @@
       "H1 bearish OB within 20pts [4697.30-4699.30]",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4692.30→4694.50 — no shorts",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4698.3,
@@ -62517,6 +63047,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4695.90 > H1 EMA20/50 — no shorts",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4698.3,
@@ -62546,6 +63078,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4698.30 > H1 EMA20/50 — no shorts",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4698.3,
@@ -62573,6 +63107,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4702.20 > H1 EMA20/50 — no shorts",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4813.7,
@@ -62599,6 +63135,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4700.00 > H1 EMA20/50 — no shorts",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4813.7,
@@ -62625,6 +63163,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4698.80 > H1 EMA20/50 — no shorts",
     "session": "ny",
     "dayOfWeek": "Sunday",
     "entry": 4813.7,
@@ -62707,6 +63247,8 @@
       "M15 BOS-bearish confirms direction",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4700.10 > H1 EMA20/50 — no shorts",
     "session": "off",
     "dayOfWeek": "Sunday",
     "entry": 4813.7,
@@ -62851,6 +63393,8 @@
       "RSI bearish divergence (M15/H1)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4698.80 > H1 EMA20/50 — no shorts",
     "session": "asia",
     "dayOfWeek": "Monday",
     "entry": 4813.7,
@@ -62880,6 +63424,8 @@
       "RSI bearish divergence (M15/H1)",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4699.20 > H1 EMA20/50 — no shorts",
     "session": "london",
     "dayOfWeek": "Monday",
     "entry": 4813.7,
@@ -64203,6 +64749,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4571.30 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 4541.9,
@@ -64249,6 +64797,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4555.80 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Friday",
     "entry": 4541.9,
@@ -64511,6 +65061,8 @@
       "H1 price in discount zone (7.8%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4560.6,
@@ -64631,6 +65183,8 @@
       "H1 price in discount zone (6.4%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4600.00→4599.40 — no longs",
     "session": "london",
     "dayOfWeek": "Saturday",
     "entry": 4560.6,
@@ -64901,6 +65455,8 @@
       "H1 price in discount zone (-52.1%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4596.90 < H1 EMA20/50 — no longs",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4560.6,
@@ -64928,6 +65484,8 @@
       "H1 price in discount zone (-4.2%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4595.40→4595.30 — no longs",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4560.6,
@@ -64955,6 +65513,8 @@
       "H1 price in discount zone (25.0%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4560.6,
@@ -64982,6 +65542,8 @@
       "H1 price in discount zone (14.6%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4560.6,
@@ -65278,6 +65840,8 @@
       "H1 price in discount zone (-30.2%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4582.60 < H1 EMA20/50 — no longs",
     "session": "asia",
     "dayOfWeek": "Monday",
     "entry": 4560.6,
@@ -65307,6 +65871,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4573.00 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Monday",
     "entry": 4560.6,
@@ -65369,6 +65935,8 @@
       "H1 bullish OB within 20pts [4555.00-4566.20]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4556.10 < H1 EMA20/50 — no longs",
     "session": "london",
     "dayOfWeek": "Monday",
     "entry": 4560.6,
@@ -65735,6 +66303,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "HH: H1 higher highs 4551.00→4565.70 — no shorts",
     "session": "ny",
     "dayOfWeek": "Tuesday",
     "entry": 4562.55,
@@ -65764,6 +66334,8 @@
       "ny-killzone active",
       "H1 bias agrees with H4 (bearish)"
     ],
+    "trendBlock": true,
+    "trendReason": "EMA: price 4570.00 > H1 EMA20/50 — no shorts",
     "session": "ny",
     "dayOfWeek": "Tuesday",
     "entry": 4562.55,
@@ -66304,6 +66876,8 @@
       "M15 CHoCH-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Thursday",
     "entry": 4548.8,
@@ -66896,6 +67470,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Friday",
     "entry": 4548.8,
@@ -66922,6 +67498,8 @@
       "M15 BOS-bullish confirms direction",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "off",
     "dayOfWeek": "Friday",
     "entry": 4548.8,
@@ -67039,6 +67617,8 @@
       "H1 price in discount zone (39.0%)",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": true,
+    "trendReason": "LL: H1 lower lows 4704.00→4703.90 — no longs",
     "session": "asia",
     "dayOfWeek": "Saturday",
     "entry": 4548.8,
@@ -67421,6 +68001,8 @@
       "H1 bullish OB within 20pts [4703.00-4704.80]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4703.9,
@@ -67448,6 +68030,8 @@
       "H1 bullish OB within 20pts [4703.00-4704.80]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4703.9,
@@ -67475,6 +68059,8 @@
       "H1 bullish OB within 20pts [4703.00-4704.80]",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "asia",
     "dayOfWeek": "Sunday",
     "entry": 4703.9,
@@ -67505,6 +68091,8 @@
       "london-killzone active",
       "H1 bias agrees with H4 (bullish)"
     ],
+    "trendBlock": false,
+    "trendReason": "",
     "session": "london",
     "dayOfWeek": "Sunday",
     "entry": 4703.9,

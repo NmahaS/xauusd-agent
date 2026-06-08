@@ -60,10 +60,13 @@ DO NOT return no-trade because of:
 - News upcoming — the risk manager blocks on news
 - H1 conflict — this is normal in trend trading
 
-If H4 = bearish AND M15 = bearish:
-  ALWAYS return direction: short
-  ALWAYS provide entry, SL, TP levels
-  Let the risk system decide if it executes
+If H4 = bearish AND M15 = bearish AND price is at or below the H1 EMAs:
+  return direction: short with entry, SL, TP levels (aligned — see CASE C).
+If H4/M15 are bearish BUT price is above BOTH H1 EMAs:
+  do NOT reflexively short — apply the EMA MOMENTUM vs SMC STRUCTURE DECISION
+  rules (CASE A: counter-structure LONG, quality "B"). Mirror this when H4/M15
+  are bullish but price is below both H1 EMAs (CASE B).
+  Let the risk system decide if it executes.
 
 ## ENTRY LEVELS — USE M15 ONLY
 
@@ -148,10 +151,14 @@ Example (no M15 POI):
   CORRECT: entry $3264, trigger "marketOnConfirmation"
   WRONG: direction null, waiting for "H4 OB at $3400"
 
-RULE 2 — Only trade WITH H4 direction:
-If H4 bias is bearish → only SHORT signals
-If H4 bias is bullish → only LONG signals
+RULE 2 — Trade WITH H4 direction UNLESS EMA momentum overrides:
+If H4 bias is bearish → SHORT (default)
+If H4 bias is bullish → LONG (default)
 If H4 bias is ranging → only Tier 1-2 signals
+EXCEPTION: if price sits on the OPPOSITE side of BOTH H1 EMAs from the H4 bias,
+apply the EMA MOMENTUM vs SMC STRUCTURE DECISION rules above (CASE A / CASE B —
+momentum override, quality "B"). Do NOT short into price that is above both H1 EMAs,
+and do NOT long into price that is below both H1 EMAs, without a clear reversal pattern.
 
 RULE 3 — SL based on M15 structure:
 Stop at the nearest M15 swing high (short) or M15 swing low (long).
@@ -159,37 +166,47 @@ Use M15 ATR × 1.0 as minimum SL distance from entry.
 
 ═══════════════════════════════════════════════════════
 
-## EMA-BASED DIRECTION CHECK
+## EMA MOMENTUM vs SMC STRUCTURE DECISION
 
-Before recommending direction, check H1 EMA position:
+Before recommending direction, read the "H1 EMA MOMENTUM" block in ENTRY GUIDANCE
+(current price vs H1 EMA20 and EMA50). EMA momentum reflects current price action and
+can OVERRIDE SMC structure when the two conflict.
 
-If price > H1 EMA20 AND price > H1 EMA50:
-  → Bias toward LONG signals
-  → SHORTs require strong reversal evidence
+When SMC structure and EMA momentum CONFLICT:
 
-If price < H1 EMA20 AND price < H1 EMA50:
-  → Bias toward SHORT signals
-  → LONGs require strong reversal evidence
+CASE A: SMC bearish BUT price above both H1 EMAs
+  → Recommend LONG (momentum override)
+  → Set quality to "B" (lower confidence)
+  → Entry: current price or M15 OB below
+  → SL: below recent M15 swing low
+  → TP: 2R target
+  → Note: "Counter-structure long — momentum override"
 
-If price between EMAs:
-  → Either direction valid based on structure
-  → Wait for break for confirmation
+CASE B: SMC bullish BUT price below both H1 EMAs
+  → Recommend SHORT (momentum override)
+  → Set quality to "B" (lower confidence)
+  → Entry: current price or M15 OB above
+  → SL: above recent M15 swing high
+  → TP: 2R target
+  → Note: "Counter-structure short — momentum override"
 
-DO NOT recommend SHORT when price is above both H1 EMAs
-unless there is a clear reversal pattern:
-  - M15 bearish CHoCH at resistance
-  - Strong rejection wick from supply zone
-  - News catalyst causing dump
+CASE C: SMC bearish AND price below both H1 EMAs
+  → Recommend SHORT (full alignment)
+  → Set quality to "A" (high confidence)
+  → This is the ideal scenario
 
-DO NOT recommend LONG when price is below both H1 EMAs
-unless there is a clear reversal pattern.
+CASE D: SMC bullish AND price above both H1 EMAs
+  → Recommend LONG (full alignment)
+  → Set quality to "A" (high confidence)
+  → This is the ideal scenario
 
-If structure says one direction but EMAs say opposite:
-  → return direction: null
-  → quality: 'no-trade'
-  → reason: 'EMA/structure conflict — wait for resolution'
+CASE E: Price between EMAs (mixed)
+  → Follow SMC structure
+  → Set quality to "B" (the schema only allows A+/A/B/no-trade — there is no "C")
 
-This prevents fighting current price action.
+NEVER return no-trade just because EMAs conflict with structure.
+Always return the momentum-aligned direction when conflict exists.
+The risk system will validate whether to execute.
 
 ═══════════════════════════════════════════════════════
 
@@ -382,36 +399,55 @@ export function buildUserPrompt(ctx) {
   });
   const h1Ema20 = h1Indicators?.ema20;
   const h1Ema50 = h1Indicators?.ema50;
+  const haveH1Emas = currentPrice != null && h1Ema20 != null && h1Ema50 != null
+    && !Number.isNaN(currentPrice) && !Number.isNaN(h1Ema20) && !Number.isNaN(h1Ema50);
   const emaPos = (ema) => {
     if (currentPrice == null || ema == null || Number.isNaN(currentPrice) || Number.isNaN(ema)) {
       return 'n/a';
     }
     const diff = currentPrice - ema;
-    return diff >= 0 ? `price is +${diff.toFixed(2)} above` : `price is ${diff.toFixed(2)} below`;
+    return diff >= 0 ? `price ABOVE by ${diff.toFixed(2)}` : `price BELOW by ${Math.abs(diff).toFixed(2)}`;
   };
-  const aboveBothEmas = currentPrice != null && h1Ema20 != null && h1Ema50 != null
-    && currentPrice > h1Ema20 && currentPrice > h1Ema50;
-  const belowBothEmas = currentPrice != null && h1Ema20 != null && h1Ema50 != null
-    && currentPrice < h1Ema20 && currentPrice < h1Ema50;
-  const emaDirectionHint = aboveBothEmas
-    ? 'ABOVE both H1 EMAs → bias toward LONG (SHORTs require strong reversal evidence)'
+  const aboveBothEmas = haveH1Emas && currentPrice > h1Ema20 && currentPrice > h1Ema50;
+  const belowBothEmas = haveH1Emas && currentPrice < h1Ema20 && currentPrice < h1Ema50;
+  const emaMomentum = !haveH1Emas ? 'unavailable (H1 EMAs missing)'
+    : aboveBothEmas ? '🟢 BULLISH (price above both H1 EMAs)'
+    : belowBothEmas ? '🔴 BEARISH (price below both H1 EMAs)'
+    : '🟡 MIXED (price between H1 EMAs)';
+  const emaConflictNote = !haveH1Emas
+    ? 'H1 EMAs unavailable — defer to SMC structure.'
+    : aboveBothEmas && h4Bias === 'bearish'
+      ? 'CONFLICT: SMC/H4 bearish but price above both EMAs → CASE A momentum override → prefer LONG (quality B) unless clear bearish reversal at resistance.'
+    : belowBothEmas && h4Bias === 'bullish'
+      ? 'CONFLICT: SMC/H4 bullish but price below both EMAs → CASE B momentum override → prefer SHORT (quality B) unless clear bullish reversal at support.'
+    : aboveBothEmas
+      ? 'Aligned bullish (CASE D) — prefer LONG.'
     : belowBothEmas
-      ? 'BELOW both H1 EMAs → bias toward SHORT (LONGs require strong reversal evidence)'
-      : (h1Ema20 == null || h1Ema50 == null)
-        ? 'H1 EMAs unavailable — defer to structure'
-        : 'BETWEEN H1 EMAs → either direction valid based on structure; wait for break to confirm';
+      ? 'Aligned bearish (CASE C) — prefer SHORT.'
+    : 'Between EMAs (CASE E) — follow SMC structure.';
+
+  console.log('[context] H1 EMA20:', fmt(h1Ema20), 'EMA50:', fmt(h1Ema50));
+  console.log('[context] price vs EMAs:', emaMomentum, '|', emaConflictNote);
 
   const entryGuidanceLines = [
     '═══ ENTRY GUIDANCE ═══',
     `H4 trend direction: ${h4Bias.toUpperCase()}`,
     `Allowed direction: ${
-      h4Bias === 'bearish' ? 'SHORT only' :
-      h4Bias === 'bullish' ? 'LONG only' :
-      'either (ranging — require Tier 1-2)'
+      aboveBothEmas && h4Bias === 'bearish'
+        ? 'CONFLICT — SHORT (H4 bias) vs LONG (price above both H1 EMAs). Prefer LONG momentum override (quality B) unless clear bearish reversal at resistance.'
+      : belowBothEmas && h4Bias === 'bullish'
+        ? 'CONFLICT — LONG (H4 bias) vs SHORT (price below both H1 EMAs). Prefer SHORT momentum override (quality B) unless clear bullish reversal at support.'
+      : h4Bias === 'bearish' ? 'SHORT (favored by H4 bias)'
+      : h4Bias === 'bullish' ? 'LONG (favored by H4 bias)'
+      : 'either (ranging — require Tier 1-2)'
     }`,
+    `── H1 EMA MOMENTUM ──`,
+    `Current price: $${fmt(currentPrice)}`,
     `H1 EMA20: $${fmt(h1Ema20)} (${emaPos(h1Ema20)})`,
     `H1 EMA50: $${fmt(h1Ema50)} (${emaPos(h1Ema50)})`,
-    `EMA direction check: ${emaDirectionHint}`,
+    `Momentum: ${emaMomentum}`,
+    `Dist from EMA20: ${haveH1Emas ? (currentPrice - h1Ema20).toFixed(2) + 'pts' : 'n/a'}`,
+    `EMA vs structure: ${emaConflictNote}`,
   ];
   if (nearestOB) {
     entryGuidanceLines.push(`Nearest M15 OB: $${nearestOB.low.toFixed(2)}-$${nearestOB.high.toFixed(2)}`);

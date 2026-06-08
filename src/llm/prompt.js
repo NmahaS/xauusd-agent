@@ -159,6 +159,40 @@ Use M15 ATR × 1.0 as minimum SL distance from entry.
 
 ═══════════════════════════════════════════════════════
 
+## EMA-BASED DIRECTION CHECK
+
+Before recommending direction, check H1 EMA position:
+
+If price > H1 EMA20 AND price > H1 EMA50:
+  → Bias toward LONG signals
+  → SHORTs require strong reversal evidence
+
+If price < H1 EMA20 AND price < H1 EMA50:
+  → Bias toward SHORT signals
+  → LONGs require strong reversal evidence
+
+If price between EMAs:
+  → Either direction valid based on structure
+  → Wait for break for confirmation
+
+DO NOT recommend SHORT when price is above both H1 EMAs
+unless there is a clear reversal pattern:
+  - M15 bearish CHoCH at resistance
+  - Strong rejection wick from supply zone
+  - News catalyst causing dump
+
+DO NOT recommend LONG when price is below both H1 EMAs
+unless there is a clear reversal pattern.
+
+If structure says one direction but EMAs say opposite:
+  → return direction: null
+  → quality: 'no-trade'
+  → reason: 'EMA/structure conflict — wait for resolution'
+
+This prevents fighting current price action.
+
+═══════════════════════════════════════════════════════
+
 Output requirements:
 - Return ONLY a single JSON object, no prose, no code fences, no markdown.
 - Schema version: ${PROMPT_VERSION}
@@ -346,6 +380,27 @@ export function buildUserPrompt(ctx) {
     const mid = (ob.high + ob.low) / 2;
     return Math.abs(mid - currentPrice) < 30;
   });
+  const h1Ema20 = h1Indicators?.ema20;
+  const h1Ema50 = h1Indicators?.ema50;
+  const emaPos = (ema) => {
+    if (currentPrice == null || ema == null || Number.isNaN(currentPrice) || Number.isNaN(ema)) {
+      return 'n/a';
+    }
+    const diff = currentPrice - ema;
+    return diff >= 0 ? `price is +${diff.toFixed(2)} above` : `price is ${diff.toFixed(2)} below`;
+  };
+  const aboveBothEmas = currentPrice != null && h1Ema20 != null && h1Ema50 != null
+    && currentPrice > h1Ema20 && currentPrice > h1Ema50;
+  const belowBothEmas = currentPrice != null && h1Ema20 != null && h1Ema50 != null
+    && currentPrice < h1Ema20 && currentPrice < h1Ema50;
+  const emaDirectionHint = aboveBothEmas
+    ? 'ABOVE both H1 EMAs → bias toward LONG (SHORTs require strong reversal evidence)'
+    : belowBothEmas
+      ? 'BELOW both H1 EMAs → bias toward SHORT (LONGs require strong reversal evidence)'
+      : (h1Ema20 == null || h1Ema50 == null)
+        ? 'H1 EMAs unavailable — defer to structure'
+        : 'BETWEEN H1 EMAs → either direction valid based on structure; wait for break to confirm';
+
   const entryGuidanceLines = [
     '═══ ENTRY GUIDANCE ═══',
     `H4 trend direction: ${h4Bias.toUpperCase()}`,
@@ -354,6 +409,9 @@ export function buildUserPrompt(ctx) {
       h4Bias === 'bullish' ? 'LONG only' :
       'either (ranging — require Tier 1-2)'
     }`,
+    `H1 EMA20: $${fmt(h1Ema20)} (${emaPos(h1Ema20)})`,
+    `H1 EMA50: $${fmt(h1Ema50)} (${emaPos(h1Ema50)})`,
+    `EMA direction check: ${emaDirectionHint}`,
   ];
   if (nearestOB) {
     entryGuidanceLines.push(`Nearest M15 OB: $${nearestOB.low.toFixed(2)}-$${nearestOB.high.toFixed(2)}`);

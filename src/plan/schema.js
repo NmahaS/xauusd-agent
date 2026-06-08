@@ -97,6 +97,11 @@ export const tradingPlanSchema = z.object({
     z.array(z.string()).default([])
   ),
   direction: z.enum(['long', 'short']).nullable(),
+  // EMA momentum override (counter-structure trade): set true when the recommended direction
+  // opposes H1 structure but agrees with price-vs-H1-EMA position. Read by the 3-layer tiering
+  // and the risk manager to bypass the counter-H1 block. Optional — defaults to no override.
+  emaOverride: z.boolean().optional().default(false),
+  overrideReason: z.string().nullable().optional(),
   poi: poiSchema.nullable(),
   entry: entrySchema.nullable(),
   stopLoss: stopLossSchema.nullable(),

@@ -173,7 +173,7 @@ export async function writeRiskState(state) {
   await fs.writeFile(STATE_FILE, JSON.stringify(state, null, 2));
 }
 
-export function getTimeframeAlignment(context, direction) {
+export function getTimeframeAlignment(context, direction, plan = null) {
   // H1 = PRIMARY filter, M15 = execution. Score is H1+M15 only (out of 2).
   // H4 is CONTEXT ONLY — resolved and displayed separately, never part of the score.
   const h1Bias =
@@ -219,6 +219,27 @@ export function getTimeframeAlignment(context, direction) {
   const h4Status = h4Bias === target ? 'agrees'
                  : h4Bias == null    ? 'unknown'
                  : 'disagrees';
+
+  // EMA momentum override: a counter-structure trade the LLM flagged. Structural H1/M15 oppose
+  // by definition, so score off the H1 EMA position instead — otherwise the score-0 / score-1
+  // rejections in checkRiskRules would kill a valid override before the counter-H1 exception runs.
+  const h1Emas = context?.h1Emas;
+  const isEmaOverride =
+    plan?.emaOverride === true ||
+    /momentum override|counter-structure/i.test(
+      `${plan?.overrideReason || ''} ${plan?.biasReasoning || ''} ${(plan?.warnings || []).join(' ')}`
+    );
+  if (isEmaOverride && h1Emas) {
+    const emaAligned =
+      (direction === 'long' && h1Emas.aboveBoth) ||
+      (direction === 'short' && h1Emas.belowBoth);
+    if (emaAligned) {
+      const disp = `EMA override: price ${direction === 'long' ? 'above' : 'below'} H1 EMA20+EMA50 ✅`;
+      console.log('[tf] ' + disp + ' — alignment 2/2 (EMA-based, structural H1/M15 bypassed)');
+      return { aligned: { h1: true, m15: true }, score: 2, total: 2, h1Bias, m15Bias, h4Bias, h4Status, emaOverride: true, display: disp };
+    }
+    console.log('[tf] EMA override claimed but price not on override side of both H1 EMAs — using structural alignment');
+  }
 
   console.log('[tf] alignment H1=' + (aligned.h1 ? '✅' : '❌') +
     ' M15=' + (aligned.m15 ? '✅' : '❌') +
@@ -526,7 +547,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     console.log('[risk] no direction for TF check — skipping');
   }
   const tfAlign = _tfDir
-    ? getTimeframeAlignment(context, _tfDir)
+    ? getTimeframeAlignment(context, _tfDir, plan)
     : { score: 2, total: 2, aligned: {} };
   if (_tfDir && tfAlign.score === 0) {
     const reason = `No timeframe alignment: H1 and M15 both disagree with ${plan.direction} direction.`;
@@ -629,7 +650,32 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     null;
   const tradeDirection = plan?.direction;
 
-  if (h1Bias && tradeDirection) {
+  // EMA momentum override exception — a counter-structure trade the LLM flagged. When price is
+  // on the override side of BOTH H1 EMAs, skip the counter-H1 block below (H1 structure opposes
+  // by design). If the EMAs do NOT confirm, the override is invalid → reject.
+  const h1Emas = context?.h1Emas;
+  const isEmaOverride =
+    plan?.emaOverride === true ||
+    /momentum override|counter-structure/i.test(
+      `${plan?.overrideReason || ''} ${plan?.biasReasoning || ''} ${(plan?.warnings || []).join(' ')}`
+    );
+  let emaOverrideActive = false;
+  if (isEmaOverride && tradeDirection) {
+    const emaAligned = !!h1Emas && (
+      (tradeDirection === 'long' && h1Emas.aboveBoth) ||
+      (tradeDirection === 'short' && h1Emas.belowBoth)
+    );
+    if (emaAligned) {
+      emaOverrideActive = true;
+      log(`EMA override — price ${tradeDirection === 'long' ? 'above' : 'below'} both H1 EMAs; skipping counter-H1 block`);
+    } else {
+      const reason = `EMA override rejected: price not ${tradeDirection === 'long' ? 'above' : 'below'} both H1 EMAs`;
+      log(`REJECT emaOverride: ${reason}`);
+      return { allowed: false, reason };
+    }
+  }
+
+  if (h1Bias && tradeDirection && !emaOverrideActive) {
     const counterH1 =
       (tradeDirection === 'long' && h1Bias === 'bearish') ||
       (tradeDirection === 'short' && h1Bias === 'bullish');

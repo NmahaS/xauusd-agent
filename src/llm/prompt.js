@@ -177,18 +177,22 @@ When SMC structure and EMA momentum CONFLICT:
 CASE A: SMC bearish BUT price above both H1 EMAs
   → Recommend LONG (momentum override)
   → Set quality to "B" (lower confidence)
+  → Set "emaOverride": true
+  → Set "overrideReason": "price above H1 EMA20+EMA50 — counter-structure long"
   → Entry: current price or M15 OB below
   → SL: below recent M15 swing low
   → TP: 2R target
-  → Note: "Counter-structure long — momentum override"
+  → Note: "Counter-structure long — momentum override" (include this phrase in biasReasoning)
 
 CASE B: SMC bullish BUT price below both H1 EMAs
   → Recommend SHORT (momentum override)
   → Set quality to "B" (lower confidence)
+  → Set "emaOverride": true
+  → Set "overrideReason": "price below H1 EMA20+EMA50 — counter-structure short"
   → Entry: current price or M15 OB above
   → SL: above recent M15 swing high
   → TP: 2R target
-  → Note: "Counter-structure short — momentum override"
+  → Note: "Counter-structure short — momentum override" (include this phrase in biasReasoning)
 
 CASE C: SMC bearish AND price below both H1 EMAs
   → Recommend SHORT (full alignment)
@@ -207,6 +211,12 @@ CASE E: Price between EMAs (mixed)
 NEVER return no-trade just because EMAs conflict with structure.
 Always return the momentum-aligned direction when conflict exists.
 The risk system will validate whether to execute.
+
+FLAGGING: Set "emaOverride": true ONLY in CASE A or CASE B (counter-structure trade where
+direction opposes SMC/H1 structure but agrees with the H1 EMA position). In CASES C, D, E
+(aligned or between EMAs) set "emaOverride": false and "overrideReason": null. The override
+flag tells the risk system to bypass its counter-H1 block — only set it when price is truly on
+the opposite side of BOTH H1 EMAs from structure, or the trade will be rejected as invalid.
 
 ═══════════════════════════════════════════════════════
 
@@ -234,6 +244,8 @@ FIELD FORMAT RULES — follow exactly:
 - poi.zone MUST be [number, number] with actual floats, never strings: [2720.20, 2725.50]
 - takeProfits MUST contain exactly ONE entry with level "TP1" — set the price at the nearest major structural level (liquidity pool, swing high/low, or premium/discount extreme). The system ignores this price for order placement; it uses ${targetRR}R automatically. This is a structural reference only.
 - entry.trigger MUST be exactly "limit" or "marketOnConfirmation"
+- emaOverride MUST be a boolean (true ONLY for CASE A/B counter-structure trades, else false)
+- overrideReason MUST be a short string when emaOverride is true, else null
 - All price fields MUST be numbers (floats), never strings
 - If direction is "long" or "short", then poi, entry, stopLoss, takeProfits, invalidation MUST all be populated — never null
 - If setupQuality is "no-trade" then direction MUST be null and poi/entry/stopLoss/takeProfits/invalidation MUST all be null

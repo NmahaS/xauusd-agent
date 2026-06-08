@@ -188,6 +188,45 @@ export async function computeThreeLayerConsensus(ctx) {
   result.warnings = result.warnings || [];
   const dirWord = dir === 'long' ? 'bullish' : 'bearish';
 
+  // ─── EMA MOMENTUM OVERRIDE ────────────────────────────────────────────────
+  // When the LLM flags a counter-structure trade (direction opposes H1 structure but agrees
+  // with price-vs-H1-EMA position), the H1-opposes block below would wrongly force Tier 4.
+  // Honour the override INSTEAD of the H1 structural check: tier off the EMA position.
+  //   • EMA confirms (price above both for long / below both for short) → Tier 3, tradeable
+  //   • EMA does NOT confirm → Tier 4 (override claimed but EMAs disagree → block)
+  const h1Emas = ctx?.h1Emas;
+  const isEmaOverride =
+    plan?.emaOverride === true ||
+    /momentum override|counter-structure/i.test(
+      `${plan?.overrideReason || ''} ${plan?.biasReasoning || ''} ${(plan?.warnings || []).join(' ')}`
+    );
+  if (isEmaOverride && dir) {
+    console.log('[3layer] EMA momentum override detected — dir:', dir, '| H1 structure:', h1Bias);
+    const emaConfirms = !!h1Emas && (
+      (dir === 'long' && h1Emas.aboveBoth) ||
+      (dir === 'short' && h1Emas.belowBoth)
+    );
+    if (emaConfirms) {
+      result.tier = 3;
+      result.tierLabel = `TIER 3 — EMA momentum override (price ${dir === 'long' ? 'above' : 'below'} both H1 EMAs)`;
+      result.autoExecute = true;
+      result.riskMultiplier = 1.0;
+      result.direction = dir;
+      result.warnings.push(`EMA momentum override: H1 structure ${h1Bias} but price ${dir === 'long' ? 'above' : 'below'} both H1 EMAs — counter-structure ${dir} (quality B)`);
+      console.log(`[3layer] TIER 3 — EMA override confirmed: price ${dir === 'long' ? 'above' : 'below'} both H1 EMAs ✅`);
+    } else {
+      result.tier = 4;
+      result.tierLabel = 'TIER 4 — EMA override claimed but EMAs disagree';
+      result.autoExecute = false;
+      result.direction = null;
+      result.blockingFactors.push('EMA override claimed but price not on the override side of both H1 EMAs');
+      console.log('[3layer] TIER 4 — EMA override but EMAs do not confirm ❌');
+    }
+    result.summary = `${result.tierLabel} | ${result.direction || 'no-trade'} | ${allFactors.length} total factors`;
+    console.log(`[3layer] ${result.summary}`);
+    return result;
+  }
+
   if (h1Opposes) {
     result.tier = 4;
     result.tierLabel = `TIER 4 — H1 (${h1Bias}) opposes ${dir || 'no-trade'}`;

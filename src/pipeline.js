@@ -189,12 +189,30 @@ async function runFullPipeline() {
   }
 
   // Phase 3: build context + call LLM consensus
+  // H1 EMA position vs current price — drives the EMA momentum-override tiering: counter-structure
+  // trades the LLM flags when price sits on the opposite side of BOTH H1 EMAs from H1 structure.
+  // Computed once here and shared by the 3-layer engine and the risk manager (context.h1Emas).
+  const _h1Ema20 = h1Indicators?.ema20;
+  const _h1Ema50 = h1Indicators?.ema50;
+  const h1Emas = (currentPrice != null && _h1Ema20 != null && _h1Ema50 != null)
+    ? {
+        ema20: _h1Ema20,
+        ema50: _h1Ema50,
+        aboveEma20: currentPrice > _h1Ema20,
+        aboveEma50: currentPrice > _h1Ema50,
+        aboveBoth: currentPrice > _h1Ema20 && currentPrice > _h1Ema50,
+        belowBoth: currentPrice < _h1Ema20 && currentPrice < _h1Ema50,
+        distFromEma20: +(currentPrice - _h1Ema20).toFixed(2),
+      }
+    : null;
+
   const ctx = {
     symbol: config.SYMBOL,
     timestamp: runTimestamp,
     executionTf: config.EXECUTION_TF,
     biasTf: config.BIAS_TF,
     h1Candles, h4Candles, m15Candles, h1Indicators, h4Indicators, m15Indicators, smcH1, smcH4, smcM15,
+    h1Emas,
     session, sessionLevels, dxy, currentPrice, spread, dailyHigh, dailyLow,
     marketStatus, igSentiment, fred: macro, sentiment: altSentiment, calendar,
     // HL-specific
@@ -222,6 +240,7 @@ async function runFullPipeline() {
   // Canonical context passed to both confluence and 3-layer consensus
   const threeLayerCtx = {
     currentPrice,
+    h1Emas,
     h4: {
       structure: smcH4.structure,
       candles: h4Candles,
@@ -493,7 +512,7 @@ async function runFullPipeline() {
   console.log('[tf] using direction:', tfDirection,
     '(plan:', mergedPlan.direction, 'h4:', h4Bias + ')');
   const tfAlignment = tfDirection
-    ? getTimeframeAlignment(threeLayerCtx, tfDirection)
+    ? getTimeframeAlignment(threeLayerCtx, tfDirection, mergedPlan)
     : { score: 0 };
   const telegramText = formatPlanForTelegram(mergedPlan, {
     dxy, sentiment: altSentiment, fred: macro, calendar, session,

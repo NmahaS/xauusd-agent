@@ -275,7 +275,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
       const todayLossesSameDir = todayClosed.filter(f =>
         f.direction === plan.direction && f.closedPnl < -0.01
       ).length;
-      if (todayLossesSameDir >= 3) {
+      if (todayLossesSameDir >= 7) {
         const reason = `Loss streak protection: ${todayLossesSameDir} ${plan.direction} losses today — resets at UTC midnight`;
         log(`REJECT lossStreak: ${reason}`);
         return { allowed: false, reason };

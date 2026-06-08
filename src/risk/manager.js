@@ -270,21 +270,17 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     }
     console.log(`[risk] daily realized P&L: ${dailyLossPct.toFixed(2)}% ✅`);
 
-    // STEP 2: same-direction loss-streak protection
+    // STEP 2: same-direction loss-streak protection (resets daily — today's UTC closes only)
     if (plan.direction) {
-      const last5Closes = recentFills
-        .filter(f => f.isClose)
-        .sort((a, b) => new Date(b.time) - new Date(a.time))
-        .slice(0, 5);
-      const recentLossesSameDir = last5Closes.filter(f =>
+      const todayLossesSameDir = todayClosed.filter(f =>
         f.direction === plan.direction && f.closedPnl < -0.01
       ).length;
-      if (recentLossesSameDir >= 3) {
-        const reason = `Loss streak protection: ${recentLossesSameDir} recent ${plan.direction} losses — wait for clear setup`;
+      if (todayLossesSameDir >= 3) {
+        const reason = `Loss streak protection: ${todayLossesSameDir} ${plan.direction} losses today — resets at UTC midnight`;
         log(`REJECT lossStreak: ${reason}`);
         return { allowed: false, reason };
       }
-      console.log(`[risk] loss streak: ${recentLossesSameDir} recent ${plan.direction} losses ✅`);
+      console.log(`[risk] loss streak: ${todayLossesSameDir} ${plan.direction} losses today ✅`);
     }
   }
 

@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { getAccountState, checkRiskRules, RISK_RULES } from '../risk/manager.js';
 import { placeHLOrder, closeHLPosition } from './hyperliquid.js';
+import { config } from '../config.js';
 
 const PLANS_DIR = path.join(process.cwd(), 'plans');
 
@@ -132,20 +133,20 @@ function getDynamicSLTP(direction, entryPrice, atr) {
   const isTrending = atr >= 15;
   const isNormal = atr >= 8 && atr < 15;
 
-  let slMultiplier, tpRR, label;
+  // SL distance adapts to volatility (regime), but the reward target is a flat TARGET_RR (2R)
+  // on every trade — so 1% risk always targets a 2% gain regardless of regime.
+  let slMultiplier, label;
   if (isTrending) {
     slMultiplier = 1.5;
-    tpRR = 3.0;
     label = 'trending';
   } else if (isNormal) {
     slMultiplier = 1.0;
-    tpRR = 2.0;
     label = 'normal';
   } else {
     slMultiplier = 0.8;
-    tpRR = 1.5;
     label = 'quiet';
   }
+  const tpRR = parseFloat(process.env.TARGET_RR || '2.0');
 
   const slDistance = atr * slMultiplier;
   const tpDistance = slDistance * tpRR;
@@ -338,16 +339,14 @@ export async function executeIfApproved(plan, context) {
     }
 
     if (positionDecision.action === 'compound') {
-      if (plan.risk) {
-        plan.risk.suggestedRiskPct = (plan.risk.suggestedRiskPct || RISK_RULES.maxRiskPerTrade) * 0.5;
-        console.log(`[executor] compound risk halved to ${plan.risk.suggestedRiskPct}%`);
-      }
+      const compoundRiskPct = Math.min(config.DEFAULT_RISK_PCT, RISK_RULES.maxRiskPerTrade) * 0.5;
+      console.log(`[executor] compound — adding at half risk (${compoundRiskPct}%)`);
       await sendPositionDecisionMsg('compound', {
         existingDirection: existingPos.direction,
         reason: positionDecision.reason,
-        risk: plan.risk?.suggestedRiskPct,
+        risk: compoundRiskPct,
       });
-      // Fall through — place the compound order at half risk
+      // Fall through — place the compound order at half risk (computed in riskPct below)
     }
 
     if (positionDecision.action === 'flip') {
@@ -389,7 +388,10 @@ export async function executeIfApproved(plan, context) {
   }
 
   // 3. Position sizing in XAU — always market price, never plan's limit price
-  const riskPct = Math.min(plan.risk?.suggestedRiskPct || RISK_RULES.maxRiskPerTrade, RISK_RULES.maxRiskPerTrade);
+  // Flat risk: DEFAULT_RISK_PCT (1%) on every entry regardless of tier/quality/LLM suggestion.
+  // Compounds add at half risk. Hard-capped at maxRiskPerTrade.
+  const baseRiskPct = Math.min(config.DEFAULT_RISK_PCT, RISK_RULES.maxRiskPerTrade);
+  const riskPct = positionDecision?.action === 'compound' ? baseRiskPct * 0.5 : baseRiskPct;
   const riskAmount = account.balance * (riskPct / 100);
   const entryPrice = context.currentPrice || plan.entry?.price;
   console.log(`[executor] market entry at current price: $${entryPrice}`);
@@ -711,9 +713,9 @@ async function reconcileUnifiedSL(coin, direction, context, fallbackSize, fallba
   }
 
   // ALWAYS calculate TP from the ACTUAL SL distance × targetRR — never an LLM/structural price.
+  // Flat TARGET_RR (2R) on every trade, regardless of regime.
   const slDistance = Math.abs(entryPrice - slPrice);
-  const isTrending = atr >= 15;
-  const targetRR = isTrending ? 3.0 : 2.0;
+  const targetRR = parseFloat(process.env.TARGET_RR || '2.0');
   const tpDistance = slDistance * targetRR;
   const tpPrice = direction === 'long'
     ? entryPrice + tpDistance

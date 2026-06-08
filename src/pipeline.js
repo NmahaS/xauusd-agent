@@ -293,9 +293,11 @@ async function runFullPipeline() {
     return null;
   });
 
-  if (threeLayer?.tier === 1 && plan.risk) {
-    plan.risk.suggestedRiskPct = Math.min(1.5, (plan.risk.suggestedRiskPct || 1) * 1.5);
-    plan.risk.positionSizeHint = 'Tier 1 — 1.5% risk (all layers strongly aligned)';
+  // Flat risk advertised on the plan to match execution (the executor always sizes to
+  // DEFAULT_RISK_PCT). No tier/quality boost — 1% risk, 2R target, every trade.
+  if (plan.risk) {
+    plan.risk.suggestedRiskPct = config.DEFAULT_RISK_PCT;
+    plan.risk.positionSizeHint = `${config.DEFAULT_RISK_PCT}% risk (flat per trade)`;
   }
 
   // Step A: M15 entry refinement — informational only, never gates execution

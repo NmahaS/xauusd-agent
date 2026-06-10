@@ -145,19 +145,44 @@ app.get('/api/dashboard', async (_req, res) => {
         '| weeks built:', monthlyHistory.length);
     }
 
-    /* ── Recent closed trades ───────────────────────────────── */
-    const recentTrades = [...fills]
-      .filter(f => f.isClose)
+    /* ── Recent closed trades — group fills into orders ─────────
+       HL returns individual fills; one order can split across 2-5
+       makers. Group by (minute + direction + open/close) so the
+       dashboard shows one row per order with combined size. */
+    const fillGroups = {};
+    fills
+      .filter(f => f.isClose || Math.abs(parseFloat(f.closedPnl)) > 0.001)
+      .forEach(f => {
+        const minuteKey = new Date(f.time).toISOString().slice(0, 16);
+        const key = minuteKey + '_' + f.direction + '_' + (f.isClose ? 'C' : 'O');
+        if (!fillGroups[key]) {
+          fillGroups[key] = {
+            time: f.time,
+            direction: f.direction,
+            isClose: f.isClose,
+            size: 0,
+            notional: 0,
+            pnl: 0,
+            fee: 0,
+          };
+        }
+        const g = fillGroups[key];
+        g.size += parseFloat(f.size || f.sz);
+        g.notional += parseFloat(f.size || f.sz) * parseFloat(f.price || f.px);
+        g.pnl += parseFloat(f.closedPnl) || 0;
+        g.fee += parseFloat(f.fee) || 0;
+      });
+
+    const recentTrades = Object.values(fillGroups)
       .sort((a, b) => new Date(b.time) - new Date(a.time))
-      .slice(0, 8)
-      .map(f => ({
-        time:   new Date(f.time).toISOString().slice(5, 16).replace('T', ' '),
-        dir:    f.direction === 'long' ? 'LONG' : 'SHORT',
-        entry:  f.price,
-        size:   f.size,
-        pnl:    f.closedPnl || 0,
-        status: (f.closedPnl || 0) > 0.01 ? 'WIN' :
-                (f.closedPnl || 0) < -0.01 ? 'LOSS' : 'BE',
+      .slice(0, 10)
+      .map(g => ({
+        time:   new Date(g.time).toISOString().slice(5, 16).replace('T', ' '),
+        dir:    g.direction === 'long' ? 'LONG' : 'SHORT',
+        entry:  parseFloat((g.notional / g.size).toFixed(2)),
+        size:   parseFloat(g.size.toFixed(4)),
+        pnl:    parseFloat(g.pnl.toFixed(2)),
+        status: g.pnl > 0.01 ? 'WIN' : g.pnl < -0.01 ? 'LOSS' : 'BE',
       }));
 
     /* ── Signal (file-cache → filesystem → fallback) ───────── */

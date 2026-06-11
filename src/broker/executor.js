@@ -7,8 +7,71 @@ import { placeHLOrder, closeHLPosition } from './hyperliquid.js';
 import { config } from '../config.js';
 
 const PLANS_DIR = path.join(process.cwd(), 'plans');
+// Persists the FIRST trade's SL point-distance so every compound trails the same distance.
+// Lives in data/ (Railway-persistent). One file per open position; cleared when the position closes.
+const POSITION_STATE_FILE = path.join(process.cwd(), 'data', 'position-state.json');
+const MAX_POSITION_SIZE = 0.25;  // hard cap on PAXG position size (~2% risk at 8pt SL)
 
 let isReconciling = false;
+
+async function readPositionState() {
+  try {
+    return JSON.parse(await fs.readFile(POSITION_STATE_FILE, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+async function writePositionState(state) {
+  await fs.mkdir(path.dirname(POSITION_STATE_FILE), { recursive: true });
+  await fs.writeFile(POSITION_STATE_FILE, JSON.stringify(state, null, 2));
+}
+
+async function clearPositionState() {
+  try {
+    await fs.unlink(POSITION_STATE_FILE);
+    console.log('[executor] position state cleared');
+  } catch {}
+}
+
+// New entry: risk exactly 1% of balance against the structural SL distance, hard-capped + floored.
+function calculateNewEntrySize(balance, entryPrice, slPrice) {
+  const riskPct = 1.0;
+  const riskAmount = balance * (riskPct / 100);
+  const slDistance = Math.abs(entryPrice - slPrice);
+  if (slDistance <= 0) throw new Error('Invalid SL distance: ' + slDistance);
+
+  let size = riskAmount / slDistance;
+  size = Math.min(size, MAX_POSITION_SIZE);
+  size = Math.max(0.001, parseFloat(size.toFixed(3)));  // 3dp = PAXG szDecimals (what HL accepts)
+
+  console.log('[sizing] NEW ENTRY:');
+  console.log('  balance: $' + balance.toFixed(2));
+  console.log('  risk: 1% = $' + riskAmount.toFixed(2));
+  console.log('  SL distance: ' + slDistance.toFixed(2) + 'pts');
+  console.log('  size: ' + size.toFixed(4) + ' PAXG');
+  console.log('  actual risk: $' + (size * slDistance).toFixed(2));
+  return size;
+}
+
+// Compound add: 0.5% of balance sized against the FIRST trade's SL distance (kept constant).
+function calculateCompoundSize(balance, firstSLDistance) {
+  const compoundRiskPct = 0.5;
+  const riskAmount = balance * (compoundRiskPct / 100);
+  if (!(firstSLDistance > 0)) throw new Error('Invalid first SL distance: ' + firstSLDistance);
+
+  let size = riskAmount / firstSLDistance;
+  size = Math.min(size, MAX_POSITION_SIZE);
+  size = Math.max(0.001, parseFloat(size.toFixed(3)));  // 3dp = PAXG szDecimals (what HL accepts)
+
+  console.log('[sizing] COMPOUND:');
+  console.log('  balance: $' + balance.toFixed(2));
+  console.log('  risk: 0.5% = $' + riskAmount.toFixed(2));
+  console.log('  using first SL distance: ' + firstSLDistance.toFixed(2) + 'pts');
+  console.log('  compound size: ' + size.toFixed(4) + ' PAXG');
+  console.log('  added risk: $' + (size * firstSLDistance).toFixed(2));
+  return size;
+}
 
 async function getLastTradeMeta() {
   const today = new Date().toISOString().slice(0, 10);
@@ -54,7 +117,7 @@ async function sendPositionDecisionMsg(type, data) {
   }
 }
 
-async function handleExistingPosition(existingPosition, plan) {
+async function handleExistingPosition(existingPosition, plan, balance) {
   const lastMeta = await getLastTradeMeta();
   const existingTier = lastMeta?.tier ?? 4;
   const existingConfluence = lastMeta?.confluenceCount ?? 0;
@@ -70,7 +133,44 @@ async function handleExistingPosition(existingPosition, plan) {
       // Dead-zone compounds are now governed by the dead-zone gate at the top of
       // executeIfApproved (strict confluence ≥ 7 + ATR ≥ 8). If we reached here in the dead
       // zone, the gate already approved it — so no separate dead-zone block here.
-      return { action: 'compound', reason: `Compounding ${existingPosition.direction} at half risk` };
+
+      // Compound model: add 0.5% each time (1% → 1.5% → 2% → 2.5%), sized against the FIRST
+      // trade's SL distance held in position state. Capped at 3 compounds. No state (e.g. a
+      // position opened before this feature) → hold; the next NEW entry establishes state.
+      const coinName = process.env.HL_COIN || 'PAXG';
+      const posState = await readPositionState();
+      if (!posState || posState.coin !== coinName ||
+          posState.direction !== existingPosition.direction || !(posState.firstSLDistance > 0)) {
+        return {
+          action: 'hold',
+          reason: 'No matching position state for compound — holding (state is set on the next new entry)',
+          unrealizedPnl,
+        };
+      }
+
+      const MAX_COMPOUNDS = 3;
+      const newCompoundCount = (posState.compoundCount || 0) + 1;
+      if (newCompoundCount > MAX_COMPOUNDS) {
+        return {
+          action: 'hold',
+          reason: `Max ${MAX_COMPOUNDS} compounds reached (current: ${posState.compoundCount})`,
+          unrealizedPnl,
+        };
+      }
+
+      const newTotalRisk = 1.0 + newCompoundCount * 0.5;
+      const compoundSize = calculateCompoundSize(balance, posState.firstSLDistance);
+      console.log(`[compound] count: ${newCompoundCount}/${MAX_COMPOUNDS} | total risk after: ${newTotalRisk}%`);
+
+      posState.compoundCount = newCompoundCount;
+      posState.totalRiskPct = newTotalRisk;
+      await writePositionState(posState);
+
+      return {
+        action: 'compound',
+        size: compoundSize,
+        reason: `Compound ${newCompoundCount}/${MAX_COMPOUNDS} — +0.5% (total ${newTotalRisk}%)`,
+      };
     } else {
       console.log(`[executor] same direction ${existingPosition.direction} -$${Math.abs(unrealizedPnl).toFixed(2)} — holding, no average down`);
       return { action: 'hold', reason: `Position losing $${unrealizedPnl.toFixed(2)} — no average down`, unrealizedPnl };
@@ -326,7 +426,7 @@ export async function executeIfApproved(plan, context) {
   let positionDecision = null;
   let existingSLPrice = null;  // compounds keep the original stop and size the add against it
   if (existingPos) {
-    positionDecision = await handleExistingPosition(existingPos, plan);
+    positionDecision = await handleExistingPosition(existingPos, plan, account.balance);
     console.log(`[executor] position decision: ${positionDecision.action} — ${positionDecision.reason}`);
 
     if (positionDecision.action === 'hold') {
@@ -399,30 +499,40 @@ export async function executeIfApproved(plan, context) {
     return out;
   }
 
-  // 3. Position sizing in XAU — always market price, never plan's limit price
-  // Flat risk: DEFAULT_RISK_PCT (1%) on every entry regardless of tier/quality/LLM suggestion.
-  // Compounds add at half risk. Hard-capped at maxRiskPerTrade.
-  const baseRiskPct = Math.min(config.DEFAULT_RISK_PCT, RISK_RULES.maxRiskPerTrade);
-  const riskPct = positionDecision?.action === 'compound' ? baseRiskPct * 0.5 : baseRiskPct;
-  const riskAmount = account.balance * (riskPct / 100);
+  // 3. Position sizing — model:
+  //    NEW entry → risk exactly 1% of balance against the structural SL distance; TP = 2R.
+  //    COMPOUND  → add 0.5%, sized against the FIRST trade's SL point-distance (from position
+  //                state). reconcileUnifiedSL then trails the unified SL/TP to that same distance
+  //                from the new weighted-average entry right after the fill.
   const entryPrice = context.currentPrice || plan.entry?.price;
   console.log(`[executor] market entry at current price: $${entryPrice}`);
 
   const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 8;
   const dynamicLevels = getDynamicSLTP(plan.direction, entryPrice, atr);
+  const tpRR = dynamicLevels.tpRR;
 
-  // SL selection. For a COMPOUND, keep the existing stop (never move a winner's stop) and size
-  // the add against it — so the unified stop stays put and the add risks 0.5% to the real stop.
-  // For a NEW entry, the plan SL is an LLM-generated absolute price from analysis time; by
-  // execution the market has often moved so it sits on the wrong side of — or within a tick of —
-  // the live entry, which makes the stop-trigger fire on placement (open→instant-close churn).
-  // Only trust the plan SL when it sits the correct side of entry with a sane buffer; otherwise
-  // fall back to the ATR-based dynamic SL (always correct side, sized off entry).
-  let finalSL;
-  if (positionDecision?.action === 'compound' && existingSLPrice != null && existingSLPrice > 0) {
-    finalSL = existingSLPrice;
-    console.log(`[executor] compound — keeping existing SL ${finalSL.toFixed(2)} and sizing add against it`);
+  // slDistance = the SL distance used for the order's inline bracket; riskDistance = the distance
+  // the sizing risk is measured against (the FIRST SL distance on a compound, so the add ≈ 0.5%).
+  let finalSL, slDistance, riskDistance, riskPct, size;
+  if (positionDecision?.action === 'compound') {
+    riskPct = 0.5;
+    const posState = await readPositionState();
+    riskDistance = posState?.firstSLDistance
+      ?? (existingSLPrice != null && existingSLPrice > 0
+        ? Math.abs(entryPrice - existingSLPrice)
+        : dynamicLevels.slDistance);
+    size = positionDecision.size ?? calculateCompoundSize(account.balance, riskDistance);
+    // Keep the existing stop for the inline bracket; reconcileUnifiedSL re-derives the unified
+    // SL/TP from the new weighted-avg entry (trailing the first SL distance) after the fill.
+    finalSL = (existingSLPrice != null && existingSLPrice > 0)
+      ? existingSLPrice
+      : (plan.direction === 'long' ? entryPrice - riskDistance : entryPrice + riskDistance);
+    slDistance = Math.abs(entryPrice - finalSL);
+    console.log(`[executor] compound — first SL distance ${riskDistance.toFixed(2)}pts, inline SL ${finalSL.toFixed(2)} (reconcile trails to avg entry)`);
   } else {
+    // New entry: trust the LLM/plan structural SL when it sits the correct side of entry with a
+    // sane buffer; otherwise fall back to the ATR-based dynamic SL (always correct side).
+    riskPct = 1.0;
     const planSL = plan.stopLoss?.price ?? null;
     const minSLDistance = Math.max(dynamicLevels.slDistance * 0.5, atr * 0.5);
     const planSLValid = planSL != null && (
@@ -435,9 +545,23 @@ export async function executeIfApproved(plan, context) {
         `(needs ${minSLDistance.toFixed(2)}pts buffer on correct side) — using ATR SL ${dynamicLevels.slPrice.toFixed(2)}`);
     }
     finalSL = planSLValid ? planSL : dynamicLevels.slPrice;
+    slDistance = Math.abs(entryPrice - finalSL);
+    riskDistance = slDistance;
+    if (!slDistance || isNaN(slDistance)) {
+      out.reason = 'SL distance is zero or invalid — check entry/SL prices in plan';
+      console.log(`[executor] sizing rejected: ${out.reason}`);
+      return out;
+    }
+    size = calculateNewEntrySize(account.balance, entryPrice, finalSL);
   }
-  const finalTP = dynamicLevels.tpPrice;
+
+  // TP is always 2R, measured from entry off the canonical risk distance (= structural SL
+  // distance on a new entry, = first SL distance on a compound).
+  const finalTP = plan.direction === 'long'
+    ? parseFloat((entryPrice + riskDistance * tpRR).toFixed(1))
+    : parseFloat((entryPrice - riskDistance * tpRR).toFixed(1));
   const tpDistance = Math.abs(finalTP - entryPrice);
+  const riskAmount = account.balance * (riskPct / 100);
 
   console.log('[executor] plan SL price:', plan?.stopLoss?.price);
   console.log('[executor] dynamic SL price:', dynamicLevels?.slPrice?.toFixed(2));
@@ -445,8 +569,6 @@ export async function executeIfApproved(plan, context) {
   console.log('[executor] TARGET_RR:', process.env.TARGET_RR);
   console.log('[executor] tpDistance:', tpDistance.toFixed(2) + 'pts');
   console.log('[executor] tpPrice:', finalTP.toFixed(2));
-
-  const slDistance = Math.abs(entryPrice - finalSL);
 
   console.log('[executor] SL distance:', slDistance.toFixed(2) + 'pts');
   console.log(`[executor] entry=${entryPrice} SL=${finalSL.toFixed(2)} distance=${slDistance.toFixed(2)}pts`);
@@ -458,24 +580,25 @@ export async function executeIfApproved(plan, context) {
     return out;
   }
 
-  const rawSize = riskAmount / slDistance;
-  let size = Math.max(0.001, Math.round(rawSize * 1000) / 1000); // 3dp matches PAXG szDecimals
-  const MAX_POSITION_SIZE = 0.25;  // ~2% risk at 8pt SL (was 0.15)
+  // Final guards: hard cap + floor (helpers already clamp, but guard again after either branch).
   if (size > MAX_POSITION_SIZE) {
-    console.warn(`[sizing] HARD CAP: ${size} → ${MAX_POSITION_SIZE} PAXG`);
-    console.warn(`[sizing] reason: max position size protection`);
+    console.warn(`[sizing] HARD CAP: ${size} → ${MAX_POSITION_SIZE} PAXG (max position size protection)`);
     size = MAX_POSITION_SIZE;
   }
-  const actualRisk = size * slDistance;
+  size = Math.max(0.001, parseFloat(size.toFixed(3)));  // 3dp = PAXG szDecimals (what HL accepts)
+
+  // actualRisk = risk to the canonical stop (first SL distance on a compound → add ≈ 0.5%).
+  const actualRisk = size * riskDistance;
 
   console.log('[sizing] balance:', account.balance.toFixed(2));
   console.log('[sizing] riskPct:', riskPct + '%');
   console.log('[sizing] riskAmount: $' + riskAmount.toFixed(3));
   console.log('[sizing] slDistance:', slDistance.toFixed(2) + 'pts');
+  console.log('[sizing] riskDistance:', riskDistance.toFixed(2) + 'pts');
   console.log('[sizing] size:', size.toFixed(4) + ' PAXG');
   console.log('[sizing] notional: $' + (size * entryPrice).toFixed(2));
-  console.log('[sizing] expected 1R loss: $' + (size * slDistance).toFixed(3));
-  console.log('[sizing] expected 2R gain: $' + (size * slDistance * 2).toFixed(3));
+  console.log('[sizing] expected 1R loss: $' + (size * riskDistance).toFixed(3));
+  console.log('[sizing] expected 2R gain: $' + (size * riskDistance * 2).toFixed(3));
   console.log('[sizing] RR ratio:', (tpDistance / slDistance).toFixed(2) + 'R');
 
   if (actualRisk > riskAmount * 1.5) {
@@ -619,6 +742,28 @@ export async function executeIfApproved(plan, context) {
   await appendTrade(trade);
   console.log(`[executor] EXECUTED orderId=${placed.orderId} size=${sizing.size} XAU risk=$${sizing.actualRisk}`);
 
+  // Store the FIRST trade's parameters so every compound trails the same SL point-distance.
+  // A compound add must NOT overwrite this (it keeps the original distance + compound count).
+  if (positionDecision?.action !== 'compound') {
+    const firstEntry = placed.fillPrice ?? markPrice;
+    // Store the distance the SIZE was computed against (entry-based abs(entry − SL), per the
+    // model) — NOT abs(fill − SL), which drifts with slippage. reconcileUnifiedSL trails this
+    // exact distance from the avg entry, so realized risk matches the intended 1% / 0.5%.
+    const firstSLDistance = slDistance;
+    await writePositionState({
+      coin,
+      direction: plan.direction,
+      firstEntry,
+      firstSLDistance,
+      firstSLPrice: finalSL,
+      targetRR: tpRR,
+      compoundCount: 0,
+      totalRiskPct: 1.0,
+      openedAt: new Date().toISOString(),
+    });
+    console.log('[executor] position state saved: SL distance ' + firstSLDistance.toFixed(2) + 'pts');
+  }
+
   try {
     const fsSync = (await import('node:fs')).default;
     const statePath = new URL('../risk/state.json', import.meta.url).pathname;
@@ -699,6 +844,11 @@ async function reconcileUnifiedSL(coin, direction, context, fallbackSize, fallba
   const { getHLPositions, cancelExistingSL, cancelExistingTP, placeSL, placeTP } =
     await import('../broker/hyperliquid.js');
 
+  // Load first-trade parameters: the canonical SL point-distance every compound preserves.
+  const posState = await readPositionState();
+  const stateValid = !!posState && posState.coin === coin
+    && posState.direction === direction && posState.firstSLDistance > 0;
+
   const positions = await getHLPositions();
   const position = positions.find(p => p.coin === coin && p.direction === direction);
 
@@ -720,35 +870,38 @@ async function reconcileUnifiedSL(coin, direction, context, fallbackSize, fallba
 
   const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 9;
   const regimeLabel = atr >= 15 ? 'trending' : atr >= 8 ? 'normal' : 'quiet';
-  let slPrice;
+  const targetRR = stateValid
+    ? (posState.targetRR || parseFloat(process.env.TARGET_RR || '2.0'))
+    : parseFloat(process.env.TARGET_RR || '2.0');
 
-  if (planSLPrice && planSLPrice > 0) {
-    slPrice = planSLPrice;
-    console.log('[executor] using PLAN SL:', slPrice.toFixed(2), 'ATR:', atr.toFixed(2));
+  // SL distance priority: the FIRST trade's distance (kept across compounds) → plan SL → ATR.
+  let slDistance;
+  if (stateValid) {
+    slDistance = posState.firstSLDistance;
+    console.log(`[executor] reconcile: first SL distance ${slDistance.toFixed(2)}pts kept (${posState.compoundCount || 0} compound(s))`);
+  } else if (planSLPrice && planSLPrice > 0) {
+    slDistance = Math.abs(entryPrice - planSLPrice);
+    console.log(`[executor] reconcile: no state — plan SL distance ${slDistance.toFixed(2)}pts`);
   } else {
-    const dynamicLevels = getDynamicSLTP(direction, entryPrice, atr);
-    slPrice = dynamicLevels.slPrice;
-    console.log('[executor] using ATR SL:', slPrice.toFixed(2), 'ATR:', atr.toFixed(2));
+    slDistance = getDynamicSLTP(direction, entryPrice, atr).slDistance;
+    console.log(`[executor] reconcile: no state/plan — ATR SL distance ${slDistance.toFixed(2)}pts`);
   }
 
-  // ALWAYS calculate TP from the ACTUAL SL distance × targetRR — never an LLM/structural price.
-  // Flat TARGET_RR (2R) on every trade, regardless of regime.
-  const slDistance = Math.abs(entryPrice - slPrice);
-  const targetRR = parseFloat(process.env.TARGET_RR || '2.0');
+  // SL and TP recalculated from the NEW weighted-average entry — trails on every compound,
+  // always keeping the first SL point-distance and a flat targetRR (2R) reward.
+  const slPrice = direction === 'long' ? entryPrice - slDistance : entryPrice + slDistance;
   const tpDistance = slDistance * targetRR;
-  const tpPrice = direction === 'long'
-    ? entryPrice + tpDistance
-    : entryPrice - tpDistance;
+  const tpPrice = direction === 'long' ? entryPrice + tpDistance : entryPrice - tpDistance;
 
-  console.log('[executor] TP calculation:');
-  console.log('  entry:', entryPrice.toFixed(2));
-  console.log('  SL:', slPrice.toFixed(2));
-  console.log('  SL distance:', slDistance.toFixed(2) + 'pts');
-  console.log('  target RR:', targetRR + 'R');
-  console.log('  TP distance:', tpDistance.toFixed(2) + 'pts');
-  console.log('  TP price:', tpPrice.toFixed(2));
-  const actualRR = tpDistance / slDistance;
-  console.log('  actual RR:', actualRR.toFixed(2) + 'R ← must be', targetRR + 'R');
+  console.log('[executor] ═══ RECALC FROM AVG ENTRY ═══');
+  console.log('  total size: ' + totalSize.toFixed(4) + ' ' + coin);
+  console.log('  avg entry: $' + entryPrice.toFixed(2));
+  console.log('  SL distance: ' + slDistance.toFixed(2) + 'pts' + (stateValid ? ' (kept from entry 1)' : ''));
+  console.log('  SL price: $' + slPrice.toFixed(2));
+  console.log('  TP distance: ' + tpDistance.toFixed(2) + 'pts (' + targetRR + 'R)');
+  console.log('  TP price: $' + tpPrice.toFixed(2));
+  console.log('  total risk: $' + (totalSize * slDistance).toFixed(2));
+  console.log('  total reward: $' + (totalSize * tpDistance).toFixed(2));
 
   console.log(`[executor] reconciling SL/TP for ${totalSize} ${coin}`);
   console.log(`[executor] entry: $${entryPrice.toFixed(2)} | SL: $${slPrice.toFixed(2)} | TP: $${tpPrice.toFixed(2)} (${targetRR}R)`);
@@ -876,7 +1029,11 @@ export async function protectNakedPositions(context) {
     return { checked: 0, protected: 0 };
   }
   const open = positions.filter(p => p.coin === coin && p.size > 0);
-  if (open.length === 0) return { checked: 0, protected: 0 };
+  if (open.length === 0) {
+    // Flat — drop any stale first-trade state so the next entry starts a clean compound count.
+    await clearPositionState();
+    return { checked: 0, protected: 0 };
+  }
 
   let orders;
   try {
@@ -912,19 +1069,38 @@ export async function protectNakedPositions(context) {
     const slCovered = slOrders.reduce((s, o) => s + (o.sz || 0), 0);
     const tpCovered = tpOrders.reduce((s, o) => s + (o.sz || 0), 0);
 
-    // Keep an existing stop (never move a winner's stop); derive from ATR only if naked.
+    // SL distance: when first-trade state matches this position, keep that SAME point-distance
+    // and trail it from the (shifting) avg entry — so a compound that filled between runs gets
+    // the same SL/TP recalc reconcileUnifiedSL would have done. Otherwise keep an existing stop
+    // (never move a winner's stop) and derive from ATR only if naked.
     const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 8;
-    let slPrice = slOrders.length > 0 ? (slOrders[0].triggerPx ?? slOrders[0].limitPx) : null;
-    if (!slPrice || slPrice <= 0) slPrice = getDynamicSLTP(pos.direction, entry, atr).slPrice;
-    const slDist = Math.abs(entry - slPrice);
-    const tpPrice = pos.direction === 'long' ? entry + slDist * targetRR : entry - slDist * targetRR;
+    const posState = await readPositionState();
+    const stateValid = !!posState && posState.coin === coin
+      && posState.direction === pos.direction && posState.firstSLDistance > 0;
+
+    let slDist, slPrice, slTrailed = false;
+    if (stateValid) {
+      slDist = posState.firstSLDistance;
+      slPrice = pos.direction === 'long' ? entry - slDist : entry + slDist;
+      slTrailed = true;
+    } else {
+      slPrice = slOrders.length > 0 ? (slOrders[0].triggerPx ?? slOrders[0].limitPx) : null;
+      if (!slPrice || slPrice <= 0) slPrice = getDynamicSLTP(pos.direction, entry, atr).slPrice;
+      slDist = Math.abs(entry - slPrice);
+    }
+    const posTargetRR = stateValid ? (posState.targetRR || targetRR) : targetRR;
+    const tpPrice = pos.direction === 'long' ? entry + slDist * posTargetRR : entry - slDist * posTargetRR;
 
     // Invariant: one SL + one TP, each covering the FULL position, TP at targetRR from the avg
-    // entry. A compound fill (size grows + avg entry shifts) breaks coverage and the TP level.
-    // No-op when already in sync, so steady positions are never churned.
+    // entry. A compound fill (size grows + avg entry shifts) breaks coverage and the SL/TP level.
+    // No-op when already in sync, so steady positions are never churned — the SL-price tolerance
+    // only triggers a re-sync once the avg entry has actually moved (a compound).
     const sizeTol = Math.max(0.0015, pos.size * 0.02);
     const tpTol = Math.max(0.5, slDist * 0.1);
-    const slInSync = slOrders.length === 1 && Math.abs(slCovered - pos.size) <= sizeTol;
+    const slPriceTol = Math.max(0.5, slDist * 0.1);
+    const existingSLPx = slOrders.length === 1 ? (slOrders[0].triggerPx ?? slOrders[0].limitPx ?? 0) : 0;
+    const slInSync = slOrders.length === 1 && Math.abs(slCovered - pos.size) <= sizeTol
+      && (!slTrailed || Math.abs(existingSLPx - slPrice) <= slPriceTol);
     const tpInSync = tpOrders.length === 1 && Math.abs(tpCovered - pos.size) <= sizeTol
       && Math.abs((tpOrders[0].limitPx ?? 0) - tpPrice) <= tpTol;
     if (slInSync && tpInSync) {
@@ -969,5 +1145,8 @@ export async function protectNakedPositions(context) {
 // Close an open Hyperliquid position (used by /close command).
 export async function closePosition(coin, direction, size) {
   const { closeHLPosition } = await import('./hyperliquid.js');
-  return closeHLPosition(coin, direction, size);
+  const result = await closeHLPosition(coin, direction, size);
+  // Position closed — drop the first-trade state so the next entry starts a fresh compound count.
+  await clearPositionState();
+  return result;
 }

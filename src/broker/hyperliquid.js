@@ -29,6 +29,19 @@ function roundToTickSize(price, tickSize) {
   return Math.round(price / tickSize) * tickSize;
 }
 
+// Hyperliquid price precision (perps): at most 5 significant figures AND at most (6 - szDecimals)
+// decimal places; integer prices are always valid. PAXG's meta exposes NO tickSize, so the old
+// `tickSize || 1` fallback rounded every price (entry/SL/TP) to a whole dollar — which corrupted
+// the SL distance, and therefore realized risk, by up to ~1pt. Round to the binding constraint
+// instead. PAXG (szDecimals 3, ~$4000) → 1 decimal (e.g. 4068.3), matching how HL quotes it.
+function roundHLPrice(price, szDecimals) {
+  if (!isFinite(price) || price <= 0) return price;
+  const maxDecimals = Math.max(0, 6 - szDecimals);
+  const sigFig = parseFloat(price.toPrecision(5));      // ≤ 5 significant figures
+  const factor = Math.pow(10, maxDecimals);
+  return Math.round(sigFig * factor) / factor;          // ≤ (6 - szDecimals) decimal places
+}
+
 async function getTickSize(assetIdx, meta) {
   const asset = meta.universe[assetIdx];
   const szDecimals = asset.szDecimals || 0;
@@ -213,13 +226,13 @@ export async function placeHLOrder({ coin, direction, size, markPrice, plan, ord
   let orderPrice, tif;
   if (orderMode === 'maker') {
     const rawEntry = plan.entry?.price || markPrice;
-    orderPrice = roundToTickSize(rawEntry, tickSize);
+    orderPrice = roundHLPrice(rawEntry, szDecimals);
     tif = 'Gtc';
     console.log(`[hl-exec] MAKER order @ $${orderPrice} (0.010% fee)`);
   } else {
     // GTC limit at the current price — rests on the book and waits for fill.
     // The next pipeline run keeps it (same direction) or cancels it (direction flip).
-    orderPrice = roundToTickSize(markPrice, tickSize);
+    orderPrice = roundHLPrice(markPrice, szDecimals);
     tif = 'Gtc';
     console.log(`[hl-exec] TAKER order (GTC @ current price $${orderPrice}) — resting, waits for fill`);
   }
@@ -364,13 +377,13 @@ export async function placeHLOrder({ coin, direction, size, markPrice, plan, ord
   let actualSL = null;
   if (stopLoss != null) {
     if (finalSL != null) {
-      actualSL = roundToTickSize(finalSL, tickSize);
+      actualSL = roundHLPrice(finalSL, szDecimals);
       console.log(`[hl-exec] ATR-based SL=${actualSL}`);
     } else {
       const slDistance = Math.abs(markPrice - stopLoss);
-      actualSL = roundToTickSize(
+      actualSL = roundHLPrice(
         isBuy ? fillPrice - slDistance : fillPrice + slDistance,
-        tickSize
+        szDecimals
       );
       console.log(`[hl-exec] adjusted SL=${actualSL} (fill=${fillPrice} distance=${slDistance.toFixed(2)})`);
     }
@@ -416,13 +429,13 @@ export async function placeHLOrder({ coin, direction, size, markPrice, plan, ord
   let tpPricePlaced = null;
   let tpComputedPrice = null;
   if (finalTP != null) {
-    tpComputedPrice = roundToTickSize(finalTP, tickSize);
+    tpComputedPrice = roundHLPrice(finalTP, szDecimals);
     console.log(`[hl-exec] single TP: $${tpComputedPrice} (ATR-based target)`);
   } else if (actualSL != null) {
     const targetRR = parseFloat(process.env.TARGET_RR || '2.0');
     const slDistFromFill = Math.abs(fillPrice - actualSL);
     const rawTPPrice = isBuy ? fillPrice + slDistFromFill * targetRR : fillPrice - slDistFromFill * targetRR;
-    tpComputedPrice = roundToTickSize(rawTPPrice, tickSize);
+    tpComputedPrice = roundHLPrice(rawTPPrice, szDecimals);
     console.log(`[hl-exec] single TP: $${tpComputedPrice} (${targetRR}R from entry)`);
   }
 
@@ -872,7 +885,7 @@ export async function placeSL({ coin, direction, size, slPrice }) {
   const { idx: assetIdx, meta } = await getAssetIndex(coin);
   const { tickSize, szDecimals } = await getTickSize(assetIdx, meta);
   const isBuy = direction === 'long';
-  const roundedSL = roundToTickSize(slPrice, tickSize);
+  const roundedSL = roundHLPrice(slPrice, szDecimals);
 
   const nonce = Date.now();
   const stopAction = {
@@ -910,7 +923,7 @@ export async function placeTP({ coin, direction, size, tpPrice }) {
   const { idx: assetIdx, meta } = await getAssetIndex(coin);
   const { tickSize, szDecimals } = await getTickSize(assetIdx, meta);
   const isBuy = direction === 'long';
-  const roundedTP = roundToTickSize(tpPrice, tickSize);
+  const roundedTP = roundHLPrice(tpPrice, szDecimals);
 
   const nonce = Date.now();
   const tpAction = {
@@ -959,7 +972,7 @@ export async function closeHLPosition(coin, direction, size) {
   const markPrice = parseFloat(assetCtxs[idx2]?.markPx ?? 0);
   const { tickSize, szDecimals } = await getTickSize(idx2, meta2);
   const rawClose = isBuy ? markPrice * 1.005 : markPrice * 0.995;
-  const closePrice = roundToTickSize(rawClose, tickSize);
+  const closePrice = roundHLPrice(rawClose, szDecimals);
 
   // GTC limit priced 0.5% through the market — crosses and fills immediately as a
   // reduce-only taker close; any tiny remainder rests reduce-only rather than being killed.

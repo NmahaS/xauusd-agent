@@ -103,6 +103,17 @@ async function runFullPipeline() {
   } = hlData;
   console.log(`[pipeline] fetch phase done in ${time() - tFetch}ms`);
 
+  // Trailing-stop maintenance — runs every cycle BEFORE signal analysis so open winners keep
+  // ratcheting even on no-signal / hold runs. Live mode only; needs just the current price.
+  if (process.env.AUTO_TRADE === 'true' && process.env.DRY_EXECUTE !== 'true' && process.env.DRY_RUN !== 'true') {
+    try {
+      const { updateTrailingStop } = await import('./broker/trailing.js');
+      await updateTrailingStop(process.env.HL_COIN || 'PAXG', { currentPrice });
+    } catch (e) {
+      console.warn('[trail] error:', e.message);
+    }
+  }
+
   if (h1Candles.length === 0) {
     console.error('[pipeline] no gold data from Hyperliquid — sending alert and skipping');
     const alert =

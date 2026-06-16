@@ -319,6 +319,40 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     console.log(`[risk] ATR: ${atrValue.toFixed(2)}pts ✅`);
   }
 
+  // ─── OVEREXTENSION FILTER ──────────────────────────────────────────────────
+  // Block entries that chase the exhausted end of an extended move (no pullback). After a big
+  // one-way leg, joining at the extreme = buying the top / selling the bottom = chop fodder.
+  // Only bites when the 20-bar range is "extended" (>6× ATR); inside normal ranges it's inert.
+  // (candles use .high/.low; context exposes m15Candles top-level — NOT context.m15.candles.)
+  {
+    const m15c = context?.m15Candles || context?.m15?.candles || [];
+    const price = context?.currentPrice;
+    if (m15c.length >= 20 && plan.direction && price) {
+      const last20 = m15c.slice(-20);
+      const high20 = Math.max(...last20.map(c => c.high));
+      const low20 = Math.min(...last20.map(c => c.low));
+      const range20 = high20 - low20;
+      const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 9;
+      const rangePos = range20 > 0 ? (price - low20) / range20 : 0.5;  // 0 = at low, 1 = at high
+      const isExtended = range20 > atr * 6;
+
+      console.log(`[overext] 20-bar range: ${range20.toFixed(0)}pts | position: ${(rangePos * 100).toFixed(0)}% | extended: ${isExtended}`);
+
+      if (isExtended) {
+        if (plan.direction === 'short' && rangePos < 0.25) {
+          const reason = `Overextension: shorting bottom ${(rangePos * 100).toFixed(0)}% of ${range20.toFixed(0)}pt move — wait for pullback to 38-62% retrace`;
+          log(`REJECT overextension: ${reason}`);
+          return { allowed: false, reason };
+        }
+        if (plan.direction === 'long' && rangePos > 0.75) {
+          const reason = `Overextension: longing top ${(rangePos * 100).toFixed(0)}% of ${range20.toFixed(0)}pt move — wait for pullback to 38-62% retrace`;
+          log(`REJECT overextension: ${reason}`);
+          return { allowed: false, reason };
+        }
+      }
+    }
+  }
+
   // ─── PRICE-BASED TREND CONFIRMATION ────────────────────────────────────────
   // SMC structure (CHoCH/BOS) can lag actual price action. These filters use REAL
   // price vs H1 EMA20/50 and H1 swing highs/lows to hard-block counter-trend entries

@@ -230,16 +230,15 @@ export function calculateSingleTP(entryPrice, slPrice, direction, targetRR = 2.0
 }
 
 function getDynamicSLTP(direction, entryPrice, atr) {
-  const isTrending = atr >= 15;
-  const isNormal = atr >= 8 && atr < 15;
-
-  // SL distance adapts to volatility (regime), but the reward target is a flat TARGET_RR (2R)
-  // on every trade — so 1% risk always targets a 2% gain regardless of regime.
+  // SL distance adapts to volatility (regime); the reward target stays a flat TARGET_RR (2R), so
+  // 1% risk always targets a 2% gain. FIX 4: in elevated/volatile ATR (>12pts) widen the stop to
+  // 2× ATR — tight stops get chopped out in volatile conditions ("death by a thousand cuts").
+  // Risk stays 1% because position size = riskAmount / SL-distance shrinks as the stop widens.
   let slMultiplier, label;
-  if (isTrending) {
-    slMultiplier = 1.5;
-    label = 'trending';
-  } else if (isNormal) {
+  if (atr > 12) {
+    slMultiplier = 2.0;
+    label = 'volatile';
+  } else if (atr >= 8) {
     slMultiplier = 1.0;
     label = 'normal';
   } else {
@@ -887,9 +886,19 @@ async function reconcileUnifiedSL(coin, direction, context, fallbackSize, fallba
     console.log(`[executor] reconcile: no state/plan — ATR SL distance ${slDistance.toFixed(2)}pts`);
   }
 
-  // SL and TP recalculated from the NEW weighted-average entry — trails on every compound,
-  // always keeping the first SL point-distance and a flat targetRR (2R) reward.
-  const slPrice = direction === 'long' ? entryPrice - slDistance : entryPrice + slDistance;
+  // Trailing-aware SL. Once the stop has been ratcheted (trailLevel set by trailing.js), KEEP it
+  // anchored to the original entry at the locked R-multiple — snapping it back to firstSLDistance
+  // from avg would undo the trail. Otherwise place it firstSLDistance from the (avg) entry.
+  const trailed = stateValid && typeof posState.trailLevel === 'number' && posState.trailLevel >= 0;
+  let slPrice;
+  if (trailed) {
+    slPrice = direction === 'long'
+      ? posState.firstEntry + posState.trailLevel * slDistance
+      : posState.firstEntry - posState.trailLevel * slDistance;
+    console.log(`[executor] reconcile: trail active (+${posState.trailLevel}R) — SL kept at $${slPrice.toFixed(2)}`);
+  } else {
+    slPrice = direction === 'long' ? entryPrice - slDistance : entryPrice + slDistance;
+  }
   const tpDistance = slDistance * targetRR;
   const tpPrice = direction === 'long' ? entryPrice + tpDistance : entryPrice - tpDistance;
 
@@ -935,7 +944,23 @@ async function reconcileUnifiedSL(coin, direction, context, fallbackSize, fallba
   // Bug 1 fix: check return values — placeSL/placeTP return false on HL rejection without throwing.
   // Without this check, reconcile logged "✅" and sent Telegram even when HL silently rejected.
   const slOk = await placeSL({ coin, direction, size: totalSize, slPrice });
-  const tpOk = await placeTP({ coin, direction, size: totalSize, tpPrice });
+
+  // FIX 1: take profit on only HALF the position at 2R; the runner half rides the trailing stop
+  // (no TP). Skip the TP entirely once we're in the runner phase — trail past +1R OR current price
+  // already at/through the 2R level (partial filled / would only fill at-market). The price check
+  // guards the case where trailLevel hasn't advanced yet (e.g. a compound filled past 2R).
+  const px = context?.currentPrice;
+  const beyond2R = px != null && (direction === 'long' ? px >= tpPrice : px <= tpPrice);
+  const runnerPhase = (stateValid && typeof posState.trailLevel === 'number' && posState.trailLevel >= 1) || beyond2R;
+  let tpOk = true;
+  if (runnerPhase) {
+    console.log('[executor] runner phase (trail ≥ +1R or price past 2R) — no TP, letting winner run');
+  } else {
+    let tpSize = parseFloat((totalSize * 0.5).toFixed(3));
+    if (tpSize < 0.001) tpSize = totalSize;          // position too small to split — full TP
+    tpOk = await placeTP({ coin, direction, size: tpSize, tpPrice });
+    console.log(`[executor] partial TP ${tpSize}/${totalSize.toFixed(3)} (50%) at ${targetRR}R — rest rides the trailing stop`);
+  }
 
   if (!slOk || !tpOk) {
     throw new Error(`SL/TP placement rejected by Hyperliquid — SL: ${slOk}, TP: ${tpOk}`);
@@ -980,8 +1005,10 @@ async function reconcileUnifiedSL(coin, direction, context, fallbackSize, fallba
   await sendTelegramMessage(
     `🔄 <b>SL/TP unified</b>\n` +
     `${direction.toUpperCase()} ${totalSize} ${coin}\n` +
-    `🛑 SL: $${slPrice.toFixed(2)} (covers full position)\n` +
-    `🎯 TP: $${tpPrice.toFixed(2)} (${targetRR}R)\n` +
+    `🛑 SL: $${slPrice.toFixed(2)} (full position${trailed ? `, trail +${posState.trailLevel}R` : ''})\n` +
+    (runnerPhase
+      ? `🏃 Runner: no TP — riding the trailing stop\n`
+      : `🎯 TP: $${tpPrice.toFixed(2)} (${targetRR}R, 50% — rest trails)\n`) +
     `ATR regime: ${regimeLabel}`
   ).catch(err => console.warn(`[executor] reconcile Telegram failed: ${err.message}`));
   } finally {
@@ -1010,12 +1037,13 @@ export async function updateUnifiedSLTP(coin, direction, totalSize, newSLPrice, 
 
 // Safety net + reconcile sweep for the resting-GTC entry model. A limit entry (or a COMPOUND
 // add) can fill BETWEEN pipeline runs, so inline reconcileUnifiedSL never runs for it. This
-// sweep runs every cycle and enforces the invariant: every open position has exactly one SL and
-// one TP, each covering the FULL size, with TP at exactly TARGET_RR from the weighted-average
-// entry. It keeps an existing stop (never moves a winner's stop) and only derives one from ATR
-// when the position is naked. No-op when already in sync — so a compound (size grows, avg entry
-// shifts) is re-bracketed to full size at 2R, while a steady position is left untouched.
-// Detection uses frontendOpenOrders (plain openOrders omits isTrigger/orderType/sz).
+// sweep runs every cycle and enforces, per position: exactly one full-size SL at the canonical
+// (possibly trailed) level + one 50%-size TP at TARGET_RR — EXCEPT in the runner phase (trail
+// ≥ +1R, the 2R partial already filled) where the runner rides on the trail with no TP. It is
+// TRAIL-AWARE: it reads position-state.trailLevel and never reverts a ratcheted stop, and it is
+// SURGICAL (fixes SL and TP independently). No-op when already in sync, so steady/trailing
+// positions are left untouched. Detection uses frontendOpenOrders (plain openOrders omits
+// isTrigger/orderType/sz).
 export async function protectNakedPositions(context) {
   const coin = process.env.HL_COIN || 'PAXG';
   const { getHLPositions, getOpenOrdersDetailed, cancelOrder, placeSL, placeTP } =
@@ -1069,20 +1097,28 @@ export async function protectNakedPositions(context) {
     const slCovered = slOrders.reduce((s, o) => s + (o.sz || 0), 0);
     const tpCovered = tpOrders.reduce((s, o) => s + (o.sz || 0), 0);
 
-    // SL distance: when first-trade state matches this position, keep that SAME point-distance
-    // and trail it from the (shifting) avg entry — so a compound that filled between runs gets
-    // the same SL/TP recalc reconcileUnifiedSL would have done. Otherwise keep an existing stop
-    // (never move a winner's stop) and derive from ATR only if naked.
+    // Trail-aware desired exit levels (must agree with trailing.js + reconcileUnifiedSL so the
+    // sweep NEVER reverts a ratcheted stop or churns the partial-TP model):
+    //   • trailLevel set  → SL locked at firstEntry ± trailLevel×R (trailing.js owns the moves).
+    //   • not yet trailed → SL at firstSLDistance from the avg entry (covers compound re-sync).
+    //   • TP             → 50% of size at 2R from avg, EXCEPT in the runner phase (trail ≥ +1R,
+    //                       i.e. the 2R partial already filled) where the runner rides with no TP.
     const atr = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 8;
     const posState = await readPositionState();
     const stateValid = !!posState && posState.coin === coin
       && posState.direction === pos.direction && posState.firstSLDistance > 0;
+    const trailed = stateValid && typeof posState.trailLevel === 'number' && posState.trailLevel >= 0;
+    const runnerPhase = stateValid && typeof posState.trailLevel === 'number' && posState.trailLevel >= 1;
 
-    let slDist, slPrice, slTrailed = false;
-    if (stateValid) {
+    let slDist, slPrice;
+    if (trailed) {
+      slDist = posState.firstSLDistance;
+      slPrice = pos.direction === 'long'
+        ? posState.firstEntry + posState.trailLevel * slDist
+        : posState.firstEntry - posState.trailLevel * slDist;
+    } else if (stateValid) {
       slDist = posState.firstSLDistance;
       slPrice = pos.direction === 'long' ? entry - slDist : entry + slDist;
-      slTrailed = true;
     } else {
       slPrice = slOrders.length > 0 ? (slOrders[0].triggerPx ?? slOrders[0].limitPx) : null;
       if (!slPrice || slPrice <= 0) slPrice = getDynamicSLTP(pos.direction, entry, atr).slPrice;
@@ -1090,51 +1126,74 @@ export async function protectNakedPositions(context) {
     }
     const posTargetRR = stateValid ? (posState.targetRR || targetRR) : targetRR;
     const tpPrice = pos.direction === 'long' ? entry + slDist * posTargetRR : entry - slDist * posTargetRR;
+    let tpSize = parseFloat((pos.size * 0.5).toFixed(3));   // FIX 1: TP covers HALF
+    if (tpSize < 0.001) tpSize = pos.size;                  // too small to split — full TP
 
-    // Invariant: one SL + one TP, each covering the FULL position, TP at targetRR from the avg
-    // entry. A compound fill (size grows + avg entry shifts) breaks coverage and the SL/TP level.
-    // No-op when already in sync, so steady positions are never churned — the SL-price tolerance
-    // only triggers a re-sync once the avg entry has actually moved (a compound).
+    // Runner = no fresh TP. Either the trail has advanced past +1R, OR current price has already
+    // reached/passed the 2R level (so the partial TP has filled or would only fill at-market). The
+    // price check is the safety net: it stops protect re-adding a now-behind-price TP and shaving
+    // the runner if trailing.js failed to advance trailLevel that cycle.
+    const px = context?.currentPrice;
+    const beyond2R = px != null && (pos.direction === 'long' ? px >= tpPrice : px <= tpPrice);
+    const noTP = runnerPhase || beyond2R;
+
+    // SL must be exactly one stop covering ~full size, at the desired (possibly trailed) price.
     const sizeTol = Math.max(0.0015, pos.size * 0.02);
-    const tpTol = Math.max(0.5, slDist * 0.1);
     const slPriceTol = Math.max(0.5, slDist * 0.1);
+    const tpTol = Math.max(0.5, slDist * 0.1);
     const existingSLPx = slOrders.length === 1 ? (slOrders[0].triggerPx ?? slOrders[0].limitPx ?? 0) : 0;
     const slInSync = slOrders.length === 1 && Math.abs(slCovered - pos.size) <= sizeTol
-      && (!slTrailed || Math.abs(existingSLPx - slPrice) <= slPriceTol);
-    const tpInSync = tpOrders.length === 1 && Math.abs(tpCovered - pos.size) <= sizeTol
-      && Math.abs((tpOrders[0].limitPx ?? 0) - tpPrice) <= tpTol;
+      && Math.abs(existingSLPx - slPrice) <= slPriceTol;
+    // TP: in the runner phase leave whatever's there (don't churn / re-add a 2R TP behind price);
+    // otherwise require exactly one TP covering ~50% at 2R.
+    const tpInSync = noTP
+      || (tpOrders.length === 1 && Math.abs(tpCovered - tpSize) <= sizeTol
+          && Math.abs((tpOrders[0].limitPx ?? 0) - tpPrice) <= tpTol);
+
     if (slInSync && tpInSync) {
-      console.log(`[protect] ${coin} ${pos.direction} ${pos.size} — SL/TP in sync ✅ (SL $${slPrice.toFixed(2)}, TP $${tpPrice.toFixed(2)})`);
+      console.log(`[protect] ${coin} ${pos.direction} ${pos.size} — SL/TP in sync ✅ (SL $${slPrice.toFixed(2)}${trailed ? ` +${posState.trailLevel}R` : ''}${noTP ? ', runner' : `, TP $${tpPrice.toFixed(2)}`})`);
       continue;
     }
 
     const wasNaked = slOrders.length === 0;
-    console.warn(`[protect] ${wasNaked ? '⚠️ NAKED' : '🔁 OUT-OF-SYNC'} ${pos.direction} ${pos.size} ${coin} @ avg $${entry.toFixed(2)} ` +
-      `— SL ${slOrders.length}x cover ${slCovered.toFixed(4)}, TP ${tpOrders.length}x cover ${tpCovered.toFixed(4)} ` +
-      `→ reconciling full size @ ${targetRR}R (SL $${slPrice.toFixed(2)}, TP $${tpPrice.toFixed(2)})`);
 
-    // Cancel all reduce-only orders, then place ONE SL + ONE TP covering the full position.
-    for (const o of reduceOrders) {
-      try { await cancelOrder(coin, o.oid); await new Promise(r => setTimeout(r, 300)); }
-      catch (err) { console.warn('[protect] reduce-only cancel failed:', err.message); }
+    // SURGICAL: fix SL and TP independently so a TP drift never forces us to cancel (and briefly
+    // strip) a good trailed stop, and vice-versa.
+    let slOk = slInSync, tpOk = tpInSync;
+
+    if (!slInSync) {
+      console.warn(`[protect] ${wasNaked ? '⚠️ NAKED' : '🔁 SL out-of-sync'} ${pos.direction} ${pos.size} ${coin} @ avg $${entry.toFixed(2)} ` +
+        `— SL ${slOrders.length}x cover ${slCovered.toFixed(4)} → placing 1× full @ $${slPrice.toFixed(2)}${trailed ? ` (+${posState.trailLevel}R)` : ''}`);
+      for (const o of slOrders) {
+        try { await cancelOrder(coin, o.oid); await new Promise(r => setTimeout(r, 300)); }
+        catch (err) { console.warn('[protect] SL cancel failed:', err.message); }
+      }
+      await new Promise(r => setTimeout(r, 1500));
+      try { slOk = await placeSL({ coin, direction: pos.direction, size: pos.size, slPrice }); }
+      catch (err) { console.error('[protect] SL placement error:', err.message); }
+      if (slOk) protectedCount++;
     }
-    await new Promise(r => setTimeout(r, 1500));
 
-    let slOk = false, tpOk = false;
-    try { slOk = await placeSL({ coin, direction: pos.direction, size: pos.size, slPrice }); }
-    catch (err) { console.error('[protect] SL placement error:', err.message); }
-    try { tpOk = await placeTP({ coin, direction: pos.direction, size: pos.size, tpPrice }); }
-    catch (err) { console.error('[protect] TP placement error:', err.message); }
-
-    if (slOk) protectedCount++;
+    if (!tpInSync) {
+      console.warn(`[protect] 🔁 TP out-of-sync ${pos.direction} ${pos.size} ${coin} ` +
+        `— TP ${tpOrders.length}x cover ${tpCovered.toFixed(4)} → placing 1× ${tpSize} (50%) @ $${tpPrice.toFixed(2)}`);
+      for (const o of tpOrders) {
+        try { await cancelOrder(coin, o.oid); await new Promise(r => setTimeout(r, 300)); }
+        catch (err) { console.warn('[protect] TP cancel failed:', err.message); }
+      }
+      await new Promise(r => setTimeout(r, 800));
+      try { tpOk = await placeTP({ coin, direction: pos.direction, size: tpSize, tpPrice }); }
+      catch (err) { console.error('[protect] TP placement error:', err.message); }
+    }
 
     if (process.env.DRY_RUN !== 'true') {
       const { sendTelegramMessage } = await import('../telegram/notify.js');
       await sendTelegramMessage(
-        `🛡 <b>${wasNaked ? 'Protected naked position' : 'Re-synced SL/TP (compound)'}</b>\n` +
+        `🛡 <b>${wasNaked ? 'Protected naked position' : 'Re-synced SL/TP'}</b>\n` +
         `${pos.direction.toUpperCase()} ${pos.size} ${coin} @ avg $${entry.toFixed(2)}\n` +
-        `🛑 SL: $${slPrice.toFixed(2)} (${slDist.toFixed(1)}pts)  🎯 TP: $${tpPrice.toFixed(2)} (${targetRR}R)\n` +
-        (slOk && tpOk ? `Covers full size ✅` : `⚠️ SL ${slOk} / TP ${tpOk} — verify manually on Hyperliquid!`)
+        `🛑 SL: $${slPrice.toFixed(2)} (${slDist.toFixed(1)}pts${trailed ? `, +${posState.trailLevel}R` : ''})  ` +
+        (noTP ? `🏃 runner (no TP)` : `🎯 TP: $${tpPrice.toFixed(2)} (50% @ ${posTargetRR}R)`) + `\n` +
+        (slOk && tpOk ? `In sync ✅` : `⚠️ SL ${slOk} / TP ${tpOk} — verify manually on Hyperliquid!`)
       ).catch(() => {});
     }
   }

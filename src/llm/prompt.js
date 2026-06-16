@@ -164,6 +164,17 @@ RULE 3 — SL based on M15 structure:
 Stop at the nearest M15 swing high (short) or M15 swing low (long).
 Use M15 ATR × 1.0 as minimum SL distance from entry.
 
+RULE 4 — TREND RE-ENTRY (do NOT chase extremes):
+After an extended move (>60pts / >6× M15 ATR) in the trend direction:
+DO NOT signal continuation AT the extreme — that is chasing, and chasing loses.
+WAIT for a pullback to the M15 EMA20 or a 38-62% retrace of the last leg.
+Signal re-entry ONLY when BOTH are true:
+  - price has retraced at least 30% of the last leg toward value, AND
+  - M15 prints a rejection (wick/engulfing/BOS) back in the trend direction.
+Entry at the retrace = better price, tighter stop, same trend.
+Entry at the extreme = chasing = losing. If price is at the extreme of an
+extended move with no pullback yet, return no-trade and say "waiting for pullback".
+
 ═══════════════════════════════════════════════════════
 
 ## EMA MOMENTUM vs SMC STRUCTURE DECISION

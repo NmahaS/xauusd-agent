@@ -380,17 +380,27 @@ app.get('/api/dashboard', async (_req, res) => {
     const pos = positions[0];
     let posOut = null;
     if (pos) {
-      // HL positions carry no openTime — everything filled after the last CLOSE of this
-      // coin belongs to the current position. Cap the lookback at 24h as a safety net.
-      const fallbackOpen = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      const lastClose = [...fills]
-        .filter(f => f.coin === pos.coin && f.isClose)
-        .sort((a, b) => new Date(b.time) - new Date(a.time))[0];
-      const positionOpenTime = lastClose ? new Date(lastClose.time) : fallbackOpen;
-
-      const positionFills = fills
-        .filter(f => f.coin === pos.coin && !f.isClose && new Date(f.time) >= positionOpenTime)
+      // HL positions carry no openTime. Find when the CURRENT position opened by walking this
+      // coin's fills oldest→newest and tracking net signed size: the position started at the first
+      // fill after the account was last flat (net ≈ 0). Partial closes — the 50% TP at 2R and
+      // trailing-stop fills — do NOT reset this; only a full flatten does. (The old logic reset on
+      // ANY Close fill, so a partial TP erased every earlier compound open → dashboard showed 0
+      // compounds while Telegram correctly reported the adds.)
+      const coinFills = fills
+        .filter(f => f.coin === pos.coin)
         .sort((a, b) => new Date(a.time) - new Date(b.time));
+
+      let net = 0;
+      let openIdx = 0;
+      for (let i = 0; i < coinFills.length; i++) {
+        if (Math.abs(net) < 1e-9) openIdx = i;   // flat before this fill → it starts a fresh position
+        const f = coinFills[i];
+        const dir = f.direction === 'long' ? 1 : -1;
+        net += (f.isOpen ? 1 : -1) * dir * parseFloat(f.size);
+      }
+
+      // Opening fills of the current position = entry + each compound add (skip partial closes).
+      const positionFills = coinFills.slice(openIdx).filter(f => f.isOpen);
 
       const compoundTrades = positionFills.map((f, i) => ({
         time:     new Date(f.time).toISOString().slice(11, 16) + ' UTC',

@@ -1231,6 +1231,23 @@ function renderPosition(d) {
     ? `<span class="badge" style="background:rgba(255,140,66,0.13);color:#FF8C42;border:1px solid rgba(255,140,66,0.3);font-size:9px;padding:2px 8px">${cc - 1} COMPOUND${cc > 2 ? 'S' : ''}</span>`
     : '';
 
+  /* Trailing-stop state (server-derived). stopLocked ⇒ the stop secures profit, not risk. */
+  const trailLvl   = (p.trailLevel != null) ? p.trailLevel : null;
+  const stopLocked = !!p.stopLocked;
+  const lockedPts  = parseFloat(p.stopLockedPts || 0);   // signed: +ve = profit locked at stop
+  const stopPnlV   = parseFloat(p.stopPnl || 0);         // signed $ realised if the stop fills
+  const rUnit      = parseFloat(p.rUnitPts || 0);        // 1R in points (0 = unknown)
+  const isRunner   = !!p.isRunner;                        // SL present, no TP — rides the trail
+  // Locked-stop label in R: prefer the executor's trail level, else derive from points.
+  const lockR = trailLvl != null
+    ? (trailLvl === 0 ? 'breakeven' : '+' + trailLvl + 'R')
+    : (rUnit > 0 ? '+' + (lockedPts / rUnit).toFixed(1) + 'R' : null);
+  const trailChip = stopLocked
+    ? `<span class="badge" style="background:rgba(0,212,160,0.13);color:#00D4A0;border:1px solid rgba(0,212,160,0.3);font-size:9px;padding:2px 8px">🔒 STOP ${lockR ? lockR.toUpperCase() : 'LOCKED'}</span>`
+    : (trailLvl != null
+      ? `<span class="badge" style="background:rgba(55,138,221,0.13);color:#378ADD;border:1px solid rgba(55,138,221,0.3);font-size:9px;padding:2px 8px">TRAIL ${trailLvl === 0 ? 'BE' : '+' + trailLvl + 'R'}</span>`
+      : '');
+
   const compoundHTML = (p.compoundTrades || []).map((t, i) => `
     <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;
                 background:${i === 0 ? 'var(--card)' : 'var(--bg)'};border:1px solid var(--border);
@@ -1254,6 +1271,7 @@ function renderPosition(d) {
         <span class="badge ${sCls}" style="font-size:12px;padding:4px 14px">${side}</span>
         <span class="c-muted" style="font-size:10px">${lev.toFixed(0)}× &nbsp;·&nbsp; ${size.toFixed(4)} XAU</span>
         ${compoundBadge}
+        ${trailChip}
       </div>
       <div style="text-align:right">
         <div class="psi-val ${plCls(upnl)}" style="font-size:17px">${fUSD(upnl)}</div>
@@ -1271,8 +1289,13 @@ function renderPosition(d) {
         <div class="psi-val c-sec">$${posNotional}</div>
       </div>
       <div class="pos-sub-item">
+        ${stopLocked ? `
+        <div class="psi-lbl">Locked Profit</div>
+        <div class="psi-val" style="color:var(--green)">+$${Math.abs(stopPnlV).toFixed(2)} <span class="c-muted" style="font-size:10px">(0% risk)</span></div>
+        ` : `
         <div class="psi-lbl">Total Risk</div>
         <div class="psi-val" style="color:${riskColor}">${riskPct.toFixed(2)}% <span class="c-muted" style="font-size:10px">($${totalRisk})</span></div>
+        `}
       </div>
     </div>
 
@@ -1296,17 +1319,24 @@ function renderPosition(d) {
         <div class="sltp-tp-zone"   style="flex:${tpRatio}"></div>
       </div>
       <div class="sltp-labels-bot">
-        <span class="c-red">−${slPts}pts (1R)</span>
+        ${stopLocked
+          ? `<span class="c-green">🔒 +${Math.abs(lockedPts).toFixed(1)}pts${lockR && lockR.includes('R') ? ' (' + lockR + ')' : ''}</span>`
+          : `<span class="c-red">−${slPts}pts${rUnit > 0 ? ' (' + (parseFloat(slPts) / rUnit).toFixed(1) + 'R)' : ''}</span>`}
         <span>now $${mark.toFixed(2)}</span>
-        <span class="c-green">+${tpPts}pts (${rr}R)</span>
+        ${isRunner
+          ? `<span class="c-green">runner · no TP</span>`
+          : `<span class="c-green">+${tpPts}pts (${rr}R)</span>`}
       </div>
     </div>
 
     <div class="sltp-risk-line">
-      ${riskPct.toFixed(2)}% risk &nbsp;·&nbsp;
-      lose <span class="c-red">$${totalRisk}</span> → stop hit
+      ${stopLocked
+        ? `<span class="c-green">0% risk</span> &nbsp;·&nbsp; 🔒 lock <span class="c-green">$${Math.abs(stopPnlV).toFixed(2)}</span> → stop hit`
+        : `${riskPct.toFixed(2)}% risk &nbsp;·&nbsp; lose <span class="c-red">$${totalRisk}</span> → stop hit`}
       &nbsp;|&nbsp;
-      win <span class="c-green">$${rewAmt}</span> → TP hit
+      ${isRunner
+        ? `runner — rides trailing stop`
+        : `win <span class="c-green">$${rewAmt}</span> → TP hit`}
       ${liqPx ? `&nbsp;|&nbsp; liq <span class="${liqCls}">$${liqDist} away</span>` : ''}
     </div>
   `;

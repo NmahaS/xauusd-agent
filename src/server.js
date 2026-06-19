@@ -380,31 +380,53 @@ app.get('/api/dashboard', async (_req, res) => {
     const pos = positions[0];
     let posOut = null;
     if (pos) {
-      // HL positions carry no openTime — everything filled after the last CLOSE of this
-      // coin belongs to the current position. Cap the lookback at 24h as a safety net.
-      const fallbackOpen = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      const lastClose = [...fills]
-        .filter(f => f.coin === pos.coin && f.isClose)
-        .sort((a, b) => new Date(b.time) - new Date(a.time))[0];
-      const positionOpenTime = lastClose ? new Date(lastClose.time) : fallbackOpen;
-
-      const positionFills = fills
-        .filter(f => f.coin === pos.coin && !f.isClose && new Date(f.time) >= positionOpenTime)
+      // Identify the CURRENT position's fills via Hyperliquid's `startPosition` (signed position
+      // size BEFORE each fill). The position opened at the most recent fill where the book was NOT
+      // already in this direction — i.e. startPosition was flat (0) or opposite-signed. Everything
+      // from that fill forward belongs to the current position. This is exact: it ignores partial
+      // closes (the 50% TP at 2R, trailing-stop fills) and never bleeds into older closed
+      // positions — unlike a last-Close cutoff (which a partial TP resets, hiding compounds) or a
+      // net-size walk (which drifts on float error and swept in weeks of fills).
+      const coinSign = pos.direction === 'short' ? -1 : 1;
+      const coinFills = fills
+        .filter(f => f.coin === pos.coin)
         .sort((a, b) => new Date(a.time) - new Date(b.time));
 
-      const compoundTrades = positionFills.map((f, i) => ({
+      let startIdx = 0;
+      for (let i = coinFills.length - 1; i >= 0; i--) {
+        const sp = coinFills[i].startPosition;
+        const spSign = sp > 1e-9 ? 1 : sp < -1e-9 ? -1 : 0;
+        if (spSign !== coinSign) { startIdx = i; break; }   // flat/opposite before this fill → opened here
+      }
+      const currentFills = coinFills.slice(startIdx);
+      const openFills = currentFills.filter(f => f.isOpen);   // entry + each compound add
+
+      // Reconcile: opens − closes inside the detected window must equal the live position size
+      // (all opens here are the same direction; closes are partial/full reductions, so magnitude
+      // nets cleanly). If it doesn't (truncated fills history, an unexpected flip fill), fall back
+      // to a single entry at HL's reported price rather than render a misleading breakdown.
+      const netInWindow = currentFills.reduce(
+        (s, f) => s + (f.isOpen ? 1 : -1) * f.size, 0);
+      const reconciles = openFills.length > 0 && Math.abs(netInWindow - pos.size) < 1e-6;
+      if (!reconciles) {
+        console.log('[dashboard] position-fill reconcile failed:',
+          'net', netInWindow.toFixed(4), 'vs size', pos.size, '— showing single entry');
+      }
+
+      const sourceOpens = reconciles ? openFills : [];
+      const compoundTrades = sourceOpens.map((f, i) => ({
         time:     new Date(f.time).toISOString().slice(11, 16) + ' UTC',
         type:     i === 0 ? 'ENTRY' : 'COMPOUND ' + i,
-        size:     parseFloat(f.size),
-        price:    parseFloat(f.price),
-        notional: parseFloat((parseFloat(f.size) * parseFloat(f.price)).toFixed(2)),
-        fee:      parseFloat(f.fee) || 0,
+        size:     f.size,
+        price:    f.price,
+        notional: parseFloat((f.size * f.price).toFixed(2)),
+        fee:      f.fee || 0,
       }));
 
-      // Weighted-average entry across all opens; fall back to HL's entryPrice if no fills found.
-      const totalSize = compoundTrades.reduce((s, t) => s + t.size, 0);
-      const weightedEntry = totalSize > 0
-        ? compoundTrades.reduce((s, t) => s + t.size * t.price, 0) / totalSize
+      // Weighted-average entry across all opens; fall back to HL's entryPrice if reconcile failed.
+      const totalOpened = compoundTrades.reduce((s, t) => s + t.size, 0);
+      const weightedEntry = totalOpened > 0
+        ? compoundTrades.reduce((s, t) => s + t.size * t.price, 0) / totalOpened
         : pos.entryPrice;
 
       // Live SL/TP from resting reduce-only orders (the HL position itself has no SL field).
@@ -422,11 +444,30 @@ app.get('/api/dashboard', async (_req, res) => {
         console.log('[dashboard] live SL/TP fetch error:', e.message);
       }
 
-      const effSize   = pos.size || totalSize;
-      const slDist    = slPrice ? Math.abs(weightedEntry - slPrice) : 0;
-      const totalRisk = effSize * slDist;
-      const bal       = balance.balance || 100;
-      const riskPct   = bal > 0 ? (totalRisk / bal) * 100 : 0;
+      // Trailing state from the executor's persisted position file (authoritative R label).
+      // 0 = stop at breakeven, n = stop locked +nR. Absent for positions opened before the feature.
+      let trailLevel = null, firstSLDistance = null;
+      try {
+        const ps = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'data', 'position-state.json'), 'utf8'));
+        if (ps && ps.coin === pos.coin && ps.direction === pos.direction) {
+          if (typeof ps.trailLevel === 'number') trailLevel = ps.trailLevel;
+          if (ps.firstSLDistance > 0) firstSLDistance = ps.firstSLDistance;
+        }
+      } catch { /* no state file → derive from price levels below */ }
+
+      const effSize = pos.size || totalOpened;
+
+      // Stop economics relative to entry. A trailing stop past breakeven LOCKS profit — it is not
+      // downside risk. stopLockedPts > 0 ⇒ profit secured if stopped; < 0 ⇒ risk if stopped.
+      const stopLockedPts = slPrice != null
+        ? (pos.direction === 'long' ? slPrice - weightedEntry : weightedEntry - slPrice)
+        : 0;
+      const stopLocked = slPrice != null && stopLockedPts >= 0;
+      const slDist     = slPrice != null ? Math.abs(weightedEntry - slPrice) : 0;
+      const stopPnl    = effSize * stopLockedPts;        // signed $ realised if the stop fills
+      const bal        = balance.balance || 100;
+      const riskAmt    = stopLocked ? 0 : effSize * slDist;   // downside only — 0 once locked
+      const riskPct    = bal > 0 ? (riskAmt / bal) * 100 : 0;
 
       posOut = {
         direction:        pos.direction,
@@ -441,8 +482,16 @@ app.get('/api/dashboard', async (_req, res) => {
         tp:               tpPrice != null ? parseFloat(tpPrice.toFixed(2)) : null,
         compoundTrades,
         compoundCount:    compoundTrades.length,
-        totalRisk:        parseFloat(totalRisk.toFixed(2)),
+        totalRisk:        parseFloat(riskAmt.toFixed(2)),
         riskPct:          parseFloat(riskPct.toFixed(2)),
+        // Trailing-stop state
+        trailLevel,                                              // 0 = breakeven, n = +nR (or null)
+        stopLocked,                                              // true ⇒ stop secures profit
+        stopLockedPts:    parseFloat(stopLockedPts.toFixed(1)),  // signed pts at the stop vs entry
+        stopPnl:          parseFloat(stopPnl.toFixed(2)),        // signed $ if the stop fills
+        slDistPts:        parseFloat(slDist.toFixed(1)),         // |entry − SL| in points
+        rUnitPts:         firstSLDistance != null ? parseFloat(firstSLDistance.toFixed(1)) : null, // 1R in pts
+        isRunner:         slPrice != null && tpPrice == null,    // runner phase: no TP, rides trail
       };
     }
 

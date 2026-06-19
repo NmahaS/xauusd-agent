@@ -580,6 +580,7 @@ function mapFill(f) {
     fee: parseFloat(f.fee || 0),
     time: new Date(f.time).toISOString(),
     closedPnl: parseFloat(f.closedPnl || 0),
+    startPosition: parseFloat(f.startPosition),  // signed position size BEFORE this fill (0 = was flat)
   };
 }
 

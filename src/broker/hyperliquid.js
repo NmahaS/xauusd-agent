@@ -651,6 +651,73 @@ export async function getHLAllFills(coin = 'PAXG') {
   return result;
 }
 
+// Closed-position history for the dashboard. Segments fills into positions using HL's
+// `startPosition` (signed size BEFORE each fill) and the API's NATIVE order (newest-first →
+// reversed to chronological). Native order is authoritative: time-sorting scrambles same-timestamp
+// fills and corrupts the startPosition chain (154 chain breaks vs 1 truncation-edge break observed).
+// A position spans from a fill where the book was flat (startPosition ≈ 0) until it returns to flat.
+// The still-open position (last segment with net ≠ 0) is excluded — it's shown in the live panel.
+export async function getClosedPositions(coin = 'PAXG', limit = 6) {
+  const address = process.env.HL_WALLET_ADDRESS;
+  if (!address) throw new Error('HL_WALLET_ADDRESS not set');
+
+  const res = await fetch(`${HL_BASE}/info`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'userFills', user: address }),
+  });
+  if (!res.ok) throw new Error(`Hyperliquid fills HTTP ${res.status}`);
+  const raw = await res.json();
+  if (!Array.isArray(raw)) return [];
+
+  // Native API order is newest-first; reverse to chronological. Do NOT sort by time.
+  const chrono = raw.filter(f => f.coin === coin).reverse();
+
+  // Group into position segments: a fill with startPosition ≈ 0 begins a new position.
+  const segments = [];
+  let seg = null;
+  for (const f of chrono) {
+    if (Math.abs(parseFloat(f.startPosition)) < 1e-9) {
+      if (seg) segments.push(seg);
+      seg = [];
+    }
+    if (!seg) seg = [];   // history truncated mid-position — start collecting anyway
+    seg.push(f);
+  }
+  if (seg) segments.push(seg);
+
+  const summarize = (s) => {
+    const opens  = s.filter(f => f.dir.startsWith('Open'));
+    const closes = s.filter(f => !f.dir.startsWith('Open'));   // Close / flip reductions
+    const totalOpened = opens.reduce((a, f) => a + parseFloat(f.sz), 0);
+    const totalClosed = closes.reduce((a, f) => a + parseFloat(f.sz), 0);
+    const avgEntry = totalOpened > 0
+      ? opens.reduce((a, f) => a + parseFloat(f.sz) * parseFloat(f.px), 0) / totalOpened
+      : 0;
+    return {
+      direction:   opens[0] ? (opens[0].dir.includes('Long') ? 'long' : 'short') : 'short',
+      compounds:   Math.max(0, opens.length - 1),
+      avgEntry:    parseFloat(avgEntry.toFixed(2)),
+      size:        parseFloat(totalOpened.toFixed(4)),
+      realizedPnl: parseFloat(s.reduce((a, f) => a + parseFloat(f.closedPnl || 0), 0).toFixed(2)),
+      fees:        parseFloat(s.reduce((a, f) => a + parseFloat(f.fee || 0), 0).toFixed(2)),
+      openTime:    opens[0] ? new Date(opens[0].time).toISOString() : null,
+      closeTime:   closes.length ? new Date(closes[closes.length - 1].time).toISOString() : null,
+      net:         totalOpened - totalClosed,   // ≈0 ⇒ fully closed; >0 ⇒ still open
+    };
+  };
+
+  const closed = segments
+    .map(summarize)
+    .filter(p => p.compounds >= 0 && Math.abs(p.net) < 1e-6 && p.size > 0)  // fully closed only
+    .reverse()           // most recent first
+    .slice(0, limit)
+    .map(({ net, ...rest }) => ({ ...rest, won: rest.realizedPnl >= 0 }));
+
+  console.log(`[hl] closed positions for ${coin}: ${closed.length}`);
+  return closed;
+}
+
 export async function getSpotBalance() {
   const address = process.env.HL_WALLET_ADDRESS;
   if (!address) throw new Error('HL_WALLET_ADDRESS not set');

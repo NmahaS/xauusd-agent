@@ -911,17 +911,6 @@ body {
     </div>
   </div>
 
-  <!-- ══ 6 · RECENT POSITIONS (closed, with compounds) ══════ -->
-  <div class="card" id="closed-section">
-    <div class="card-hdr">
-      <span class="card-lbl">Recent Positions</span>
-      <span class="c-muted" style="font-size:10px" id="closed-count"></span>
-    </div>
-    <div class="card-body" id="closed-body">
-      <span class="no-data">Loading…</span>
-    </div>
-  </div>
-
 </div><!-- /wrap -->
 
 <script>
@@ -1242,6 +1231,12 @@ function renderPosition(d) {
     ? `<span class="badge" style="background:rgba(255,140,66,0.13);color:#FF8C42;border:1px solid rgba(255,140,66,0.3);font-size:9px;padding:2px 8px">${cc - 1} COMPOUND${cc > 2 ? 'S' : ''}</span>`
     : '';
 
+  /* Little note: has THIS trade compounded yet? (cc = entry + compound fills) */
+  const nCompounds  = Math.max(0, cc - 1);
+  const compoundNote = nCompounds > 0
+    ? `<span class="c-green">📈 Compounded ${nCompounds}× this trade — 1 entry + ${nCompounds} add${nCompounds > 1 ? 's' : ''}</span>`
+    : `<span class="c-muted">➖ Not compounded yet — single entry</span>`;
+
   /* Trailing-stop state (server-derived). stopLocked ⇒ the stop secures profit, not risk. */
   const trailLvl   = (p.trailLevel != null) ? p.trailLevel : null;
   const stopLocked = !!p.stopLocked;
@@ -1289,6 +1284,8 @@ function renderPosition(d) {
         <div class="c-muted" style="font-size:9px">unrealized P&L</div>
       </div>
     </div>
+
+    <div style="font-size:10px;margin:4px 0 8px">${compoundNote}</div>
 
     <div class="pos-sub-grid">
       <div class="pos-sub-item">
@@ -1593,42 +1590,6 @@ function renderTrades(d) {
   }).join('');
 }
 
-/* ── Recent closed positions (preserves compound history after a trade closes) ── */
-function renderClosedPositions(d) {
-  const list = d.closedPositions || [];
-  const body = $('closed-body');
-  $('closed-count').textContent = list.length ? list.length + ' shown' : '';
-
-  if (!list.length) {
-    body.innerHTML = '<span class="no-data">No closed positions yet</span>';
-    return;
-  }
-
-  body.innerHTML = `<div style="display:flex;flex-direction:column;gap:6px">` + list.map(p => {
-    const dir   = p.direction === 'long' ? 'LONG' : 'SHORT';
-    const dCls  = p.direction === 'long' ? 'bg-green' : 'bg-red';
-    const pnl   = parseFloat(p.realizedPnl) || 0;
-    const pCls  = pnl > 0.005 ? 'c-green' : pnl < -0.005 ? 'c-red' : 'c-muted';
-    const cmp   = (p.compounds || 0) > 0
-      ? `<span class="badge" style="background:rgba(255,140,66,0.13);color:#FF8C42;border:1px solid rgba(255,140,66,0.3);font-size:9px;padding:2px 8px">${p.compounds} COMPOUND${p.compounds > 1 ? 'S' : ''}</span>`
-      : '';
-    const when  = p.closeTime ? p.closeTime.slice(5, 16).replace('T', ' ') + ' UTC' : '—';
-    return `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;
-                  background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:11px">
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <span class="badge ${dCls}" style="font-size:9px;padding:2px 8px">${dir}</span>
-          ${cmp}
-          <span class="c-muted" style="font-size:10px">${when}</span>
-        </div>
-        <div style="display:flex;gap:12px;align-items:center">
-          <span class="c-muted" style="font-size:10px">avg $${parseFloat(p.avgEntry || 0).toFixed(2)} · ${parseFloat(p.size || 0).toFixed(3)} XAU</span>
-          <span class="${pCls}" style="min-width:62px;text-align:right;font-weight:600">${fUSD(pnl)}</span>
-        </div>
-      </div>`;
-  }).join('') + `</div>`;
-}
-
 /* ── Price chart ─────────────────────────────────────────────── */
 async function fetchCandles(interval) {
   const endTime   = Date.now();
@@ -1827,7 +1788,6 @@ async function fetchAndRender() {
     renderChart(d);
     renderRisk(d);
     renderTrades(d);
-    renderClosedPositions(d);
 
     dot.className = 'pulse-dot';
   } catch (e) {

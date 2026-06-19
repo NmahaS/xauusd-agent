@@ -51,19 +51,18 @@ app.get('/dashboard', (_req, res) => {
 
 app.get('/api/dashboard', async (_req, res) => {
   try {
-    const { getHLBalance, getHLPositions, getHLAllFills, getHLPrice, getClosedPositions } =
+    const { getHLBalance, getHLPositions, getHLAllFills, getHLPrice } =
       await import('./broker/hyperliquid.js');
     const { fetchHLCandles } = await import('./data/hyperliquid.js');
     const { readRiskState } = await import('./risk/manager.js');
 
-    const [priceData, balance, positions, fills, m15Candles, state, closedPositions] = await Promise.all([
+    const [priceData, balance, positions, fills, m15Candles, state] = await Promise.all([
       getHLPrice('PAXG'),
       getHLBalance(),
       getHLPositions(),
       getHLAllFills('PAXG'),
       fetchHLCandles('PAXG', '15m', 50).catch(() => []),
       readRiskState(),
-      getClosedPositions('PAXG', 6).catch(() => []),
     ]);
 
     /* ── ATR from live M15 candles ──────────────────────────── */
@@ -508,7 +507,6 @@ app.get('/api/dashboard', async (_req, res) => {
       plan:           planMeta,
       signal,
       trades:         recentTrades,
-      closedPositions,
       weeklyHistory,
       monthlyHistory,
       weeklyGoal:     5.00,

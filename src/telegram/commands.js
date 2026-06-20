@@ -157,6 +157,7 @@ async function handleHelp() {
     `/monthly — Previous month P&amp;L report\n` +
     `/yearly — Year-to-date P&amp;L + monthly breakdown\n` +
     `/memory — Trade history database stats (RAG)\n` +
+    `/rebuildrag — Rebuild RAG from Hyperliquid fills\n` +
     `/spotbalance — Spot + perp balances + auto-transfer status\n` +
     `/deposited — Confirm deposit received\n` +
     `/test — Full system diagnostic\n` +
@@ -1184,6 +1185,24 @@ async function handleMemory() {
   }
 }
 
+async function handleRebuildRag() {
+  try {
+    await tgSend('🧠 Rebuilding RAG from Hyperliquid fills…');
+    const { rebuildRAGFromFills } = await import('../memory/rebuildFromFills.js');
+    const { getDB } = await import('../memory/tradeDB.js');
+    const imported = await rebuildRAGFromFills();
+    const { c } = getDB().prepare('SELECT COUNT(*) as c FROM trades').get();
+    await tgSend(
+      `✅ <b>RAG rebuilt from fills</b>\n` +
+      `Imported: <b>${imported}</b> closed trades\n` +
+      `Total rows now: <b>${c}</b>\n\n` +
+      `<i>Outcome + P&amp;L only — SMC context (tier/confluence/session) isn't in fill data.</i>`
+    );
+  } catch (err) {
+    await tgSend(`❌ RAG rebuild failed: ${err.message}`);
+  }
+}
+
 async function handleDeposited() {
   try {
     const { getHLBalance } = await import('../broker/hyperliquid.js');
@@ -1228,6 +1247,7 @@ export async function routeCommand(command, args, _chatId) {
     if (lower === '/monthly' || lower.startsWith('/monthly ')) return await handleMonthly(args);
     if (lower === '/yearly' || lower.startsWith('/yearly ')) return await handleYearly(args);
     if (lower === '/memory') return await handleMemory();
+    if (lower === '/rebuildrag') return await handleRebuildRag();
     if (lower === '/spotbalance') return await handleSpotBalance();
     if (lower === '/deposited') return await handleDeposited();
     if (lower === '/ask' && args) return await handleAsk(args);
@@ -1279,6 +1299,7 @@ export async function processCommand(text, fromChatId) {
       return await handleYearly(trimmed.slice('/yearly'.length).trim());
     }
     if (lower === '/memory') return await handleMemory();
+    if (lower === '/rebuildrag') return await handleRebuildRag();
     if (lower === '/spotbalance') return await handleSpotBalance();
     if (lower === '/deposited') return await handleDeposited();
     if (lower.startsWith('/ask ')) return await handleAsk(trimmed.slice(5));

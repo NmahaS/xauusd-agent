@@ -128,14 +128,14 @@ cron.schedule('0 7 * * 1', async () => {
   }
 }, { timezone: 'UTC' });
 
-// Friday 21:00 UTC — weekly summary + goal check
+// Friday 21:00 UTC — weekly summary + goal check (INFO ONLY, no transfer)
 cron.schedule('0 21 * * 5', async () => {
   console.log('[cron] 📊 Friday — weekly goal check');
   try {
     const { sendWeeklyGoalUpdate } = await import('./plan/weeklyGoal.js');
-    const data = await sendWeeklyGoalUpdate();
+    const data = await sendWeeklyGoalUpdate(false); // no transfer Friday
     if (data.goalHit) {
-      console.log(`[cron] 🎯 Weekly goal HIT! +$${data.netPnl.toFixed(2)}`);
+      console.log(`[cron] 🎯 Weekly goal HIT! +$${data.netPnl.toFixed(2)} — transfer runs Monday 00:00`);
     } else {
       console.log(`[cron] goal not hit: $${data.netPnl.toFixed(2)} / $${data.goalUSD}`);
     }
@@ -144,14 +144,31 @@ cron.schedule('0 21 * * 5', async () => {
   }
 }, { timezone: 'UTC' });
 
-// Daily 20:00 UTC — progress update
+// Daily 20:00 UTC — progress update (INFO ONLY, no transfer)
 cron.schedule('0 20 * * *', async () => {
   console.log('[cron] 📈 Daily goal progress check');
   try {
     const { sendWeeklyGoalUpdate } = await import('./plan/weeklyGoal.js');
-    await sendWeeklyGoalUpdate();
+    await sendWeeklyGoalUpdate(false); // info only, no transfer
   } catch (err) {
     console.error('[cron] daily progress failed:', err.message);
+  }
+}, { timezone: 'UTC' });
+
+// Monday 00:00 UTC — auto-transfer based on LAST week's goal (ONLY transfer point)
+cron.schedule('0 0 * * 1', async () => {
+  console.log('[cron] 📅 Monday 00:00 — weekly auto-transfer check');
+  try {
+    const { runMondayAutoTransfer } = await import('./plan/weeklyGoal.js');
+    const result = await runMondayAutoTransfer();
+    if (result.transferred) {
+      console.log('[cron] 🚀 Monday transfer complete: $' + result.rewardUSD);
+    } else {
+      console.log('[cron] Monday: no transfer (' +
+        (result.goalHit ? 'spot unfunded' : 'goal missed') + ')');
+    }
+  } catch (err) {
+    console.error('[cron] Monday transfer failed:', err.message);
   }
 }, { timezone: 'UTC' });
 
@@ -259,5 +276,6 @@ console.log('[cron] Monday 21:00 UTC — weekly macro refresh');
 console.log('[cron] Friday 16:00 UTC — COT report refresh');
 console.log('[cron] Monday 22:05 UTC — weekly candle cache warmup');
 console.log('[cron] Monday 07:00 UTC — weekly goal kickoff');
-console.log('[cron] Friday 21:00 UTC — weekly goal final check');
-console.log('[cron] Daily 20:00 UTC — goal progress update');
+console.log('[cron] Monday 00:00 UTC — weekly auto-transfer (off last week)');
+console.log('[cron] Friday 21:00 UTC — weekly goal final check (info only)');
+console.log('[cron] Daily 20:00 UTC — goal progress update (info only)');

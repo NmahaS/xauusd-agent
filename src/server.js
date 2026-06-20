@@ -78,14 +78,13 @@ app.get('/api/dashboard', async (_req, res) => {
       todayFills.reduce((s, f) => s + (f.fee || 0), 0)
     ).toFixed(3));
 
-    const weekStart = new Date();
-    weekStart.setUTCDate(weekStart.getUTCDate() - weekStart.getUTCDay());
-    weekStart.setUTCHours(0, 0, 0, 0);
-    const weekFills = fills.filter(f => new Date(f.time) >= weekStart);
-    const weeklyPL = parseFloat((
-      weekFills.filter(f => f.isClose).reduce((s, f) => s + (f.closedPnl || 0), 0) -
-      weekFills.reduce((s, f) => s + (f.fee || 0), 0)
-    ).toFixed(3));
+    // Weekly REALIZED P&L — identical math to weeklyGoal.js (Monday 00:00 UTC →
+    // now). Reuses already-fetched `fills`; no unrealized runner P&L added.
+    const { computeWeeklyPnl } = await import('./utils/weeklyPnl.js');
+    const week = computeWeeklyPnl(fills);
+    const weeklyPL = week.net;
+    const weeklyGross = week.gross;
+    const weeklyFees = week.fees;
 
     /* ── Weekly history (last 5 days for chart) ─────────────── */
     const DAY = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -501,6 +500,8 @@ app.get('/api/dashboard', async (_req, res) => {
       balance:        balance.balance       || 0,
       dailyPL,
       weeklyPL,
+      weeklyGross,
+      weeklyFees,
       dailyTrades:    state?.dailyTrades    || 0,
       atr,
       position:       posOut,

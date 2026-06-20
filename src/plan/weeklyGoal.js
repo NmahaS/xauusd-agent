@@ -2,38 +2,28 @@
 // computes net P&L vs WEEKLY_GOAL_USD, and renders progress to Telegram.
 // Informational only — never gates execution.
 
-import { getHLAllFills, getHLBalance } from '../broker/hyperliquid.js';
+import { getHLBalance } from '../broker/hyperliquid.js';
+import { getWeeklyPnl, getPreviousWeekPnl } from '../utils/weeklyPnl.js';
 
 export async function checkWeeklyGoal() {
   const goalUSD = parseFloat(process.env.WEEKLY_GOAL_USD || '5.00');
   const rewardUSD = parseFloat(process.env.WEEKLY_GOAL_REWARD || '100');
   const coin = process.env.HL_COIN || 'PAXG';
 
-  // Fetch all fills (no date cutoff) then filter to current week
-  const fills = await getHLAllFills(coin);
-  const balance = await getHLBalance();
+  // Shared single-source-of-truth weekly realized P&L (Monday 00:00 UTC → now)
+  const [week, balance] = await Promise.all([
+    getWeeklyPnl(coin),
+    getHLBalance(),
+  ]);
 
-  // Week boundaries — Monday 00:00 UTC to now
-  const now = new Date();
-  const dayOfWeek = now.getUTCDay(); // 0=Sun, 1=Mon ... 6=Sat
-  const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-  const weekStart = new Date(now);
-  weekStart.setUTCDate(now.getUTCDate() - daysFromMonday);
-  weekStart.setUTCHours(0, 0, 0, 0);
+  const netPnl = week.net;
+  const grossPnl = week.gross;
+  const totalFees = week.fees;
 
-  const weekFills = fills.filter(f =>
-    new Date(f.time).getTime() >= weekStart.getTime()
-  );
-
-  const closeFills = weekFills.filter(f => f.isClose);
-  const grossPnl = closeFills.reduce((sum, f) => sum + f.closedPnl, 0);
-  const totalFees = weekFills.reduce((sum, f) => sum + f.fee, 0);
-  const netPnl = grossPnl - totalFees;
-
-  const wins = closeFills.filter(f => f.closedPnl > 0).length;
-  const losses = closeFills.filter(f => f.closedPnl <= 0).length;
-  const winRate = closeFills.length > 0
-    ? ((wins / closeFills.length) * 100).toFixed(1)
+  const wins = week.wins;
+  const losses = week.losses;
+  const winRate = week.trades > 0
+    ? ((wins / week.trades) * 100).toFixed(1)
     : '0.0';
 
   const goalPctRaw = (netPnl / goalUSD) * 100;
@@ -55,13 +45,106 @@ export async function checkWeeklyGoal() {
     wins,
     losses,
     winRate,
-    trades: closeFills.length,
-    weekStart: weekStart.toISOString().slice(0, 10),
+    trades: week.trades,
+    weekStart: week.weekStart,
     balance: balance.balance,
   };
 }
 
-export async function sendWeeklyGoalUpdate() {
+// Measures the PREVIOUS week (last Mon 00:00 → this Mon 00:00 UTC). Used by the
+// Monday 00:00 auto-transfer, since the current week resets to $0 at that moment.
+export async function checkPreviousWeekGoal() {
+  const goalUSD = parseFloat(process.env.WEEKLY_GOAL_USD || '5.00');
+  const rewardUSD = parseFloat(process.env.WEEKLY_GOAL_REWARD || '100');
+  const coin = process.env.HL_COIN || 'PAXG';
+
+  // Shared single-source-of-truth previous-week realized P&L
+  const prev = await getPreviousWeekPnl(coin);
+
+  console.log(`[goal] PREVIOUS week (${prev.weekRange}): net $${prev.net.toFixed(2)} / $${goalUSD} goal`);
+
+  return {
+    netPnl: prev.net,
+    grossPnl: prev.gross,
+    totalFees: prev.fees,
+    goalUSD,
+    rewardUSD,
+    goalHit: prev.net >= goalUSD,
+    wins: prev.wins,
+    losses: prev.losses,
+    trades: prev.trades,
+    weekRange: prev.weekRange,
+  };
+}
+
+// Monday 00:00 UTC auto-transfer — the ONLY place a spot→perp transfer happens.
+// Decides off LAST week's final result (this week is $0 at this moment).
+export async function runMondayAutoTransfer() {
+  const { sendTelegramMessage } = await import('../telegram/notify.js');
+  const data = await checkPreviousWeekGoal();
+
+  if (!data.goalHit) {
+    const msg = '📅 <b>Monday — New Trading Week</b>\n\n' +
+      '❌ Last week missed goal: $' + data.netPnl.toFixed(2) +
+      ' / $' + data.goalUSD + '\n' +
+      'No auto-transfer this week.\n\n' +
+      'Week stats: ' + data.trades + ' trades, ' +
+      data.wins + 'W ' + data.losses + 'L';
+    await sendTelegramMessage(msg);
+    console.log('[goal] Monday: last week missed goal, no transfer');
+    return { ...data, transferred: false };
+  }
+
+  // Goal hit last week — attempt transfer
+  const rewardUSD = data.rewardUSD;
+  let transferResult = null;
+  let transferError = null;
+
+  try {
+    const { transferSpotToPerp, getSpotBalance, getHLBalance } =
+      await import('../broker/hyperliquid.js');
+
+    const spotBalance = await getSpotBalance();
+
+    if (spotBalance >= rewardUSD) {
+      await transferSpotToPerp(rewardUSD);
+      const newBalance = await getHLBalance();
+      transferResult = newBalance.balance;
+      console.log('[goal] ✅ Monday auto-transfer: $' + rewardUSD + ' spot → perp');
+    } else {
+      transferError = 'Spot balance too low: $' + spotBalance.toFixed(2) +
+        ' < $' + rewardUSD + ' needed';
+      console.warn('[goal] ⚠️ Monday transfer skipped:', transferError);
+    }
+  } catch (err) {
+    transferError = err.message;
+    console.error('[goal] Monday transfer failed:', err.message);
+  }
+
+  let msg = '📅 <b>Monday — New Trading Week</b>\n\n';
+  msg += '🎯 <b>LAST WEEK GOAL HIT!</b>\n';
+  msg += '✅ Net P&amp;L: +$' + data.netPnl.toFixed(2) +
+    ' (goal: $' + data.goalUSD + ')\n';
+  msg += '📊 ' + data.trades + ' trades, ' + data.wins + 'W ' + data.losses + 'L\n\n';
+
+  if (transferResult != null) {
+    msg += '🚀 <b>AUTO-DEPOSIT COMPLETE!</b>\n';
+    msg += '$' + rewardUSD + ' transferred spot → perp\n';
+    msg += 'New balance: $' + transferResult.toFixed(2) + ' USDC\n';
+    msg += 'New 1% risk: $' + (transferResult * 0.01).toFixed(2) + '/trade\n\n';
+    msg += 'Trading resumes with larger size 🎉';
+  } else {
+    msg += '⚠️ <b>Auto-transfer skipped:</b>\n';
+    msg += transferError + '\n\n';
+    msg += 'Keep $' + rewardUSD + '+ in spot for auto-transfer.\n';
+    msg += 'Or transfer manually + send /deposited';
+  }
+
+  await sendTelegramMessage(msg);
+  return { ...data, transferResult, transferError, transferred: transferResult != null };
+}
+
+export async function sendWeeklyGoalUpdate(allowTransfer = false) {
   const { sendTelegramMessage } = await import('../telegram/notify.js');
   const data = await checkWeeklyGoal();
 
@@ -73,7 +156,7 @@ export async function sendWeeklyGoalUpdate() {
 
   let msg = '';
 
-  if (data.goalHit) {
+  if (data.goalHit && allowTransfer) {
     const rewardUSD = data.rewardUSD;
     let transferResult = null;
     let transferError = null;
@@ -126,6 +209,17 @@ export async function sendWeeklyGoalUpdate() {
 
     await sendTelegramMessage(msg);
     return { ...data, transferResult, transferError };
+  } else if (data.goalHit) {
+    // Goal already hit — info only. The transfer runs Monday 00:00 UTC off the
+    // week's FINAL result (see runMondayAutoTransfer), not here.
+    msg = `🎯 <b>WEEKLY GOAL HIT!</b>\n\n`;
+    msg += `✅ Net P&amp;L: +$${data.netPnl.toFixed(2)} (goal: $${data.goalUSD})\n`;
+    msg += `💰 Balance: $${data.balance.toFixed(2)}\n\n`;
+    msg += `🗓 Auto-deposit of $${data.rewardUSD} runs <b>Monday 00:00 UTC</b>\n`;
+    msg += `based on this week's final result.\n\n`;
+    msg += `<b>📊 Week stats:</b>\n`;
+    msg += `Trades: ${data.trades} | ${data.wins}W ${data.losses}L (${data.winRate}% WR)\n`;
+    msg += `Gross: +$${data.grossPnl.toFixed(2)} | Fees: -$${data.totalFees.toFixed(3)}\n`;
   } else {
     const pnlEmoji = data.netPnl >= 0 ? '🟢' : '🔴';
     msg = `📊 <b>Weekly Goal Progress</b>\n\n`;

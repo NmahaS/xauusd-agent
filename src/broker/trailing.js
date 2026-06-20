@@ -13,10 +13,10 @@
 // snap the stop back to firstSLDistance once it has been ratcheted up. Live mode only — the
 // pipeline guards the call (AUTO_TRADE && !DRY_EXECUTE && !DRY_RUN).
 import fs from 'fs';
-import path from 'path';
 import { getHLPositions, cancelExistingSL, placeSL } from './hyperliquid.js';
+import { dataPath } from '../utils/dataDir.js';
 
-const STATE_FILE = path.join(process.cwd(), 'data', 'position-state.json');
+const STATE_FILE = dataPath('position-state.json');
 
 export async function updateTrailingStop(coin, context) {
   let state;

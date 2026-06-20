@@ -1,4 +1,5 @@
 import { config, configIsFull } from './config.js';
+import { dataPath } from './utils/dataDir.js';
 import { fetchAllHLData } from './data/hyperliquid.js';
 import { fetchFredMacro as fetchMacroData } from './data/fred.js';
 import { fetchSentiment } from './data/sentiment.js';
@@ -433,8 +434,7 @@ async function runFullPipeline() {
   // Write plan to file so dashboard can read it across processes
   try {
     const fsMod   = await import('fs');
-    const pathMod = await import('path');
-    const cacheFile = pathMod.default.join(process.cwd(), 'data', 'last-plan.json');
+    const cacheFile = dataPath('last-plan.json');
     fsMod.default.writeFileSync(cacheFile, JSON.stringify({
       ...mergedPlan,
       _cachedAt:     new Date().toISOString(),

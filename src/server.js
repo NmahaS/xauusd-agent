@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import 'dotenv/config';
 import { processWebhookUpdate } from './telegram/webhook.js';
+import { dataPath } from './utils/dataDir.js';
 
 /* inline Wilder ATR — avoids importing technicalindicators in the server */
 function calcATR(candles, period = 14) {
@@ -270,7 +271,7 @@ app.get('/api/dashboard', async (_req, res) => {
 
     // Tier 1: file cache written by pipeline after each run — works across processes
     try {
-      const cacheFile = path.join(process.cwd(), 'data', 'last-plan.json');
+      const cacheFile = dataPath('last-plan.json');
       if (fs.existsSync(cacheFile)) {
         const p      = JSON.parse(fs.readFileSync(cacheFile, 'utf8'));
         const ageMin = p._cachedAt
@@ -447,7 +448,7 @@ app.get('/api/dashboard', async (_req, res) => {
       // 0 = stop at breakeven, n = stop locked +nR. Absent for positions opened before the feature.
       let trailLevel = null, firstSLDistance = null;
       try {
-        const ps = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'data', 'position-state.json'), 'utf8'));
+        const ps = JSON.parse(fs.readFileSync(dataPath('position-state.json'), 'utf8'));
         if (ps && ps.coin === pos.coin && ps.direction === pos.direction) {
           if (typeof ps.trailLevel === 'number') trailLevel = ps.trailLevel;
           if (ps.firstSLDistance > 0) firstSLDistance = ps.firstSLDistance;

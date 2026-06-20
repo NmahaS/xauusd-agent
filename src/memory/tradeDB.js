@@ -1,11 +1,12 @@
 import Database from 'better-sqlite3';
-import path from 'path';
-import fs from 'fs';
+import { resolveDBPath, seedFromRepo } from '../utils/dataDir.js';
 
-const DB_PATH = path.join(process.cwd(), 'data', 'trades.db');
-
-// Ensure data directory exists
-fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+// Railway-persistent when /data volume is mounted, ./data locally. resolveDataDir()
+// (called inside resolveDBPath) ensures the directory exists. seedFromRepo copies
+// the committed ./data/trades.db into a freshly mounted volume on first boot so the
+// 78-trade history isn't lost.
+seedFromRepo('trades.db');
+const DB_PATH = resolveDBPath();
 
 let db;
 
@@ -13,9 +14,18 @@ export function getDB() {
   if (!db) {
     db = new Database(DB_PATH);
     initSchema();
+    // Log row count on startup so deploy-time data loss is immediately visible.
+    try {
+      const { c } = db.prepare('SELECT COUNT(*) as c FROM trades').get();
+      console.log('[db] trades.db loaded:', c, 'rows at', DB_PATH);
+    } catch (e) {
+      console.log('[db] fresh database created at', DB_PATH);
+    }
   }
   return db;
 }
+
+export { resolveDBPath };
 
 function initSchema() {
   db.exec(`

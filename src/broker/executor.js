@@ -5,11 +5,13 @@ import path from 'node:path';
 import { getAccountState, checkRiskRules, RISK_RULES } from '../risk/manager.js';
 import { placeHLOrder, closeHLPosition } from './hyperliquid.js';
 import { config } from '../config.js';
+import { dataPath } from '../utils/dataDir.js';
 
 const PLANS_DIR = path.join(process.cwd(), 'plans');
 // Persists the FIRST trade's SL point-distance so every compound trails the same distance.
-// Lives in data/ (Railway-persistent). One file per open position; cleared when the position closes.
-const POSITION_STATE_FILE = path.join(process.cwd(), 'data', 'position-state.json');
+// Lives on the Railway-persistent /data volume (./data locally). One file per open
+// position; cleared when the position closes.
+const POSITION_STATE_FILE = dataPath('position-state.json');
 const MAX_POSITION_SIZE = 0.25;  // hard cap on PAXG position size (~2% risk at 8pt SL)
 
 let isReconciling = false;

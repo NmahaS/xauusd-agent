@@ -1530,6 +1530,7 @@ function renderRisk(d) {
     { lbl: `Min ATR: ${atrMin}pts  (now: ${fNum(atr)})`,             pass: atr >= atrMin  || atr === 0 },
     { lbl: 'Max spread: 3 pts',                                       pass: true },
     { lbl: 'Counter-H1 blocked (H1 = primary; H4 context only)',      pass: true },
+    { lbl: 'Overextension: block entries >2.0 ATR from H1 EMA20',      pass: true },
     { lbl: 'Tier 4 blocked',                                          pass: true },
     { lbl: 'Dead zone: strict rules (ATR≥7, C≥5, no position)',       pass: true },
     { lbl: 'Max daily trades: 10',                                    pass: true },

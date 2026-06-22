@@ -379,6 +379,52 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     }
   }
 
+  // ─── OVEREXTENSION CHECK 2: distance from H1 EMA20 (ATR units) ──────────────
+  // The range filter above only fires on big moves (>6× ATR range). This catches price being
+  // stretched far from its mean even when the recent range looks normal — the classic "chasing"
+  // entry (e.g. a long ~26pts / ~2.9 ATR above the H1 EMA20 that mean-reverted into its stop).
+  // Measured in ATR units so the threshold adapts to volatility. (candles use .close, not .c;
+  // H1 candles live at context.h1Candles; reuse the precomputed h1Indicators.ema20 when present.)
+  {
+    const h1cExt = context?.h1Candles || context?.h1?.candles || [];
+    const priceExt = context?.currentPrice;
+    if (h1cExt.length >= 20 && plan.direction && priceExt) {
+      const emaExt = (arr, p) => {
+        const m = 2 / (p + 1);
+        let v = arr[0];
+        for (let i = 1; i < arr.length; i++) v = (arr[i] - v) * m + v;
+        return v;
+      };
+      const h1ClosesExt = h1cExt.slice(-50).map(c => c.close);
+      const ema20Ext = context?.h1Indicators?.ema20 ?? emaExt(h1ClosesExt, 20);
+      const atrExt = context?.m15Indicators?.atr ?? context?.m15?.indicators?.atr ?? 9;
+
+      const distPts = Math.abs(priceExt - ema20Ext);
+      const distATR = atrExt > 0 ? distPts / atrExt : 0;
+      const priceAbove = priceExt > ema20Ext;
+
+      console.log(`[overext-ema] price ${priceExt.toFixed(2)} vs H1 EMA20 ${ema20Ext.toFixed(2)} = ${distPts.toFixed(1)}pts (${distATR.toFixed(1)} ATR)`);
+
+      // 2.0 (not 2.5): the −$3.18 chase sat ~2.3 ATR above the EMA, so 2.5 would have let it
+      // through. 2.0 catches that class of stretched entry while still allowing normal pullback
+      // entries (typically < 1.5 ATR from the mean).
+      const MAX_EMA_DIST_ATR = 2.0;  // > this many ATR from H1 EMA20 = overextended (chase risk)
+
+      if (distATR > MAX_EMA_DIST_ATR) {
+        if (plan.direction === 'long' && priceAbove) {
+          const reason = `Overextended from EMA: price ${distPts.toFixed(0)}pts (${distATR.toFixed(1)} ATR) above H1 EMA20 — wait for pullback, don't chase long`;
+          log(`REJECT overext-ema: ${reason}`);
+          return { allowed: false, reason };
+        }
+        if (plan.direction === 'short' && !priceAbove) {
+          const reason = `Overextended from EMA: price ${distPts.toFixed(0)}pts (${distATR.toFixed(1)} ATR) below H1 EMA20 — wait for bounce, don't chase short`;
+          log(`REJECT overext-ema: ${reason}`);
+          return { allowed: false, reason };
+        }
+      }
+    }
+  }
+
   // ─── PRICE-BASED TREND CONFIRMATION ────────────────────────────────────────
   // SMC structure (CHoCH/BOS) can lag actual price action. These filters use REAL
   // price vs H1 EMA20/50 and H1 swing highs/lows to hard-block counter-trend entries

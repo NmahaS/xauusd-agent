@@ -915,7 +915,10 @@ body {
 
 <script>
 /* ── Constants ──────────────────────────────────────────────── */
-const WEEKLY_GOAL = 5;
+/* Weekly goal is dynamic: WEEKLY_GOAL_PCT of balance, sent by /api/dashboard.
+   These hold the latest values (defaults until the first fetch resolves). */
+let WEEKLY_GOAL     = 5;     // dollar target for the week
+let WEEKLY_GOAL_PCT = 5;     // percent of balance
 const DAY_NAMES   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
 /* ── State ──────────────────────────────────────────────────── */
@@ -1158,7 +1161,7 @@ function renderStats(d) {
   const gBar     = $('wpl-bar');
   gBar.style.width      = goalPct + '%';
   gBar.style.background = barClr;
-  $('wpl-pct').textContent = goalPct.toFixed(0) + '% of $' + WEEKLY_GOAL + ' goal';
+  $('wpl-pct').textContent = goalPct.toFixed(0) + '% of ' + WEEKLY_GOAL_PCT + '% goal ($' + WEEKLY_GOAL.toFixed(2) + ')';
 
   const aEl = $('s-atr');
   aEl.textContent = atr ? fNum(atr) + ' pts' : '—';
@@ -1554,7 +1557,7 @@ function renderRisk(d) {
   const rbar    = $('risk-gbar');
   rbar.style.width      = goalPct + '%';
   rbar.style.background = wpl < 0 ? '#FF4D6A' : '#00D4A0';
-  $('risk-gl-left').textContent = fUSD(wpl) + ' / $' + WEEKLY_GOAL + ' goal';
+  $('risk-gl-left').textContent = fUSD(wpl) + ' / $' + WEEKLY_GOAL.toFixed(2) + ' (' + WEEKLY_GOAL_PCT + '%)';
   $('risk-gl-pct').textContent  = goalPct.toFixed(0) + '%';
 }
 
@@ -1778,6 +1781,8 @@ async function fetchAndRender() {
     if (d.error) throw new Error(d.error);
 
     lastData = d;
+    if (typeof d.weeklyGoalUSD === 'number') WEEKLY_GOAL = d.weeklyGoalUSD;
+    if (typeof d.weeklyGoalPct === 'number') WEEKLY_GOAL_PCT = d.weeklyGoalPct;
     const srcEl = $('api-source');
     if (srcEl) srcEl.textContent =
       'src: ' + (d.signal?.source || 'unknown') + ' · age: ' + (d.signal?.age || '?');

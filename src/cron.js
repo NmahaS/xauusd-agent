@@ -114,11 +114,12 @@ cron.schedule('0 7 * * 1', async () => {
   console.log('[cron] 📅 Monday — weekly goal reset');
   try {
     const { sendTelegramMessage } = await import('./telegram/notify.js');
-    const goal = parseFloat(process.env.WEEKLY_GOAL_USD || '5.00');
+    const { checkWeeklyGoal } = await import('./plan/weeklyGoal.js');
+    const data = await checkWeeklyGoal();   // dynamic goal = WEEKLY_GOAL_PCT of live balance
     const reward = parseFloat(process.env.WEEKLY_GOAL_REWARD || '100');
     await sendTelegramMessage(
       `🎯 <b>New Week Started!</b>\n\n` +
-      `Weekly goal: +$${goal.toFixed(2)} net profit\n` +
+      `Weekly goal: ${data.goalTargetPct}% of $${data.balance.toFixed(2)} = +$${data.goalUSD.toFixed(2)} net profit\n` +
       `Reward: Deposit $${reward} if goal hit\n\n` +
       `London kill zone opens at 07:00 UTC\n` +
       `Let's go! 💪`
@@ -137,7 +138,7 @@ cron.schedule('0 21 * * 5', async () => {
     if (data.goalHit) {
       console.log(`[cron] 🎯 Weekly goal HIT! +$${data.netPnl.toFixed(2)} — transfer runs Monday 00:00`);
     } else {
-      console.log(`[cron] goal not hit: $${data.netPnl.toFixed(2)} / $${data.goalUSD}`);
+      console.log(`[cron] goal not hit: $${data.netPnl.toFixed(2)} / $${data.goalUSD.toFixed(2)}`);
     }
   } catch (err) {
     console.error('[cron] weekly goal check failed:', err.message);

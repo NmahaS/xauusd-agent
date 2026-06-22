@@ -286,6 +286,26 @@ export async function executeIfApproved(plan, context) {
   console.log(`[executor] DRY_EXECUTE=${process.env.DRY_EXECUTE} → dry=${dryExecuteEnabled}`);
 
   const coin = process.env.HL_COIN || 'PAXG';
+
+  // BUG 1 fix: clear stale first-trade state if the position closed (SL/TP/manual) since the last
+  // run. Otherwise the next entry could read a dead position's compoundCount / firstSLDistance and
+  // size wrong. protectNakedPositions also clears when flat, but only in full live mode and BEFORE
+  // this — so this is the defense-in-depth guard for every executor cycle. Only hits the positions
+  // API when a state file actually exists, so flat-with-no-state cycles stay free.
+  try {
+    if (await readPositionState()) {
+      const { getHLPositions } = await import('./hyperliquid.js');
+      const livePositions = await getHLPositions();
+      const stillOpen = livePositions.some(p => p.coin === coin && Math.abs(p.size) > 0.001);
+      if (!stillOpen) {
+        await clearPositionState();
+        console.log('[executor] no live position but state exists — cleared stale position state');
+      }
+    }
+  } catch (err) {
+    console.warn('[executor] stale-state check failed (non-fatal):', err.message);
+  }
+
   const utcHour = new Date().getUTCHours();
   const isDeadZone = utcHour >= 0 && utcHour < 6;
 
@@ -493,7 +513,11 @@ export async function executeIfApproved(plan, context) {
     }
   }
 
-  // 2. Risk rules
+  // 2. Risk rules. Flag flips so the post-close cooldown (checkRiskRules) doesn't block a
+  //    structural reversal — a flip just closed its own position, which would otherwise read as a
+  //    fresh "loss/win" inside the cooldown window. A flip is a high-conviction reversal, not
+  //    revenge re-entry.
+  context.isFlip = positionDecision?.action === 'flip';
   const risk = await checkRiskRules(plan, account, context);
   if (!risk.allowed) {
     out.reason = `Risk: ${risk.reason}`;
@@ -554,6 +578,25 @@ export async function executeIfApproved(plan, context) {
       return out;
     }
     size = calculateNewEntrySize(account.balance, entryPrice, finalSL);
+
+    // BUG 2 fix: sanity-guard a NEW entry (always fresh 1% — never compound logic). A correctly
+    // sized 1% entry on this account is never this tiny: < 0.01 PAXG implies a >200pt SL, which the
+    // risk manager already caps at 50pts. A near-zero size here means the SL distance is broken
+    // (stale/garbage), so reject instead of firing a dust order (the 0.004-PAXG bug).
+    if (slDistance < 0.5) {
+      out.reason = `SL distance too small: ${slDistance.toFixed(2)}pts — rejecting new entry`;
+      console.error('[sizing] ' + out.reason);
+      return out;
+    }
+    if (size < 0.01) {
+      out.reason = `Sizing error: new-entry size ${size} PAXG too small ` +
+        `(balance $${account.balance.toFixed(2)}, 1% risk $${(account.balance * 0.01).toFixed(2)}, ` +
+        `SL dist ${slDistance.toFixed(1)}pts) — rejecting`;
+      console.error('[sizing] ' + out.reason);
+      return out;
+    }
+    console.log(`[sizing] NEW entry sanity ✅ ${size} PAXG ` +
+      `(1% = $${(account.balance * 0.01).toFixed(2)}, SL dist ${slDistance.toFixed(1)}pts)`);
   }
 
   // TP is always 2R, measured from entry off the canonical risk distance (= structural SL

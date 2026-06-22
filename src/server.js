@@ -495,6 +495,10 @@ app.get('/api/dashboard', async (_req, res) => {
       };
     }
 
+    // Dynamic weekly goal — WEEKLY_GOAL_PCT of the live balance (default 5%).
+    const weeklyGoalPct = parseFloat(process.env.WEEKLY_GOAL_PCT || '5.0');
+    const weeklyGoalUSD = parseFloat(((balance.balance || 0) * (weeklyGoalPct / 100)).toFixed(2));
+
     res.json({
       price:          priceData?.markPrice  || 0,
       funding:        priceData?.funding    || 0,
@@ -511,7 +515,9 @@ app.get('/api/dashboard', async (_req, res) => {
       trades:         recentTrades,
       weeklyHistory,
       monthlyHistory,
-      weeklyGoal:     5.00,
+      weeklyGoal:     weeklyGoalUSD,
+      weeklyGoalPct,
+      weeklyGoalUSD,
     });
   } catch (err) {
     console.error('[dashboard] API error:', err.message);

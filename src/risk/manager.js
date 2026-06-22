@@ -274,6 +274,32 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     const bal = accountState?.balance ?? 0;
     const todayStr = new Date().toISOString().slice(0, 10);
 
+    // STEP 0: post-close cooldown — prevents revenge re-entry right after an exit. Only applies
+    // when FLAT (no open position in this coin): a still-open position routes through compound/hold
+    // logic, and a partial-TP "win" fill must never block adding to a live winner. Flips bypass via
+    // context.isFlip (a structural reversal isn't revenge). Loss → 60min, win → 30min.
+    const flatNow = !(accountState.openPositions || []).some(
+      p => p.coin === coin && Math.abs(p.size) > 0.001
+    );
+    if (flatNow && !context.isFlip) {
+      const closes = recentFills
+        .filter(f => f.isClose && Math.abs(f.closedPnl || 0) > 0.001)
+        .sort((a, b) => new Date(b.time) - new Date(a.time));
+      if (closes.length > 0) {
+        const lastClose = closes[0];
+        const minsSinceClose = (Date.now() - new Date(lastClose.time).getTime()) / 60000;
+        const wasLoss = lastClose.closedPnl < 0;
+        const cooldownMins = wasLoss ? 60 : 30;
+        if (minsSinceClose < cooldownMins) {
+          const reason = `Cooldown: ${Math.ceil(cooldownMins - minsSinceClose)}min after ` +
+            `${wasLoss ? 'loss' : 'win'} (prevents revenge trading)`;
+          log(`REJECT cooldown: ${reason}`);
+          return { allowed: false, reason };
+        }
+        log(`cooldown clear: ${minsSinceClose.toFixed(0)}min since last ${wasLoss ? 'loss' : 'win'} ✅`);
+      }
+    }
+
     // STEP 3: daily loss circuit breaker
     const todayClosed = recentFills.filter(f =>
       f.isClose && new Date(f.time).toISOString().slice(0, 10) === todayStr

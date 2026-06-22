@@ -1,12 +1,12 @@
 // Weekly profit-goal tracker. Filters this week's HL fills (Mon 00:00 UTC → now),
-// computes net P&L vs WEEKLY_GOAL_USD, and renders progress to Telegram.
-// Informational only — never gates execution.
+// computes net P&L vs a dynamic goal (WEEKLY_GOAL_PCT of the live balance, default
+// 5%), and renders progress to Telegram. Informational only — never gates execution.
 
 import { getHLBalance } from '../broker/hyperliquid.js';
 import { getWeeklyPnl, getPreviousWeekPnl } from '../utils/weeklyPnl.js';
 
 export async function checkWeeklyGoal() {
-  const goalUSD = parseFloat(process.env.WEEKLY_GOAL_USD || '5.00');
+  const goalTargetPct = parseFloat(process.env.WEEKLY_GOAL_PCT || '5.0');
   const rewardUSD = parseFloat(process.env.WEEKLY_GOAL_REWARD || '100');
   const coin = process.env.HL_COIN || 'PAXG';
 
@@ -15,6 +15,12 @@ export async function checkWeeklyGoal() {
     getWeeklyPnl(coin),
     getHLBalance(),
   ]);
+
+  // Dynamic goal: WEEKLY_GOAL_PCT of the live balance (default 5%), so the target
+  // scales as the account compounds instead of a fixed dollar figure.
+  const goalUSD = balance.balance * (goalTargetPct / 100);
+  console.log('[goal] ' + goalTargetPct + '% of $' + balance.balance.toFixed(2) +
+    ' = $' + goalUSD.toFixed(2) + ' weekly target');
 
   const netPnl = week.net;
   const grossPnl = week.gross;
@@ -31,13 +37,14 @@ export async function checkWeeklyGoal() {
   const remaining = parseFloat(Math.max(goalUSD - netPnl, 0).toFixed(2));
   const goalHit = netPnl >= goalUSD;
 
-  console.log(`[goal] week PnL: $${netPnl.toFixed(2)} / $${goalUSD} goal (${goalPct}%)`);
+  console.log(`[goal] week PnL: $${netPnl.toFixed(2)} / $${goalUSD.toFixed(2)} goal (${goalPct}%)`);
 
   return {
     netPnl,
     grossPnl,
     totalFees,
     goalUSD,
+    goalTargetPct,
     rewardUSD,
     goalHit,
     goalPct,
@@ -54,20 +61,28 @@ export async function checkWeeklyGoal() {
 // Measures the PREVIOUS week (last Mon 00:00 → this Mon 00:00 UTC). Used by the
 // Monday 00:00 auto-transfer, since the current week resets to $0 at that moment.
 export async function checkPreviousWeekGoal() {
-  const goalUSD = parseFloat(process.env.WEEKLY_GOAL_USD || '5.00');
+  const goalTargetPct = parseFloat(process.env.WEEKLY_GOAL_PCT || '5.0');
   const rewardUSD = parseFloat(process.env.WEEKLY_GOAL_REWARD || '100');
   const coin = process.env.HL_COIN || 'PAXG';
 
   // Shared single-source-of-truth previous-week realized P&L
-  const prev = await getPreviousWeekPnl(coin);
+  const [prev, balance] = await Promise.all([
+    getPreviousWeekPnl(coin),
+    getHLBalance(),
+  ]);
 
-  console.log(`[goal] PREVIOUS week (${prev.weekRange}): net $${prev.net.toFixed(2)} / $${goalUSD} goal`);
+  // Dynamic goal: WEEKLY_GOAL_PCT of the live balance (default 5%).
+  const goalUSD = balance.balance * (goalTargetPct / 100);
+  console.log('[goal] ' + goalTargetPct + '% of $' + balance.balance.toFixed(2) +
+    ' = $' + goalUSD.toFixed(2) +
+    ` (PREVIOUS week ${prev.weekRange}: net $${prev.net.toFixed(2)})`);
 
   return {
     netPnl: prev.net,
     grossPnl: prev.gross,
     totalFees: prev.fees,
     goalUSD,
+    goalTargetPct,
     rewardUSD,
     goalHit: prev.net >= goalUSD,
     wins: prev.wins,
@@ -86,7 +101,7 @@ export async function runMondayAutoTransfer() {
   if (!data.goalHit) {
     const msg = '📅 <b>Monday — New Trading Week</b>\n\n' +
       '❌ Last week missed goal: $' + data.netPnl.toFixed(2) +
-      ' / $' + data.goalUSD + '\n' +
+      ' / ' + data.goalTargetPct + '% ($' + data.goalUSD.toFixed(2) + ')\n' +
       'No auto-transfer this week.\n\n' +
       'Week stats: ' + data.trades + ' trades, ' +
       data.wins + 'W ' + data.losses + 'L';
@@ -124,7 +139,7 @@ export async function runMondayAutoTransfer() {
   let msg = '📅 <b>Monday — New Trading Week</b>\n\n';
   msg += '🎯 <b>LAST WEEK GOAL HIT!</b>\n';
   msg += '✅ Net P&amp;L: +$' + data.netPnl.toFixed(2) +
-    ' (goal: $' + data.goalUSD + ')\n';
+    ' (goal: ' + data.goalTargetPct + '% — $' + data.goalUSD.toFixed(2) + ')\n';
   msg += '📊 ' + data.trades + ' trades, ' + data.wins + 'W ' + data.losses + 'L\n\n';
 
   if (transferResult != null) {
@@ -182,7 +197,7 @@ export async function sendWeeklyGoalUpdate(allowTransfer = false) {
     }
 
     msg = `🎯 <b>WEEKLY GOAL HIT!</b>\n\n`;
-    msg += `✅ Net P&amp;L: +$${data.netPnl.toFixed(2)} (goal: $${data.goalUSD})\n`;
+    msg += `✅ Net P&amp;L: +$${data.netPnl.toFixed(2)} (goal: ${data.goalTargetPct}% — $${data.goalUSD.toFixed(2)})\n`;
     msg += `💰 Balance before: $${data.balance.toFixed(2)}\n\n`;
 
     if (transferResult != null) {
@@ -213,7 +228,7 @@ export async function sendWeeklyGoalUpdate(allowTransfer = false) {
     // Goal already hit — info only. The transfer runs Monday 00:00 UTC off the
     // week's FINAL result (see runMondayAutoTransfer), not here.
     msg = `🎯 <b>WEEKLY GOAL HIT!</b>\n\n`;
-    msg += `✅ Net P&amp;L: +$${data.netPnl.toFixed(2)} (goal: $${data.goalUSD})\n`;
+    msg += `✅ Net P&amp;L: +$${data.netPnl.toFixed(2)} (goal: ${data.goalTargetPct}% — $${data.goalUSD.toFixed(2)})\n`;
     msg += `💰 Balance: $${data.balance.toFixed(2)}\n\n`;
     msg += `🗓 Auto-deposit of $${data.rewardUSD} runs <b>Monday 00:00 UTC</b>\n`;
     msg += `based on this week's final result.\n\n`;
@@ -225,7 +240,7 @@ export async function sendWeeklyGoalUpdate(allowTransfer = false) {
     msg = `📊 <b>Weekly Goal Progress</b>\n\n`;
     msg += `${progressBar()} ${data.goalPct}%\n\n`;
     msg += `${pnlEmoji} Net P&amp;L: ${data.netPnl >= 0 ? '+' : ''}$${data.netPnl.toFixed(2)}\n`;
-    msg += `🎯 Goal: $${data.goalUSD.toFixed(2)}\n`;
+    msg += `🎯 Goal: ${data.goalTargetPct}% ($${data.goalUSD.toFixed(2)})\n`;
     msg += `📍 Remaining: $${data.remaining.toFixed(2)}\n\n`;
     msg += `Trades: ${data.trades} | ${data.wins}W ${data.losses}L\n`;
     msg += `Win rate: ${data.winRate}%\n`;

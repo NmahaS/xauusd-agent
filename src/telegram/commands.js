@@ -523,9 +523,15 @@ async function handleRisk() {
   msg += `Weekly P&amp;L: ${(state.weeklyPL ?? 0) >= 0 ? '+' : ''}$${(state.weeklyPL || 0).toFixed(2)}\n\n`;
 
   msg += '<b>Weekly goal:</b>\n';
-  const goalUSD = parseFloat(process.env.WEEKLY_GOAL_USD || '5');
+  const goalTargetPct = parseFloat(process.env.WEEKLY_GOAL_PCT || '5.0');
   const rewardUSD = parseFloat(process.env.WEEKLY_GOAL_REWARD || '100');
-  msg += `Target: +$${goalUSD.toFixed(2)} net\n`;
+  try {
+    const { getHLBalance } = await import('../broker/hyperliquid.js');
+    const bal = await getHLBalance();
+    msg += `Target: ${goalTargetPct}% of $${bal.balance.toFixed(2)} = +$${(bal.balance * goalTargetPct / 100).toFixed(2)} net\n`;
+  } catch {
+    msg += `Target: ${goalTargetPct}% of balance net\n`;
+  }
   msg += `Reward: Deposit $${rewardUSD} if hit\n`;
 
   await tgSend(msg);

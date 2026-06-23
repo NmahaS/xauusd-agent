@@ -151,11 +151,36 @@ async function handleExistingPosition(existingPosition, plan, balance) {
       }
 
       const MAX_COMPOUNDS = 3;
-      const newCompoundCount = (posState.compoundCount || 0) + 1;
+
+      // Count compounds from ACTUAL fills, not the persisted counter. The counter used to be bumped
+      // at decision time — before the add was confirmed filled — so blocked/unfilled compound
+      // attempts permanently inflated it and falsely tripped this cap (state said 3 while only 1 add
+      // had actually filled). Real adds = open fills in the current position window − 1 (the
+      // original entry). Self-healing: a stale/inflated counter can never wrongly block again. Falls
+      // back to the persisted counter only when fills can't be reconciled to the live position
+      // (truncated history), where the conservative cap is the safer default.
+      let priorCompounds = posState.compoundCount || 0;
+      try {
+        const { getHLAllFills, getHLPositions, computePositionOpenFills } = await import('./hyperliquid.js');
+        const [fills, positions] = await Promise.all([getHLAllFills(coinName), getHLPositions()]);
+        const livePos = positions.find(p => p.coin === coinName && p.direction === existingPosition.direction);
+        const { openFills, reconciles } = computePositionOpenFills(fills, livePos);
+        if (reconciles) {
+          const fromFills = Math.max(0, openFills.length - 1);
+          if (fromFills !== priorCompounds) {
+            console.log(`[compound] reconciled count: state had ${priorCompounds}, fills show ${fromFills} add(s) — using fills`);
+          }
+          priorCompounds = fromFills;
+        }
+      } catch (err) {
+        console.warn('[compound] fill reconcile failed — using persisted counter:', err.message);
+      }
+
+      const newCompoundCount = priorCompounds + 1;
       if (newCompoundCount > MAX_COMPOUNDS) {
         return {
           action: 'hold',
-          reason: `Max ${MAX_COMPOUNDS} compounds reached (current: ${posState.compoundCount})`,
+          reason: `Max ${MAX_COMPOUNDS} compounds reached (current: ${priorCompounds})`,
           unrealizedPnl,
         };
       }
@@ -164,13 +189,14 @@ async function handleExistingPosition(existingPosition, plan, balance) {
       const compoundSize = calculateCompoundSize(balance, posState.firstSLDistance);
       console.log(`[compound] count: ${newCompoundCount}/${MAX_COMPOUNDS} | total risk after: ${newTotalRisk}%`);
 
-      posState.compoundCount = newCompoundCount;
-      posState.totalRiskPct = newTotalRisk;
-      await writePositionState(posState);
-
+      // Do NOT persist the incremented count here — it is written only after the add is confirmed
+      // filled (see executeIfApproved). Persisting at decision time is exactly what let blocked /
+      // unfilled attempts inflate the cap; the prospective values ride along on the decision.
       return {
         action: 'compound',
         size: compoundSize,
+        compoundCount: newCompoundCount,
+        totalRiskPct: newTotalRisk,
         reason: `Compound ${newCompoundCount}/${MAX_COMPOUNDS} — +0.5% (total ${newTotalRisk}%)`,
       };
     } else {
@@ -806,6 +832,21 @@ export async function executeIfApproved(plan, context) {
       openedAt: new Date().toISOString(),
     });
     console.log('[executor] position state saved: SL distance ' + firstSLDistance.toFixed(2) + 'pts');
+  } else {
+    // Compound add CONFIRMED filled — only now advance the persisted counter. Doing this post-fill
+    // (not at decision time) is what keeps blocked/unfilled attempts from inflating the cap. The
+    // gate re-derives from fills anyway, so this just keeps the backup counter honest.
+    try {
+      const ps = await readPositionState();
+      if (ps && ps.coin === coin && ps.direction === plan.direction) {
+        ps.compoundCount = positionDecision.compoundCount ?? ((ps.compoundCount || 0) + 1);
+        ps.totalRiskPct = positionDecision.totalRiskPct ?? (1.0 + ps.compoundCount * 0.5);
+        await writePositionState(ps);
+        console.log(`[executor] compound confirmed — state count → ${ps.compoundCount}`);
+      }
+    } catch (err) {
+      console.warn('[executor] compound state update failed (non-fatal):', err.message);
+    }
   }
 
   try {

@@ -627,6 +627,39 @@ export async function getHLFillsHistory(coin = 'PAXG', days = 7) {
     .map(mapFill);
 }
 
+// Single source of truth for "which fills make up the currently-open position" — the original
+// entry plus each compound add. Used by the compound gate (executor) and the dashboard breakdown
+// (server) so both count adds the same way. PURE: pass already-fetched fills (getHLAllFills) and
+// the live position (from getHLPositions); no network here. Walks back through fills until
+// `startPosition` flips sign (flat or opposite-signed before that fill = where this position
+// opened), then returns the "Open" legs in that window in chronological order. `reconciles` is
+// true only when opens − closes inside the window equals the live position size; when false the
+// fills history is truncated/ambiguous and callers must NOT trust the breakdown.
+export function computePositionOpenFills(fills, position) {
+  if (!position || !(Math.abs(position.size) > 1e-9)) {
+    return { openFills: [], reconciles: false };
+  }
+  const coinSign = position.direction === 'short' ? -1 : 1;
+  const coinFills = (fills || [])
+    .filter(f => f.coin === position.coin)
+    .sort((a, b) => new Date(a.time) - new Date(b.time));
+
+  let startIdx = 0;
+  for (let i = coinFills.length - 1; i >= 0; i--) {
+    const sp = coinFills[i].startPosition;
+    const spSign = sp > 1e-9 ? 1 : sp < -1e-9 ? -1 : 0;
+    if (spSign !== coinSign) { startIdx = i; break; }   // flat/opposite before this fill → opened here
+  }
+  const currentFills = coinFills.slice(startIdx);
+  const openFills = currentFills.filter(f => f.isOpen);   // entry + each compound add
+
+  // opens − closes inside the window must net to the live size; otherwise history is truncated.
+  const netInWindow = currentFills.reduce((s, f) => s + (f.isOpen ? 1 : -1) * f.size, 0);
+  const reconciles = openFills.length > 0 && Math.abs(netInWindow - position.size) < 1e-6;
+
+  return { openFills, reconciles };
+}
+
 // Returns ALL fills for an address with no date filter.
 // Callers filter by date range on their side.
 export async function getHLAllFills(coin = 'PAXG') {

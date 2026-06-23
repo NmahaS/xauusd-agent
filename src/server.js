@@ -52,7 +52,7 @@ app.get('/dashboard', (_req, res) => {
 
 app.get('/api/dashboard', async (_req, res) => {
   try {
-    const { getHLBalance, getHLPositions, getHLAllFills, getHLPrice } =
+    const { getHLBalance, getHLPositions, getHLAllFills, getHLPrice, computePositionOpenFills } =
       await import('./broker/hyperliquid.js');
     const { fetchHLCandles } = await import('./data/hyperliquid.js');
     const { readRiskState } = await import('./risk/manager.js');
@@ -380,37 +380,14 @@ app.get('/api/dashboard', async (_req, res) => {
     const pos = positions[0];
     let posOut = null;
     if (pos) {
-      // Identify the CURRENT position's fills via Hyperliquid's `startPosition` (signed position
-      // size BEFORE each fill). The position opened at the most recent fill where the book was NOT
-      // already in this direction — i.e. startPosition was flat (0) or opposite-signed. Everything
-      // from that fill forward belongs to the current position. This is exact: it ignores partial
-      // closes (the 50% TP at 2R, trailing-stop fills) and never bleeds into older closed
-      // positions — unlike a last-Close cutoff (which a partial TP resets, hiding compounds) or a
-      // net-size walk (which drifts on float error and swept in weeks of fills).
-      const coinSign = pos.direction === 'short' ? -1 : 1;
-      const coinFills = fills
-        .filter(f => f.coin === pos.coin)
-        .sort((a, b) => new Date(a.time) - new Date(b.time));
-
-      let startIdx = 0;
-      for (let i = coinFills.length - 1; i >= 0; i--) {
-        const sp = coinFills[i].startPosition;
-        const spSign = sp > 1e-9 ? 1 : sp < -1e-9 ? -1 : 0;
-        if (spSign !== coinSign) { startIdx = i; break; }   // flat/opposite before this fill → opened here
-      }
-      const currentFills = coinFills.slice(startIdx);
-      const openFills = currentFills.filter(f => f.isOpen);   // entry + each compound add
-
-      // Reconcile: opens − closes inside the detected window must equal the live position size
-      // (all opens here are the same direction; closes are partial/full reductions, so magnitude
-      // nets cleanly). If it doesn't (truncated fills history, an unexpected flip fill), fall back
-      // to a single entry at HL's reported price rather than render a misleading breakdown.
-      const netInWindow = currentFills.reduce(
-        (s, f) => s + (f.isOpen ? 1 : -1) * f.size, 0);
-      const reconciles = openFills.length > 0 && Math.abs(netInWindow - pos.size) < 1e-6;
+      // Identify the CURRENT position's fills (entry + each compound add) via the shared
+      // window-detection helper — the same source of truth the executor's compound gate uses, so
+      // the dashboard count and the gate count can never disagree. It walks back through fills
+      // until `startPosition` flips sign and reconciles opens − closes against the live size.
+      const { openFills, reconciles } = computePositionOpenFills(fills, pos);
       if (!reconciles) {
-        console.log('[dashboard] position-fill reconcile failed:',
-          'net', netInWindow.toFixed(4), 'vs size', pos.size, '— showing single entry');
+        console.log('[dashboard] position-fill reconcile failed for', pos.coin,
+          'size', pos.size, '— showing single entry');
       }
 
       const sourceOpens = reconciles ? openFills : [];

@@ -776,8 +776,8 @@ body {
         </div>
         <div class="gbar-foot">
           <span>$0</span>
-          <span id="wpl-pct">0% of $5 goal</span>
-          <span>$5</span>
+          <span id="wpl-pct">0% of goal</span>
+          <span id="wpl-goal-max">—</span>
         </div>
       </div>
     </div>
@@ -877,7 +877,7 @@ body {
           <div class="gbar-fill" id="risk-gbar" style="width:0%"></div>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:3px">
-          <span id="risk-gl-left">$0.00 / $5 goal</span>
+          <span id="risk-gl-left">$0.00 / goal</span>
           <span id="risk-gl-pct">0%</span>
         </div>
       </div>
@@ -1162,6 +1162,7 @@ function renderStats(d) {
   gBar.style.width      = goalPct + '%';
   gBar.style.background = barClr;
   $('wpl-pct').textContent = goalPct.toFixed(0) + '% of ' + WEEKLY_GOAL_PCT + '% goal ($' + WEEKLY_GOAL.toFixed(2) + ')';
+  $('wpl-goal-max').textContent = '$' + WEEKLY_GOAL.toFixed(2);
 
   const aEl = $('s-atr');
   aEl.textContent = atr ? fNum(atr) + ' pts' : '—';

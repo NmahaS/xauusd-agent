@@ -380,24 +380,24 @@ app.get('/api/dashboard', async (_req, res) => {
     const pos = positions[0];
     let posOut = null;
     if (pos) {
-      // Identify the CURRENT position's fills (entry + each compound add) via the shared
-      // window-detection helper — the same source of truth the executor's compound gate uses, so
-      // the dashboard count and the gate count can never disagree. It walks back through fills
-      // until `startPosition` flips sign and reconciles opens − closes against the live size.
-      const { openFills, reconciles } = computePositionOpenFills(fills, pos);
+      // Identify the CURRENT position's entry + each compound add via the shared window-detection
+      // helper — the same source of truth the executor's compound gate uses, so the dashboard count
+      // and the gate count can never disagree. It walks back through fills until `startPosition`
+      // flips sign, collapses partial fills into distinct ORDERS, and reconciles against live size.
+      const { openOrders, reconciles } = computePositionOpenFills(fills, pos);
       if (!reconciles) {
         console.log('[dashboard] position-fill reconcile failed for', pos.coin,
           'size', pos.size, '— showing single entry');
       }
 
-      const sourceOpens = reconciles ? openFills : [];
-      const compoundTrades = sourceOpens.map((f, i) => ({
-        time:     new Date(f.time).toISOString().slice(11, 16) + ' UTC',
+      const sourceOpens = reconciles ? openOrders : [];
+      const compoundTrades = sourceOpens.map((o, i) => ({
+        time:     new Date(o.time).toISOString().slice(11, 16) + ' UTC',
         type:     i === 0 ? 'ENTRY' : 'COMPOUND ' + i,
-        size:     f.size,
-        price:    f.price,
-        notional: parseFloat((f.size * f.price).toFixed(2)),
-        fee:      f.fee || 0,
+        size:     o.size,
+        price:    o.price,
+        notional: parseFloat((o.size * o.price).toFixed(2)),
+        fee:      o.fee || 0,
       }));
 
       // Weighted-average entry across all opens; fall back to HL's entryPrice if reconcile failed.

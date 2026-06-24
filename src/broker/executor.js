@@ -152,21 +152,22 @@ async function handleExistingPosition(existingPosition, plan, balance) {
 
       const MAX_COMPOUNDS = 3;
 
-      // Count compounds from ACTUAL fills, not the persisted counter. The counter used to be bumped
-      // at decision time — before the add was confirmed filled — so blocked/unfilled compound
-      // attempts permanently inflated it and falsely tripped this cap (state said 3 while only 1 add
-      // had actually filled). Real adds = open fills in the current position window − 1 (the
-      // original entry). Self-healing: a stale/inflated counter can never wrongly block again. Falls
-      // back to the persisted counter only when fills can't be reconciled to the live position
-      // (truncated history), where the conservative cap is the safer default.
+      // Count compounds from ACTUAL filled ORDERS, not the persisted counter. The counter used to be
+      // bumped at decision time — before the add was confirmed filled — so blocked/unfilled attempts
+      // inflated it. And the count must be by ORDER, not by fill: Hyperliquid splits one order into
+      // multiple partial fills, so a single compound that filled in 3 partials must read as 1 add,
+      // not 3. Real adds = distinct open orders in the current position window − 1 (the entry).
+      // Self-healing: a stale/inflated counter can never wrongly block again. Falls back to the
+      // persisted counter only when fills can't be reconciled to the live position (truncated
+      // history), where the conservative cap is the safer default.
       let priorCompounds = posState.compoundCount || 0;
       try {
         const { getHLAllFills, getHLPositions, computePositionOpenFills } = await import('./hyperliquid.js');
         const [fills, positions] = await Promise.all([getHLAllFills(coinName), getHLPositions()]);
         const livePos = positions.find(p => p.coin === coinName && p.direction === existingPosition.direction);
-        const { openFills, reconciles } = computePositionOpenFills(fills, livePos);
+        const { openOrders, reconciles } = computePositionOpenFills(fills, livePos);
         if (reconciles) {
-          const fromFills = Math.max(0, openFills.length - 1);
+          const fromFills = Math.max(0, openOrders.length - 1);
           if (fromFills !== priorCompounds) {
             console.log(`[compound] reconciled count: state had ${priorCompounds}, fills show ${fromFills} add(s) — using fills`);
           }

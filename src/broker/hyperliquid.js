@@ -627,17 +627,22 @@ export async function getHLFillsHistory(coin = 'PAXG', days = 7) {
     .map(mapFill);
 }
 
-// Single source of truth for "which fills make up the currently-open position" — the original
+// Single source of truth for "which orders make up the currently-open position" — the original
 // entry plus each compound add. Used by the compound gate (executor) and the dashboard breakdown
 // (server) so both count adds the same way. PURE: pass already-fetched fills (getHLAllFills) and
 // the live position (from getHLPositions); no network here. Walks back through fills until
 // `startPosition` flips sign (flat or opposite-signed before that fill = where this position
-// opened), then returns the "Open" legs in that window in chronological order. `reconciles` is
-// true only when opens − closes inside the window equals the live position size; when false the
-// fills history is truncated/ambiguous and callers must NOT trust the breakdown.
+// opened), then collapses the "Open" fills in that window into distinct ORDERS (by oid).
+//
+// Counting raw fills is WRONG: Hyperliquid splits one order across price levels into multiple
+// fills sharing an oid, and each entry/compound is ONE order. A compound that filled in 3 partials
+// must read as 1 add, not 3. `openOrders` is the deduped, chronological list of opens; its length
+// minus 1 is the real compound count. `reconciles` is true only when opens − closes inside the
+// window equals the live position size; when false the fills history is truncated/ambiguous and
+// callers must NOT trust the breakdown.
 export function computePositionOpenFills(fills, position) {
   if (!position || !(Math.abs(position.size) > 1e-9)) {
-    return { openFills: [], reconciles: false };
+    return { openFills: [], openOrders: [], reconciles: false };
   }
   const coinSign = position.direction === 'short' ? -1 : 1;
   const coinFills = (fills || [])
@@ -651,13 +656,36 @@ export function computePositionOpenFills(fills, position) {
     if (spSign !== coinSign) { startIdx = i; break; }   // flat/opposite before this fill → opened here
   }
   const currentFills = coinFills.slice(startIdx);
-  const openFills = currentFills.filter(f => f.isOpen);   // entry + each compound add
+  const openFills = currentFills.filter(f => f.isOpen);   // entry + compound fills (may be partials)
+
+  // Collapse partial fills of the SAME order (shared oid) into one logical open: entry + each add.
+  // Map preserves insertion order, and openFills is already chronological, so openOrders stays in
+  // order. price = size-weighted average across the order's partials.
+  const byOid = new Map();
+  for (const f of openFills) {
+    const key = f.orderId ?? `${f.time}|${f.price}`;     // oid; fall back to time+price if missing
+    const g = byOid.get(key);
+    if (g) {
+      g.size += f.size;
+      g.notional += f.size * f.price;
+      g.fee += f.fee || 0;
+    } else {
+      byOid.set(key, { orderId: f.orderId, time: f.time, size: f.size, notional: f.size * f.price, fee: f.fee || 0 });
+    }
+  }
+  const openOrders = [...byOid.values()].map(o => ({
+    orderId: o.orderId,
+    time: o.time,
+    size: o.size,
+    price: o.size > 0 ? o.notional / o.size : 0,
+    fee: o.fee,
+  }));
 
   // opens − closes inside the window must net to the live size; otherwise history is truncated.
   const netInWindow = currentFills.reduce((s, f) => s + (f.isOpen ? 1 : -1) * f.size, 0);
-  const reconciles = openFills.length > 0 && Math.abs(netInWindow - position.size) < 1e-6;
+  const reconciles = openOrders.length > 0 && Math.abs(netInWindow - position.size) < 1e-6;
 
-  return { openFills, reconciles };
+  return { openFills, openOrders, reconciles };
 }
 
 // Returns ALL fills for an address with no date filter.

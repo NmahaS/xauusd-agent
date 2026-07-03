@@ -190,31 +190,60 @@ export async function generateYearlyReport(year) {
   const openFills = yearFills.filter(f => f.isOpen);
   const closeFills = yearFills.filter(f => f.isClose);
 
+  // Hyperliquid splits one order across price levels into several fills sharing an oid, and each
+  // compound is another order — so counting raw fills overstates trade counts and lets one order's
+  // partials register as multiple wins/losses. Collapse fills into distinct ORDERS by oid (summing
+  // each order's realized P&L) and count trades/wins/losses off those. P&L totals are unchanged:
+  // summing per-order equals summing per-fill.
+  const collapseByOrder = (list) => {
+    const byOid = new Map();
+    for (const f of list) {
+      const key = f.orderId ?? `${f.time}|${f.price}`;
+      const g = byOid.get(key);
+      if (g) g.closedPnl += f.closedPnl;
+      else byOid.set(key, { closedPnl: f.closedPnl });
+    }
+    return [...byOid.values()];
+  };
+  const openOrders = collapseByOrder(openFills);
+  const closeOrders = collapseByOrder(closeFills);
+
   const totalGross = closeFills.reduce((s, f) => s + f.closedPnl, 0);
   const totalFees = yearFills.reduce((s, f) => s + f.fee, 0);
   const netPnl = totalGross - totalFees;
-  const wins = closeFills.filter(f => f.closedPnl > 0).length;
-  const losses = closeFills.filter(f => f.closedPnl <= 0).length;
-  const winRate = closeFills.length > 0
-    ? ((wins / closeFills.length) * 100).toFixed(1)
+  const wins = closeOrders.filter(o => o.closedPnl > 0).length;
+  const losses = closeOrders.filter(o => o.closedPnl < 0).length;  // < 0 only — break-even is not a loss
+  const winRate = closeOrders.length > 0
+    ? ((wins / closeOrders.length) * 100).toFixed(1)
     : '0.0';
 
-  // Monthly breakdown — include fees from all fills, not just close fills
+  // Monthly breakdown. Fees come from ALL fills; P&L, close counts and win/loss come from distinct
+  // closing ORDERS (partials of one order collapsed by oid — same reasoning as the yearly totals).
+  const monthKey = (t) => {
+    const d = new Date(t);
+    return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+  };
   const byMonth = {};
   for (const fill of yearFills) {
-    const d = new Date(fill.time);
-    const key = d.getUTCFullYear() + '-' +
-      String(d.getUTCMonth() + 1).padStart(2, '0');
-    if (!byMonth[key]) {
-      byMonth[key] = { pnl: 0, fees: 0, closes: 0, wins: 0, losses: 0 };
-    }
+    const key = monthKey(fill.time);
+    if (!byMonth[key]) byMonth[key] = { pnl: 0, fees: 0, closes: 0, wins: 0, losses: 0 };
     byMonth[key].fees += fill.fee;
-    if (fill.isClose) {
-      byMonth[key].pnl += fill.closedPnl;
-      byMonth[key].closes++;
-      if (fill.closedPnl > 0) byMonth[key].wins++;
-      else byMonth[key].losses++;
-    }
+  }
+  // Collapse close fills into orders keyed by month+oid, then tally one entry per distinct order.
+  const closeOrdersByMonth = new Map();
+  for (const fill of closeFills) {
+    const key = monthKey(fill.time);
+    const oidKey = key + '|' + (fill.orderId ?? `${fill.time}|${fill.price}`);
+    const g = closeOrdersByMonth.get(oidKey);
+    if (g) g.pnl += fill.closedPnl;
+    else closeOrdersByMonth.set(oidKey, { month: key, pnl: fill.closedPnl });
+  }
+  for (const order of closeOrdersByMonth.values()) {
+    const b = byMonth[order.month];
+    b.pnl += order.pnl;
+    b.closes++;
+    if (order.pnl > 0) b.wins++;
+    else if (order.pnl < 0) b.losses++;  // < 0 only — break-even is not a loss
   }
 
   const monthlyNet = Object.entries(byMonth).map(([month, d]) => ({
@@ -234,8 +263,10 @@ export async function generateYearlyReport(year) {
     ? monthlyNet.reduce((worst, m) => m.net < worst.net ? m : worst, monthlyNet[0])
     : null;
 
+  // Net P&L as % of current balance. The old denominator (balance − net) tried to infer the year's
+  // opening balance but ignored deposits/withdrawals, so it misstated the return.
   const ytdPct = balance.balance > 0
-    ? ((netPnl / (balance.balance - netPnl)) * 100).toFixed(2)
+    ? ((netPnl / balance.balance) * 100).toFixed(2)
     : '0.00';
 
   const pnlEmoji = netPnl >= 0 ? '✅' : '❌';
@@ -246,8 +277,8 @@ export async function generateYearlyReport(year) {
     `Balance: $${balance.balance.toFixed(2)} USDC`,
     '',
     `<b>📈 YTD Summary</b>`,
-    `Trades opened: ${openFills.length}`,
-    `Trades closed: ${closeFills.length}`,
+    `Trades opened: ${openOrders.length}`,
+    `Trades closed: ${closeOrders.length}`,
     `Wins: ${wins} | Losses: ${losses}`,
     `Win rate: ${winRate}%`,
     '',

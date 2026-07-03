@@ -12,7 +12,23 @@ const PLANS_DIR = path.join(process.cwd(), 'plans');
 // Lives on the Railway-persistent /data volume (./data locally). One file per open
 // position; cleared when the position closes.
 const POSITION_STATE_FILE = dataPath('position-state.json');
-const MAX_POSITION_SIZE = 0.25;  // hard cap on PAXG position size (~2% risk at 8pt SL)
+
+// Notional-based position ceiling that scales with balance. Replaces the old fixed 0.25 PAXG cap,
+// which was tuned for a ~$100 account: as the balance grew (now ~$246, scaling to $500) that fixed
+// 0.25 started clamping tight-SL trades BELOW their intended risk — a 6-8pt SL couldn't reach full
+// 1% because 0.25 bit first (under-risking, e.g. 0.63% instead of 1%). This is a MARGIN/leverage
+// guard, NOT a risk-% rule: the 1% (new) / 0.5% (compound) sizing computed elsewhere is untouched;
+// this only stops that size exceeding safe leverage exposure, and it now scales automatically.
+//   • leverage cap: 4.5× balance notional (5× max leverage minus a margin buffer)
+//   • absolute ceiling: 0.30 PAXG per $100 of balance ($100→0.30, $500→1.50) — a break-glass guard
+//     against an insane size if the SL distance is ever broken.
+// Fail-safe: on bad inputs, fall back to the old fixed 0.25 cap rather than removing the ceiling.
+function maxPositionSize(balance, price) {
+  if (!(balance > 0) || !(price > 0)) return 0.25;
+  const maxSizeByNotional = (balance * 4.5) / price;   // 5× leverage, 0.5× buffer
+  const absoluteCeiling = (balance / 100) * 0.30;      // scales with balance
+  return Math.min(maxSizeByNotional, absoluteCeiling);
+}
 
 let isReconciling = false;
 
@@ -44,7 +60,7 @@ function calculateNewEntrySize(balance, entryPrice, slPrice) {
   if (slDistance <= 0) throw new Error('Invalid SL distance: ' + slDistance);
 
   let size = riskAmount / slDistance;
-  size = Math.min(size, MAX_POSITION_SIZE);
+  size = Math.min(size, maxPositionSize(balance, entryPrice));
   size = Math.max(0.001, parseFloat(size.toFixed(3)));  // 3dp = PAXG szDecimals (what HL accepts)
 
   console.log('[sizing] NEW ENTRY:');
@@ -57,13 +73,13 @@ function calculateNewEntrySize(balance, entryPrice, slPrice) {
 }
 
 // Compound add: 0.5% of balance sized against the FIRST trade's SL distance (kept constant).
-function calculateCompoundSize(balance, firstSLDistance) {
+function calculateCompoundSize(balance, firstSLDistance, entryPrice) {
   const compoundRiskPct = 0.5;
   const riskAmount = balance * (compoundRiskPct / 100);
   if (!(firstSLDistance > 0)) throw new Error('Invalid first SL distance: ' + firstSLDistance);
 
   let size = riskAmount / firstSLDistance;
-  size = Math.min(size, MAX_POSITION_SIZE);
+  size = Math.min(size, maxPositionSize(balance, entryPrice));
   size = Math.max(0.001, parseFloat(size.toFixed(3)));  // 3dp = PAXG szDecimals (what HL accepts)
 
   console.log('[sizing] COMPOUND:');
@@ -187,7 +203,7 @@ async function handleExistingPosition(existingPosition, plan, balance) {
       }
 
       const newTotalRisk = 1.0 + newCompoundCount * 0.5;
-      const compoundSize = calculateCompoundSize(balance, posState.firstSLDistance);
+      const compoundSize = calculateCompoundSize(balance, posState.firstSLDistance, existingPosition.entryPrice);
       console.log(`[compound] count: ${newCompoundCount}/${MAX_COMPOUNDS} | total risk after: ${newTotalRisk}%`);
 
       // Do NOT persist the incremented count here — it is written only after the add is confirmed
@@ -573,7 +589,7 @@ export async function executeIfApproved(plan, context) {
       ?? (existingSLPrice != null && existingSLPrice > 0
         ? Math.abs(entryPrice - existingSLPrice)
         : dynamicLevels.slDistance);
-    size = positionDecision.size ?? calculateCompoundSize(account.balance, riskDistance);
+    size = positionDecision.size ?? calculateCompoundSize(account.balance, riskDistance, entryPrice);
     // Keep the existing stop for the inline bracket; reconcileUnifiedSL re-derives the unified
     // SL/TP from the new weighted-avg entry (trailing the first SL distance) after the fill.
     finalSL = (existingSLPrice != null && existingSLPrice > 0)
@@ -651,10 +667,15 @@ export async function executeIfApproved(plan, context) {
     return out;
   }
 
-  // Final guards: hard cap + floor (helpers already clamp, but guard again after either branch).
-  if (size > MAX_POSITION_SIZE) {
-    console.warn(`[sizing] HARD CAP: ${size} → ${MAX_POSITION_SIZE} PAXG (max position size protection)`);
-    size = MAX_POSITION_SIZE;
+  // Final guards: notional cap + floor (helpers already clamp, but guard again after either branch).
+  // The cap scales with balance (leverage-exposure ceiling) so tight-SL trades reach their full 1%
+  // instead of being throttled by a fixed coin amount. Margin guard only — does not change risk %.
+  const sizeCap = maxPositionSize(account.balance, entryPrice);
+  const sizeBefore = size;
+  size = Math.min(size, sizeCap);
+  if (size < sizeBefore) {
+    console.log('[sizing] capped:', sizeBefore.toFixed(4), '→', size.toFixed(4),
+      '(cap:', sizeCap.toFixed(4), 'PAXG, notional $' + (size * entryPrice).toFixed(0) + ')');
   }
   size = Math.max(0.001, parseFloat(size.toFixed(3)));  // 3dp = PAXG szDecimals (what HL accepts)
 
@@ -689,11 +710,11 @@ export async function executeIfApproved(plan, context) {
   // Compound total size cap
   if (positionDecision?.action === 'compound' && existingPos) {
     const totalAfterCompound = existingPos.size + sizing.size;
-    const MAX_TOTAL_POSITION = 0.25;  // same cap as single entry (was 0.15)
+    const MAX_TOTAL_POSITION = maxPositionSize(account.balance, entryPrice);  // scales with balance (was fixed 0.25)
     if (totalAfterCompound > MAX_TOTAL_POSITION) {
-      console.warn(`[executor] compound blocked: total would be ${totalAfterCompound} PAXG (max ${MAX_TOTAL_POSITION})`);
+      console.warn(`[executor] compound blocked: total would be ${totalAfterCompound.toFixed(3)} PAXG (max ${MAX_TOTAL_POSITION.toFixed(3)})`);
       out.reason = 'Compound blocked: total ' + totalAfterCompound.toFixed(3) +
-        ' would exceed ' + MAX_TOTAL_POSITION + ' PAXG max';
+        ' would exceed ' + MAX_TOTAL_POSITION.toFixed(3) + ' PAXG max';
       return out;
     }
   }

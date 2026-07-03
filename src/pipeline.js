@@ -108,8 +108,13 @@ async function runFullPipeline() {
   // ratcheting even on no-signal / hold runs. Live mode only; needs just the current price.
   if (process.env.AUTO_TRADE === 'true' && process.env.DRY_EXECUTE !== 'true' && process.env.DRY_RUN !== 'true') {
     try {
-      const { updateTrailingStop } = await import('./broker/trailing.js');
-      await updateTrailingStop(process.env.HL_COIN || 'PAXG', { currentPrice });
+      const { updateTrailingStop, verifyTrailingState } = await import('./broker/trailing.js');
+      const trailCoin = process.env.HL_COIN || 'PAXG';
+      await updateTrailingStop(trailCoin, { currentPrice }).catch(e =>
+        console.warn('[trail] error:', e.message));
+      // Recovery sweep: catches any trail that should have moved but didn't (prior-cycle failure).
+      await verifyTrailingState(trailCoin, { currentPrice }).catch(e =>
+        console.warn('[trail-verify] error:', e.message));
     } catch (e) {
       console.warn('[trail] error:', e.message);
     }

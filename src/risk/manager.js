@@ -250,6 +250,73 @@ export function getTimeframeAlignment(context, direction, plan = null) {
 }
 
 export async function checkRiskRules(plan, accountState, context = {}) {
+  // ═══ BACKUP CIRCUIT BREAKER (independent of primary 6% fill-based) ═══
+  // Uses balance-snapshot delta, NOT fill P&L. Catches catastrophe if the primary 6% breaker's
+  // calculation fails (bad fill data, error). Trips at -8% so the primary 6% always fires first in
+  // normal operation. Runs FIRST as a hard floor; fail-open — any error here logs and continues so
+  // the primary breaker still handles the normal case.
+  try {
+    const { getHLBalance } = await import('../broker/hyperliquid.js');
+    const fsSync = await import('fs');
+    const { dataPath } = await import('../utils/dataDir.js');
+
+    // dataPath resolves the Railway volume (/data) when mounted+writable, else ./data — so the
+    // snapshot persists across deploys, same as the RAG DB and position-state.
+    const snapFile = dataPath('daily-balance-snapshot.json');
+
+    const currentBal = (await getHLBalance()).balance;
+    const today = new Date().toISOString().slice(0, 10);
+
+    let snapshot;
+    try {
+      snapshot = JSON.parse(fsSync.default.readFileSync(snapFile, 'utf8'));
+    } catch (e) {
+      snapshot = {};
+    }
+
+    // Set/reset today's opening balance at start of each UTC day
+    if (snapshot.date !== today) {
+      snapshot = { date: today, openBalance: currentBal };
+      fsSync.default.writeFileSync(snapFile, JSON.stringify(snapshot));
+      console.log('[backup-breaker] new day — opening balance $' + currentBal.toFixed(2));
+    }
+
+    const dayDelta = currentBal - snapshot.openBalance;
+    const dayDeltaPct = snapshot.openBalance > 0
+      ? (dayDelta / snapshot.openBalance) * 100
+      : 0;
+
+    console.log('[backup-breaker] today delta: ' + dayDeltaPct.toFixed(2) +
+      '% ($' + dayDelta.toFixed(2) + ') | open $' + snapshot.openBalance.toFixed(2) +
+      ' → now $' + currentBal.toFixed(2));
+
+    // Trip at -8% — ONLY catches if primary 6% breaker failed
+    if (dayDeltaPct <= -8) {
+      console.error('[backup-breaker] 🛑 TRIPPED at ' + dayDeltaPct.toFixed(1) + '%');
+      try {
+        const { sendTelegramMessage } = await import('../telegram/notify.js');
+        await sendTelegramMessage(
+          '🛑🛑 <b>BACKUP BREAKER TRIPPED</b>\n' +
+          'Balance dropped ' + dayDeltaPct.toFixed(1) + '% today\n' +
+          'Open: $' + snapshot.openBalance.toFixed(2) + ' → Now: $' + currentBal.toFixed(2) + '\n' +
+          '⚠️ Primary 6% breaker may have failed — trading HALTED\n' +
+          'Check the agent immediately.'
+        );
+      } catch (e) {}
+
+      return {
+        allowed: false,
+        reason: 'BACKUP breaker: balance down ' + dayDeltaPct.toFixed(1) +
+                '% today (primary 6% may have failed)',
+      };
+    }
+  } catch (err) {
+    // Backup breaker itself errored — log but don't block trading
+    // (primary 6% breaker still handles normal case)
+    console.warn('[backup-breaker] check failed: ' + err.message);
+  }
+  // ═══ END BACKUP BREAKER — existing 6% primary breaker continues below ═══
+
   console.log(`[risk] checking: hour=${new Date().getUTCHours()} dir=${plan?.direction} tier=${plan?.threeLayer?.tier}`);
   const log = (msg) => console.log(`[risk] ${msg}`);
 

@@ -832,20 +832,34 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     /momentum override|counter-structure/i.test(
       `${plan?.overrideReason || ''} ${plan?.biasReasoning || ''} ${(plan?.warnings || []).join(' ')}`
     );
+  // BOUNCE vs REVERSAL gate — the override is only a genuine REVERSAL when H4 structure has ALSO
+  // turned with the trade. If H4 still opposes, price above/below the H1 EMAs is a counter-trend
+  // BOUNCE inside the H4 trend (buying the top of the bounce). Use raw structural H4 bias so a
+  // short retrace can't flip the arbiter. H4 must agree before the counter-H1 block is skipped.
+  const h4OverrideBias =
+    context?.h4?.structure?.bias ?? context?.smcH4?.structure?.bias ?? context?.h4?.bias ?? null;
+  const h4AgreesOverride =
+    (tradeDirection === 'long' && h4OverrideBias === 'bullish') ||
+    (tradeDirection === 'short' && h4OverrideBias === 'bearish');
+
   let emaOverrideActive = false;
   if (isEmaOverride && tradeDirection) {
     const emaAligned = !!h1Emas && (
       (tradeDirection === 'long' && h1Emas.aboveBoth) ||
       (tradeDirection === 'short' && h1Emas.belowBoth)
     );
-    if (emaAligned) {
-      emaOverrideActive = true;
-      log(`EMA override — price ${tradeDirection === 'long' ? 'above' : 'below'} both H1 EMAs; skipping counter-H1 block`);
-    } else {
+    if (!emaAligned) {
       const reason = `EMA override rejected: price not ${tradeDirection === 'long' ? 'above' : 'below'} both H1 EMAs`;
       log(`REJECT emaOverride: ${reason}`);
       return { allowed: false, reason };
     }
+    if (!h4AgreesOverride) {
+      const reason = `EMA override blocked: H4 ${h4OverrideBias} opposes ${tradeDirection} — counter-trend bounce, not reversal. Wait for H4 to confirm.`;
+      log(`REJECT emaOverride h4Gate: ${reason}`);
+      return { allowed: false, reason };
+    }
+    emaOverrideActive = true;
+    log(`EMA override — H4 ${h4OverrideBias} co-signs + price ${tradeDirection === 'long' ? 'above' : 'below'} both H1 EMAs; genuine reversal, skipping counter-H1 block`);
   }
 
   if (h1Bias && tradeDirection && !emaOverrideActive) {

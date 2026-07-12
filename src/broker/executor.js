@@ -234,6 +234,18 @@ async function handleExistingPosition(existingPosition, plan, balance) {
         };
       }
 
+      // Never compound an EMA-override trade. It was opened counter-structure (lowest confidence);
+      // adding to it stacks size onto the highest-risk setup — exactly the July-6 failure mode.
+      if (posState.wasEmaOverride === true) {
+        console.log('[compound] BLOCKED — position was opened via EMA override ' +
+          '(counter-structure, lowest confidence). Single entry only.');
+        return {
+          action: 'hold',
+          reason: 'No compounding on EMA-override trades (counter-structure)',
+          unrealizedPnl,
+        };
+      }
+
       const MAX_COMPOUNDS = 3;
 
       // Count compounds from ACTUAL filled ORDERS, not the persisted counter. The counter used to be
@@ -934,6 +946,12 @@ export async function executeIfApproved(plan, context) {
     // model) — NOT abs(fill − SL), which drifts with slippage. reconcileUnifiedSL trails this
     // exact distance from the avg entry, so realized risk matches the intended 1% / 0.5%.
     const firstSLDistance = slDistance;
+    // Tag override-born positions so the compound handler can refuse to add to them. An EMA
+    // momentum override is the lowest-confidence, counter-structure entry — single entry only.
+    const wasEmaOverride =
+      plan?.emaOverride === true ||
+      (typeof plan?.biasReasoning === 'string' && plan.biasReasoning.includes('momentum override')) ||
+      false;
     await writePositionState({
       coin,
       direction: plan.direction,
@@ -943,6 +961,7 @@ export async function executeIfApproved(plan, context) {
       targetRR: tpRR,
       compoundCount: 0,
       totalRiskPct: 1.0,
+      wasEmaOverride,
       openedAt: new Date().toISOString(),
     });
     console.log('[executor] position state saved: SL distance ' + firstSLDistance.toFixed(2) + 'pts');

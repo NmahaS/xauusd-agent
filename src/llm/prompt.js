@@ -61,11 +61,13 @@ DO NOT return no-trade because of:
 - H1 conflict — this is normal in trend trading
 
 If H4 = bearish AND M15 = bearish AND price is at or below the H1 EMAs:
-  return direction: short with entry, SL, TP levels (aligned — see CASE C).
-If H4/M15 are bearish BUT price is above BOTH H1 EMAs:
-  do NOT reflexively short — apply the EMA MOMENTUM vs SMC STRUCTURE DECISION
-  rules (CASE A: counter-structure LONG, quality "B"). Mirror this when H4/M15
-  are bullish but price is below both H1 EMAs (CASE B).
+  return direction: short with entry, SL, TP levels (fully aligned).
+If price is on the OPPOSITE side of BOTH H1 EMAs from the H4 bias, this is a
+  conflict — apply the EMA MOMENTUM OVERRIDE — REVERSAL vs BOUNCE rules below.
+  It is an override (CASE A/B counter-structure trade) ONLY if H4 structure has
+  ALSO turned to the EMA side. If H4 still holds its original bias, it is a
+  counter-trend BOUNCE (CASE C/D) → return no-trade. Do NOT go LONG just because
+  price bounced above the H1 EMAs while H4 is still bearish.
   Let the risk system decide if it executes.
 
 ## ENTRY LEVELS — USE M15 ONLY
@@ -156,9 +158,11 @@ If H4 bias is bearish → SHORT (default)
 If H4 bias is bullish → LONG (default)
 If H4 bias is ranging → only Tier 1-2 signals
 EXCEPTION: if price sits on the OPPOSITE side of BOTH H1 EMAs from the H4 bias,
-apply the EMA MOMENTUM vs SMC STRUCTURE DECISION rules above (CASE A / CASE B —
-momentum override, quality "B"). Do NOT short into price that is above both H1 EMAs,
-and do NOT long into price that is below both H1 EMAs, without a clear reversal pattern.
+it is a conflict — apply the EMA MOMENTUM OVERRIDE — REVERSAL vs BOUNCE rules above.
+Override to the EMA side (CASE A/B, quality "B") ONLY if H4 structure has ALSO turned
+that way. If H4 still holds its bias it is a counter-trend BOUNCE (CASE C/D) → no-trade.
+Do NOT short into price above both H1 EMAs, and do NOT long into price below both H1
+EMAs, unless H4 confirms the reversal.
 
 RULE 3 — SL based on M15 structure:
 Stop at the nearest M15 swing high (short) or M15 swing low (long).
@@ -177,57 +181,59 @@ extended move with no pullback yet, return no-trade and say "waiting for pullbac
 
 ═══════════════════════════════════════════════════════
 
-## EMA MOMENTUM vs SMC STRUCTURE DECISION
+## EMA MOMENTUM OVERRIDE — REVERSAL vs BOUNCE
 
-Before recommending direction, read the "H1 EMA MOMENTUM" block in ENTRY GUIDANCE
-(current price vs H1 EMA20 and EMA50). EMA momentum reflects current price action and
-can OVERRIDE SMC structure when the two conflict.
+When SMC structure conflicts with H1 EMA position, you must decide:
+is this a genuine REVERSAL, or a counter-trend BOUNCE?
 
-When SMC structure and EMA momentum CONFLICT:
+The test is H4. H1 EMAs can be flipped by a few hours of retrace.
+H4 structure cannot. H4 is the arbiter.
 
-CASE A: SMC bearish BUT price above both H1 EMAs
-  → Recommend LONG (momentum override)
-  → Set quality to "B" (lower confidence)
-  → Set "emaOverride": true
-  → Set "overrideReason": "price above H1 EMA20+EMA50 — counter-structure long"
-  → Entry: current price or M15 OB below
-  → SL: below recent M15 swing low
-  → TP: 2R target
-  → Note: "Counter-structure long — momentum override" (include this phrase in biasReasoning)
+CASE A — GENUINE REVERSAL (override allowed):
+  Structure bearish BUT price above H1 EMAs
+  AND H4 structure has ALSO turned bullish
+  → Recommend LONG, quality B, set emaOverride: true
+  → overrideReason: "price above H1 EMA20+EMA50, H4 turned bullish — reversal long"
+  → Include the phrase "momentum override" in biasReasoning
 
-CASE B: SMC bullish BUT price below both H1 EMAs
-  → Recommend SHORT (momentum override)
-  → Set quality to "B" (lower confidence)
-  → Set "emaOverride": true
-  → Set "overrideReason": "price below H1 EMA20+EMA50 — counter-structure short"
-  → Entry: current price or M15 OB above
-  → SL: above recent M15 swing high
-  → TP: 2R target
-  → Note: "Counter-structure short — momentum override" (include this phrase in biasReasoning)
+CASE B — GENUINE REVERSAL (override allowed):
+  Structure bullish BUT price below H1 EMAs
+  AND H4 structure has ALSO turned bearish
+  → Recommend SHORT, quality B, set emaOverride: true
+  → overrideReason: "price below H1 EMA20+EMA50, H4 turned bearish — reversal short"
+  → Include the phrase "momentum override" in biasReasoning
 
-CASE C: SMC bearish AND price below both H1 EMAs
-  → Recommend SHORT (full alignment)
-  → Set quality to "A" (high confidence)
-  → This is the ideal scenario
+CASE C — BOUNCE (NO TRADE):
+  Structure bearish, price above H1 EMAs,
+  BUT H4 is STILL bearish
+  → This is a retrace inside a downtrend. Do NOT recommend LONG.
+  → Return direction: null, quality: "no-trade", emaOverride: false
+  → reason: "Counter-trend bounce — H4 still bearish, wait for pullback
+     to resume short, or wait for H4 to confirm reversal"
 
-CASE D: SMC bullish AND price above both H1 EMAs
-  → Recommend LONG (full alignment)
-  → Set quality to "A" (high confidence)
-  → This is the ideal scenario
+CASE D — BOUNCE (NO TRADE):
+  Structure bullish, price below H1 EMAs,
+  BUT H4 is STILL bullish
+  → Retrace inside an uptrend. Do NOT recommend SHORT.
+  → Return direction: null, quality: "no-trade", emaOverride: false
 
-CASE E: Price between EMAs (mixed)
-  → Follow SMC structure
-  → Set quality to "B" (the schema only allows A+/A/B/no-trade — there is no "C")
+Buying the top of a bounce is the single most expensive mistake
+available. When in doubt between reversal and bounce, choose no-trade.
 
-NEVER return no-trade just because EMAs conflict with structure.
-Always return the momentum-aligned direction when conflict exists.
-The risk system will validate whether to execute.
+CASE E — Price BETWEEN the H1 EMAs (no clean conflict):
+  → Follow SMC structure. Quality "B". emaOverride: false.
 
-FLAGGING: Set "emaOverride": true ONLY in CASE A or CASE B (counter-structure trade where
-direction opposes SMC/H1 structure but agrees with the H1 EMA position). In CASES C, D, E
-(aligned or between EMAs) set "emaOverride": false and "overrideReason": null. The override
-flag tells the risk system to bypass its counter-H1 block — only set it when price is truly on
-the opposite side of BOTH H1 EMAs from structure, or the trade will be rejected as invalid.
+ALIGNED (no conflict) — structure and H1 EMAs agree:
+  Structure bearish AND price below both EMAs → SHORT, quality "A".
+  Structure bullish AND price above both EMAs → LONG, quality "A".
+  This is the ideal scenario. emaOverride: false.
+
+FLAGGING: Set "emaOverride": true ONLY in CASE A or CASE B — a counter-structure trade
+whose direction opposes SMC/H1 structure, agrees with the H1 EMA position, AND is
+confirmed by H4 having turned that way. In CASE C/D (bounce → no-trade), CASE E, and the
+aligned cases, set "emaOverride": false and "overrideReason": null. The override flag tells
+the risk system to bypass its counter-H1 block — the risk system ALSO independently requires
+H4 to agree, so an override without H4 confirmation will be rejected as a bounce.
 
 ═══════════════════════════════════════════════════════
 
@@ -440,13 +446,13 @@ export function buildUserPrompt(ctx) {
   const emaConflictNote = !haveH1Emas
     ? 'H1 EMAs unavailable — defer to SMC structure.'
     : aboveBothEmas && h4Bias === 'bearish'
-      ? 'CONFLICT: SMC/H4 bearish but price above both EMAs → CASE A momentum override → prefer LONG (quality B) unless clear bearish reversal at resistance.'
+      ? 'CONFLICT: price above both EMAs but H4 still BEARISH → counter-trend BOUNCE (CASE C). Do NOT long into it. no-trade UNLESS H4 structure has actually turned bullish (then it is a CASE A reversal long, quality B).'
     : belowBothEmas && h4Bias === 'bullish'
-      ? 'CONFLICT: SMC/H4 bullish but price below both EMAs → CASE B momentum override → prefer SHORT (quality B) unless clear bullish reversal at support.'
+      ? 'CONFLICT: price below both EMAs but H4 still BULLISH → counter-trend BOUNCE (CASE D). Do NOT short into it. no-trade UNLESS H4 structure has actually turned bearish (then it is a CASE B reversal short, quality B).'
     : aboveBothEmas
-      ? 'Aligned bullish (CASE D) — prefer LONG.'
+      ? 'Aligned bullish (structure + EMAs agree) — prefer LONG.'
     : belowBothEmas
-      ? 'Aligned bearish (CASE C) — prefer SHORT.'
+      ? 'Aligned bearish (structure + EMAs agree) — prefer SHORT.'
     : 'Between EMAs (CASE E) — follow SMC structure.';
 
   console.log('[context] H1 EMA20:', fmt(h1Ema20), 'EMA50:', fmt(h1Ema50));
@@ -457,9 +463,9 @@ export function buildUserPrompt(ctx) {
     `H4 trend direction: ${h4Bias.toUpperCase()}`,
     `Allowed direction: ${
       aboveBothEmas && h4Bias === 'bearish'
-        ? 'CONFLICT — SHORT (H4 bias) vs LONG (price above both H1 EMAs). Prefer LONG momentum override (quality B) unless clear bearish reversal at resistance.'
+        ? 'BOUNCE RISK — price above both H1 EMAs but H4 still BEARISH. This is a counter-trend bounce (CASE C): no-trade UNLESS H4 has structurally turned bullish (genuine reversal → CASE A long). Do NOT long into a bounce.'
       : belowBothEmas && h4Bias === 'bullish'
-        ? 'CONFLICT — LONG (H4 bias) vs SHORT (price below both H1 EMAs). Prefer SHORT momentum override (quality B) unless clear bullish reversal at support.'
+        ? 'BOUNCE RISK — price below both H1 EMAs but H4 still BULLISH. Counter-trend bounce (CASE D): no-trade UNLESS H4 has structurally turned bearish (genuine reversal → CASE B short). Do NOT short into a bounce.'
       : h4Bias === 'bearish' ? 'SHORT (favored by H4 bias)'
       : h4Bias === 'bullish' ? 'LONG (favored by H4 bias)'
       : 'either (ranging — require Tier 1-2)'

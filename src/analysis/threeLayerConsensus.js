@@ -202,18 +202,46 @@ export async function computeThreeLayerConsensus(ctx) {
     );
   if (isEmaOverride && dir) {
     console.log('[3layer] EMA momentum override detected — dir:', dir, '| H1 structure:', h1Bias);
+
+    // BOUNCE vs REVERSAL gate — the EMA override cannot tell a genuine REVERSAL (H4 flips too)
+    // from a counter-trend BOUNCE (H4 still opposes). H1 EMAs get flipped by a few hours of
+    // retrace; H4 structure does not — so H4 is the arbiter. Require H4 STRUCTURAL agreement
+    // before honoring the override; otherwise it is a retrace inside the H4 trend (a trap that
+    // buys the top of the bounce). Use raw structural H4 bias, not the stale-resolved live one,
+    // so a short bounce can't itself flip the arbiter.
+    const h4OverrideBias = ctx.h4?.structure?.bias ?? ctx.h4?.bias ?? null;
+    const h4AgreesOverride =
+      (dir === 'long' && h4OverrideBias === 'bullish') ||
+      (dir === 'short' && h4OverrideBias === 'bearish');
+    console.log('[3layer] EMA override H4 gate — H4 bias:', h4OverrideBias,
+      '| direction:', dir, '| H4 agrees:', h4AgreesOverride);
+
+    if (!h4AgreesOverride) {
+      result.tier = 4;
+      result.tierLabel = `TIER 4 — EMA override blocked: H4 ${h4OverrideBias} opposes ${dir} (bounce, not reversal)`;
+      result.autoExecute = false;
+      result.direction = null;
+      result.blockingFactors.push(`EMA override blocked: H4 ${h4OverrideBias} opposes ${dir} — counter-trend bounce, not reversal. Wait for H4 to confirm.`);
+      console.log(`[3layer] TIER 4 — EMA override REJECTED: H4 (${h4OverrideBias}) opposes ${dir}. Counter-trend BOUNCE, not reversal.`);
+      result.summary = `${result.tierLabel} | no-trade | ${allFactors.length} total factors`;
+      console.log(`[3layer] ${result.summary}`);
+      return result;
+    }
+
+    // H4 co-signs → genuine reversal. Still require the H1 EMA position to confirm the direction.
     const emaConfirms = !!h1Emas && (
       (dir === 'long' && h1Emas.aboveBoth) ||
       (dir === 'short' && h1Emas.belowBoth)
     );
     if (emaConfirms) {
       result.tier = 3;
-      result.tierLabel = `TIER 3 — EMA momentum override (price ${dir === 'long' ? 'above' : 'below'} both H1 EMAs)`;
+      result.tierLabel = `TIER 3 — EMA momentum override (H4 ${h4OverrideBias} co-signs, price ${dir === 'long' ? 'above' : 'below'} both H1 EMAs)`;
       result.autoExecute = true;
       result.riskMultiplier = 1.0;
       result.direction = dir;
-      result.warnings.push(`EMA momentum override: H1 structure ${h1Bias} but price ${dir === 'long' ? 'above' : 'below'} both H1 EMAs — counter-structure ${dir} (quality B)`);
-      console.log(`[3layer] TIER 3 — EMA override confirmed: price ${dir === 'long' ? 'above' : 'below'} both H1 EMAs ✅`);
+      result.emaOverride = true;
+      result.warnings.push(`EMA momentum override: H1 structure ${h1Bias} but H4 ${h4OverrideBias} co-signs + price ${dir === 'long' ? 'above' : 'below'} both H1 EMAs — genuine reversal ${dir} (quality B)`);
+      console.log(`[3layer] TIER 3 — EMA override ALLOWED (H4 ${h4OverrideBias} co-signs ${dir}) ✅`);
     } else {
       result.tier = 4;
       result.tierLabel = 'TIER 4 — EMA override claimed but EMAs disagree';

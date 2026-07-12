@@ -22,12 +22,80 @@ const POSITION_STATE_FILE = dataPath('position-state.json');
 //   • leverage cap: 4.5× balance notional (5× max leverage minus a margin buffer)
 //   • absolute ceiling: 0.30 PAXG per $100 of balance ($100→0.30, $500→1.50) — a break-glass guard
 //     against an insane size if the SL distance is ever broken.
-// Fail-safe: on bad inputs, fall back to the old fixed 0.25 cap rather than removing the ceiling.
+// Fail-safe: on bad inputs, delegate entirely to enforceSize (the authoritative hard gate) by
+// returning Infinity — Math.min(size, Infinity) = size, and enforceSize then caps/rejects it.
+// (The old fixed 0.25 fallback was removed: it was a hardcoded cap that could be bypassed.)
 function maxPositionSize(balance, price) {
-  if (!(balance > 0) || !(price > 0)) return 0.25;
+  if (!(balance > 0) || !(price > 0)) return Infinity;
   const maxSizeByNotional = (balance * 4.5) / price;   // 5× leverage, 0.5× buffer
   const absoluteCeiling = (balance / 100) * 0.30;      // scales with balance
   return Math.min(maxSizeByNotional, absoluteCeiling);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HARD SIZE GATE — the single, non-bypassable enforcement point every entry and
+// compound order MUST pass through immediately before submission to Hyperliquid.
+//
+// This does NOT change the strategy: risk stays 1% per new entry / 0.5% per compound.
+// It only makes those percentages STICK by measuring the size's ACTUAL risk against the
+// REAL stop being placed, then hard-capping (risk-% + notional/leverage) and rejecting
+// micro-scrap sizes. Throws → caller skips the trade and logs the reason to Telegram.
+// ─────────────────────────────────────────────────────────────────────────────
+function enforceSize(size, balance, entryPrice, slPrice, isCompound) {
+  const slDist = Math.abs(entryPrice - slPrice);
+
+  if (!Number.isFinite(size) || size <= 0) {
+    throw new Error('SIZE INVALID: ' + size);
+  }
+  if (!Number.isFinite(slDist) || slDist < 1) {
+    throw new Error('SL DISTANCE INVALID: ' + slDist + 'pts');
+  }
+
+  // What risk does this size actually represent?
+  const riskUSD = size * slDist;
+  const riskPct = (riskUSD / balance) * 100;
+
+  // Ceiling: 1% new entry, 0.5% compound, +20% tolerance
+  const maxPct = isCompound ? 0.6 : 1.2;
+  const maxRiskUSD = balance * (maxPct / 100);
+
+  // Floor: reject micro-scraps (sizing bug produced 0.003)
+  const minRiskUSD = balance * 0.002; // 0.2% minimum
+  if (riskUSD < minRiskUSD) {
+    throw new Error('SIZE TOO SMALL: risk $' + riskUSD.toFixed(2) +
+      ' (' + riskPct.toFixed(2) + '%) — sizing bug, rejecting order');
+  }
+
+  let finalSize = size;
+
+  // HARD CAP by risk
+  if (riskUSD > maxRiskUSD) {
+    finalSize = maxRiskUSD / slDist;
+    console.warn('[SIZE-GATE] risk ' + riskPct.toFixed(2) + '% exceeds ' +
+      maxPct + '% — capping ' + size.toFixed(4) + ' -> ' + finalSize.toFixed(4));
+  }
+
+  // HARD CAP by notional (max 5x leverage, matches account leverage)
+  const maxNotional = balance * 5;
+  const maxSizeByNotional = maxNotional / entryPrice;
+  if (finalSize > maxSizeByNotional) {
+    console.warn('[SIZE-GATE] notional cap: ' + finalSize.toFixed(4) +
+      ' -> ' + maxSizeByNotional.toFixed(4));
+    finalSize = maxSizeByNotional;
+  }
+
+  const finalRisk = finalSize * slDist;
+  const finalPct = (finalRisk / balance) * 100;
+  const finalNotional = finalSize * entryPrice;
+
+  console.log('[SIZE-GATE] APPROVED:');
+  console.log('  size: ' + finalSize.toFixed(4) + ' PAXG');
+  console.log('  notional: $' + finalNotional.toFixed(0) +
+    ' (' + (finalNotional/balance).toFixed(1) + 'x)');
+  console.log('  SL dist: ' + slDist.toFixed(1) + 'pts');
+  console.log('  risk: $' + finalRisk.toFixed(2) + ' (' + finalPct.toFixed(2) + '%)');
+
+  return parseFloat(finalSize.toFixed(4));
 }
 
 let isReconciling = false;
@@ -678,6 +746,30 @@ export async function executeIfApproved(plan, context) {
       '(cap:', sizeCap.toFixed(4), 'PAXG, notional $' + (size * entryPrice).toFixed(0) + ')');
   }
   size = Math.max(0.001, parseFloat(size.toFixed(3)));  // 3dp = PAXG szDecimals (what HL accepts)
+
+  // ── HARD SIZE GATE ── The single, non-bypassable choke point. Every entry AND compound flows
+  // through here before PRE-FLIGHT / DRY / real submission below — no order reaches Hyperliquid
+  // without it. Measures the ACTUAL risk of `size` against the REAL stop (`finalSL`) being placed,
+  // hard-caps risk-% + notional, and rejects micro-scraps. Throw → skip the trade + alert Telegram.
+  const isCompoundOrder = positionDecision?.action === 'compound';
+  try {
+    size = enforceSize(size, account.balance, entryPrice, finalSL, isCompoundOrder);
+    size = Math.max(0.001, parseFloat(size.toFixed(3)));  // re-snap to HL szDecimals after capping
+  } catch (err) {
+    out.reason = `Size gate rejected: ${err.message}`;
+    console.error('[SIZE-GATE] REJECTED —', err.message);
+    if (process.env.DRY_RUN !== 'true') {
+      try {
+        const { sendTelegramMessage } = await import('../telegram/notify.js');
+        await sendTelegramMessage(
+          `⛔ <b>Order blocked by size gate</b>\n` +
+          `${plan.direction ? plan.direction.toUpperCase() + ' ' : ''}${coin}\n` +
+          `<i>${err.message}</i>`
+        );
+      } catch (e) { console.warn('[SIZE-GATE] Telegram alert failed:', e.message); }
+    }
+    return out;
+  }
 
   // actualRisk = risk to the canonical stop (first SL distance on a compound → add ≈ 0.5%).
   const actualRisk = size * riskDistance;

@@ -1,0 +1,89 @@
+{
+  "month": "2026-06",
+  "generatedAt": "2026-07-28T00:25:39.885Z",
+  "summary": {
+    "totalDays": 1,
+    "totalHours": 1,
+    "totalPlans": 1,
+    "totalTrades": 0,
+    "totalNoTrades": 0,
+    "tradeRate": "0.0%",
+    "setupBreakdown": {
+      "A+": 0,
+      "A": 1,
+      "B": 0,
+      "no-trade": 0
+    },
+    "directionBreakdown": {
+      "long": 1,
+      "short": 0
+    }
+  },
+  "winLoss": {
+    "wins": 0,
+    "losses": 0,
+    "partialWins": 0,
+    "expired": 0,
+    "winRate": "0%",
+    "profitFactor": 0,
+    "avgWinRR": 0,
+    "avgLossRR": -1,
+    "expectancy": -1,
+    "maxConsecutiveWins": 0,
+    "maxConsecutiveLosses": 0,
+    "longestWinStreak": null,
+    "longestLoseStreak": null
+  },
+  "rrAnalysis": {
+    "totalNetRR": 0,
+    "avgRR_TP1": 0,
+    "avgRR_TP2": 0,
+    "avgRR_TP3": 0,
+    "avgActualRR": 0,
+    "bestDay": null,
+    "worstDay": null,
+    "bestSingleTrade": null,
+    "avgConfluence": null,
+    "qualityVsRR": {}
+  },
+  "breakdowns": {
+    "byQuality": {},
+    "bySession": {},
+    "byDirection": {
+      "long": {
+        "trades": 0,
+        "wins": 0,
+        "winRate": "0%",
+        "netRR": 0
+      },
+      "short": {
+        "trades": 0,
+        "wins": 0,
+        "winRate": "0%",
+        "netRR": 0
+      }
+    },
+    "byDayOfWeek": {
+      "Monday": {
+        "trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0%"
+      }
+    }
+  },
+  "weeklyTrend": [
+    {
+      "week": 1,
+      "trades": 0,
+      "wins": 0,
+      "winRate": "0%",
+      "netRR": 0,
+      "bestQuality": null
+    }
+  ],
+  "insights": [
+    "Trade rate is very low (0.0%) — agent may be too selective; review confluence thresholds",
+    "Expectancy: -1.00R per trade — expectancy is negative, review strategy"
+  ]
+}

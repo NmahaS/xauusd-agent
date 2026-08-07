@@ -1,0 +1,232 @@
+{
+  "month": "2026-05",
+  "generatedAt": "2026-07-28T00:28:07.362Z",
+  "summary": {
+    "totalDays": 19,
+    "totalHours": 57,
+    "totalPlans": 57,
+    "totalTrades": 13,
+    "totalNoTrades": 13,
+    "tradeRate": "22.8%",
+    "setupBreakdown": {
+      "A+": 0,
+      "A": 3,
+      "B": 41,
+      "no-trade": 13
+    },
+    "directionBreakdown": {
+      "long": 14,
+      "short": 30
+    }
+  },
+  "winLoss": {
+    "wins": 2,
+    "losses": 0,
+    "partialWins": 1,
+    "expired": 0,
+    "winRate": "150.0%",
+    "profitFactor": 999,
+    "avgWinRR": 2.45,
+    "avgLossRR": -1,
+    "expectancy": 2.45,
+    "maxConsecutiveWins": 2,
+    "maxConsecutiveLosses": 0,
+    "longestWinStreak": {
+      "start": "2026-05-05 09:00",
+      "end": "2026-05-05 17:00",
+      "count": 2
+    },
+    "longestLoseStreak": null
+  },
+  "rrAnalysis": {
+    "totalNetRR": 4.9,
+    "avgRR_TP1": 0.6,
+    "avgRR_TP2": 0.64,
+    "avgRR_TP3": 1.02,
+    "avgActualRR": 2.45,
+    "bestDay": {
+      "date": "2026-05-05",
+      "netRR": 4.9,
+      "wins": 2,
+      "losses": 0
+    },
+    "worstDay": {
+      "date": "2026-05-05",
+      "netRR": 4.9,
+      "wins": 2,
+      "losses": 0
+    },
+    "bestSingleTrade": {
+      "date": "2026-05-05",
+      "hour": "17",
+      "actualRR": 3.3,
+      "quality": "B"
+    },
+    "avgConfluence": 5.69,
+    "qualityVsRR": {
+      "A": {
+        "count": 1,
+        "avgRR_TP1": null
+      },
+      "B": {
+        "count": 12,
+        "avgRR_TP1": 2.45
+      }
+    }
+  },
+  "breakdowns": {
+    "byQuality": {
+      "A": {
+        "count": 1,
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%",
+        "avgRR": null,
+        "netRR": 0
+      },
+      "B": {
+        "count": 12,
+        "wins": 2,
+        "losses": 0,
+        "winRate": "16.7%",
+        "avgRR": 2.45,
+        "netRR": 4.9
+      }
+    },
+    "bySession": {
+      "asia": {
+        "trades": 5,
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%",
+        "avgRR": null,
+        "netRR": 0
+      },
+      "off": {
+        "trades": 3,
+        "wins": 1,
+        "losses": 0,
+        "winRate": "33.3%",
+        "avgRR": 3.3,
+        "netRR": 3.3
+      },
+      "london": {
+        "trades": 2,
+        "wins": 1,
+        "losses": 0,
+        "winRate": "50.0%",
+        "avgRR": 1.6,
+        "netRR": 1.6
+      },
+      "ny": {
+        "trades": 3,
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%",
+        "avgRR": null,
+        "netRR": 0
+      }
+    },
+    "byDirection": {
+      "long": {
+        "trades": 4,
+        "wins": 0,
+        "winRate": "0.0%",
+        "netRR": 0
+      },
+      "short": {
+        "trades": 9,
+        "wins": 2,
+        "winRate": "22.2%",
+        "netRR": 4.9
+      }
+    },
+    "byDayOfWeek": {
+      "Friday": {
+        "trades": 5,
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%"
+      },
+      "Monday": {
+        "trades": 1,
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%"
+      },
+      "Tuesday": {
+        "trades": 4,
+        "wins": 2,
+        "losses": 0,
+        "winRate": "50.0%"
+      },
+      "Wednesday": {
+        "trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0%"
+      },
+      "Thursday": {
+        "trades": 3,
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0.0%"
+      },
+      "Sunday": {
+        "trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "winRate": "0%"
+      }
+    }
+  },
+  "weeklyTrend": [
+    {
+      "week": 1,
+      "trades": 5,
+      "wins": 2,
+      "winRate": "40.0%",
+      "netRR": 4.9,
+      "bestQuality": "B"
+    },
+    {
+      "week": 2,
+      "trades": 0,
+      "wins": 0,
+      "winRate": "0%",
+      "netRR": 0,
+      "bestQuality": null
+    },
+    {
+      "week": 3,
+      "trades": 5,
+      "wins": 0,
+      "winRate": "0.0%",
+      "netRR": 0,
+      "bestQuality": "B"
+    },
+    {
+      "week": 4,
+      "trades": 3,
+      "wins": 0,
+      "winRate": "0.0%",
+      "netRR": 0,
+      "bestQuality": "B"
+    },
+    {
+      "week": 5,
+      "trades": 0,
+      "wins": 0,
+      "winRate": "0%",
+      "netRR": 0,
+      "bestQuality": null
+    }
+  ],
+  "insights": [
+    "Off KZ: 33.3% win rate with 3.3R avg — your best session",
+    "Short bias dominated (69%) — consistent with monthly trend",
+    "Friday win rate drops to 0.0% — consider reducing size",
+    "Expectancy: 2.45R per trade — every trade is +EV",
+    "Week 2 performance (0% WR) dropped >30% vs average — possible regime change"
+  ]
+}

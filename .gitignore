@@ -6,3 +6,9 @@ node_modules/
 coverage/
 cache/
 cache/*.json
+# runtime state written to the persistent volume (never commit)
+data/decisions.jsonl
+data/decisions.1.jsonl
+data/trade-frequency.json
+data/daily-results.json
+data/range-shadow.json

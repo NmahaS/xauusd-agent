@@ -55,7 +55,7 @@ app.get('/api/dashboard', async (_req, res) => {
     const { getHLBalance, getHLPositions, getHLAllFills, getHLPrice, computePositionOpenFills } =
       await import('./broker/hyperliquid.js');
     const { fetchHLCandles } = await import('./data/hyperliquid.js');
-    const { readRiskState } = await import('./risk/manager.js');
+    const { readRiskState, RISK_RULES } = await import('./risk/manager.js');
 
     const [priceData, balance, positions, fills, m15Candles, state] = await Promise.all([
       getHLPrice('PAXG'),
@@ -495,6 +495,18 @@ app.get('/api/dashboard', async (_req, res) => {
       weeklyGoal:     weeklyGoalUSD,
       weeklyGoalPct,
       weeklyGoalUSD,
+      // Live risk limits so the dashboard renders the real thresholds instead of
+      // hardcoded label text (which silently drifted from RISK_RULES before).
+      riskRules: {
+        maxDailyLoss:       RISK_RULES.maxDailyLoss,
+        maxWeeklyDrawdown:  RISK_RULES.maxWeeklyDrawdown,
+        maxOpenPositions:   RISK_RULES.maxOpenPositions,
+        maxDailyTrades:     RISK_RULES.maxDailyTrades,
+        maxSLDistance:      RISK_RULES.maxSLDistance,
+        requiredConfluence: RISK_RULES.requiredConfluence,
+        minATR:             RISK_RULES.minATR,
+        maxSpread:          RISK_RULES.maxSpread,
+      },
     });
   } catch (err) {
     console.error('[dashboard] API error:', err.message);

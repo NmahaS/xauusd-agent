@@ -1517,25 +1517,44 @@ function renderRisk(d) {
   const conf = d.signal?.confluence || 0;
   const atr  = d.atr || 0;
 
+  // Limits come from the API (src/risk/manager.js RISK_RULES) so these labels can never
+  // drift from what the agent actually enforces. Fallbacks mirror the current defaults
+  // for the brief window before the first /api/dashboard response lands.
+  const R = d.riskRules || {};
+  const maxDaily   = R.maxDailyLoss       ?? 3;
+  const maxWeekly  = R.maxWeeklyDrawdown  ?? 6;
+  const maxPos     = R.maxOpenPositions   ?? 6;
+  const maxTrades  = R.maxDailyTrades     ?? 10;
+  const maxSL      = R.maxSLDistance      ?? 50;
+  const maxSpread  = R.maxSpread          ?? 3;
+
   const isDeadZone = utcH < 6 || utcH >= 21;
-  const atrMin     = isDeadZone ? 7 : 3;
-  const confMin    = 5;  // uniform across all sessions (normal + dead zone)
+  const atrMin     = isDeadZone ? 7 : (R.minATR ?? 3);
+  const confMin    = R.requiredConfluence ?? 5;  // uniform across all sessions (normal + dead zone)
+
+  // Live drawdown checks — computed from actual P&L rather than assumed green.
+  const bal      = parseFloat(d.balance) || 0;
+  const dailyPct = bal > 0 ? ((d.dailyPL  ?? 0) / bal) * 100 : 0;
+  const weekPct  = bal > 0 ? ((d.weeklyPL ?? 0) / bal) * 100 : 0;
+  const openPos  = d.position ? 1 : 0;
+  const nTrades  = d.dailyTrades ?? 0;
+
   const checks = [
     { lbl: 'Friday after 15:00 UTC blocked',                          pass: !(utcD === 5 && utcH >= 15) },
     { lbl: 'High-impact news guard (30 min)',                         pass: true },
-    { lbl: 'Daily loss < 6%',                                         pass: true },
-    { lbl: 'Weekly DD < 15%',                                         pass: true },
-    { lbl: 'Max positions < 6',                                       pass: true },
+    { lbl: `Daily loss < ${maxDaily}%  (now: ${fNum(dailyPct)}%)`,    pass: dailyPct > -maxDaily },
+    { lbl: `Weekly DD < ${maxWeekly}%  (now: ${fNum(weekPct)}%)`,     pass: weekPct  > -maxWeekly },
+    { lbl: `Max positions < ${maxPos}  (now: ${openPos})`,            pass: openPos < maxPos },
     { lbl: 'TP target: 2R (3R if trending)',                          pass: true },
     { lbl: `Min confluence: ${confMin}/12  (now: ${conf})`,           pass: conf >= confMin || conf === 0 },
     { lbl: `Min ATR: ${atrMin}pts  (now: ${fNum(atr)})`,             pass: atr >= atrMin  || atr === 0 },
-    { lbl: 'Max spread: 3 pts',                                       pass: true },
+    { lbl: `Max spread: ${maxSpread} pts`,                            pass: true },
     { lbl: 'Counter-H1 blocked (H1 = primary; H4 context only)',      pass: true },
     { lbl: 'Overextension: block entries >2.0 ATR from H1 EMA20',      pass: true },
     { lbl: 'Tier 4 blocked',                                          pass: true },
     { lbl: 'Dead zone: strict rules (ATR≥7, C≥5, no position)',       pass: true },
-    { lbl: 'Max daily trades: 10',                                    pass: true },
-    { lbl: 'SL range: 3–50 pts',                                      pass: true },
+    { lbl: `Max daily trades: ${maxTrades}  (now: ${nTrades})`,       pass: nTrades < maxTrades },
+    { lbl: `SL range: 3–${maxSL} pts`,                                pass: true },
   ];
 
   const allOk = checks.every(c => c.pass);

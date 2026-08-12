@@ -104,8 +104,8 @@ Send Telegram only if something changed
 | Rule | Limit |
 |---|---|
 | Risk per trade | 0.5% – 2.0% (by tier) |
-| Max daily loss | 6% |
-| Max weekly drawdown | 15% |
+| Max daily loss | 3% |
+| Max weekly drawdown | 6% |
 | Max open positions | 2 |
 | Max daily trades | 6 |
 | Off session block | 17:00–00:00 UTC |

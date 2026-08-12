@@ -238,8 +238,8 @@ All tiers are executable. Tier 4 adds warnings but does NOT block.
 ### Hard blocks (return `{ allowed: false }`)
 - Friday after 15:00 UTC
 - High-impact news within 30 min
-- Daily loss ≤ −6%
-- Weekly drawdown ≤ −15%
+- Daily loss ≤ −3%
+- Weekly drawdown ≤ −6%
 - Open positions ≥ 6
 - TP1 RR < 1.5
 - Confluence < 5

@@ -6,8 +6,8 @@ import { resolveStaleH4Bias } from '../smc/structure.js';
 
 export const RISK_RULES = {
   maxRiskPerTrade: 2.0,         // % of equity
-  maxDailyLoss: 6.0,            // stop trading after -6% daily P&L
-  maxWeeklyDrawdown: 15.0,      // pause until next week at -15%
+  maxDailyLoss: 3.0,            // stop trading after -3% daily P&L
+  maxWeeklyDrawdown: 6.0,       // pause until next week at -6%
   maxOpenPositions: 6,          // up to 6 concurrent positions
   maxDailyTrades: 10,           // max trades per calendar day
   maxSLDistance: 50,             // reject if SL > 50pts from entry
@@ -250,11 +250,11 @@ export function getTimeframeAlignment(context, direction, plan = null) {
 }
 
 export async function checkRiskRules(plan, accountState, context = {}) {
-  // ═══ BACKUP CIRCUIT BREAKER (independent of primary 6% fill-based) ═══
-  // Uses balance-snapshot delta, NOT fill P&L. Catches catastrophe if the primary 6% breaker's
-  // calculation fails (bad fill data, error). Trips at -8% so the primary 6% always fires first in
-  // normal operation. Runs FIRST as a hard floor; fail-open — any error here logs and continues so
-  // the primary breaker still handles the normal case.
+  // ═══ BACKUP CIRCUIT BREAKER (independent of the primary fill-based daily breaker) ═══
+  // Uses balance-snapshot delta, NOT fill P&L. Catches catastrophe if the primary daily breaker's
+  // calculation fails (bad fill data, error). Trips at -8%, well below the primary -maxDailyLoss%,
+  // so the primary always fires first in normal operation. Runs FIRST as a hard floor; fail-open —
+  // any error here logs and continues so the primary breaker still handles the normal case.
   try {
     const { getHLBalance } = await import('../broker/hyperliquid.js');
     const fsSync = await import('fs');
@@ -290,7 +290,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
       '% ($' + dayDelta.toFixed(2) + ') | open $' + snapshot.openBalance.toFixed(2) +
       ' → now $' + currentBal.toFixed(2));
 
-    // Trip at -8% — ONLY catches if primary 6% breaker failed
+    // Trip at -8% — ONLY catches if the primary daily breaker failed
     if (dayDeltaPct <= -8) {
       console.error('[backup-breaker] 🛑 TRIPPED at ' + dayDeltaPct.toFixed(1) + '%');
       try {
@@ -299,7 +299,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
           '🛑🛑 <b>BACKUP BREAKER TRIPPED</b>\n' +
           'Balance dropped ' + dayDeltaPct.toFixed(1) + '% today\n' +
           'Open: $' + snapshot.openBalance.toFixed(2) + ' → Now: $' + currentBal.toFixed(2) + '\n' +
-          '⚠️ Primary 6% breaker may have failed — trading HALTED\n' +
+          `⚠️ Primary ${RISK_RULES.maxDailyLoss}% breaker may have failed — trading HALTED\n` +
           'Check the agent immediately.'
         );
       } catch (e) {}
@@ -307,15 +307,15 @@ export async function checkRiskRules(plan, accountState, context = {}) {
       return {
         allowed: false,
         reason: 'BACKUP breaker: balance down ' + dayDeltaPct.toFixed(1) +
-                '% today (primary 6% may have failed)',
+                `% today (primary ${RISK_RULES.maxDailyLoss}% may have failed)`,
       };
     }
   } catch (err) {
     // Backup breaker itself errored — log but don't block trading
-    // (primary 6% breaker still handles normal case)
+    // (primary daily breaker still handles normal case)
     console.warn('[backup-breaker] check failed: ' + err.message);
   }
-  // ═══ END BACKUP BREAKER — existing 6% primary breaker continues below ═══
+  // ═══ END BACKUP BREAKER — primary daily breaker continues below ═══
 
   console.log(`[risk] checking: hour=${new Date().getUTCHours()} dir=${plan?.direction} tier=${plan?.threeLayer?.tier}`);
   const log = (msg) => console.log(`[risk] ${msg}`);
@@ -325,7 +325,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
 
   // ─── DRAWDOWN & LOSS-STREAK GUARDS (fills-based) ───────────────────────────
   // Two protections that both need recent fills, fetched once here:
-  //   • STEP 3: daily loss circuit breaker — hard stop at -3% realized P&L today
+  //   • STEP 3: daily loss circuit breaker — hard stop at -maxDailyLoss% realized P&L today
   //   • STEP 2: same-direction loss streak — 3+ recent losses in plan.direction
   // Fail-open: if the fills API is unavailable we warn and continue (never crash the run).
   const coin = process.env.HL_COIN || 'PAXG';
@@ -374,13 +374,13 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     const todayNetPL = todayClosed.reduce((s, f) => s + f.closedPnl - f.fee, 0);
     const dailyLossPct = bal > 0 ? (todayNetPL / bal) * 100 : 0;
 
-    if (dailyLossPct < -3) {
+    if (dailyLossPct < -RISK_RULES.maxDailyLoss) {
       const reason = `Daily circuit breaker: ${dailyLossPct.toFixed(2)}% realized loss today — trading stopped`;
       log(`REJECT circuitBreaker: ${reason}`);
       return { allowed: false, reason };
     }
-    if (dailyLossPct < -2) {
-      console.warn(`[risk] daily loss ${dailyLossPct.toFixed(2)}% — approaching -3% circuit breaker`);
+    if (dailyLossPct < -(RISK_RULES.maxDailyLoss * 2 / 3)) {
+      console.warn(`[risk] daily loss ${dailyLossPct.toFixed(2)}% — approaching -${RISK_RULES.maxDailyLoss}% circuit breaker`);
     }
     console.log(`[risk] daily realized P&L: ${dailyLossPct.toFixed(2)}% ✅`);
 

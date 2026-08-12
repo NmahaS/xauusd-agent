@@ -940,6 +940,9 @@ const fUSD = (n, sign = true) => {
   return (n >= 0 ? '+$' : '-$') + abs;
 };
 const fNum  = (n, d = 2) => (typeof n === 'number' && !isNaN(n)) ? n.toFixed(d) : '—';
+/* Signed percent — always shows +/- so a profit can never read as a loss. */
+const fSign = (n, d = 2) => (typeof n === 'number' && !isNaN(n))
+  ? (n >= 0 ? '+' : '') + n.toFixed(d) + '%' : '—';
 const plCls = n => n > 0.005 ? 'c-green' : n < -0.005 ? 'c-red' : 'c-sec';
 
 /* ── Session label ──────────────────────────────────────────── */
@@ -1542,8 +1545,8 @@ function renderRisk(d) {
   const checks = [
     { lbl: 'Friday after 15:00 UTC blocked',                          pass: !(utcD === 5 && utcH >= 15) },
     { lbl: 'High-impact news guard (30 min)',                         pass: true },
-    { lbl: `Daily loss < ${maxDaily}%  (now: ${fNum(dailyPct)}%)`,    pass: dailyPct > -maxDaily },
-    { lbl: `Weekly DD < ${maxWeekly}%  (now: ${fNum(weekPct)}%)`,     pass: weekPct  > -maxWeekly },
+    { lbl: `Daily P&amp;L &gt; -${maxDaily}%  (now: ${fSign(dailyPct)})`,   pass: dailyPct > -maxDaily },
+    { lbl: `Weekly P&amp;L &gt; -${maxWeekly}%  (now: ${fSign(weekPct)})`,  pass: weekPct  > -maxWeekly },
     { lbl: `Max positions < ${maxPos}  (now: ${openPos})`,            pass: openPos < maxPos },
     { lbl: 'TP target: 2R (3R if trending)',                          pass: true },
     { lbl: `Min confluence: ${confMin}/12  (now: ${conf})`,           pass: conf >= confMin || conf === 0 },

@@ -323,10 +323,10 @@ export async function checkRiskRules(plan, accountState, context = {}) {
   const utcHour = new Date().getUTCHours();
   console.log(`[risk] hour: ${utcHour}:xx UTC (dead zone gating handled by executor)`);
 
-  // ─── DRAWDOWN & LOSS-STREAK GUARDS (fills-based) ───────────────────────────
-  // Two protections that both need recent fills, fetched once here:
+  // ─── DRAWDOWN GUARDS (fills-based) ─────────────────────────────────────────
+  // Protections that need recent fills, fetched once here:
+  //   • STEP 0: post-close cooldown — no revenge re-entry right after an exit
   //   • STEP 3: daily loss circuit breaker — hard stop at -maxDailyLoss% realized P&L today
-  //   • STEP 2: same-direction loss streak — 3+ recent losses in plan.direction
   // Fail-open: if the fills API is unavailable we warn and continue (never crash the run).
   const coin = process.env.HL_COIN || 'PAXG';
   let recentFills = [];
@@ -334,7 +334,7 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     const { getHLFillsHistory } = await import('../broker/hyperliquid.js');
     recentFills = await getHLFillsHistory(coin, 7);
   } catch (err) {
-    console.warn('[risk] fills fetch failed — skipping circuit breaker + loss-streak:', err.message);
+    console.warn('[risk] fills fetch failed — skipping cooldown + circuit breaker:', err.message);
   }
 
   if (recentFills.length > 0) {
@@ -384,17 +384,13 @@ export async function checkRiskRules(plan, accountState, context = {}) {
     }
     console.log(`[risk] daily realized P&L: ${dailyLossPct.toFixed(2)}% ✅`);
 
-    // STEP 2: same-direction loss-streak protection (resets daily — today's UTC closes only)
+    // (same-direction loss-streak gate removed — daily circuit breaker above covers the
+    //  drawdown case; direction streaks alone no longer block entries)
     if (plan.direction) {
       const todayLossesSameDir = todayClosed.filter(f =>
         f.direction === plan.direction && f.closedPnl < -0.01
       ).length;
-      if (todayLossesSameDir >= 7) {
-        const reason = `Loss streak protection: ${todayLossesSameDir} ${plan.direction} losses today — resets at UTC midnight`;
-        log(`REJECT lossStreak: ${reason}`);
-        return { allowed: false, reason };
-      }
-      console.log(`[risk] loss streak: ${todayLossesSameDir} ${plan.direction} losses today ✅`);
+      console.log(`[risk] ${todayLossesSameDir} ${plan.direction} losses today (informational)`);
     }
   }
 
